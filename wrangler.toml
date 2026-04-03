@@ -2,6 +2,7 @@ name = "phenomena"
 main = "src/worker.js"
 compatibility_date = "2024-12-01"
 account_id = "39143dcc2da52fa6724dce616eb7bf4d"
+workers_dev = true
 
 [assets]
 directory = "static"
@@ -9,6 +10,14 @@ directory = "static"
 [[kv_namespaces]]
 binding = "KV"
 id = "6af788121c174b05aaefcd0853b7839d"
+
+[[routes]]
+pattern = "phenomenarapida.com/*"
+zone_name = "phenomenarapida.com"
+
+[[routes]]
+pattern = "www.phenomenarapida.com/*"
+zone_name = "phenomenarapida.com"
 
 [triggers]
 crons = ["*/15 * * * *"]
