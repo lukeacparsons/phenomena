@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Phenomena Experience — classic cinema in Barcelona. Browse screenings and buy tickets.">
+<title>Phenomena Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;--s1:#141417;--s2:#1e1e24;--s3:#28282f;
+  --border:#2a2a33;--tx:#ececf0;--tx2:#9898ab;--tx3:#68687a;
+  --red:#dc3545;--red-h:#ef4444;--grn:#22c55e;--gold:#e5a84b;
+  --focus:#6366f1;--radius:10px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+.skip{position:absolute;top:-100%;left:8px;background:var(--focus);color:#fff;padding:8px 16px;border-radius:0 0 6px 6px;font-weight:600;font-size:14px;z-index:999}
+.skip:focus{top:0}
+.header-wrap{position:sticky;top:0;z-index:50;background:rgba(9,9,11,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+header{max-width:1120px;margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.logo{font-weight:700;font-size:17px;letter-spacing:-.3px}
+.lang-switch{display:flex;gap:2px}
+.lang-switch button{background:var(--s2);border:1px solid var(--border);color:var(--tx2);font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;transition:all .15s}
+.lang-switch button:hover{color:var(--tx);border-color:var(--tx3)}
+.lang-switch button.active{background:var(--red);border-color:var(--red);color:#fff}
+main{max-width:1120px;margin:0 auto;padding:0 16px}
+h1{font-size:24px;font-weight:700;padding:28px 0 4px;letter-spacing:-.5px}
+.subtitle{font-size:14px;color:var(--tx2);padding-bottom:4px}
+.address{padding-bottom:20px}
+.address a{font-size:13px;color:var(--tx3);transition:color .15s}
+.address a:hover{color:var(--tx)}
+.dates{display:flex;gap:6px;padding-bottom:20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.dates::-webkit-scrollbar{display:none}
+.dates button{flex-shrink:0;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--tx2);font-size:13px;font-weight:500;transition:background .15s,border-color .15s,color .15s;min-width:64px;text-align:center;line-height:1.3}
+.dates button:hover{background:var(--s2);color:var(--tx)}
+.dates button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;padding-bottom:48px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .15s}
+.card:hover,.card:focus-within{border-color:var(--tx3)}
+.card-link{display:block;text-decoration:none;color:inherit}
+.card-img{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--s2)}
+.card-body{padding:14px}
+.card-title{font-size:15px;font-weight:600;line-height:1.35;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--tx2);margin-bottom:10px}
+.tag{display:inline-block;background:var(--s2);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500}
+.tag-fmt{color:var(--gold);background:rgba(229,168,75,.1)}
+.card-sessions{display:flex;flex-direction:column;gap:4px}
+.srow{display:grid;grid-template-columns:1fr auto auto;align-items:center;background:none;border-radius:0;padding:7px 0;font-size:13px;gap:10px}
+.srow-dt{font-weight:500}
+.srow-avail{font-size:11px;color:var(--tx2);text-align:right;white-space:nowrap;min-width:72px}
+.srow-price{min-width:32px;text-align:right;font-weight:600;color:var(--grn)}
+.srow-avail[data-status="low"]{color:var(--red);font-weight:600}
+.srow-avail[data-status="out"]{color:var(--red);font-weight:600}
+.srow[data-sold-out]{opacity:.4}
+dialog{background:var(--s1);color:var(--tx);border:1px solid var(--border);border-radius:14px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);margin:0;position:fixed;inset:0;margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
+.dlg-close{position:sticky;top:12px;float:right;margin:0 12px 0 0;background:var(--s3);border:none;color:var(--tx);width:40px;height:40px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:1}
+.dlg-close:hover{background:var(--border)}
+.dlg-head{display:flex;gap:16px;padding:20px 20px 16px;clear:both}
+.dlg-poster{width:80px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--s2)}
+.dlg-info{flex:1;min-width:0}
+.dlg-title{font-size:20px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.dlg-dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:13px;text-align:left}
+.dlg-dl dt{color:var(--tx2)}
+.dlg-synopsis-wrap{border-top:1px solid var(--border);cursor:pointer}
+.dlg-synopsis-wrap:hover .synopsis-toggle{text-decoration:underline}
+.dlg-synopsis{padding:12px 20px 12px;font-size:13px;color:var(--tx2);line-height:1.6}
+.dlg-synopsis.collapsed{max-height:6.4em;overflow:hidden;position:relative}
+.dlg-synopsis.collapsed::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2em;background:linear-gradient(transparent,var(--s1));pointer-events:none}
+.dlg-synopsis.no-fade::after{display:none!important}
+.synopsis-toggle{display:block;background:none;border:none;color:var(--gold);font-size:12px;font-weight:600;padding:4px 20px 10px;cursor:pointer;position:relative;z-index:1;clear:both}
+@media(min-width:601px){.dlg-synopsis.collapsed{max-height:none!important;overflow:visible}.dlg-synopsis.collapsed::after{display:none}.synopsis-toggle{display:none}.dlg-synopsis-wrap{cursor:default}}
+.dlg-sessions{padding:16px 20px;border-top:1px solid var(--border)}
+.dlg-sessions h3{font-size:15px;font-weight:600;margin-bottom:12px}
+.buyrow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:6px;transition:border-color .15s}
+.buyrow:focus-within{border-color:var(--focus)}
+.buyrow[data-sold-out]{opacity:.6}
+.buyrow-left{display:flex;flex-direction:column;gap:1px}
+.buyrow-date{font-weight:600;font-size:14px}
+.buyrow-sub{font-size:12px;color:var(--tx2)}
+.buyrow-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.buyrow-price{font-weight:700;font-size:17px;color:var(--grn)}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border:none;font-size:13px;font-weight:600;padding:9px 0;border-radius:8px;transition:background .15s;min-width:110px;text-align:center}
+.btn:hover{background:var(--red-h)}
+.btn:disabled{background:var(--s3);color:var(--tx3);cursor:not-allowed}
+.co-section{padding:12px 20px;border-top:1px solid var(--border)}
+.co-section h3{font-size:14px;font-weight:600;margin-bottom:10px}
+.qty{display:flex;align-items:center;gap:0;background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content}
+.qty button{background:none;border:none;color:var(--tx);width:36px;height:36px;font-size:18px}
+.qty button:hover{background:var(--s3)}
+.qty output{width:40px;text-align:center;font-weight:600;font-size:16px;background:var(--s1);padding:6px 0}
+.totals{margin-bottom:10px}
+.trow{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.trow-total{border-top:1px solid var(--border);padding-top:8px;margin-top:2px;font-weight:700;font-size:16px}
+.trow-total .amt{color:var(--grn)}
+fieldset{border:none}
+.field{margin-bottom:8px}
+.field label{display:block;font-size:11px;color:var(--tx);font-weight:500;margin-bottom:2px}
+.field input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px 14px;color:var(--tx);font-size:16px;transition:border-color .15s}
+.field input:focus{border-color:var(--focus);outline:none}
+.field input::placeholder{color:var(--tx3)}
+.btn-full{width:100%;padding:12px;font-size:15px;margin-top:10px;border-radius:var(--radius)}
+.co-note{font-size:10px;color:var(--tx3);text-align:center;margin-top:6px}
+.fields-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.empty{text-align:center;padding:48px 16px;color:var(--tx2);grid-column:1/-1}
+footer{text-align:center;padding:32px 16px;font-size:12px;color:var(--tx3);border-top:1px solid var(--border)}
+footer a{color:var(--red)}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card-img{aspect-ratio:auto;width:auto;max-height:360px;margin:16px auto 0;border-radius:8px;object-fit:contain}
+  h1{font-size:20px}
+  .dlg-head{flex-direction:row;align-items:flex-start;text-align:left}
+  .dlg-poster{width:100px;height:150px}
+  .buyrow{flex-direction:column;align-items:stretch}
+  .buyrow-right{justify-content:space-between}
+  .fields-row{grid-template-columns:1fr}
+  dialog#dlgCheckout{inset:auto 0 0 0;margin:0;width:100%;max-width:100%;height:90vh;max-height:90vh;border-radius:14px 14px 0 0;animation:sheetUp .2s ease}
+  dialog#dlgEvent{inset:auto 0 0 0;margin:0;width:100%;max-width:100%;height:90vh;max-height:90vh;border-radius:14px 14px 0 0;animation:sheetUp .2s ease}
+  .dlg-poster{width:80px;height:120px}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip" id="skipLink">Skip to content</a>
+
+<div class="header-wrap">
+<header>
+  <div class="logo">Phenomena Experience</div>
+  <nav class="lang-switch" aria-label="Language">
+    <button onclick="setLang('es')" id="lang-es">ES</button>
+    <button onclick="setLang('ca')" id="lang-ca">CA</button>
+    <button onclick="setLang('en')" id="lang-en">EN</button>
+  </nav>
+</header>
+</div>
+
+<main id="main">
+  <h1 id="heading">What's On</h1>
+  <p class="subtitle" id="subtitleEl">Classic cinema in 4K, Dolby Atmos &amp; original version</p>
+  <p class="address"><a href="https://maps.google.com/?q=Phenomena+Experience,+C/+Sant+Antoni+Maria+Claret+168,+08025+Barcelona" target="_blank" rel="noopener" id="addressLink">C/ Sant Antoni Maria Claret, 168, Eixample, 08025 Barcelona ↗</a></p>
+  <nav class="dates" role="tablist" aria-label="Filter by date" id="dates"></nav>
+  <section class="grid" id="grid" aria-live="polite" aria-label="Screenings"></section>
+</main>
+
+<dialog id="dlgEvent" aria-label="Event details"></dialog>
+<dialog id="dlgCheckout" aria-label="Buy tickets"></dialog>
+
+<footer>
+  <p id="footerEl">A faster way to book tickets. Made with ❤️ for my favourite cinema, <a href="https://phenomena-experience.com" target="_blank" rel="noopener">Phenomena Experience</a>!</p>
+</footer>
+
+<script>
+const BASE='https://phenomena-experience.com';
+
+/* === i18n === */
+const I18N={
+  en:{
+    whatsOn:"What's On",
+    subtitle:"Classic cinema in 4K, Dolby Atmos & original version",
+    all:"All",today:"Today",
+    days:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+    months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    seatsLeft:"seats left",soldOut:"Sold out",
+    sessions:"Sessions",buy:"Buy",
+    showMore:"Show more",showLess:"Show less",
+    tickets:"Tickets",serviceFee:"Service fee",total:"Total",
+    howMany:"tickets ×",
+    yourDetails:"Your details",fullName:"Full name",namePh:"Name and surname",
+    email:"Email",emailPh:"you@email.com",phone:"Phone",phonePh:"+34 600 000 000",
+    proceed:"Proceed to payment →",processing:"Processing…",
+    secureNote:"Secure payment via Redsys. You'll be redirected to complete the transaction.",
+    noScreenings:"No screenings on this date",
+    loadFail:"Failed to load",
+    fillFields:"Please fill in name and email.",
+    director:"Director",duration:"Duration",year:"Year",
+    allAges:"All ages",kids:"Kids",
+    more:"more",min:"min",
+    footer:"A faster way to book tickets. Made with ❤️ for my favourite cinema,",
+    skip:"Skip to content",
+    close:"Close",removeTicket:"Remove ticket",addTicket:"Add ticket",
+  },
+  es:{
+    whatsOn:"Cartelera",
+    subtitle:"Cine clásico en 4K, Dolby Atmos y versión original",
+    all:"Todos",today:"Hoy",
+    days:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],
+    months:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+    seatsLeft:"asientos libres",soldOut:"Agotado",
+    sessions:"Sesiones",buy:"Comprar",
+    showMore:"Ver más",showLess:"Ver menos",
+    tickets:"Entradas",serviceFee:"Gastos de gestión",total:"Total",
+    howMany:"entradas ×",
+    yourDetails:"Tus datos",fullName:"Nombre completo",namePh:"Nombre y apellidos",
+    email:"Email",emailPh:"tu@email.com",phone:"Teléfono",phonePh:"+34 600 000 000",
+    proceed:"Continuar al pago →",processing:"Procesando…",
+    secureNote:"Pago seguro a través de Redsys. Serás redirigido para completar la transacción.",
+    noScreenings:"No hay sesiones en esta fecha",
+    loadFail:"Error al cargar",
+    fillFields:"Por favor, introduce tu nombre y email.",
+    director:"Director",duration:"Duración",year:"Año",
+    allAges:"Todos los públicos",kids:"Infantil",
+    more:"más",min:"min",
+    footer:"Una forma más rápida de comprar entradas. Hecho con ❤️ para mi cine favorito,",
+    skip:"Ir al contenido",
+    close:"Cerrar",removeTicket:"Quitar entrada",addTicket:"Añadir entrada",
+  },
+  ca:{
+    whatsOn:"Cartellera",
+    subtitle:"Cinema clàssic en 4K, Dolby Atmos i versió original",
+    all:"Tots",today:"Avui",
+    days:["Dg","Dl","Dt","Dc","Dj","Dv","Ds"],
+    months:["Gen","Feb","Mar","Abr","Mai","Jun","Jul","Ago","Set","Oct","Nov","Des"],
+    seatsLeft:"seients lliures",soldOut:"Exhaurit",
+    sessions:"Sessions",buy:"Comprar",
+    showMore:"Veure més",showLess:"Veure menys",
+    tickets:"Entrades",serviceFee:"Despeses de gestió",total:"Total",
+    howMany:"entrades ×",
+    yourDetails:"Les teves dades",fullName:"Nom complet",namePh:"Nom i cognoms",
+    email:"Email",emailPh:"tu@email.com",phone:"Telèfon",phonePh:"+34 600 000 000",
+    proceed:"Continuar al pagament →",processing:"Processant…",
+    secureNote:"Pagament segur a través de Redsys. Seràs redirigit per completar la transacció.",
+    noScreenings:"No hi ha sessions en aquesta data",
+    loadFail:"Error en carregar",
+    fillFields:"Si us plau, introdueix el teu nom i email.",
+    director:"Director",duration:"Durada",year:"Any",
+    allAges:"Tots els públics",kids:"Infantil",
+    more:"més",min:"min",
+    footer:"Una forma més ràpida de comprar entrades. Fet amb ❤️ per al meu cinema preferit,",
+    skip:"Anar al contingut",
+    close:"Tancar",removeTicket:"Treure entrada",addTicket:"Afegir entrada",
+  }
+};
+
+let LANG='en';
+function T(k){return I18N[LANG]?.[k]||I18N.en[k]||k}
+
+function detectLang(){
+  const saved=localStorage.getItem('phenomena-lang');
+  if(saved&&I18N[saved])return saved;
+  const nav=(navigator.language||'').toLowerCase();
+  if(nav.startsWith('ca'))return'ca';
+  if(nav.startsWith('es'))return'es';
+  return'en';
+}
+
+function setLang(l){
+  LANG=l;
+  localStorage.setItem('phenomena-lang',l);
+  document.documentElement.lang=l;
+  document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.id==='lang-'+l));
+  document.getElementById('skipLink').textContent=T('skip');
+  document.getElementById('heading').textContent=T('whatsOn');
+  document.getElementById('subtitleEl').textContent=T('subtitle');
+  document.getElementById('footerEl').innerHTML=T('footer')+' <a href="https://phenomena-experience.com" target="_blank" rel="noopener">Phenomena Experience</a>!';
+  if(DATA){buildDates();render();}
+}
+
+let DATA,selectedDate='all';
+
+const parseD=s=>{const[d,m,y]=s.split('/');return new Date(+y,+m-1,+d)};
+const fmtDate=s=>{const d=parseD(s);return`${T('days')[d.getDay()]} ${d.getDate()} ${T('months')[d.getMonth()]}`};
+const isToday=s=>parseD(s).toDateString()===new Date().toDateString();
+
+function formats(name){
+  const f=[];
+  if(name.includes('Dolby Atmos'))f.push('Dolby Atmos');
+  else if(name.includes('Dolby 7.1'))f.push('Dolby 7.1');
+  if(name.includes('4K'))f.push('4K');
+  if(name.includes('35 mm'))f.push('35mm');
+  if(name.includes('VOSE'))f.push('VOSE');
+  return f;
+}
+
+function title(name){
+  return name.replace(/\s*\(Proyecci[óo]n en.*?\)/gi,'').replace(/\s*Proyecci[óo]n en.*$/gi,'').replace(/\s*VOSE\s*y?\s*4K\s*/gi,'').trim();
+}
+
+function avail(s){
+  if(!s.purchase_open)return{t:T('soldOut'),s:'out'};
+  const pct=s.available/s.capacity*100;
+  if(pct<=20)return{t:s.available+' '+T('seatsLeft'),s:'low'};
+  return{t:s.available+' '+T('seatsLeft'),s:'ok'};
+}
+
+function ageShort(r){
+  if(!r)return'';
+  if(r.includes('todos'))return T('allAges');
+  if(r.includes('infancia'))return T('kids');
+  const m=r.match(/(\d+)/);
+  return m?m[1]+'+':'';
+}
+
+function buildDates(){
+  const el=document.getElementById('dates');
+  const ds=new Set();
+  DATA.events.forEach(e=>e.sessions.forEach(s=>ds.add(s.date)));
+  const sorted=[...ds].sort((a,b)=>parseD(a)-parseD(b));
+  let h=`<button role="tab" aria-pressed="true" onclick="pick('all',this)">${T('all')}</button>`;
+  for(const d of sorted){
+    const dt=parseD(d);
+    const lbl=isToday(d)?T('today'):T('days')[dt.getDay()];
+    h+=`<button role="tab" aria-pressed="false" onclick="pick('${d}',this)"><div style="font-size:11px">${lbl}</div><div style="font-size:16px;font-weight:600">${dt.getDate()}</div><div style="font-size:11px">${T('months')[dt.getMonth()]}</div></button>`;
+  }
+  el.innerHTML=h;
+}
+
+function pick(date,btn){
+  selectedDate=date;
+  document.querySelectorAll('.dates button').forEach(b=>b.setAttribute('aria-pressed','false'));
+  btn.setAttribute('aria-pressed','true');
+  render();
+}
+
+function render(){
+  const g=document.getElementById('grid');
+  const now=new Date();
+  let evs=DATA.events.map(ev=>({
+    ...ev,
+    sessions:ev.sessions.filter(s=>{
+      const d=parseD(s.date);
+      // If session date is in the future, keep it
+      if(d.toDateString()!==now.toDateString())return d>now;
+      // Same day: keep if showtime hasn't passed yet (with 30min grace)
+      const [h,m]=(s.time||'0:0').split(':').map(Number);
+      const sesTime=new Date(d);sesTime.setHours(h,m+30,0);
+      return sesTime>now;
+    })
+  })).filter(ev=>ev.sessions.length>0);
+  evs.forEach(ev=>ev.sessions.sort((a,b)=>{
+    const da=parseD(a.date),db=parseD(b.date);
+    if(da-db)return da-db;
+    return a.time.localeCompare(b.time);
+  }));
+  if(selectedDate!=='all')evs=evs.filter(e=>e.sessions.some(s=>s.date===selectedDate));
+  evs=[...evs].sort((a,b)=>{
+    const ao=a.sessions.some(s=>s.purchase_open),bo=b.sessions.some(s=>s.purchase_open);
+    if(ao!==bo)return bo-ao;
+    const aSes=selectedDate!=='all'?a.sessions.find(s=>s.date===selectedDate):a.sessions[0];
+    const bSes=selectedDate!=='all'?b.sessions.find(s=>s.date===selectedDate):b.sessions[0];
+    const dCmp=parseD(aSes?.date||'01/01/2000')-parseD(bSes?.date||'01/01/2000');
+    if(dCmp)return dCmp;
+    return(aSes?.time||'').localeCompare(bSes?.time||'');
+  });
+  if(!evs.length){g.innerHTML=`<div class="empty" role="status">${T('noScreenings')}</div>`;return}
+  g.innerHTML=evs.map(ev=>{
+    const ss=selectedDate!=='all'?ev.sessions.filter(s=>s.date===selectedDate):ev.sessions;
+    const t=title(ev.name),f=formats(ev.name);
+    const poster=ev.poster_local||( ev.poster_v?BASE+ev.poster_v:'');
+    return`<article class="card">
+      <a href="#" class="card-link" onclick="event.preventDefault();openEvent('${ev.evento_id}')" aria-label="${t}">
+        ${poster?`<img class="card-img" src="${poster}" alt="" loading="lazy" width="260" height="390">`:'<div class="card-img"></div>'}
+        <div class="card-body">
+          <h2 class="card-title">${t}</h2>
+          <div class="card-meta">
+            ${ev.duration_min?`<span>${ev.duration_min} ${T('min')}</span>`:''}
+            ${ev.director?`<span>${ev.director.split(',')[0].trim()}</span>`:''}
+            ${f.map(x=>`<span class="tag tag-fmt">${x}</span>`).join('')}
+          </div>
+          <div class="card-sessions" aria-label="${T('sessions')}">${ss.slice(0,2).map(s=>{
+            const a=avail(s);
+            return`<div class="srow"${!s.purchase_open?' data-sold-out':''}>
+              <span class="srow-dt">${fmtDate(s.date)} · ${s.time}</span>
+              <span class="srow-avail" data-status="${a.s}">${a.t}</span>
+              <span class="srow-price">${ev.price_eur||'?'}€</span>
+            </div>`;
+          }).join('')}${ss.length>2?`<div style="font-size:11px;color:var(--tx3);text-align:center;padding:3px">+${ss.length-2} ${T('more')}</div>`:''}</div>
+        </div>
+      </a>
+    </article>`;
+  }).join('');
+}
+
+function openEvent(id){
+  const ev=DATA.events.find(e=>e.evento_id===id);
+  if(!ev)return;
+  const d=document.getElementById('dlgEvent');
+  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
+  const age=ageShort(ev.age_rating);
+  const sm=T('showMore'),sl=T('showLess');
+
+  d.innerHTML=`<button class="dlg-close" onclick="this.closest('dialog').close()" aria-label="${T('close')}">✕</button>
+    <div class="dlg-head">
+      ${poster?`<img class="dlg-poster" src="${poster}" alt="">`:''} 
+      <div class="dlg-info">
+        <h2 class="dlg-title">${t}</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;margin-left:-3px">
+          ${f.map(x=>`<span class="tag tag-fmt">${x}</span>`).join('')}
+          ${ev.genre?`<span class="tag">${ev.genre}</span>`:''}
+          ${age?`<span class="tag">${age}</span>`:''}
+        </div>
+        <dl class="dlg-dl">
+          ${ev.director?`<dt>${T('director')}</dt><dd>${ev.director}</dd>`:''}
+          ${ev.duration_min?`<dt>${T('duration')}</dt><dd>${ev.duration_min} ${T('min')}</dd>`:''}
+          ${ev.year?`<dt>${T('year')}</dt><dd>${ev.year}</dd>`:''}
+        </dl>
+      </div>
+    </div>
+    ${ev.synopsis?`<div class="dlg-synopsis-wrap" id="synWrap"><div class="dlg-synopsis collapsed" id="synopsisBox">${ev.synopsis}</div><button class="synopsis-toggle" id="synopsisBtn">${sm}</button></div>`:''}
+    <div class="dlg-sessions"><h3>${T('sessions')}</h3>${ev.sessions.map(s=>{
+      const a=avail(s);
+      return`<div class="buyrow"${!s.purchase_open?' data-sold-out':''}>
+        <div class="buyrow-left">
+          <div class="buyrow-date">${fmtDate(s.date)} · ${s.time}h</div>
+          <div class="buyrow-sub">${s.sala_full||'Sala 1'} · ${a.t}</div>
+        </div>
+        <div class="buyrow-right">
+          <span class="buyrow-price">${ev.price_eur||'?'}€</span>
+          <button class="btn"${!s.purchase_open?' disabled':''} onclick="this.closest('dialog').close();openCheckout('${ev.evento_id}','${s.session_id}')">${s.purchase_open?T('buy'):T('soldOut')}</button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+
+  // Synopsis toggle
+  const wrap=d.querySelector('#synWrap');
+  if(wrap){
+    wrap.addEventListener('click',()=>{
+      const box=d.querySelector('#synopsisBox'),btn=d.querySelector('#synopsisBtn');
+      if(!btn||btn.style.display==='none')return;
+      if(box.classList.contains('collapsed')){
+        box.classList.remove('collapsed');
+        box.classList.add('no-fade');
+        btn.textContent=sl;
+      } else {
+        box.classList.add('collapsed');
+        box.classList.remove('no-fade');
+        btn.textContent=sm;
+      }
+    });
+  }
+
+  lockScroll();
+  d.showModal();
+
+  // Check if synopsis needs toggle at all
+  requestAnimationFrame(()=>{
+    const box=d.querySelector('#synopsisBox'),btn=d.querySelector('#synopsisBtn');
+    if(!box||!btn)return;
+    // If the full text fits within the collapsed max-height, no need for toggle
+    if(box.scrollHeight<=box.clientHeight+4){
+      btn.style.display='none';
+      box.classList.remove('collapsed');
+      box.classList.add('no-fade');
+      if(wrap)wrap.style.cursor='default';
+    }
+  });
+
+  fetch('/api/availability?evento='+id).then(r=>r.json()).then(live=>{
+    if(!live.sessions)return;
+    d.querySelectorAll('.buyrow').forEach(row=>{
+      const btn=row.querySelector('.btn');
+      const sesId=btn?.getAttribute('onclick')?.match(/'(\d+)'/)?.[1];
+      if(!sesId||!live.sessions[sesId])return;
+      const s=live.sessions[sesId];
+      const sub=row.querySelector('.buyrow-sub');
+      if(!s.purchase_open){
+        row.setAttribute('data-sold-out','');
+        row.style.opacity='.4';
+        sub.textContent=sub.textContent.split('·')[0]+'· '+T('soldOut');
+        btn.disabled=true;btn.textContent=T('soldOut');
+      } else {
+        const pct=s.available/s.capacity*100;
+        const label=pct<=20?s.available+' '+T('seatsLeft'):s.available+' '+T('seatsLeft');
+        sub.textContent=sub.textContent.split('·')[0]+'· '+label;
+      }
+    });
+  }).catch(()=>{});
+}
+
+function openCheckout(evId,sesId){
+  const ev=DATA.events.find(e=>e.evento_id===evId);
+  const ses=ev.sessions.find(s=>s.session_id===sesId);
+  if(!ev||!ses)return;
+  const d=document.getElementById('dlgCheckout');
+  const t=title(ev.name),f=formats(ev.name);
+  const price=ev.price_eur||12,feePerTicket=0.8;
+
+  d.innerHTML=`<button class="dlg-close" onclick="this.closest('dialog').close()" aria-label="${T('close')}">✕</button>
+    <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);clear:both">
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:3px">${t}</h2>
+      <p style="font-size:13px;color:var(--tx)">${fmtDate(ses.date)} · ${ses.time}h · ${ses.sala_full||'Sala 1'}</p>
+      <div style="display:flex;gap:5px;margin-top:6px;margin-left:-3px">${f.map(x=>`<span class="tag tag-fmt">${x}</span>`).join('')}</div>
+    </div>
+    <div class="co-section">
+      <h3>${T('tickets')}</h3>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div class="qty">
+          <button type="button" aria-label="${T('removeTicket')}" onclick="chgQty(-1,${price},${feePerTicket})">−</button>
+          <output id="coQty">1</output>
+          <button type="button" aria-label="${T('addTicket')}" onclick="chgQty(1,${price},${feePerTicket})">+</button>
+        </div>
+      </div>
+      <div class="totals">
+        <div class="trow"><span>${T('tickets')}</span><span id="coSub">${(1*price).toFixed(2)}€</span></div>
+        <div class="trow"><span>${T('serviceFee')}</span><span id="coFee">${(1*feePerTicket).toFixed(2)}€</span></div>
+        <div class="trow trow-total"><span>${T('total')}</span><span class="amt" id="coTotal">${(1*price+1*feePerTicket).toFixed(2)}€</span></div>
+      </div>
+    </div>
+    <form class="co-section" onsubmit="return submitCo(event,'${sesId}')">
+      <h3>${T('yourDetails')}</h3>
+      <fieldset>
+        <div class="field"><label for="coName">${T('fullName')}</label><input id="coName" type="text" required autocomplete="name" placeholder="${T('namePh')}"></div>
+        <div class="fields-row">
+          <div class="field"><label for="coEmail">${T('email')}</label><input id="coEmail" type="email" required autocomplete="email" placeholder="${T('emailPh')}"></div>
+          <div class="field"><label for="coPhone">${T('phone')}</label><input id="coPhone" type="tel" autocomplete="tel" placeholder="${T('phonePh')}"></div>
+        </div>
+      </fieldset>
+      <button type="submit" class="btn btn-full">${T('proceed')}</button>
+      <p class="co-note">${T('secureNote')}</p>
+    </form>`;
+  lockScroll();
+  d.showModal();
+}
+
+function chgQty(delta,price,feePerTicket){
+  const o=document.getElementById('coQty');
+  let v=parseInt(o.textContent)+delta;
+  v=Math.max(1,Math.min(12,v));
+  o.textContent=v;
+  const fee=v*feePerTicket;
+  document.getElementById('coSub').textContent=(v*price).toFixed(2)+'€';
+  document.getElementById('coFee').textContent=fee.toFixed(2)+'€';
+  document.getElementById('coTotal').textContent=(v*price+fee).toFixed(2)+'€';
+}
+
+function submitCo(e,sesId){
+  e.preventDefault();
+  const name=document.getElementById('coName').value.trim();
+  const email=document.getElementById('coEmail').value.trim();
+  const phone=document.getElementById('coPhone').value.trim();
+  const qty=parseInt(document.getElementById('coQty').textContent);
+  if(!name||!email){alert(T('fillFields'));return false}
+  const btn=e.target.querySelector('.btn-full');
+  btn.disabled=true;btn.textContent=T('processing');
+  fetch('/api/checkout',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({sessionId:sesId,qty,name,email,phone})
+  }).then(r=>r.json()).then(d=>{
+    if(d.error){alert('Error: '+d.error);btn.disabled=false;btn.textContent=T('proceed');return}
+    window.location.href=d.paymentUrl;
+  }).catch(err=>{
+    alert('Network error: '+err.message);
+    btn.disabled=false;btn.textContent=T('proceed');
+  });
+  return false;
+}
+
+/* === Dialog helpers: scroll lock + keyboard handling === */
+const savedScrollY={v:0};
+
+function lockScroll(){
+  savedScrollY.v=window.scrollY;
+  document.body.style.position='fixed';
+  document.body.style.top=`-${savedScrollY.v}px`;
+  document.body.style.left='0';
+  document.body.style.right='0';
+  document.body.style.overflow='hidden';
+}
+
+function unlockScroll(){
+  document.body.style.position='';
+  document.body.style.top='';
+  document.body.style.left='';
+  document.body.style.right='';
+  document.body.style.overflow='';
+  window.scrollTo({top:savedScrollY.v,behavior:'instant'});
+}
+
+document.querySelectorAll('dialog').forEach(d=>{
+  d.addEventListener('click',e=>{if(e.target===d)d.close()});
+  d.addEventListener('close',unlockScroll);
+  d.addEventListener('cancel',unlockScroll);
+});
+
+/* Swipe-to-dismiss on bottom sheet dialogs */
+function initSwipeDismiss(dlg){
+  let startY=0,currentY=0,dragging=false;
+  const threshold=80;
+
+  dlg.addEventListener('touchstart',e=>{
+    // Only trigger from top area or if scrolled to top
+    if(dlg.scrollTop>10)return;
+    startY=e.touches[0].clientY;
+    currentY=startY;
+    dragging=true;
+    dlg.style.transition='none';
+  },{passive:true});
+
+  dlg.addEventListener('touchmove',e=>{
+    if(!dragging)return;
+    currentY=e.touches[0].clientY;
+    const dy=currentY-startY;
+    if(dy>0){
+      dlg.style.transform=`translateY(${dy}px)`;
+      dlg.style.opacity=Math.max(0.3,1-dy/400);
+    }
+  },{passive:true});
+
+  dlg.addEventListener('touchend',()=>{
+    if(!dragging)return;
+    dragging=false;
+    const dy=currentY-startY;
+    dlg.style.transition='transform .2s ease,opacity .2s ease';
+    if(dy>threshold){
+      dlg.style.transform=`translateY(100%)`;
+      dlg.style.opacity='0';
+      setTimeout(()=>{
+        dlg.close();
+        dlg.style.transform='';
+        dlg.style.opacity='';
+        dlg.style.transition='';
+      },200);
+    } else {
+      dlg.style.transform='';
+      dlg.style.opacity='';
+    }
+  },{passive:true});
+}
+
+if('ontouchstart' in window){
+  initSwipeDismiss(document.getElementById('dlgEvent'));
+  initSwipeDismiss(document.getElementById('dlgCheckout'));
+}
+
+/* Handle mobile keyboard resizing — scroll focused input into view */
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',()=>{
+    const el=document.activeElement;
+    if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA')){
+      requestAnimationFrame(()=>{
+        el.scrollIntoView({block:'center',behavior:'smooth'});
+      });
+    }
+  });
+}
+
+/* Init */
+LANG=detectLang();
+setLang(LANG);
+fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;buildDates();render()}).catch(err=>{
+  document.getElementById('grid').innerHTML=`<div class="empty" role="alert">${T('loadFail')}: ${err.message}</div>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+name = "phenomena"
+main = "src/worker.js"
+compatibility_date = "2024-12-01"
+
+[assets]
+directory = "static"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "TO_BE_CREATED"
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[vars]
+SITE_HOST = "phenomena-experience.com"
+TELEGRAM_CHAT_ID = "-1003773662180"
+TELEGRAM_TOPIC_ID = "13331"
