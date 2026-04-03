@@ -61,7 +61,7 @@ h1{font-size:24px;font-weight:700;padding:28px 0 4px;letter-spacing:-.5px}
 .srow-avail[data-status="low"]{color:var(--red);font-weight:600}
 .srow-avail[data-status="out"]{color:var(--red);font-weight:600}
 .srow[data-sold-out]{opacity:.4}
-dialog{background:var(--s1);color:var(--tx);border:1px solid var(--border);border-radius:14px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);margin:0;position:fixed;inset:0;margin:auto}
+dialog{background:var(--s1);color:var(--tx);border:1px solid var(--border);border-radius:14px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);margin:0;position:fixed;inset:0;margin:auto;touch-action:manipulation}
 dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .dlg-close{position:sticky;top:12px;float:right;margin:0 12px 0 0;background:var(--s3);border:none;color:var(--tx);width:40px;height:40px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:1}
 .dlg-close:hover{background:var(--border)}
@@ -89,13 +89,13 @@ dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .buyrow-sub{font-size:12px;color:var(--tx2)}
 .buyrow-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .buyrow-price{font-weight:700;font-size:17px;color:var(--grn)}
-.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border:none;font-size:13px;font-weight:600;padding:9px 0;border-radius:8px;transition:background .15s;min-width:110px;text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border:none;font-size:13px;font-weight:600;padding:9px 0;border-radius:8px;transition:background .15s;min-width:110px;text-align:center;touch-action:manipulation}
 .btn:hover{background:var(--red-h)}
 .btn:disabled{background:var(--s3);color:var(--tx3);cursor:not-allowed}
 .co-section{padding:12px 20px;border-top:1px solid var(--border)}
 .co-section h3{font-size:14px;font-weight:600;margin-bottom:10px}
 .qty{display:flex;align-items:center;gap:0;background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content}
-.qty button{background:none;border:none;color:var(--tx);width:36px;height:36px;font-size:18px}
+.qty button{background:none;border:none;color:var(--tx);width:36px;height:36px;font-size:18px;touch-action:manipulation}
 .qty button:hover{background:var(--s3)}
 .qty output{width:40px;text-align:center;font-weight:600;font-size:16px;background:var(--s1);padding:6px 0}
 .totals{margin-bottom:10px}

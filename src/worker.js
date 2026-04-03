@@ -445,6 +445,10 @@ export default {
     if (url.pathname === '/api/logs') {
       return handleLogs(env);
     }
+    if (url.pathname === '/api/refresh') {
+      const log = await refreshData(env);
+      return jsonResponse({ triggered: true, log });
+    }
 
     // Serve data.json from KV if available (fresher than static)
     if (url.pathname === '/data.json') {
