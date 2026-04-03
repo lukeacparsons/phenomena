@@ -430,12 +430,16 @@ async function refreshData(env) {
     log.sessions = totalSessions;
 
     // Send Telegram notification for important changes
-    if (log.changes.length > 0 && env.TELEGRAM_BOT_TOKEN) {
-      const importantChanges = log.changes.filter(c => c.startsWith('🎬') || c.startsWith('🔴'));
-      if (importantChanges.length > 0) {
-        const msg = `📽️ *Phenomena Update*\n\n${importantChanges.join('\n')}`;
+    // Send Telegram notifications for important changes
+    const importantChanges = (log.changes || []).filter(c => c.startsWith('🎬') || c.startsWith('🔴'));
+    if (importantChanges.length > 0) {
+      const hasToken = !!env.TELEGRAM_BOT_TOKEN;
+      log.telegram = { hasToken, attempted: false };
+      if (hasToken) {
+        const msg = `📽️ *Phenomena Rápida*\n\n${importantChanges.join('\n')}`;
         try {
-          await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          log.telegram.attempted = true;
+          const tgResp = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -445,7 +449,11 @@ async function refreshData(env) {
               parse_mode: 'Markdown',
             }),
           });
+          const tgResult = await tgResp.json();
+          log.telegram.ok = tgResult.ok;
+          if (!tgResult.ok) log.telegram.error = tgResult.description;
         } catch (e) {
+          log.telegram.error = e.message;
           log.changes.push(`⚠️ Telegram notify failed: ${e.message}`);
         }
       }
