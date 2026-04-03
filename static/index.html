@@ -356,10 +356,11 @@ function render(){
   g.innerHTML=evs.map(ev=>{
     const ss=selectedDate!=='all'?ev.sessions.filter(s=>s.date===selectedDate):ev.sessions;
     const t=title(ev.name),f=formats(ev.name);
-    const poster=ev.poster_local||( ev.poster_v?BASE+ev.poster_v:'');
+    const poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:'');
+    const posterFallback=ev.poster_proxy||(ev.poster_v?BASE+ev.poster_v:'');
     return`<article class="card">
       <a href="#" class="card-link" onclick="event.preventDefault();openEvent('${ev.evento_id}')" aria-label="${t}">
-        ${poster?`<img class="card-img" src="${poster}" alt="" loading="lazy" width="260" height="390">`:'<div class="card-img"></div>'}
+        ${poster?`<img class="card-img" src="${poster}" alt="" loading="lazy" width="260" height="390" onerror="if(this.src!=='${posterFallback}')this.src='${posterFallback}'">`:'<div class="card-img"></div>'}
         <div class="card-body">
           <h2 class="card-title">${t}</h2>
           <div class="card-meta">
@@ -385,7 +386,7 @@ function openEvent(id){
   const ev=DATA.events.find(e=>e.evento_id===id);
   if(!ev)return;
   const d=document.getElementById('dlgEvent');
-  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
+  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:'');
   const age=ageShort(ev.age_rating);
   const sm=T('showMore'),sl=T('showLess');
 

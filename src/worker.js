@@ -93,6 +93,72 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+// ─── /img/proxy ───
+
+async function handleImageProxy(request, env) {
+  const url = new URL(request.url);
+  const imgPath = url.searchParams.get('path');
+  if (!imgPath || !imgPath.startsWith('/')) {
+    return new Response('Missing path', { status: 400 });
+  }
+
+  // Check KV cache first
+  const cacheKey = `img:${imgPath}`;
+  const cached = await env.KV.get(cacheKey, 'arrayBuffer');
+  if (cached) {
+    return new Response(cached, {
+      headers: {
+        'Content-Type': 'image/webp',
+        'Cache-Control': 'public, max-age=604800, immutable',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+
+  // Fetch from origin
+  const originUrl = `https://${SITE}${imgPath}`;
+  const resp = await fetch(originUrl, {
+    headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'image/*' },
+    cf: {
+      image: {
+        width: 400,
+        quality: 75,
+        format: 'webp',
+        fit: 'scale-down',
+      },
+    },
+  });
+
+  if (!resp.ok) {
+    // Fallback: return the original without resizing
+    const fallback = await fetch(originUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'image/*' },
+    });
+    if (!fallback.ok) return new Response('Image not found', { status: 404 });
+    const buf = await fallback.arrayBuffer();
+    // Cache in KV for 7 days (even unoptimised, avoids re-fetching)
+    await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
+    return new Response(buf, {
+      headers: {
+        'Content-Type': fallback.headers.get('content-type') || 'image/jpeg',
+        'Cache-Control': 'public, max-age=604800',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+
+  const buf = await resp.arrayBuffer();
+  // Cache optimised image in KV for 7 days
+  await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
+  return new Response(buf, {
+    headers: {
+      'Content-Type': 'image/webp',
+      'Cache-Control': 'public, max-age=604800, immutable',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
+
 // ─── /api/checkout ───
 
 async function handleCheckout(request) {
@@ -302,10 +368,11 @@ async function refreshData(env) {
                 });
               }
             }
-            // Also add poster_local if we have it in static
+            // Set poster_local: use static WebP if it exists, otherwise proxy
             if (ev.poster_v) {
               const fname = ev.poster_v.split('/').pop().replace('.jpg', '.webp').replace('.png', '.webp');
               ev.poster_local = `img/${fname}`;
+              ev.poster_proxy = `/img/proxy?path=${encodeURIComponent(ev.poster_v)}`;
             }
             break;
           }
@@ -448,6 +515,9 @@ export default {
     if (url.pathname === '/api/refresh') {
       const log = await refreshData(env);
       return jsonResponse({ triggered: true, log });
+    }
+    if (url.pathname.startsWith('/img/proxy')) {
+      return handleImageProxy(request, env);
     }
 
     // Serve data.json from KV if available (fresher than static)
