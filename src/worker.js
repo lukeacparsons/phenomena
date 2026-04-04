@@ -369,16 +369,46 @@ async function refreshData(env) {
       }
     }
 
-    // Scrape individual fichas for metadata
-    const eventoIds = [...new Set(Object.values(events).map(e => e.evento_id))];
-    for (const eid of eventoIds) {
+    // For existing events: reuse cached metadata. Only fetch fichas for NEW events.
+    const prevEvMap = {};
+    for (const pe of prevData.events || []) prevEvMap[pe.evento_id] = pe;
+
+    const newEventIds = [];
+    for (const ev of Object.values(events)) {
+      const cached = prevEvMap[ev.evento_id];
+      if (cached && cached.director) {
+        // Reuse cached metadata
+        ev.year = cached.year;
+        ev.duration_min = cached.duration_min;
+        ev.director = cached.director;
+        ev.cast = cached.cast;
+        ev.genre = cached.genre;
+        ev.age_rating = cached.age_rating;
+        ev.price_eur = cached.price_eur;
+        ev.poster_local = cached.poster_local;
+        ev.poster_proxy = cached.poster_proxy;
+      } else {
+        newEventIds.push(ev.evento_id);
+      }
+      // Set poster paths
+      if (ev.poster_v && !ev.poster_local) {
+        const fname = ev.poster_v.split('/').pop().replace('.jpg', '.webp').replace('.png', '.webp');
+        ev.poster_local = `img/${fname}`;
+        ev.poster_proxy = `/img/proxy?path=${encodeURIComponent(ev.poster_v)}`;
+      }
+    }
+
+    // Only fetch fichas for genuinely new events
+    if (newEventIds.length > 0) {
+      log.changes.push(`ℹ️ Fetching metadata for ${newEventIds.length} new event(s)`);
+    }
+    for (const eid of newEventIds) {
       try {
         const { text: fhtml } = await siteRequest('GET', `/index?pag=ficha&evento=${eid}`);
 
         const year = fhtml.match(/<b>Año:\s*<\/b>(\d{4})/)?.[1] || '';
         const dur = fhtml.match(/<b>Duración:\s*<\/b>\s*(\d+)/)?.[1];
         const dir = fhtml.match(/<b>Director:\s*<\/b>\s*([^<]+)/)?.[1]?.trim() || '';
-        const cast = fhtml.match(/<b>Reparto:\s*<\/b>\s*([^<]+)/)?.[1]?.trim() || '';
         const genre = fhtml.match(/<b>Género:\s*<\/b>\s*([^<]+)/)?.[1]?.trim() || '';
         const rating = fhtml.match(/class="(?:info-calif|no-borrar)"[^>]*>\s*([^<]+)/)?.[1]?.trim() || '';
         const prices = [...fhtml.matchAll(/class="precio"[^>]*>\s*(\d+)€/g)].map(m => parseInt(m[1]));
@@ -388,7 +418,6 @@ async function refreshData(env) {
             ev.year = year;
             ev.duration_min = dur ? parseInt(dur) : null;
             ev.director = dir;
-            ev.cast = cast;
             ev.genre = genre;
             ev.age_rating = rating;
             if (prices.length) ev.price_eur = prices[0];
@@ -406,14 +435,11 @@ async function refreshData(env) {
                   capacity: fsd.Aforo || 0, available: fsd.Disponibles || 0,
                   purchase_open: fsd.CompraAbierta === 1,
                   closed_reason: fsd.RazonCompraCerradaTexto || '',
-                  numbered_seats: fsd.Numerada === 1,
-                  single_price: fsd.PrecioUnico === 1,
                   format: fsd.Formato || '',
                   event_name: fsd.NombreEvento || '',
                 });
               }
             }
-            // Set poster_local: use static WebP if it exists, otherwise proxy
             if (ev.poster_v) {
               const fname = ev.poster_v.split('/').pop().replace('.jpg', '.webp').replace('.png', '.webp');
               ev.poster_local = `img/${fname}`;
