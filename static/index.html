@@ -65,7 +65,7 @@ h1{font-size:24px;font-weight:700;padding:28px 0 4px;letter-spacing:-.5px}
 .srow-price{min-width:32px;text-align:right;font-weight:600;color:var(--grn)}
 .srow-avail[data-status="low"]{color:var(--red);font-weight:600}
 .srow-avail[data-status="out"]{color:var(--red);font-weight:600}
-.srow[data-sold-out]{opacity:.4}
+
 dialog{background:var(--s1);color:var(--tx);border:1px solid var(--border);border-radius:14px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);margin:0;position:fixed;inset:0;margin:auto;touch-action:manipulation}
 dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .dlg-close{position:sticky;top:12px;float:right;margin:0 12px 0 0;background:var(--s3);border:none;color:var(--tx);width:40px;height:40px;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:1}
@@ -88,7 +88,7 @@ dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .dlg-sessions h3{font-size:15px;font-weight:600;margin-bottom:12px}
 .buyrow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:6px;transition:border-color .15s}
 .buyrow:focus-within{border-color:var(--focus)}
-.buyrow[data-sold-out]{opacity:.6}
+
 .buyrow-left{display:flex;flex-direction:column;gap:1px}
 .buyrow-date{font-weight:600;font-size:14px}
 .buyrow-sub{font-size:12px;color:var(--tx2)}
@@ -473,26 +473,7 @@ function openEvent(id){
     }
   });
 
-  fetch('/api/availability?evento='+id).then(r=>r.json()).then(live=>{
-    if(!live.sessions)return;
-    d.querySelectorAll('.buyrow').forEach(row=>{
-      const btn=row.querySelector('.btn');
-      const sesId=btn?.getAttribute('data-ses');
-      if(!sesId||!live.sessions[sesId])return;
-      const s=live.sessions[sesId];
-      const sub=row.querySelector('.buyrow-sub');
-      if(!s.purchase_open){
-        row.setAttribute('data-sold-out','');
-        row.style.opacity='.4';
-        sub.textContent=sub.textContent.split('·')[0]+'· '+T('soldOut');
-        btn.disabled=true;btn.textContent=T('soldOut');
-      } else {
-        const pct=s.available/s.capacity*100;
-        const label=pct<=20?s.available+' '+T('seatsLeft'):s.available+' '+T('seatsLeft');
-        sub.textContent=sub.textContent.split('·')[0]+'· '+label;
-      }
-    });
-  }).catch(()=>{});
+
 }
 
 function openCheckout(evId,sesId){
