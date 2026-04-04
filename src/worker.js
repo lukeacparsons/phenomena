@@ -602,7 +602,7 @@ export default {
       return handleImageProxy(request, env);
     }
 
-    // Serve data.json from KV if available (fresher than static)
+    // Everything else → static assets, EXCEPT data.json which comes from KV
     if (url.pathname === '/data.json') {
       const kvData = await env.KV.get('data');
       if (kvData) {
@@ -614,10 +614,8 @@ export default {
           },
         });
       }
-      // Fall through to static asset
     }
 
-    // Everything else → static assets (handled by [assets] in wrangler.toml)
     return env.ASSETS.fetch(request);
   },
 
