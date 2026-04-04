@@ -65,6 +65,7 @@ h1{font-size:24px;font-weight:700;padding:28px 0 4px;letter-spacing:-.5px}
 .srow-price{min-width:32px;text-align:right;font-weight:600;color:var(--grn)}
 .srow-avail[data-status="low"]{color:var(--red);font-weight:600}
 .srow-avail[data-status="out"]{color:var(--red);font-weight:600}
+.srow[data-sold-out]{opacity:.4}
 
 dialog{background:var(--s1);color:var(--tx);border:1px solid var(--border);border-radius:14px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);margin:0;position:fixed;inset:0;margin:auto;touch-action:manipulation}
 dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
@@ -88,6 +89,7 @@ dialog::backdrop{background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .dlg-sessions h3{font-size:15px;font-weight:600;margin-bottom:12px}
 .buyrow{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:6px;transition:border-color .15s}
 .buyrow:focus-within{border-color:var(--focus)}
+.buyrow[data-sold-out]{opacity:.6}
 
 .buyrow-left{display:flex;flex-direction:column;gap:1px}
 .buyrow-date{font-weight:600;font-size:14px}
@@ -378,9 +380,9 @@ function render(){
           </div>
           <div class="card-sessions" aria-label="${T('sessions')}">${ss.slice(0,2).map(s=>{
             const a=avail(s);
-            return`<div class="srow" data-sid="${s.session_id}">
+            return`<div class="srow" data-sid="${s.session_id}"${!s.purchase_open?' data-sold-out':''}>
               <span class="srow-dt">${fmtDate(s.date)} · ${s.time}</span>
-              <span class="srow-avail" data-status=""></span>
+              <span class="srow-avail" data-status="${a.s}">${a.t}</span>
               <span class="srow-price">${ev.price_eur||'?'}€</span>
             </div>`;
           }).join('')}${ss.length>2?`<div style="font-size:11px;color:var(--tx3);text-align:center;padding:3px">+${ss.length-2} ${T('more')}</div>`:''}</div>
@@ -647,32 +649,26 @@ if(window.visualViewport){
 /* Init */
 LANG=detectLang();
 setLang(LANG);
-fetch('data.json').then(r=>r.json()).then(d=>{
+// Fetch cached data + live availability in parallel, merge, render once
+Promise.all([
+  fetch('data.json').then(r=>r.json()),
+  fetch('/api/availability-all').then(r=>r.json()).catch(()=>null)
+]).then(([d,live])=>{
+  // Merge live availability into data before first render
+  if(live?.events){
+    for(const[eid,sessions]of Object.entries(live.events)){
+      const ev=d.events.find(e=>e.evento_id===eid);
+      if(!ev)continue;
+      ev.sessions.forEach(s=>{
+        const l=sessions[s.session_id];
+        if(!l)return;
+        s.available=l.available;
+        s.purchase_open=l.purchase_open;
+        s.closed_reason=l.closed_reason||'';
+      });
+    }
+  }
   DATA=d;buildDates();render();
-  // Fetch live availability and patch text only (never modify DATA or re-render)
-  fetch('/api/availability-all').then(r=>r.json()).then(live=>{
-    if(!live?.events)return;
-    document.querySelectorAll('.srow[data-sid]').forEach(row=>{
-      const sid=row.getAttribute('data-sid');
-      // Find live data for this session
-      let liveS=null;
-      for(const[eid,sessions]of Object.entries(live.events)){
-        if(sessions[sid]){liveS=sessions[sid];break;}
-      }
-      if(!liveS)return;
-      const avEl=row.querySelector('.srow-avail');
-      if(!avEl)return;
-      if(!liveS.purchase_open){
-        avEl.textContent=T('soldOut');
-        avEl.setAttribute('data-status','out');
-        row.setAttribute('data-sold-out','');
-      } else {
-        const pct=liveS.available/liveS.capacity*100;
-        avEl.textContent=liveS.available+' '+T('seatsLeft');
-        avEl.setAttribute('data-status',pct<=20?'low':'ok');
-      }
-    });
-  }).catch(()=>{});
 }).catch(err=>{
   document.getElementById('grid').innerHTML=`<div class="empty" role="alert">${T('loadFail')}: ${err.message}</div>`;
 });
