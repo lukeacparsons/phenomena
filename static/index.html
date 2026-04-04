@@ -669,32 +669,28 @@ LANG=detectLang();
 setLang(LANG);
 fetch('data.json').then(r=>r.json()).then(d=>{
   DATA=d;buildDates();render();
-  // Fetch live availability and patch cards in-place (no re-render)
+  // Fetch live availability and patch text only (never modify DATA or re-render)
   fetch('/api/availability-all').then(r=>r.json()).then(live=>{
     if(!live?.events)return;
-    for(const[eid,sessions]of Object.entries(live.events)){
-      const ev=DATA.events.find(e=>e.evento_id===eid);
-      if(!ev)continue;
-      ev.sessions.forEach(s=>{
-        const l=sessions[s.session_id];
-        if(!l)return;
-        s.available=l.available;
-        s.purchase_open=l.purchase_open;
-        s.closed_reason=l.closed_reason||'';
-      });
-    }
-    // Patch DOM in-place using session IDs
     document.querySelectorAll('.srow[data-sid]').forEach(row=>{
       const sid=row.getAttribute('data-sid');
-      // Find this session in DATA
-      let ses=null;
-      for(const ev of DATA.events){ses=ev.sessions.find(s=>s.session_id===sid);if(ses)break;}
-      if(!ses)return;
-      const a=avail(ses);
+      // Find live data for this session
+      let liveS=null;
+      for(const[eid,sessions]of Object.entries(live.events)){
+        if(sessions[sid]){liveS=sessions[sid];break;}
+      }
+      if(!liveS)return;
       const avEl=row.querySelector('.srow-avail');
-      if(avEl){avEl.textContent=a.t;avEl.setAttribute('data-status',a.s);}
-      if(!ses.purchase_open)row.setAttribute('data-sold-out','');
-      else row.removeAttribute('data-sold-out');
+      if(!avEl)return;
+      if(!liveS.purchase_open){
+        avEl.textContent=T('soldOut');
+        avEl.setAttribute('data-status','out');
+        row.setAttribute('data-sold-out','');
+      } else {
+        const pct=liveS.available/liveS.capacity*100;
+        avEl.textContent=liveS.available+' '+T('seatsLeft');
+        avEl.setAttribute('data-status',pct<=20?'low':'ok');
+      }
     });
   }).catch(()=>{});
 }).catch(err=>{
