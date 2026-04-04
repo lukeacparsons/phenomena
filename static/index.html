@@ -308,8 +308,12 @@ function ageShort(r){
 
 function buildDates(){
   const el=document.getElementById('dates');
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const ds=new Set();
-  DATA.events.forEach(e=>e.sessions.forEach(s=>ds.add(s.date)));
+  DATA.events.forEach(e=>e.sessions.forEach(s=>{
+    if(parseD(s.date)>=today)ds.add(s.date);
+  }));
   const sorted=[...ds].sort((a,b)=>parseD(a)-parseD(b));
   let h=`<button role="tab" aria-pressed="true" onclick="pick('all',this)">${T('all')}</button>`;
   for(const d of sorted){
