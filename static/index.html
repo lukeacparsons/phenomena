@@ -432,7 +432,7 @@ function openEvent(id){
       return`<div class="buyrow"${!s.purchase_open?' data-sold-out':''}>
         <div class="buyrow-left">
           <div class="buyrow-date">${fmtDate(s.date)} · ${s.time}h</div>
-          <div class="buyrow-sub">${s.sala_full||'Sala 1'} · ${a.t}</div>
+          <div class="buyrow-sub">${s.sala_full||'Sala 1'} · <span style="${!s.purchase_open?'color:var(--red);font-weight:600':''}">${a.t}</span></div>
         </div>
         <div class="buyrow-right">
           <span class="buyrow-price">${ev.price_eur||'?'}€</span>
