@@ -20,7 +20,7 @@ pattern = "www.phenomenarapida.com/*"
 zone_name = "phenomenarapida.com"
 
 [triggers]
-crons = ["0 7 * * *", "0 19 * * *"]
+crons = ["0,30 6-20 * * *"]
 
 [vars]
 SITE_HOST = "phenomena-experience.com"

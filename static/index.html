@@ -649,25 +649,7 @@ if(window.visualViewport){
 /* Init */
 LANG=detectLang();
 setLang(LANG);
-// Fetch cached data + live availability in parallel, merge, render once
-Promise.all([
-  fetch('data.json').then(r=>r.json()),
-  fetch('/api/availability-all').then(r=>r.json()).catch(()=>null)
-]).then(([d,live])=>{
-  // Merge live availability into data before first render
-  if(live?.events){
-    for(const[eid,sessions]of Object.entries(live.events)){
-      const ev=d.events.find(e=>e.evento_id===eid);
-      if(!ev)continue;
-      ev.sessions.forEach(s=>{
-        const l=sessions[s.session_id];
-        if(!l)return;
-        s.available=l.available;
-        s.purchase_open=l.purchase_open;
-        s.closed_reason=l.closed_reason||'';
-      });
-    }
-  }
+fetch('data.json').then(r=>r.json()).then(d=>{
   DATA=d;buildDates();render();
 }).catch(err=>{
   document.getElementById('grid').innerHTML=`<div class="empty" role="alert">${T('loadFail')}: ${err.message}</div>`;
