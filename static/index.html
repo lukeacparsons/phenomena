@@ -379,7 +379,7 @@ function render(){
           </div>
           <div class="card-sessions" aria-label="${T('sessions')}">${ss.slice(0,2).map(s=>{
             const a=avail(s);
-            return`<div class="srow"${!s.purchase_open?' data-sold-out':''}>
+            return`<div class="srow" data-sid="${s.session_id}"${!s.purchase_open?' data-sold-out':''}>
               <span class="srow-dt">${fmtDate(s.date)} · ${s.time}</span>
               <span class="srow-avail" data-status="${a.s}">${a.t}</span>
               <span class="srow-price">${ev.price_eur||'?'}€</span>
@@ -669,25 +669,33 @@ LANG=detectLang();
 setLang(LANG);
 fetch('data.json').then(r=>r.json()).then(d=>{
   DATA=d;buildDates();render();
-  // Fetch live availability for all events in one call
+  // Fetch live availability and patch cards in-place (no re-render)
   fetch('/api/availability-all').then(r=>r.json()).then(live=>{
     if(!live?.events)return;
-    let changed=false;
     for(const[eid,sessions]of Object.entries(live.events)){
       const ev=DATA.events.find(e=>e.evento_id===eid);
       if(!ev)continue;
       ev.sessions.forEach(s=>{
         const l=sessions[s.session_id];
         if(!l)return;
-        if(s.available!==l.available||s.purchase_open!==l.purchase_open){
-          s.available=l.available;
-          s.purchase_open=l.purchase_open;
-          s.closed_reason=l.closed_reason||'';
-          changed=true;
-        }
+        s.available=l.available;
+        s.purchase_open=l.purchase_open;
+        s.closed_reason=l.closed_reason||'';
       });
     }
-    if(changed)render();
+    // Patch DOM in-place using session IDs
+    document.querySelectorAll('.srow[data-sid]').forEach(row=>{
+      const sid=row.getAttribute('data-sid');
+      // Find this session in DATA
+      let ses=null;
+      for(const ev of DATA.events){ses=ev.sessions.find(s=>s.session_id===sid);if(ses)break;}
+      if(!ses)return;
+      const a=avail(ses);
+      const avEl=row.querySelector('.srow-avail');
+      if(avEl){avEl.textContent=a.t;avEl.setAttribute('data-status',a.s);}
+      if(!ses.purchase_open)row.setAttribute('data-sold-out','');
+      else row.removeAttribute('data-sold-out');
+    });
   }).catch(()=>{});
 }).catch(err=>{
   document.getElementById('grid').innerHTML=`<div class="empty" role="alert">${T('loadFail')}: ${err.message}</div>`;
