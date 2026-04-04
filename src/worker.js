@@ -159,6 +159,51 @@ async function handleImageProxy(request, env) {
   });
 }
 
+// ─── /api/availability-all ───
+
+async function handleAvailabilityAll(request) {
+  try {
+    // Scrape the cartelera page which has all session data inline
+    const { text } = await siteRequest('GET', '/index?pag=cartelera');
+    const raw = extractJson(text, 's');
+    
+    // Group by event name, but we need evento IDs. Get fichas too.
+    const fichas = extractJson(text, 'f');
+    const eventoMap = {}; // session_id → evento_id
+    for (const [fid, fd] of Object.entries(fichas)) {
+      if (fd.evento && String(fd.evento) !== '0') {
+        eventoMap[fid] = String(fd.evento);
+      }
+    }
+    
+    const events = {};
+    for (const [k, v] of Object.entries(raw)) {
+      const sesId = String(v.Id);
+      // Find which evento this session belongs to by matching event name
+      let eventoId = null;
+      for (const [fid, fd] of Object.entries(fichas)) {
+        if (fd.nombre === v.NombreEvento && fd.evento && String(fd.evento) !== '0') {
+          eventoId = String(fd.evento);
+          break;
+        }
+      }
+      if (!eventoId) continue;
+      
+      if (!events[eventoId]) events[eventoId] = {};
+      events[eventoId][sesId] = {
+        available: v.Disponibles || 0,
+        capacity: v.Aforo || 0,
+        purchase_open: v.CompraAbierta === 1,
+        closed_reason: v.RazonCompraCerradaTexto || '',
+      };
+    }
+    
+    return jsonResponse({ events });
+  } catch (e) {
+    return jsonResponse({ error: e.message }, 500);
+  }
+}
+
 // ─── /api/checkout ───
 
 async function handleCheckout(request) {
@@ -510,6 +555,9 @@ export default {
     // API routes
     if (url.pathname === '/api/checkout' && request.method === 'POST') {
       return handleCheckout(request);
+    }
+    if (url.pathname === '/api/availability-all') {
+      return handleAvailabilityAll(request);
     }
     if (url.pathname.startsWith('/api/availability')) {
       return handleAvailability(request);
