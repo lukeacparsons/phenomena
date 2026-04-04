@@ -378,9 +378,9 @@ function render(){
           </div>
           <div class="card-sessions" aria-label="${T('sessions')}">${ss.slice(0,2).map(s=>{
             const a=avail(s);
-            return`<div class="srow" data-sid="${s.session_id}"${!s.purchase_open?' data-sold-out':''}>
+            return`<div class="srow" data-sid="${s.session_id}">
               <span class="srow-dt">${fmtDate(s.date)} · ${s.time}</span>
-              <span class="srow-avail" data-status="${a.s}">${a.t}</span>
+              <span class="srow-avail" data-status=""></span>
               <span class="srow-price">${ev.price_eur||'?'}€</span>
             </div>`;
           }).join('')}${ss.length>2?`<div style="font-size:11px;color:var(--tx3);text-align:center;padding:3px">+${ss.length-2} ${T('more')}</div>`:''}</div>
