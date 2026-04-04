@@ -435,7 +435,7 @@ function openEvent(id){
         </div>
         <div class="buyrow-right">
           <span class="buyrow-price">${ev.price_eur||'?'}€</span>
-          <button class="btn"${!s.purchase_open?' disabled':''} onclick="this.closest('dialog').close();openCheckout('${ev.evento_id}','${s.session_id}')">${s.purchase_open?T('buy'):T('soldOut')}</button>
+          <button class="btn" data-ses="${s.session_id}"${!s.purchase_open?' disabled':''} onclick="this.closest('dialog').close();openCheckout('${ev.evento_id}','${s.session_id}')">${s.purchase_open?T('buy'):T('soldOut')}</button>
         </div>
       </div>`;
     }).join('')}</div>`;
@@ -478,7 +478,7 @@ function openEvent(id){
     if(!live.sessions)return;
     d.querySelectorAll('.buyrow').forEach(row=>{
       const btn=row.querySelector('.btn');
-      const sesId=btn?.getAttribute('onclick')?.match(/'(\d+)'/)?.[1];
+      const sesId=btn?.getAttribute('data-ses');
       if(!sesId||!live.sessions[sesId])return;
       const s=live.sessions[sesId];
       const sub=row.querySelector('.buyrow-sub');
