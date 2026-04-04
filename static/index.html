@@ -396,6 +396,15 @@ function openEvent(id){
   if(!ev)return;
   const d=document.getElementById('dlgEvent');
   const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:'');
+  // Filter out past sessions
+  const now=new Date();
+  const futureSessions=ev.sessions.filter(s=>{
+    const sd=parseD(s.date);
+    if(sd.toDateString()!==now.toDateString())return sd>now;
+    const [h,m]=(s.time||'0:0').split(':').map(Number);
+    const sesTime=new Date(sd);sesTime.setHours(h,m+30,0);
+    return sesTime>now;
+  });
   const age=ageShort(ev.age_rating);
   const sm=T('showMore'),sl=T('showLess');
 
@@ -417,7 +426,7 @@ function openEvent(id){
       </div>
     </div>
     ${ev.synopsis?`<div class="dlg-synopsis-wrap" id="synWrap"><div class="dlg-synopsis collapsed" id="synopsisBox">${ev.synopsis}</div><button class="synopsis-toggle" id="synopsisBtn">${sm}</button></div>`:''}
-    <div class="dlg-sessions"><h3>${T('sessions')}</h3>${ev.sessions.map(s=>{
+    <div class="dlg-sessions"><h3>${T('sessions')}</h3>${futureSessions.map(s=>{
       const a=avail(s);
       return`<div class="buyrow"${!s.purchase_open?' data-sold-out':''}>
         <div class="buyrow-left">
