@@ -353,8 +353,7 @@ function render(){
   }));
   if(selectedDate!=='all')evs=evs.filter(e=>e.sessions.some(s=>s.date===selectedDate));
   evs=[...evs].sort((a,b)=>{
-    const ao=a.sessions.some(s=>s.purchase_open),bo=b.sessions.some(s=>s.purchase_open);
-    if(ao!==bo)return bo-ao;
+
     const aSes=selectedDate!=='all'?a.sessions.find(s=>s.date===selectedDate):a.sessions[0];
     const bSes=selectedDate!=='all'?b.sessions.find(s=>s.date===selectedDate):b.sessions[0];
     const dCmp=parseD(aSes?.date||'01/01/2000')-parseD(bSes?.date||'01/01/2000');
