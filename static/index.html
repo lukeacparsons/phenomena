@@ -169,6 +169,9 @@ footer a{color:var(--red)}
 
 <script>
 const BASE='https://phenomena-experience.com';
+const API_BASE='https://phenomena.luke-391.workers.dev';
+const apiUrl=(path='')=>`${API_BASE}${path.startsWith('/')?'':'/'}${path}`;
+const assetUrl=(path='')=>path&&path.startsWith('/')?apiUrl(path):path;
 
 /* === i18n === */
 const I18N={
@@ -366,7 +369,7 @@ function render(){
   g.innerHTML=evs.map(ev=>{
     const ss=selectedDate!=='all'?ev.sessions.filter(s=>s.date===selectedDate):ev.sessions;
     const t=title(ev.name),f=formats(ev.name);
-    const poster=ev.poster_proxy||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
+    const poster=assetUrl(ev.poster_proxy)||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
     const posterFallback=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
     return`<article class="card">
       <a href="#" class="card-link" onclick="event.preventDefault();openEvent('${ev.evento_id}')" aria-label="${t}">
@@ -396,7 +399,7 @@ function openEvent(id){
   const ev=DATA.events.find(e=>e.evento_id===id);
   if(!ev)return;
   const d=document.getElementById('dlgEvent');
-  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_proxy||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:''),posterFallback=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
+  const t=title(ev.name),f=formats(ev.name),poster=assetUrl(ev.poster_proxy)||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:''),posterFallback=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
   // Filter out past sessions
   const now=new Date();
   const futureSessions=ev.sessions.filter(s=>{
@@ -543,7 +546,7 @@ function submitCo(e,sesId){
   if(!name||!email){alert(T('fillFields'));return false}
   const btn=e.target.querySelector('.btn-full');
   btn.disabled=true;btn.textContent=T('processing');
-  fetch('/api/checkout',{
+  fetch(apiUrl('/api/checkout'),{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({sessionId:sesId,qty,name,email,phone})
@@ -649,7 +652,7 @@ if(window.visualViewport){
 /* Init */
 LANG=detectLang();
 setLang(LANG);
-fetch('data.json').then(r=>r.json()).then(d=>{
+fetch(apiUrl('/data.json')).then(r=>r.json()).then(d=>{
   DATA=d;buildDates();render();
 }).catch(err=>{
   document.getElementById('grid').innerHTML=`<div class="empty" role="alert">${T('loadFail')}: ${err.message}</div>`;
