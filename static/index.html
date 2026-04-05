@@ -366,8 +366,8 @@ function render(){
   g.innerHTML=evs.map(ev=>{
     const ss=selectedDate!=='all'?ev.sessions.filter(s=>s.date===selectedDate):ev.sessions;
     const t=title(ev.name),f=formats(ev.name);
-    const poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:'');
-    const posterFallback=ev.poster_proxy||(ev.poster_v?BASE+ev.poster_v:'');
+    const poster=ev.poster_proxy||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
+    const posterFallback=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
     return`<article class="card">
       <a href="#" class="card-link" onclick="event.preventDefault();openEvent('${ev.evento_id}')" aria-label="${t}">
         ${poster?`<img class="card-img" src="${poster}" alt="" loading="lazy" width="260" height="390" onerror="if(this.src!=='${posterFallback}')this.src='${posterFallback}'">`:'<div class="card-img"></div>'}
@@ -396,7 +396,7 @@ function openEvent(id){
   const ev=DATA.events.find(e=>e.evento_id===id);
   if(!ev)return;
   const d=document.getElementById('dlgEvent');
-  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:''),posterFallback=ev.poster_proxy||(ev.poster_v?BASE+ev.poster_v:'');
+  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_proxy||ev.poster_local||(ev.poster_v?BASE+ev.poster_v:''),posterFallback=ev.poster_local||(ev.poster_v?BASE+ev.poster_v:'');
   // Filter out past sessions
   const now=new Date();
   const futureSessions=ev.sessions.filter(s=>{

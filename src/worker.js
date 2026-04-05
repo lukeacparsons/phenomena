@@ -93,6 +93,41 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+async function warmImageCache(imgPath, env) {
+  if (!imgPath || !imgPath.startsWith('/')) return false;
+
+  const cacheKey = `img:${imgPath}`;
+  const cached = await env.KV.get(cacheKey, 'arrayBuffer');
+  if (cached) return false;
+
+  const originUrl = `https://${SITE}${imgPath}`;
+  const resp = await fetch(originUrl, {
+    headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'image/*' },
+    cf: {
+      image: {
+        width: 400,
+        quality: 75,
+        format: 'webp',
+        fit: 'scale-down',
+      },
+    },
+  });
+
+  if (!resp.ok) {
+    const fallback = await fetch(originUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'image/*' },
+    });
+    if (!fallback.ok) return false;
+    const buf = await fallback.arrayBuffer();
+    await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
+    return true;
+  }
+
+  const buf = await resp.arrayBuffer();
+  await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
+  return true;
+}
+
 // ─── /img/proxy ───
 
 async function handleImageProxy(request, env) {
@@ -455,6 +490,22 @@ async function refreshData(env) {
 
     const evList = Object.values(events).sort((a, b) => a.name.localeCompare(b.name));
     const totalSessions = evList.reduce((sum, e) => sum + e.sessions.length, 0);
+
+    // Pre-warm poster cache so new films don't rely on frontend fallbacks
+    let warmedPosters = 0;
+    for (const ev of evList) {
+      try {
+        if (ev.poster_v) {
+          const warmed = await warmImageCache(ev.poster_v, env);
+          if (warmed) warmedPosters++;
+        }
+      } catch (e) {
+        log.changes.push(`⚠️ poster ${ev.name}: ${e.message}`);
+      }
+    }
+    if (warmedPosters > 0) {
+      log.changes.push(`🖼️ Warmed ${warmedPosters} poster cache entr${warmedPosters === 1 ? 'y' : 'ies'}`);
+    }
 
     // Detect changes
     const newEvents = new Set(evList.map(e => e.evento_id));
