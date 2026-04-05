@@ -11,6 +11,11 @@
 
 const SITE = 'phenomena-experience.com';
 const POSTER_PATH_RE = /^\/obj\/LCinesD_dat\/eventos\/[A-Za-z0-9_-]+\.(?:jpe?g|png|webp)$/i;
+const PUBLIC_CORS_ORIGINS = new Set([
+  'https://phenomenarapida.com',
+  'https://www.phenomenarapida.com',
+  'https://phenomena-rapida.onrender.com',
+]);
 
 // ─── Helpers ───
 
@@ -88,8 +93,16 @@ function jsonResponse(data, status = 200, corsOrigin = '*') {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache',
   };
-  if (corsOrigin) headers['Access-Control-Allow-Origin'] = corsOrigin;
+  if (corsOrigin) {
+    headers['Access-Control-Allow-Origin'] = corsOrigin;
+    headers['Vary'] = 'Origin';
+  }
   return new Response(JSON.stringify(data), { status, headers });
+}
+
+function getCorsOrigin(request) {
+  const origin = request.headers.get('Origin');
+  return origin && PUBLIC_CORS_ORIGINS.has(origin) ? origin : null;
 }
 
 function sanitizeText(value, { maxLen, pattern, field }) {
@@ -199,6 +212,7 @@ async function warmImageCache(imgPath, env) {
 // ─── /img/proxy ───
 
 async function handleImageProxy(request, env) {
+  const corsOrigin = getCorsOrigin(request);
   if (!['GET', 'HEAD'].includes(request.method)) {
     return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'GET, HEAD' } });
   }
@@ -221,7 +235,7 @@ async function handleImageProxy(request, env) {
     return imageResponse(cached, {
       'Content-Type': 'image/webp',
       'Cache-Control': 'public, max-age=604800, immutable',
-      'Access-Control-Allow-Origin': '*',
+      ...(corsOrigin ? { 'Access-Control-Allow-Origin': corsOrigin, 'Vary': 'Origin' } : {}),
     }, request.method);
   }
 
@@ -251,7 +265,7 @@ async function handleImageProxy(request, env) {
     return imageResponse(buf, {
       'Content-Type': fallback.headers.get('content-type') || 'image/jpeg',
       'Cache-Control': 'public, max-age=604800',
-      'Access-Control-Allow-Origin': '*',
+      ...(corsOrigin ? { 'Access-Control-Allow-Origin': corsOrigin, 'Vary': 'Origin' } : {}),
     }, request.method);
   }
 
@@ -261,13 +275,14 @@ async function handleImageProxy(request, env) {
   return imageResponse(buf, {
     'Content-Type': 'image/webp',
     'Cache-Control': 'public, max-age=604800, immutable',
-    'Access-Control-Allow-Origin': '*',
+    ...(corsOrigin ? { 'Access-Control-Allow-Origin': corsOrigin, 'Vary': 'Origin' } : {}),
   }, request.method);
 }
 
 // ─── /api/availability-all ───
 
 async function handleAvailabilityAll(request) {
+  const corsOrigin = getCorsOrigin(request);
   try {
     // Scrape the cartelera page which has all session data inline
     const { text } = await siteRequest('GET', '/index?pag=cartelera');
@@ -304,22 +319,23 @@ async function handleAvailabilityAll(request) {
       };
     }
     
-    return jsonResponse({ events });
+    return jsonResponse({ events }, 200, corsOrigin);
   } catch (e) {
-    return jsonResponse({ error: e.message }, 500);
+    return jsonResponse({ error: e.message }, 500, corsOrigin);
   }
 }
 
 // ─── /api/checkout ───
 
 async function handleCheckout(request) {
+  const corsOrigin = getCorsOrigin(request);
   try {
     const payload = await request.json();
     const { sessionId, qty, name, email, phone } = parseCheckoutPayload(payload);
 
     // Step 1: Fresh session
     const sess = await getFreshSession();
-    if (!sess.uuid) return jsonResponse({ error: 'Failed to get session' }, 500);
+    if (!sess.uuid) return jsonResponse({ error: 'Failed to get session' }, 500, corsOrigin);
 
     let { uuid } = sess;
     const { recinto, subdominio, key } = sess;
@@ -331,7 +347,7 @@ async function handleCheckout(request) {
       cookies: cookieStr,
     });
     const patioData = JSON.parse(patioResp.text);
-    if (patioData.error === -1) return jsonResponse({ error: patioData.text || 'Patio error' }, 400);
+    if (patioData.error === -1) return jsonResponse({ error: patioData.text || 'Patio error' }, 400, corsOrigin);
     if (patioData.uuid && patioData.uuid !== uuid) uuid = patioData.uuid;
 
     // Step 3: POST to resumen
@@ -349,7 +365,7 @@ async function handleCheckout(request) {
       cookies: cookieStr,
     });
     const valData = JSON.parse(valResp.text);
-    if (valData.error === -1) return jsonResponse({ error: valData.text || 'Validation failed' }, 400);
+    if (valData.error === -1) return jsonResponse({ error: valData.text || 'Validation failed' }, 400, corsOrigin);
 
     // Step 5: Build Redsys payment URL
     const jsonPayload = JSON.stringify({
@@ -363,20 +379,21 @@ async function handleCheckout(request) {
 
     const paymentUrl = `https://www.reservaentradas.com/cart/tpvapp/${subdominio}/${recinto}/${sessionId}/${uuid}/0/0/${bin2hex(jsonPayload)}`;
 
-    return jsonResponse({ paymentUrl, uuid });
+    return jsonResponse({ paymentUrl, uuid }, 200, corsOrigin);
   } catch (e) {
     const isClientError = e instanceof SyntaxError || /sessionId|qty|name|email|phone|invalid|too long/i.test(e.message || '');
-    return jsonResponse({ error: e.message }, isClientError ? 400 : 500);
+    return jsonResponse({ error: e.message }, isClientError ? 400 : 500, corsOrigin);
   }
 }
 
 // ─── /api/availability ───
 
 async function handleAvailability(request) {
+  const corsOrigin = getCorsOrigin(request);
   try {
     const url = new URL(request.url);
     const eventoId = url.searchParams.get('evento');
-    if (!eventoId) return jsonResponse({ error: 'evento param required' }, 400);
+    if (!eventoId) return jsonResponse({ error: 'evento param required' }, 400, corsOrigin);
 
     const { text } = await siteRequest('GET', `/index?pag=ficha&evento=${eventoId}`);
     const sessions = {};
@@ -389,15 +406,16 @@ async function handleAvailability(request) {
         closed_reason: v.RazonCompraCerradaTexto || '',
       };
     }
-    return jsonResponse({ sessions });
+    return jsonResponse({ sessions }, 200, corsOrigin);
   } catch (e) {
-    return jsonResponse({ error: e.message }, 500);
+    return jsonResponse({ error: e.message }, 500, corsOrigin);
   }
 }
 
 // ─── /api/health ───
 
-async function handleHealth(env) {
+async function handleHealth(request, env) {
+  const corsOrigin = getCorsOrigin(request);
   try {
     const meta = JSON.parse(await env.KV.get('refresh_meta') || '{}');
     return jsonResponse({
@@ -406,9 +424,9 @@ async function handleHealth(env) {
       events: meta.total_events || 0,
       sessions: meta.total_sessions || 0,
       staleMinutes: meta.scraped_at ? Math.round((Date.now() - new Date(meta.scraped_at).getTime()) / 60000) : null,
-    });
+    }, 200, corsOrigin);
   } catch (e) {
-    return jsonResponse({ ok: false, error: e.message }, 500);
+    return jsonResponse({ ok: false, error: e.message }, 500, corsOrigin);
   }
 }
 
@@ -694,10 +712,11 @@ export default {
 
     if (request.method === 'OPTIONS') {
       const isAdminRoute = url.pathname === '/api/logs' || url.pathname === '/api/refresh';
+      const corsOrigin = getCorsOrigin(request);
       return new Response(null, {
         headers: {
-          ...(isAdminRoute ? {} : { 'Access-Control-Allow-Origin': '*' }),
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          ...(isAdminRoute || !corsOrigin ? {} : { 'Access-Control-Allow-Origin': corsOrigin, 'Vary': 'Origin' }),
+          'Access-Control-Allow-Methods': 'GET, HEAD, POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       });
@@ -714,7 +733,7 @@ export default {
       return handleAvailability(request);
     }
     if (url.pathname === '/api/health') {
-      return handleHealth(env);
+      return handleHealth(request, env);
     }
     if (url.pathname === '/api/logs') {
       if (request.method !== 'GET') return jsonResponse({ error: 'Method not allowed' }, 405, null);
@@ -737,11 +756,12 @@ export default {
     if (url.pathname === '/data.json') {
       const kvData = await env.KV.get('data');
       if (kvData) {
+        const corsOrigin = getCorsOrigin(request);
         return new Response(kvData, {
           headers: {
             'Content-Type': 'application/json',
             'Cache-Control': 'public, max-age=60',
-            'Access-Control-Allow-Origin': '*',
+            ...(corsOrigin ? { 'Access-Control-Allow-Origin': corsOrigin, 'Vary': 'Origin' } : {}),
           },
         });
       }
