@@ -11,14 +11,6 @@ directory = "static"
 binding = "KV"
 id = "6af788121c174b05aaefcd0853b7839d"
 
-[[routes]]
-pattern = "phenomenarapida.com/*"
-zone_name = "phenomenarapida.com"
-
-[[routes]]
-pattern = "www.phenomenarapida.com/*"
-zone_name = "phenomenarapida.com"
-
 [triggers]
 crons = ["0,30 6-20 * * *"]
 
