@@ -396,7 +396,7 @@ function openEvent(id){
   const ev=DATA.events.find(e=>e.evento_id===id);
   if(!ev)return;
   const d=document.getElementById('dlgEvent');
-  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:'');
+  const t=title(ev.name),f=formats(ev.name),poster=ev.poster_local||(ev.poster_proxy)||(ev.poster_v?BASE+ev.poster_v:''),posterFallback=ev.poster_proxy||(ev.poster_v?BASE+ev.poster_v:'');
   // Filter out past sessions
   const now=new Date();
   const futureSessions=ev.sessions.filter(s=>{
@@ -411,7 +411,7 @@ function openEvent(id){
 
   d.innerHTML=`<button class="dlg-close" onclick="this.closest('dialog').close()" aria-label="${T('close')}">✕</button>
     <div class="dlg-head">
-      ${poster?`<img class="dlg-poster" src="${poster}" alt="">`:''} 
+      ${poster?`<img class="dlg-poster" src="${poster}" alt="" onerror="if(this.src!=='${posterFallback}')this.src='${posterFallback}'">`:''} 
       <div class="dlg-info">
         <h2 class="dlg-title">${t}</h2>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;margin-left:-3px">
