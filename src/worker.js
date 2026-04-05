@@ -10,6 +10,7 @@
  */
 
 const SITE = 'phenomena-experience.com';
+const POSTER_PATH_RE = /^\/obj\/LCinesD_dat\/eventos\/[A-Za-z0-9_-]+\.(?:jpe?g|png|webp)$/i;
 
 // ─── Helpers ───
 
@@ -82,15 +83,82 @@ function decodeBase64Latin1(b64) {
   } catch (e) { return b64; }
 }
 
-function jsonResponse(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Cache-Control': 'no-cache',
-    },
+function jsonResponse(data, status = 200, corsOrigin = '*') {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+  };
+  if (corsOrigin) headers['Access-Control-Allow-Origin'] = corsOrigin;
+  return new Response(JSON.stringify(data), { status, headers });
+}
+
+function sanitizeText(value, { maxLen, pattern, field }) {
+  const str = String(value ?? '').trim();
+  if (str.length > maxLen) throw new Error(`${field} too long`);
+  if (/[|\u0000-\u001F\u007F]/.test(str)) throw new Error(`${field} contains invalid characters`);
+  if (str && pattern && !pattern.test(str)) throw new Error(`${field} is invalid`);
+  return str;
+}
+
+function parseCheckoutPayload(payload) {
+  const sessionId = String(payload?.sessionId ?? '').trim();
+  if (!/^\d+$/.test(sessionId)) throw new Error('sessionId must be numeric');
+
+  const qtyRaw = payload?.qty ?? 1;
+  const qty = Number.parseInt(String(qtyRaw), 10);
+  if (!Number.isInteger(qty) || qty < 1 || qty > 10) throw new Error('qty must be an integer between 1 and 10');
+
+  const name = sanitizeText(payload?.name ?? '', {
+    maxLen: 80,
+    pattern: /^[\p{L}\p{M}0-9 .,'’()\-]*$/u,
+    field: 'name',
   });
+  const email = sanitizeText(payload?.email ?? '', {
+    maxLen: 120,
+    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    field: 'email',
+  }).toLowerCase();
+  const phone = sanitizeText(payload?.phone ?? '', {
+    maxLen: 30,
+    pattern: /^[0-9+()\- .]*$/,
+    field: 'phone',
+  });
+
+  return { sessionId, qty, name, email, phone };
+}
+
+function getBearerToken(request) {
+  const auth = request.headers.get('Authorization') || '';
+  const match = auth.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : '';
+}
+
+function requireAdmin(request, env) {
+  if (!env.ADMIN_TOKEN) return jsonResponse({ error: 'Admin auth not configured' }, 500, null);
+  const token = getBearerToken(request);
+  if (!token) return jsonResponse({ error: 'Authorization required' }, 401, null);
+  if (token !== env.ADMIN_TOKEN) return jsonResponse({ error: 'Invalid admin token' }, 403, null);
+  return null;
+}
+
+async function getAllowedPosterPaths(env) {
+  const stored = await env.KV.get('allowed_poster_paths');
+  if (stored) {
+    try {
+      return new Set(JSON.parse(stored));
+    } catch (e) {}
+  }
+
+  try {
+    const data = JSON.parse(await env.KV.get('data') || '{"events":[]}');
+    return new Set((data.events || []).map(ev => ev.poster_v).filter(Boolean));
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function imageResponse(body, headers, method = 'GET') {
+  return new Response(method === 'HEAD' ? null : body, { headers });
 }
 
 async function warmImageCache(imgPath, env) {
@@ -131,23 +199,30 @@ async function warmImageCache(imgPath, env) {
 // ─── /img/proxy ───
 
 async function handleImageProxy(request, env) {
+  if (!['GET', 'HEAD'].includes(request.method)) {
+    return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'GET, HEAD' } });
+  }
+
   const url = new URL(request.url);
-  const imgPath = url.searchParams.get('path');
-  if (!imgPath || !imgPath.startsWith('/')) {
+  const imgPath = (url.searchParams.get('path') || '').trim();
+  if (!imgPath || !imgPath.startsWith('/') || imgPath.length > 200 || imgPath.includes('..') || !POSTER_PATH_RE.test(imgPath)) {
     return new Response('Missing path', { status: 400 });
+  }
+
+  const allowedPaths = await getAllowedPosterPaths(env);
+  if (!allowedPaths.has(imgPath)) {
+    return new Response('Image path not allowed', { status: 403 });
   }
 
   // Check KV cache first
   const cacheKey = `img:${imgPath}`;
   const cached = await env.KV.get(cacheKey, 'arrayBuffer');
   if (cached) {
-    return new Response(cached, {
-      headers: {
-        'Content-Type': 'image/webp',
-        'Cache-Control': 'public, max-age=604800, immutable',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
+    return imageResponse(cached, {
+      'Content-Type': 'image/webp',
+      'Cache-Control': 'public, max-age=604800, immutable',
+      'Access-Control-Allow-Origin': '*',
+    }, request.method);
   }
 
   // Fetch from origin
@@ -173,25 +248,21 @@ async function handleImageProxy(request, env) {
     const buf = await fallback.arrayBuffer();
     // Cache in KV for 7 days (even unoptimised, avoids re-fetching)
     await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
-    return new Response(buf, {
-      headers: {
-        'Content-Type': fallback.headers.get('content-type') || 'image/jpeg',
-        'Cache-Control': 'public, max-age=604800',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
+    return imageResponse(buf, {
+      'Content-Type': fallback.headers.get('content-type') || 'image/jpeg',
+      'Cache-Control': 'public, max-age=604800',
+      'Access-Control-Allow-Origin': '*',
+    }, request.method);
   }
 
   const buf = await resp.arrayBuffer();
   // Cache optimised image in KV for 7 days
   await env.KV.put(cacheKey, buf, { expirationTtl: 604800 });
-  return new Response(buf, {
-    headers: {
-      'Content-Type': 'image/webp',
-      'Cache-Control': 'public, max-age=604800, immutable',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+  return imageResponse(buf, {
+    'Content-Type': 'image/webp',
+    'Cache-Control': 'public, max-age=604800, immutable',
+    'Access-Control-Allow-Origin': '*',
+  }, request.method);
 }
 
 // ─── /api/availability-all ───
@@ -243,8 +314,8 @@ async function handleAvailabilityAll(request) {
 
 async function handleCheckout(request) {
   try {
-    const { sessionId, qty = 1, name = '', email = '', phone = '' } = await request.json();
-    if (!sessionId) return jsonResponse({ error: 'sessionId required' }, 400);
+    const payload = await request.json();
+    const { sessionId, qty, name, email, phone } = parseCheckoutPayload(payload);
 
     // Step 1: Fresh session
     const sess = await getFreshSession();
@@ -294,7 +365,8 @@ async function handleCheckout(request) {
 
     return jsonResponse({ paymentUrl, uuid });
   } catch (e) {
-    return jsonResponse({ error: e.message }, 500);
+    const isClientError = e instanceof SyntaxError || /sessionId|qty|name|email|phone|invalid|too long/i.test(e.message || '');
+    return jsonResponse({ error: e.message }, isClientError ? 400 : 500);
   }
 }
 
@@ -547,6 +619,7 @@ async function refreshData(env) {
     // Write to KV
     await env.KV.put('data', JSON.stringify(output));
     await env.KV.put('refresh_meta', JSON.stringify(output._meta));
+    await env.KV.put('allowed_poster_paths', JSON.stringify([...new Set(evList.map(ev => ev.poster_v).filter(Boolean))]));
 
     log.events = evList.length;
     log.sessions = totalSessions;
@@ -620,11 +693,12 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === 'OPTIONS') {
+      const isAdminRoute = url.pathname === '/api/logs' || url.pathname === '/api/refresh';
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          ...(isAdminRoute ? {} : { 'Access-Control-Allow-Origin': '*' }),
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       });
     }
@@ -643,11 +717,17 @@ export default {
       return handleHealth(env);
     }
     if (url.pathname === '/api/logs') {
+      if (request.method !== 'GET') return jsonResponse({ error: 'Method not allowed' }, 405, null);
+      const authError = requireAdmin(request, env);
+      if (authError) return authError;
       return handleLogs(env);
     }
     if (url.pathname === '/api/refresh') {
+      if (request.method !== 'POST') return jsonResponse({ error: 'Method not allowed' }, 405, null);
+      const authError = requireAdmin(request, env);
+      if (authError) return authError;
       const log = await refreshData(env);
-      return jsonResponse({ triggered: true, log });
+      return jsonResponse({ triggered: true, log }, 200, null);
     }
     if (url.pathname.startsWith('/img/proxy')) {
       return handleImageProxy(request, env);
