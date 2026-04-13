@@ -105,6 +105,32 @@ function getCorsOrigin(request) {
   return origin && PUBLIC_CORS_ORIGINS.has(origin) ? origin : null;
 }
 
+function detectSuspiciousEventDrop(prevEventList = [], nextEventList = []) {
+  const prevCount = prevEventList.length;
+  const nextCount = nextEventList.length;
+  if (prevCount < 12) return null;
+
+  const prevIds = new Set(prevEventList.map(e => String(e.evento_id)));
+  const nextIds = new Set(nextEventList.map(e => String(e.evento_id)));
+
+  let removedCount = 0;
+  for (const id of prevIds) {
+    if (!nextIds.has(id)) removedCount++;
+  }
+
+  let addedCount = 0;
+  for (const id of nextIds) {
+    if (!prevIds.has(id)) addedCount++;
+  }
+
+  const collapsedCount = nextCount <= Math.max(5, Math.floor(prevCount * 0.4));
+  const heavyRemoval = removedCount >= Math.max(8, Math.floor(prevCount * 0.5));
+  const lowReplacement = addedCount <= Math.max(2, Math.floor(prevCount * 0.1));
+
+  if (!collapsedCount || !heavyRemoval || !lowReplacement) return null;
+  return { prevCount, nextCount, removedCount, addedCount };
+}
+
 function sanitizeText(value, { maxLen, pattern, field }) {
   const str = String(value ?? '').trim();
   if (str.length > maxLen) throw new Error(`${field} too long`);
@@ -580,94 +606,102 @@ async function refreshData(env) {
 
     const evList = Object.values(events).sort((a, b) => a.name.localeCompare(b.name));
     const totalSessions = evList.reduce((sum, e) => sum + e.sessions.length, 0);
-
-    // Pre-warm poster cache so new films don't rely on frontend fallbacks
-    let warmedPosters = 0;
-    for (const ev of evList) {
-      try {
-        if (ev.poster_v) {
-          const warmed = await warmImageCache(ev.poster_v, env);
-          if (warmed) warmedPosters++;
-        }
-      } catch (e) {
-        log.changes.push(`⚠️ poster ${ev.name}: ${e.message}`);
-      }
-    }
-    if (warmedPosters > 0) {
-      log.changes.push(`🖼️ Warmed ${warmedPosters} poster cache entr${warmedPosters === 1 ? 'y' : 'ies'}`);
-    }
-
-    // Detect changes
-    const newEvents = new Set(evList.map(e => e.evento_id));
-    for (const eid of newEvents) {
-      if (!prevEvents.has(eid)) {
-        const ev = evList.find(e => e.evento_id === eid);
-        log.changes.push(`🎬 NEW: ${ev.name}`);
-      }
-    }
-    for (const eid of prevEvents) {
-      if (!newEvents.has(eid)) {
-        const ev = prevData.events.find(e => e.evento_id === eid);
-        log.changes.push(`🗑️ REMOVED: ${ev?.name || eid}`);
-      }
-    }
-
-    // Check for sold-out changes
-    for (const ev of evList) {
-      const prevEv = prevData.events?.find(e => e.evento_id === ev.evento_id);
-      if (!prevEv) continue;
-      for (const s of ev.sessions) {
-        const prevS = prevEv.sessions?.find(ps => ps.session_id === s.session_id);
-        if (prevS?.purchase_open && !s.purchase_open) {
-          log.changes.push(`🔴 SOLD OUT: ${ev.name} — ${s.date} ${s.time}`);
-        }
-      }
-    }
-
-    const output = {
-      _meta: {
-        scraped_at: new Date().toISOString(),
-        source: `https://${SITE}`,
-        total_events: evList.length,
-        total_sessions: totalSessions,
-      },
-      events: evList,
-    };
-
-    // Write to KV
-    await env.KV.put('data', JSON.stringify(output));
-    await env.KV.put('refresh_meta', JSON.stringify(output._meta));
-    await env.KV.put('allowed_poster_paths', JSON.stringify([...new Set(evList.map(ev => ev.poster_v).filter(Boolean))]));
+    const suspiciousDrop = detectSuspiciousEventDrop(prevData.events || [], evList);
 
     log.events = evList.length;
     log.sessions = totalSessions;
 
-    // Send Telegram notification for important changes
-    // Send Telegram notifications for important changes
-    const importantChanges = (log.changes || []).filter(c => c.startsWith('🎬') || c.startsWith('🔴'));
-    if (importantChanges.length > 0) {
-      const hasToken = !!env.TELEGRAM_BOT_TOKEN;
-      log.telegram = { hasToken, attempted: false };
-      if (hasToken) {
-        const msg = `📽️ *Phenomena Rápida*\n\n${importantChanges.join('\n')}`;
+    if (suspiciousDrop) {
+      log.status = 'guarded';
+      log.guard = { type: 'partial_scrape', ...suspiciousDrop };
+      log.changes.push(
+        `🛡️ Suspected partial scrape: ${suspiciousDrop.nextCount} events vs ${suspiciousDrop.prevCount} previously (${suspiciousDrop.removedCount} removed, ${suspiciousDrop.addedCount} added). Keeping prior catalog and skipping notifications.`
+      );
+    } else {
+      // Pre-warm poster cache so new films don't rely on frontend fallbacks
+      let warmedPosters = 0;
+      for (const ev of evList) {
         try {
-          log.telegram.attempted = true;
-          const tgResp = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: env.TELEGRAM_CHAT_ID,
-              message_thread_id: parseInt(env.TELEGRAM_TOPIC_ID),
-              text: msg,
-              parse_mode: 'Markdown',
-            }),
-          });
-          const tgResult = await tgResp.json();
-          log.telegram.ok = tgResult.ok;
-          if (!tgResult.ok) log.telegram.error = tgResult.description;
+          if (ev.poster_v) {
+            const warmed = await warmImageCache(ev.poster_v, env);
+            if (warmed) warmedPosters++;
+          }
         } catch (e) {
-          log.telegram.error = e.message;
-          log.changes.push(`⚠️ Telegram notify failed: ${e.message}`);
+          log.changes.push(`⚠️ poster ${ev.name}: ${e.message}`);
+        }
+      }
+      if (warmedPosters > 0) {
+        log.changes.push(`🖼️ Warmed ${warmedPosters} poster cache entr${warmedPosters === 1 ? 'y' : 'ies'}`);
+      }
+
+      // Detect changes
+      const newEvents = new Set(evList.map(e => e.evento_id));
+      for (const eid of newEvents) {
+        if (!prevEvents.has(eid)) {
+          const ev = evList.find(e => e.evento_id === eid);
+          log.changes.push(`🎬 NEW: ${ev.name}`);
+        }
+      }
+      for (const eid of prevEvents) {
+        if (!newEvents.has(eid)) {
+          const ev = prevData.events.find(e => e.evento_id === eid);
+          log.changes.push(`🗑️ REMOVED: ${ev?.name || eid}`);
+        }
+      }
+
+      // Check for sold-out changes
+      for (const ev of evList) {
+        const prevEv = prevData.events?.find(e => e.evento_id === ev.evento_id);
+        if (!prevEv) continue;
+        for (const s of ev.sessions) {
+          const prevS = prevEv.sessions?.find(ps => ps.session_id === s.session_id);
+          if (prevS?.purchase_open && !s.purchase_open) {
+            log.changes.push(`🔴 SOLD OUT: ${ev.name} — ${s.date} ${s.time}`);
+          }
+        }
+      }
+
+      const output = {
+        _meta: {
+          scraped_at: new Date().toISOString(),
+          source: `https://${SITE}`,
+          total_events: evList.length,
+          total_sessions: totalSessions,
+        },
+        events: evList,
+      };
+
+      // Write to KV
+      await env.KV.put('data', JSON.stringify(output));
+      await env.KV.put('refresh_meta', JSON.stringify(output._meta));
+      await env.KV.put('allowed_poster_paths', JSON.stringify([...new Set(evList.map(ev => ev.poster_v).filter(Boolean))]));
+
+      // Send Telegram notifications for important changes
+      const importantChanges = (log.changes || []).filter(c => c.startsWith('🎬') || c.startsWith('🔴'));
+      if (importantChanges.length > 0) {
+        const hasToken = !!env.TELEGRAM_BOT_TOKEN;
+        log.telegram = { hasToken, attempted: false };
+        if (hasToken) {
+          const msg = `📽️ *Phenomena Rápida*\n\n${importantChanges.join('\n')}`;
+          try {
+            log.telegram.attempted = true;
+            const tgResp = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: env.TELEGRAM_CHAT_ID,
+                message_thread_id: parseInt(env.TELEGRAM_TOPIC_ID),
+                text: msg,
+                parse_mode: 'Markdown',
+              }),
+            });
+            const tgResult = await tgResp.json();
+            log.telegram.ok = tgResult.ok;
+            if (!tgResult.ok) log.telegram.error = tgResult.description;
+          } catch (e) {
+            log.telegram.error = e.message;
+            log.changes.push(`⚠️ Telegram notify failed: ${e.message}`);
+          }
         }
       }
     }
