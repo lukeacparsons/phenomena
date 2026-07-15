@@ -189,7 +189,7 @@ const I18N={
     yourDetails:"Your details",fullName:"Full name",namePh:"Name and surname",
     email:"Email",emailPh:"you@email.com",phone:"Phone",phonePh:"+34 600 000 000",
     proceed:"Proceed to payment →",processing:"Processing…",
-    secureNote:"Secure payment via Redsys. You'll be redirected to complete the transaction.",
+    secureNote:"You'll continue on ReservaEntradas to confirm details and complete payment.",
     noScreenings:"No screenings on this date",
     loadFail:"Failed to load",
     fillFields:"Please fill in name and email.",
@@ -214,7 +214,7 @@ const I18N={
     yourDetails:"Tus datos",fullName:"Nombre completo",namePh:"Nombre y apellidos",
     email:"Email",emailPh:"tu@email.com",phone:"Teléfono",phonePh:"+34 600 000 000",
     proceed:"Continuar al pago →",processing:"Procesando…",
-    secureNote:"Pago seguro a través de Redsys. Serás redirigido para completar la transacción.",
+    secureNote:"Continuarás en ReservaEntradas para confirmar los datos y completar el pago.",
     noScreenings:"No hay sesiones en esta fecha",
     loadFail:"Error al cargar",
     fillFields:"Por favor, introduce tu nombre y email.",
@@ -239,7 +239,7 @@ const I18N={
     yourDetails:"Les teves dades",fullName:"Nom complet",namePh:"Nom i cognoms",
     email:"Email",emailPh:"tu@email.com",phone:"Telèfon",phonePh:"+34 600 000 000",
     proceed:"Continuar al pagament →",processing:"Processant…",
-    secureNote:"Pagament segur a través de Redsys. Seràs redirigit per completar la transacció.",
+    secureNote:"Continuaràs a ReservaEntradas per confirmar les dades i completar el pagament.",
     noScreenings:"No hi ha sessions en aquesta data",
     loadFail:"Error en carregar",
     fillFields:"Si us plau, introdueix el teu nom i email.",
@@ -511,14 +511,6 @@ function openCheckout(evId,sesId){
       </div>
     </div>
     <form class="co-section" onsubmit="return submitCo(event,'${sesId}')">
-      <h3>${T('yourDetails')}</h3>
-      <fieldset>
-        <div class="field"><label for="coName">${T('fullName')}</label><input id="coName" type="text" required autocomplete="name" placeholder="${T('namePh')}"></div>
-        <div class="fields-row">
-          <div class="field"><label for="coEmail">${T('email')}</label><input id="coEmail" type="email" required autocomplete="email" placeholder="${T('emailPh')}"></div>
-          <div class="field"><label for="coPhone">${T('phone')}</label><input id="coPhone" type="tel" autocomplete="tel" placeholder="${T('phonePh')}"></div>
-        </div>
-      </fieldset>
       <button type="submit" class="btn btn-full">${T('proceed')}</button>
       <p class="co-note">${T('secureNote')}</p>
     </form>`;
@@ -539,20 +531,35 @@ function chgQty(delta,price,feePerTicket){
 
 function submitCo(e,sesId){
   e.preventDefault();
-  const name=document.getElementById('coName').value.trim();
-  const email=document.getElementById('coEmail').value.trim();
-  const phone=document.getElementById('coPhone').value.trim();
   const qty=parseInt(document.getElementById('coQty').textContent);
-  if(!name||!email){alert(T('fillFields'));return false}
   const btn=e.target.querySelector('.btn-full');
   btn.disabled=true;btn.textContent=T('processing');
   fetch(apiUrl('/api/checkout'),{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({sessionId:sesId,qty,name,email,phone})
+    body:JSON.stringify({sessionId:sesId,qty})
   }).then(r=>r.json()).then(d=>{
     if(d.error){alert('Error: '+d.error);btn.disabled=false;btn.textContent=T('proceed');return}
-    window.location.href=d.paymentUrl;
+    if(d.postUrl&&d.fields){
+      const form=document.createElement('form');
+      form.method='POST';
+      form.action=d.postUrl;
+      for(const [name,value] of Object.entries(d.fields)){
+        const input=document.createElement('input');
+        input.type='hidden';
+        input.name=name;
+        input.value=value;
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+      return;
+    }
+    if(d.paymentUrl){
+      window.location.href=d.paymentUrl;
+      return;
+    }
+    throw new Error('Checkout response missing payment handoff');
   }).catch(err=>{
     alert('Network error: '+err.message);
     btn.disabled=false;btn.textContent=T('proceed');

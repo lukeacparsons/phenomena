@@ -145,25 +145,22 @@ function parseCheckoutPayload(payload) {
 
   const qtyRaw = payload?.qty ?? 1;
   const qty = Number.parseInt(String(qtyRaw), 10);
-  if (!Number.isInteger(qty) || qty < 1 || qty > 10) throw new Error('qty must be an integer between 1 and 10');
+  if (!Number.isInteger(qty) || qty < 1 || qty > 12) throw new Error('qty must be an integer between 1 and 12');
 
-  const name = sanitizeText(payload?.name ?? '', {
-    maxLen: 80,
-    pattern: /^[\p{L}\p{M}0-9 .,'’()\-]*$/u,
-    field: 'name',
-  });
-  const email = sanitizeText(payload?.email ?? '', {
-    maxLen: 120,
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    field: 'email',
-  }).toLowerCase();
-  const phone = sanitizeText(payload?.phone ?? '', {
-    maxLen: 30,
-    pattern: /^[0-9+()\- .]*$/,
-    field: 'phone',
-  });
+  return { sessionId, qty };
+}
 
-  return { sessionId, qty, name, email, phone };
+function getInputValue(html, name) {
+  const inputRe = /<input\b[^>]*>/gi;
+  let match;
+  while ((match = inputRe.exec(html)) !== null) {
+    const tag = match[0];
+    const nameMatch = tag.match(/\bname\s*=\s*["']?([^"'\s>]+)/i);
+    if (nameMatch?.[1] !== name) continue;
+    const valueMatch = tag.match(/\bvalue\s*=\s*["']?([^"'>\s]*)/i);
+    return valueMatch?.[1] || '';
+  }
+  return '';
 }
 
 function getBearerToken(request) {
@@ -357,57 +354,45 @@ async function handleCheckout(request) {
   const corsOrigin = getCorsOrigin(request);
   try {
     const payload = await request.json();
-    const { sessionId, qty, name, email, phone } = parseCheckoutPayload(payload);
+    const { sessionId, qty } = parseCheckoutPayload(payload);
+    const subdominio = 'phenomenaexperience';
+    const fallbackRecinto = '200';
 
-    // Step 1: Fresh session
-    const sess = await getFreshSession();
-    if (!sess.uuid) return jsonResponse({ error: 'Failed to get session' }, 500, corsOrigin);
+    const cartSeedResp = await fetch(
+      `https://www.reservaentradas.com/entrada/sessionone/buy/${subdominio}/tickets/${sessionId}?destatic=false&sala=0&step=2`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+          'Accept': 'text/html,*/*',
+        },
+      }
+    );
+    const cartSeedHtml = await cartSeedResp.text();
+    if (!cartSeedResp.ok) {
+      return jsonResponse({ error: `ReservaEntradas returned ${cartSeedResp.status}` }, 502, corsOrigin);
+    }
 
-    let { uuid } = sess;
-    const { recinto, subdominio, key } = sess;
-    const cookieStr = `uuid=${uuid}; sitio=1; recinto=${recinto}; subdominio=${subdominio}; key=${key}`;
+    const usu = getInputValue(cartSeedHtml, 'usu');
+    const recinto = getInputValue(cartSeedHtml, 'recinto') || fallbackRecinto;
+    const cine = getInputValue(cartSeedHtml, 'cine') || subdominio;
+    const ses = getInputValue(cartSeedHtml, 'w-ses') || sessionId;
 
-    // Step 2: Init patio
-    const patioResp = await siteRequest('POST', '/ws.pro', {
-      body: { uuid, proc: 'patio', sesion: sessionId, zona: 0 },
-      cookies: cookieStr,
-    });
-    const patioData = JSON.parse(patioResp.text);
-    if (patioData.error === -1) return jsonResponse({ error: patioData.text || 'Patio error' }, 400, corsOrigin);
-    if (patioData.uuid && patioData.uuid !== uuid) uuid = patioData.uuid;
+    if (!/^[0-9a-f-]{36}$/i.test(usu)) {
+      return jsonResponse({ error: 'ReservaEntradas did not return a cart token' }, 502, corsOrigin);
+    }
 
-    // Step 3: POST to resumen
-    const resumenBody = new URLSearchParams({ pag: 'resumen', sesion: sessionId, nument: String(qty) });
-    const resumenResp = await siteRequest('POST', '/index?pag=resumen', {
-      body: resumenBody,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      cookies: cookieStr,
-    });
-
-    // Step 4: Validate via ws.pro
-    const dat_upd = `||0|0|${email}|0|${name}|${phone}`;
-    const valResp = await siteRequest('POST', '/ws.pro', {
-      body: { uuid, recinto, proc: 'resumen', sesion: sessionId, act: 2, dat_upd },
-      cookies: cookieStr,
-    });
-    const valData = JSON.parse(valResp.text);
-    if (valData.error === -1) return jsonResponse({ error: valData.text || 'Validation failed' }, 400, corsOrigin);
-
-    // Step 5: Build Redsys payment URL
-    const jsonPayload = JSON.stringify({
-      uuid,
-      uuid_fid: '',
-      url_base: `https://${SITE}`,
-      url_proc: `https://${SITE}/LCinesWeb_app`,
-      url_ret: `https://${SITE}/index?retdata=redsys&uuid=${uuid}&uuid_fid=`,
-      url_resumen: `https://${SITE}/LCinesWeb_app/resumen?UUID=${uuid}&sesion=${sessionId}&recinto=${recinto}&act=3`,
-    });
-
-    const paymentUrl = `https://www.reservaentradas.com/cart/tpvapp/${subdominio}/${recinto}/${sessionId}/${uuid}/0/0/${bin2hex(jsonPayload)}`;
-
-    return jsonResponse({ paymentUrl, uuid }, 200, corsOrigin);
+    return jsonResponse({
+      postUrl: 'https://www.reservaentradas.com/cart',
+      fields: {
+        'w-num-ent': String(qty),
+        'w-ses': ses,
+        usu,
+        cine,
+        recinto,
+      },
+    }, 200, corsOrigin);
   } catch (e) {
-    const isClientError = e instanceof SyntaxError || /sessionId|qty|name|email|phone|invalid|too long/i.test(e.message || '');
+    const isClientError = e instanceof SyntaxError || /sessionId|qty|invalid|too long/i.test(e.message || '');
     return jsonResponse({ error: e.message }, isClientError ? 400 : 500, corsOrigin);
   }
 }
