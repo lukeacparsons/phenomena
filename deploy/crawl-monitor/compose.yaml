@@ -1,0 +1,29 @@
+services:
+  crawl-monitor:
+    build:
+      context: .
+      dockerfile: deploy/crawl-monitor/Dockerfile
+    image: vobarna-crawl-monitor:local
+    container_name: vobarna-crawl-monitor
+    restart: unless-stopped
+    init: true
+    env_file: ./monitor.env
+    volumes:
+      - ./state:/data
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 0.25
+    stop_grace_period: 80s
+    healthcheck:
+      test: [CMD, node, -e, "const s=JSON.parse(require('fs').readFileSync('/data/state.json'));process.exit(Date.now()-s.lastSuccess<600000 && !s.outbox.some(x=>Date.now()-x.at>900000)?0:1)"]
+      interval: 60s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '2'

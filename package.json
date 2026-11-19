@@ -18,14 +18,18 @@
     "preview:ratings": ".venv/bin/python scripts/film_ratings.py",
     "webmcp:docs": "node scripts/export_webmcp_tools.mjs",
     "test:webmcp:browser": "node scripts/test_webmcp_browser.cjs",
-    "test": ".venv/bin/python -m unittest discover -s scripts -p 'test_*.py' && node scripts/test_cinema_search.cjs && node scripts/test_search_dates.cjs && node --test scripts/test_webmcp.mjs scripts/test_analytics.mjs scripts/test_public_routing.mjs scripts/test_crawler_watchdog.mjs scripts/test_provider_source_reader.mjs",
+    "test": ".venv/bin/python -m unittest discover -s scripts -p 'test_*.py' && node scripts/test_cinema_search.cjs && node scripts/test_search_dates.cjs && node --test scripts/test_webmcp.mjs scripts/test_analytics.mjs scripts/test_public_routing.mjs scripts/test_crawler_watchdog.mjs scripts/test_provider_source_reader.mjs && npm run test:traffic",
     "site:publish": ".venv/bin/python scripts/publish_vobarna.py",
     "site:test:browser": "node scripts/test_public_browser.cjs",
     "crawler:health": ".venv/bin/python scripts/crawler_health.py",
     "crawler:heartbeat": ".venv/bin/python scripts/crawler_monitor.py",
     "crawler:run": ".venv/bin/python scripts/run_crawler.py",
     "site:serve": "node src/vobarna-server.mjs",
-    "site:publish:hetzner": ".venv/bin/python scripts/publish_hetzner.py"
+    "site:publish:hetzner": ".venv/bin/python scripts/publish_hetzner.py",
+    "crawlers": "node scripts/traffic-report.mjs",
+    "search-console": "node scripts/search-console.mjs",
+    "crawl:monitor": "node scripts/crawl-monitor.mjs",
+    "test:traffic": "node --test scripts/test_crawl_monitor.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.165.0"

@@ -1,0 +1,9 @@
+**
+!scripts/
+!scripts/crawl-monitor.mjs
+!scripts/crawler-visits.mjs
+!scripts/traffic-io.mjs
+!deploy/
+!deploy/crawl-monitor/
+!deploy/crawl-monitor/Dockerfile
+!deploy/crawl-monitor/Dockerfile.dockerignore
