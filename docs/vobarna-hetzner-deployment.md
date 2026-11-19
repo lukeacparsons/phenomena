@@ -26,7 +26,7 @@ The application runs as the unprivileged Node user, with a 768 MB memory limit a
 
 ## Routine publication
 
-The existing Mac collector still collects screenings. It has **not** been migrated to Hetzner. A separate `com.vobarna.publisher` LaunchAgent checks for completed local releases every minute and uploads changed releases as the server's data input. Fresh data therefore still depends on this Mac being awake and its collector running.
+The collector now has a separate GitHub-backed Coolify application on Outrageous Otter. See the [collector deployment and cutover guide](collector-server-deployment.md) for its persistent mounts, scoped monitoring credentials and verification. After cutover the website reads `/srv/vobarna/collector-publication`; the older `/srv/vobarna/publication` input and Mac publisher are retained as a deliberate rollback path, not parallel production writers.
 
 `scripts/serve_deployed_site.py` reads only the incoming catalogue, availability, artwork and initial identity registry. It renders them using the templates, scripts, styles and reference data packaged in the deployed Git image. Incoming HTML and JavaScript are never served. Each container renders into its own directory, so an older rolling container cannot overwrite a newer deployment. New input is checked every 15 seconds, with a rebuild at least every five minutes to expire sessions. Later build failures retain the last successful publication. Older input releases without private `catalogue.json` use `public/programme.json` during migration.
 

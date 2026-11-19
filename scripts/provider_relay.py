@@ -1,5 +1,6 @@
 """Authenticated fallback for public programme reads; direct requests remain first."""
 import json
+import os
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -27,6 +28,9 @@ class ProgrammeRelay:
         self.session=session
         try:self.config=json.loads(Path(config_path).read_text())
         except (OSError,ValueError):self.config={}
+        if os.environ.get('VOBARNA_SOURCE_TOKEN'):
+            self.config = {'url': 'https://vobarna-source-reader.luke-391.workers.dev/programme',
+                           'token': os.environ['VOBARNA_SOURCE_TOKEN']}
         self.failed=set()
 
     def get(self,url):

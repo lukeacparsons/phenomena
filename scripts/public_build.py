@@ -1,5 +1,6 @@
 """Run each publication with the current on-disk generator and its imports."""
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -11,8 +12,10 @@ PUBLIC = ROOT / '.site'
 def build(*, output=PUBLIC):
     # Watchers can live for days. Importing the generator once silently republishes
     # old templates after a code change, even while copying the newest JS assets.
-    result = subprocess.run([sys.executable, str(ROOT / 'scripts/build_public_site.py'),
-                             '--output', str(output)], cwd=ROOT, check=True,
+    command = [sys.executable, str(ROOT / 'scripts/build_public_site.py'), '--output', str(output)]
+    if os.environ.get('VOBARNA_REGISTRY_PATH'):
+        command.extend(['--registry', os.environ['VOBARNA_REGISTRY_PATH']])
+    result = subprocess.run(command, cwd=ROOT, check=True,
                             capture_output=True, text=True, timeout=600)
     if result.stderr:
         print(result.stderr, file=sys.stderr, end='')

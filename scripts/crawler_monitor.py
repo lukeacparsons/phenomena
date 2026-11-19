@@ -2,15 +2,35 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import subprocess
 import threading
+import urllib.request
 
 from crawler_health import ROOT, refresh_health
 from cinesa_showtimes import atomic_write
 from programme_store import file_lock
 
 HEALTH_KEY = 'vobarna:crawler-health'
+HEARTBEAT_URL = 'https://vobarna-crawler-heartbeat.luke-391.workers.dev/heartbeat'
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+
+def send_heartbeat(health, token):
+    # The server receives only this scoped credential, never a personal
+    # Wrangler login or an account-wide Cloudflare API token.
+    request = urllib.request.Request(HEARTBEAT_URL, data=json.dumps(health).encode(),
+        headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json',
+                 'User-Agent': 'VOBarnaCollector/1.0'}, method='POST')
+    with urllib.request.build_opener(NoRedirect).open(request, timeout=30) as response:
+        result = json.loads(response.read(4096))
+        if response.status != 200 or result.get('ok') is not True or result.get('checked_at') != health['checked_at']:
+            raise ValueError('Heartbeat not acknowledged')
 
 
 def publish_health(output=ROOT / 'static/preview-data', *, runner=subprocess.run):
@@ -26,13 +46,17 @@ def publish_health(output=ROOT / 'static/preview-data', *, runner=subprocess.run
             state = {}
         state['last_attempt'] = health['checked_at']
         try:
-            runner([str(ROOT / 'node_modules/.bin/wrangler'), 'kv', 'key', 'put', HEALTH_KEY,
-                    '--binding', 'KV', '--remote', '--config', str(ROOT / 'wrangler.toml'),
-                    '--path', str(output / 'crawler-health.json')], cwd=ROOT,
-                   check=True, timeout=60, capture_output=True)
+            token = os.environ.get('VOBARNA_HEARTBEAT_TOKEN')
+            if token:
+                send_heartbeat(health, token)
+            else:
+                runner([str(ROOT / 'node_modules/.bin/wrangler'), 'kv', 'key', 'put', HEALTH_KEY,
+                        '--binding', 'KV', '--remote', '--config', str(ROOT / 'wrangler.toml'),
+                        '--path', str(output / 'crawler-health.json')], cwd=ROOT,
+                       check=True, timeout=60, capture_output=True)
             state.update(status='ok', last_success=health['checked_at'])
             state.pop('error', None)
-        except (OSError, subprocess.SubprocessError) as error:
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
             # Wrangler output can contain account details. Record only the type.
             state.update(status='error', error=type(error).__name__)
         atomic_write(path, state)

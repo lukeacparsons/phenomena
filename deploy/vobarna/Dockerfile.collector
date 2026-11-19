@@ -1,0 +1,20 @@
+FROM node:24-bookworm-slim@sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates tzdata \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY scripts/requirements-cinesa.txt scripts/requirements-posters.txt ./scripts/
+RUN python3 -m venv /app/.venv && /app/.venv/bin/pip install --no-cache-dir -r scripts/requirements-posters.txt
+ARG SOURCE_COMMIT=unknown
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1 SOURCE_COMMIT=$SOURCE_COMMIT \
+    VOBARNA_WAIT_FOR_LEASE=1 VOBARNA_RUNTIME_HEALTH=/tmp/collector-health.json \
+    VOBARNA_REGISTRY_PATH=/app/.site/registry.json
+COPY --chown=node:node scripts/ ./scripts/
+COPY --chown=node:node src/ ./src/
+COPY --chown=node:node static/ ./static/
+COPY --chown=node:node data/ ./data/
+COPY --chown=node:node docs/cinema-dossiers.json docs/auditoriums.json docs/cinema-practical-info.json ./docs/
+COPY --chown=node:node barcelona-mascot-point-right-brow-refined.webp barcelona-mascot-poke.webp ./
+RUN mkdir -p /app/.site /app/static/preview-data && chown -R node:node /app
+USER node
+HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 CMD ["python", "scripts/run_deployed_crawler.py", "--health"]
+CMD ["python", "-u", "scripts/run_deployed_crawler.py"]

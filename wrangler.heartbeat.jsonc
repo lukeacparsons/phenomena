@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vobarna-crawler-heartbeat",
+  "main": "src/crawler-heartbeat.mjs",
+  "compatibility_date": "2026-11-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "39143dcc2da52fa6724dce616eb7bf4d",
+  "workers_dev": true,
+  "kv_namespaces": [{"binding": "KV", "id": "6af788121c174b05aaefcd0853b7839d"}],
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}

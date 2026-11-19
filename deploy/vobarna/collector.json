@@ -1,0 +1,14 @@
+{
+  "application_uuid": "2shq6c1ddaoxmrnqwhxfa4ir",
+  "application_name": "vobarna-collector",
+  "server_uuid": "of4fec7d9pc7vccw3h8hvimb",
+  "server_name": "Outrageous Otter",
+  "github_repository": "lukeacparsons/phenomena",
+  "github_branch": "main",
+  "dockerfile": "deploy/vobarna/Dockerfile.collector",
+  "automatic_deployments": true,
+  "data_directory": "/srv/vobarna/collector-data",
+  "publication_directory": "/srv/vobarna/collector-publication",
+  "heartbeat_worker": "vobarna-crawler-heartbeat",
+  "public_endpoints": false
+}
