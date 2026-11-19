@@ -9,6 +9,8 @@ The 19 November 2026 audit against the [Bing Webmaster Guidelines](https://www.b
 - Sitemap lastmod follows rendered content. The global Today navigation date is excluded from the hash; actual schedule, metadata and editorial changes count.
 - Permanent path, alias and host redirects use 301. The moving Today shortcut remains an uncached 302.
 - New poster variants include a normalized film title and content hash. Existing cached artwork URLs are reused.
+- The homepage links to paginated, indexable HTML programme pages; every screening remains readable without JavaScript. Opening its disclosure optionally loads those same pages. See [complete programme delivery](homepage-complete-programme.md). Bing's Live URL issue panel specifies a **1 MB soft limit** for HTML size.
+- The header mascot has descriptive, localized alt text while its button retains the action label.
 
 ## IndexNow operation
 

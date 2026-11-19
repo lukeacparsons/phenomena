@@ -32,7 +32,7 @@ from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVER
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
 from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS,
                                    REVIEWED_ON, SOURCES as COLLECTION_SOURCES)
-from complete_programme import render_complete_programme
+from complete_programme import LABELS as PROGRAMME_LABELS, paginate_programme, programme_path, render_programme_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
@@ -214,7 +214,9 @@ class Publication:
             script += '<script type="module" src="/site-page.js"></script>'
         cinema_scope = f' data-cinema-id="{text(cinema_id)}"' if cinema_id else ''
         # This small disclosure style must not add a render-blocking request.
-        programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if path == f'/{lang}/' else ''
+        programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
+        if path == f'/{lang}/':
+            script += '<script type="module" src="/complete-programme.js"></script>'
         html = f'''<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
@@ -227,7 +229,7 @@ class Publication:
 <script src="/theme.js"></script>
 <link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}</head>
 <body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}"{cinema_scope} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
-<div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt=""></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
+<div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
 <main id="main">{navigation}{breadcrumb}{body}</main>
 <footer class="site-footer">{footer}</footer>
 {'<dialog id="filmDialog" aria-labelledby="dialogTitle"></dialog>' if interactive else ''}</body></html>'''
@@ -495,14 +497,26 @@ class Publication:
         films = [self.film_data(k, r) for k, r in self.registry['entities'].items() if r['kind'] == 'films']
         films.sort(key=lambda f: (not bool(f['sessions']), f['title'].casefold()))
         venues = sorted([r for r in self.registry['entities'].values() if r['kind'] == 'cinemas'], key=lambda r: r['cinema']['name'].casefold())
+        programme_pages = paginate_programme(self.browser_programme, self.now, language_name=language_name)
         for lang in LOCALES:
             t = COPY[lang]
             body = f'<h1 class="sr-only">{t["home"]}</h1>' + self.programme_listing(lang)
-            body += render_complete_programme(self.browser_programme, lang, self.now, language_name=language_name)
+            body += render_programme_directory(programme_pages, lang)
             footer_extra = f'<p class="site-intro">{t["intro"]}</p><p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
             self.page(f'/{lang}/', lang, t['home'] + ' | VO Barna', t['intro'], body, alternatives={l: f'/{l}/' for l in LOCALES}, interactive=True,
                       footer_extra=footer_extra,
                       graph=[{'@type': 'WebSite', '@id': self.origin + '/#website', 'name': 'VO Barna', 'url': self.origin + '/', 'inLanguage': list(LOCALES), 'publisher': {'@id': self.origin + '/#publisher'}}])
+            for number, programme_page in enumerate(programme_pages, 1):
+                title = f'{PROGRAMME_LABELS[lang][0]} · {t["page"]} {number}'
+                alternatives = {l: programme_path(l, number) for l in LOCALES}
+                pagination = '<nav class="pagination" aria-label="' + text(PROGRAMME_LABELS[lang][0]) + '">'
+                for target, label in [(number - 1, t['previous']), (number + 1, t['next'])]:
+                    if 1 <= target <= len(programme_pages):
+                        pagination += link(programme_path(lang, target), label)
+                pagination += '</nav>'
+                description = f'{PROGRAMME_LABELS[lang][1]} {t["page"]} {number}/{len(programme_pages)}.'
+                body = f'<h1>{text(title)}</h1>' + pagination + programme_page['html'][lang] + pagination
+                self.page(alternatives[lang], lang, title + ' | VO Barna', description, body, alternatives=alternatives)
             pages = max(1, math.ceil(len(films) / PAGE_SIZE))
             for page in range(1, pages + 1):
                 suffix = '' if page == 1 else f'page/{page}/'
@@ -817,7 +831,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.discovery_pages()
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js',
-                         'site-header.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
+                         'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)

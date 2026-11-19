@@ -1,4 +1,4 @@
-/* The complete text is delivered in HTML; only this quiet summary is visible. */
+/* Crawlable programme pages and their optional homepage disclosure. */
 .complete-programme{margin:32px 0 0;border-top:1px solid var(--border);padding-top:12px;font-size:.875rem}
 .complete-programme>summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;color:var(--tx2)}
 .complete-programme>summary:focus-visible{outline:2px solid var(--tx);outline-offset:4px}

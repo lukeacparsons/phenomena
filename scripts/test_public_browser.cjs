@@ -13,6 +13,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:8789';
   let response=await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
   assert.equal(response.status(),200);
   assert.equal(await page.locator('.card[data-film]').count(),24);
+  assert.ok(Buffer.byteLength(await response.text())<1000000);
   assert.equal(await page.locator('#resultCount').getAttribute('hidden'),null);
   assert.equal(await page.locator('#resultCount').getAttribute('class'),'sr-only');
   assert.equal(await page.locator('.site-nav').isVisible(),false);

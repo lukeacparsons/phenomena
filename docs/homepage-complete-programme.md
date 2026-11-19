@@ -1,12 +1,14 @@
-# Complete programme in the homepage HTML
+# Crawlable complete programme
 
-The EN, ES and CA homepages include a native, closed **Complete programme** disclosure at the bottom of `main`, before the footer. It contains every collected upcoming film and screening in the initial response. It remains available when JavaScript is disabled, the catalogue request fails, or the visitor filters the poster grid.
+The EN, ES and CA homepages include a native, closed **Complete programme** disclosure at the bottom of `main`, before the footer. Its initial HTML links directly to every programme page: `/en/programme/`, `/es/cartelera/` and `/ca/cartellera/`, followed by `/page/2/` and subsequent pages. Each page contains ordinary, visible HTML screenings, a self-canonical URL, localized hreflang links and previous/next links. All programme pages are included in the sitemap and IndexNow manifest. JavaScript is not required to discover or read any screening.
 
-`scripts/complete_programme.py` renders compact text grouped by film, local date, cinema, room, audio, subtitles, version and format. Missing session languages stay unconfirmed; film-level language metadata is not used to fill them. Expired sessions are omitted during publication. The section displays its snapshot date and the Barcelona time zone.
+`scripts/complete_programme.py` partitions all upcoming screenings alphabetically by film, in batches of at most 1,000 sessions. Batches that exceed 600,000 UTF-8 bytes in any locale are split again, including oversized single films. Locale boundaries match. Every future screening appears exactly once per locale. The renderer groups by film, local date, cinema, room, audio, subtitles, version and format. Missing session languages stay unconfirmed; film-level language metadata never fills them. Pages show the collection time and Barcelona time zone.
 
-Screening links use the canonical film URL and screening fragment. With the catalogue loaded, the existing homepage click handler resolves that fragment and opens the selected session in the film modal. Without JavaScript, the same link opens the static film page. Modified clicks retain normal browser behaviour.
+Opening the homepage disclosure optionally fetches these same HTML pages, with at most three concurrent requests, and inserts their screening entries. Nothing is fetched while the disclosure remains closed. Completed content is reused on reopening. If a request fails or the programme has changed since the homepage loaded, the original links remain available; reopening retries. A shared version hash prevents combining different snapshots. The script is independent of the search catalogue, so a failed catalogue fetch does not prevent reading the programme. Humans and crawlers receive the same HTML.
 
-The poster grid, its batch sizes, image loading and collapsed footer navigation remain independent. The disclosure adds no images, JavaScript module or stylesheet request. Its small stylesheet is inlined on homepages only. Native `details` keeps the content collapsed; `content-visibility: auto` defers layout of offscreen film sections when expanded. The programme is identical for human visitors and crawlers.
+The homepage retains its usual 24 initial film cards and interactive batch size. The full programme remains linked regardless of grid filtering. Screening links use canonical film URLs and screening fragments; when the search catalogue is available, the existing click handler opens the exact screening modal. Otherwise they navigate normally to static film pages.
+
+The small programme stylesheet is inlined on the homepages and programme pages. The mascot has localized descriptive alt text; its button retains its action label, and the animation overlay remains hidden from assistive technology.
 
 Validation:
 
@@ -16,6 +18,6 @@ Validation:
 VOBARNA_PUBLIC_URL=http://127.0.0.1:8795 node scripts/test_complete_programme_browser.cjs
 ```
 
-The browser check covers the closed state, complete DOM content, JavaScript failure, native keyboard expansion, mobile overflow, search preservation and selection of the correct screening with keyboard access to Tickets. Availability in HTML does not control whether an external AI reader truncates or filters its extraction.
+The browser check covers no-JavaScript navigation, delayed loading, reuse, failed catalogue and programme requests, keyboard disclosure activation, mobile overflow, grid preservation and selection of the exact screening modal. Python checks cover lossless pagination, byte limits, localization, unconfirmed audio, expired screenings, sitemap inclusion and HTML fallbacks.
 
-The initial acceptance snapshot included 296 films and 2,990 unique screening links in every locale. Compressed homepage HTML was about 125 KB, an increase of about 95 KB; no image or asset requests were added. A controlled mobile comparison (390 px, 4× CPU slowdown, Fast 4G, two cold runs per variant) measured average LCP of 1.87 s before and 1.91 s after, with zero layout shift in all runs. These are lab observations, not field guarantees. Detailed evidence is in `homepage-complete-programme-checks-2026-11-19.json`.
+This replaces the original all-in-one homepage response, which was about 1.29 MB uncompressed. The original performance measurements in `homepage-complete-programme-checks-2026-11-19.json` describe that earlier implementation.

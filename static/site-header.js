@@ -157,7 +157,7 @@ if (logo && button) {
       readyURL = URL.createObjectURL(blob);
       const image = new Image();
       image.className = 'clint-animation';
-      image.alt = '';
+      image.alt = logo.alt;
       image.setAttribute('aria-hidden', 'true');
       image.src = readyURL;
       await image.decode();

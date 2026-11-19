@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 import unittest
 
 from build_public_site import language_name, compact_programme
-from complete_programme import render_complete_programme, LABELS
+from complete_programme import render_complete_programme, paginate_programme, programme_path, LABELS
 from site_identity import update_registry, new_registry
 from test_public_site import programme, NOW
 import test_public_site as publication_fixtures
@@ -24,6 +24,29 @@ class ProgrammeHTML(HTMLParser):
 
 
 class CompleteProgrammeTests(unittest.TestCase):
+    def test_pagination_preserves_every_session_with_bounded_localized_html(self):
+        data = programme()
+        original = data['films'][0]
+        original['sessions'] = [{**original['sessions'][0], 'id': f'session:{n}'} for n in range(451)]
+        registry = update_registry(new_registry(), data, data['cinemas'], NOW.isoformat())
+        compact = compact_programme(data, registry, NOW)
+        compact['films'][0]['title'] = 'A long title with accents àèí ' * 8
+        pages = paginate_programme(compact, NOW, language_name=language_name, budget=6000)
+        self.assertGreater(len(pages), 4)  # An oversized film must split too.
+        for lang in LABELS:
+            sessions = []
+            for page in pages:
+                html = page['html'][lang]
+                self.assertLessEqual(len(html.encode()), 6000)
+                parser = ProgrammeHTML(); parser.feed(html)
+                self.assertEqual(parser.disclosures, [])
+                sessions.extend(s['href'] for s in parser.sessions)
+            self.assertEqual(len(sessions), 451)
+            self.assertEqual(len(set(sessions)), 451)
+        empty = paginate_programme(compact, datetime(2027, 1, 1, tzinfo=timezone.utc), language_name=language_name)
+        self.assertEqual(len(empty), 1)
+        self.assertEqual(empty[0]['sessions'], 0)
+
     def test_complete_beyond_grid_limits_localized_and_without_inferred_audio(self):
         data = programme()
         original = data['films'][0]
@@ -74,7 +97,7 @@ class CompleteProgrammeTests(unittest.TestCase):
 
 
 class CompleteProgrammePublicationTest(unittest.TestCase):
-    def test_full_programme_is_inside_main_in_initial_html_and_outside_grid(self):
+    def test_homepage_links_to_complete_indexable_html_without_javascript(self):
         # Reuse the publication fixture without inheriting its entire test suite.
         fixture = publication_fixtures.PublicationTests()
         fixture.setUp()
@@ -88,7 +111,18 @@ class CompleteProgrammePublicationTest(unittest.TestCase):
                 self.assertLess(end, html.index('</main>'))
                 self.assertLess(end, html.index('<footer'))
                 parser = ProgrammeHTML(); parser.feed(html[start:end + len('</details>')])
-                self.assertEqual(len(parser.sessions), 1)
+                self.assertEqual(len(parser.sessions), 0)
+                path = programme_path(lang)
+                self.assertIn(f'href="{path}" data-programme-page', html)
+                page = (fixture.root / 'site/current/public' / path.lstrip('/') / 'index.html').read_text()
+                content = ProgrammeHTML(); content.feed(page)
+                self.assertEqual(len(content.sessions), 1)
+                self.assertIn('content="index,follow"', page)
+                self.assertIn('https://vobarna.com' + path, (fixture.root / 'site/current/public/sitemap.xml').read_text())
+                self.assertLess(len(page.encode()), 1000000)
+                self.assertLess(len(html.encode()), 1000000)
+                self.assertNotIn('alt=""', html)
+                self.assertIn('src="/complete-programme.js"', html)
                 self.assertNotIn('open', parser.disclosures[0])
                 self.assertIn('content-visibility:auto', html)
                 self.assertNotIn('href="/complete-programme.css"', html)
