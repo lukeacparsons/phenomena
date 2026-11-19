@@ -4,11 +4,12 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const source=readFileSync(new URL('../static/analytics.js',import.meta.url),'utf8').replace(/^export /gm,'');
-function setup({hostname='vobarna.com',dnt='0',gpc=false}={}){
+function setup({hostname='vobarna.com',dnt='0',gpc=false,storage=new Map(),blocked=false,search='?q=private-search'}={}){
   const events=[],scripts=[],window=new EventTarget();let config;
   window.posthog={init(token,options){assert.match(token,/^phc_/);config=options;options.loaded({capture(name,properties){events.push(options.before_send({event:name,properties}));}});}};
-  const location={hostname,origin:'https://'+hostname,pathname:'/en/',search:'?q=private-search',hash:''};
-  const context=vm.createContext({window,location,navigator:{doNotTrack:dnt,globalPrivacyControl:gpc},URL,
+  const location={hostname,origin:'https://'+hostname,pathname:'/en/',search,hash:''};
+  const localStorage={setItem(k,v){if(blocked)throw Error('Blocked');storage.set(k,v);},getItem:k=>storage.get(k),removeItem:k=>storage.delete(k)};
+  const context=vm.createContext({window,location,localStorage,navigator:{doNotTrack:dnt,globalPrivacyControl:gpc},URL,URLSearchParams,
     document:{documentElement:{lang:'en'},referrer:'https://example.com/private?q=secret',
       createElement:()=>({}),head:{append:script=>scripts.push(script)}}});
   vm.runInContext(source,context);
@@ -18,7 +19,10 @@ test('production analytics queues handoffs and tracks path changes without searc
   const app=setup();assert.equal(app.scripts.length,1);
   app.emit('vobarna:ticket-click',{film_id:'film1',screening_id:'session1',cinema_id:'verdi',destination:'cinema.example',placement:'dialog',booking_url:'https://cinema.example/private'});
   assert.equal(app.events.length,0);app.scripts[0].onload();
-  assert.equal(app.config.cookieless_mode,'always');assert.equal(app.config.person_profiles,'never');
+  assert.equal(app.config.cookieless_mode,'never');assert.equal(app.config.person_profiles,'never');
+  assert.equal(app.config.persistence,'localStorage');assert.equal(app.config.disable_persistence,false);
+  assert.equal(app.events[0].properties.visitor_alert_version,1);
+  assert.equal(app.events[0].properties.visitor_identity_persisted,true);
   assert.equal(app.config.autocapture,false);assert.equal(app.config.disable_session_recording,true);
   assert.deepEqual(app.events.map(event=>event.event),['$pageview','ticket_click']);
   assert.equal(app.events[0].properties.$referrer,'https://example.com');
@@ -35,5 +39,17 @@ test('production analytics queues handoffs and tracks path changes without searc
   assert.equal(cleaned.properties.$search_keyword,undefined);
 });
 test('local previews and browser privacy preferences do not load analytics',()=>{
-  for(const options of [{hostname:'127.0.0.1'},{hostname:'localhost'},{dnt:'1'},{gpc:true}])assert.equal(setup(options).scripts.length,0);
+  for(const options of [{hostname:'127.0.0.1'},{hostname:'localhost'},{hostname:'origin.vobarna.com'},{dnt:'1'},{dnt:'yes'},{gpc:true}])assert.equal(setup(options).scripts.length,0);
+});
+test('internal marking persists across pages and can be cleared',()=>{
+  const storage=new Map();
+  for(const [search,expected] of [['?internal=1',true],['',true],['?internal=0',false],['',false]]){
+    const app=setup({storage,search});app.scripts[0].onload();
+    assert.equal(app.events[0].properties.internal_user,expected);
+  }
+});
+test('blocked storage falls back to memory and leaves identity unclassified',()=>{
+  const app=setup({blocked:true});app.scripts[0].onload();
+  assert.equal(app.config.persistence,'memory');assert.equal(app.config.disable_persistence,true);
+  assert.equal(app.events[0].properties.visitor_identity_persisted,false);
 });

@@ -2,6 +2,18 @@
 const PROJECT_TOKEN='phc_AUvZfww2dcEvkZ5CBuUdZxRBDCCfqxWXpVquA8eDbf27';
 const API_HOST='https://us.i.posthog.com';
 
+export function visitorContext(){
+  const internal=new URLSearchParams(location.search).get('internal');
+  try{
+    // Use local storage only; blocked storage must not fall back to cookies.
+    localStorage.setItem('vobarna-storage-check','1');
+    localStorage.removeItem('vobarna-storage-check');
+    if(internal==='0')localStorage.removeItem('vobarna-internal');
+    else if(internal==='1')localStorage.setItem('vobarna-internal','1');
+    return {persisted:true,internal:localStorage.getItem('vobarna-internal')==='1'};
+  }catch{return {persisted:false,internal:internal==='1'};}
+}
+
 export function sanitizeAnalyticsEvent(event){
   if(!event?.properties)return event;
   const properties={...event.properties};
@@ -18,10 +30,12 @@ export function sanitizeAnalyticsEvent(event){
 }
 
 if(['vobarna.com','www.vobarna.com'].includes(location.hostname)
-    &&navigator.doNotTrack!=='1'&&!navigator.globalPrivacyControl){
+    &&!['1','yes'].includes(navigator.doNotTrack)&&!navigator.globalPrivacyControl){
+  const visitor=visitorContext();
   let client=null;
   const queued=[];
   const pageProperties=()=>({site:'vobarna',language:document.documentElement.lang,
+    visitor_alert_version:1,visitor_identity_persisted:visitor.persisted,internal_user:visitor.internal,
     $current_url:location.origin+location.pathname,$pathname:location.pathname,
     $referrer:document.referrer?new URL(document.referrer).origin:''});
   function capture(event,properties={}){
@@ -53,7 +67,9 @@ if(['vobarna.com','www.vobarna.com'].includes(location.hostname)
   script.async=true;script.crossOrigin='anonymous';
   script.onload=()=>{
     window.posthog?.init(PROJECT_TOKEN,{
-      api_host:API_HOST,defaults:'2026-08-30',cookieless_mode:'always',person_profiles:'never',
+      api_host:API_HOST,defaults:'2026-08-30',cookieless_mode:'never',person_profiles:'never',
+      persistence:visitor.persisted?'localStorage':'memory',disable_persistence:!visitor.persisted,
+      cross_subdomain_cookie:false,respect_dnt:true,
       autocapture:false,capture_pageview:false,capture_pageleave:false,
       capture_dead_clicks:false,rageclick:false,capture_heatmaps:false,capture_webmcp:false,
       disable_session_recording:true,disable_surveys:true,advanced_disable_feature_flags:true,

@@ -1,0 +1,95 @@
+{
+  "chat_id": -1003773662180,
+  "rich_message": {
+    "blocks": [
+      {
+        "text": {
+          "text": "{if(event.properties.notification_test, 'TEST — New VO Barna visitor', 'New VO Barna visitor')}",
+          "type": "bold"
+        },
+        "type": "paragraph"
+      },
+      {
+        "text": [
+          {
+            "text": "Source: ",
+            "type": "bold"
+          },
+          "{if(coalesce(if(empty(event.properties.$session_entry_utm_source), null, event.properties.$session_entry_utm_source), if(empty(event.properties.utm_source), null, event.properties.utm_source), '') != '', concat(if(lower(coalesce(if(empty(event.properties.$session_entry_utm_source), null, event.properties.$session_entry_utm_source), if(empty(event.properties.utm_source), null, event.properties.utm_source), '')) = 'chatgpt.com', 'ChatGPT', substring(coalesce(if(empty(event.properties.$session_entry_utm_source), null, event.properties.$session_entry_utm_source), if(empty(event.properties.utm_source), null, event.properties.utm_source), ''), 1, 120)), ' · UTM-tagged'), if(coalesce(if(empty(event.properties.$session_entry_referring_domain), null, event.properties.$session_entry_referring_domain), if(empty(event.properties.$referring_domain), null, event.properties.$referring_domain), '$direct') in ('vobarna.com', 'www.vobarna.com'), 'Internal navigation · original source unknown', if(coalesce(if(empty(event.properties.$session_entry_referring_domain), null, event.properties.$session_entry_referring_domain), if(empty(event.properties.$referring_domain), null, event.properties.$referring_domain), '$direct') = '$direct', 'Direct / unattributed', concat(substring(coalesce(if(empty(event.properties.$session_entry_referring_domain), null, event.properties.$session_entry_referring_domain), if(empty(event.properties.$referring_domain), null, event.properties.$referring_domain), '$direct'), 1, 120), ' · referrer'))))}"
+        ],
+        "type": "paragraph"
+      },
+      {
+        "text": [
+          {
+            "text": "Landing page: ",
+            "type": "bold"
+          },
+          "{coalesce(if(empty(event.properties.$session_entry_pathname), null, event.properties.$session_entry_pathname), event.properties.$pathname, '/')}"
+        ],
+        "type": "paragraph"
+      },
+      {
+        "text": [
+          {
+            "text": "Approx. location: ",
+            "type": "bold"
+          },
+          "{coalesce({'AD': '🇦🇩 ', 'AE': '🇦🇪 ', 'AF': '🇦🇫 ', 'AG': '🇦🇬 ', 'AI': '🇦🇮 ', 'AL': '🇦🇱 ', 'AM': '🇦🇲 ', 'AO': '🇦🇴 ', 'AQ': '🇦🇶 ', 'AR': '🇦🇷 ', 'AS': '🇦🇸 ', 'AT': '🇦🇹 ', 'AU': '🇦🇺 ', 'AW': '🇦🇼 ', 'AX': '🇦🇽 ', 'AZ': '🇦🇿 ', 'BA': '🇧🇦 ', 'BB': '🇧🇧 ', 'BD': '🇧🇩 ', 'BE': '🇧🇪 ', 'BF': '🇧🇫 ', 'BG': '🇧🇬 ', 'BH': '🇧🇭 ', 'BI': '🇧🇮 ', 'BJ': '🇧🇯 ', 'BL': '🇧🇱 ', 'BM': '🇧🇲 ', 'BN': '🇧🇳 ', 'BO': '🇧🇴 ', 'BQ': '🇧🇶 ', 'BR': '🇧🇷 ', 'BS': '🇧🇸 ', 'BT': '🇧🇹 ', 'BV': '🇧🇻 ', 'BW': '🇧🇼 ', 'BY': '🇧🇾 ', 'BZ': '🇧🇿 ', 'CA': '🇨🇦 ', 'CC': '🇨🇨 ', 'CD': '🇨🇩 ', 'CF': '🇨🇫 ', 'CG': '🇨🇬 ', 'CH': '🇨🇭 ', 'CI': '🇨🇮 ', 'CK': '🇨🇰 ', 'CL': '🇨🇱 ', 'CM': '🇨🇲 ', 'CN': '🇨🇳 ', 'CO': '🇨🇴 ', 'CR': '🇨🇷 ', 'CU': '🇨🇺 ', 'CV': '🇨🇻 ', 'CW': '🇨🇼 ', 'CX': '🇨🇽 ', 'CY': '🇨🇾 ', 'CZ': '🇨🇿 ', 'DE': '🇩🇪 ', 'DJ': '🇩🇯 ', 'DK': '🇩🇰 ', 'DM': '🇩🇲 ', 'DO': '🇩🇴 ', 'DZ': '🇩🇿 ', 'EC': '🇪🇨 ', 'EE': '🇪🇪 ', 'EG': '🇪🇬 ', 'EH': '🇪🇭 ', 'ER': '🇪🇷 ', 'ES': '🇪🇸 ', 'ET': '🇪🇹 ', 'FI': '🇫🇮 ', 'FJ': '🇫🇯 ', 'FK': '🇫🇰 ', 'FM': '🇫🇲 ', 'FO': '🇫🇴 ', 'FR': '🇫🇷 ', 'GA': '🇬🇦 ', 'GB': '🇬🇧 ', 'GD': '🇬🇩 ', 'GE': '🇬🇪 ', 'GF': '🇬🇫 ', 'GG': '🇬🇬 ', 'GH': '🇬🇭 ', 'GI': '🇬🇮 ', 'GL': '🇬🇱 ', 'GM': '🇬🇲 ', 'GN': '🇬🇳 ', 'GP': '🇬🇵 ', 'GQ': '🇬🇶 ', 'GR': '🇬🇷 ', 'GS': '🇬🇸 ', 'GT': '🇬🇹 ', 'GU': '🇬🇺 ', 'GW': '🇬🇼 ', 'GY': '🇬🇾 ', 'HK': '🇭🇰 ', 'HM': '🇭🇲 ', 'HN': '🇭🇳 ', 'HR': '🇭🇷 ', 'HT': '🇭🇹 ', 'HU': '🇭🇺 ', 'ID': '🇮🇩 ', 'IE': '🇮🇪 ', 'IL': '🇮🇱 ', 'IM': '🇮🇲 ', 'IN': '🇮🇳 ', 'IO': '🇮🇴 ', 'IQ': '🇮🇶 ', 'IR': '🇮🇷 ', 'IS': '🇮🇸 ', 'IT': '🇮🇹 ', 'JE': '🇯🇪 ', 'JM': '🇯🇲 ', 'JO': '🇯🇴 ', 'JP': '🇯🇵 ', 'KE': '🇰🇪 ', 'KG': '🇰🇬 ', 'KH': '🇰🇭 ', 'KI': '🇰🇮 ', 'KM': '🇰🇲 ', 'KN': '🇰🇳 ', 'KP': '🇰🇵 ', 'KR': '🇰🇷 ', 'KW': '🇰🇼 ', 'KY': '🇰🇾 ', 'KZ': '🇰🇿 ', 'LA': '🇱🇦 ', 'LB': '🇱🇧 ', 'LC': '🇱🇨 ', 'LI': '🇱🇮 ', 'LK': '🇱🇰 ', 'LR': '🇱🇷 ', 'LS': '🇱🇸 ', 'LT': '🇱🇹 ', 'LU': '🇱🇺 ', 'LV': '🇱🇻 ', 'LY': '🇱🇾 ', 'MA': '🇲🇦 ', 'MC': '🇲🇨 ', 'MD': '🇲🇩 ', 'ME': '🇲🇪 ', 'MF': '🇲🇫 ', 'MG': '🇲🇬 ', 'MH': '🇲🇭 ', 'MK': '🇲🇰 ', 'ML': '🇲🇱 ', 'MM': '🇲🇲 ', 'MN': '🇲🇳 ', 'MO': '🇲🇴 ', 'MP': '🇲🇵 ', 'MQ': '🇲🇶 ', 'MR': '🇲🇷 ', 'MS': '🇲🇸 ', 'MT': '🇲🇹 ', 'MU': '🇲🇺 ', 'MV': '🇲🇻 ', 'MW': '🇲🇼 ', 'MX': '🇲🇽 ', 'MY': '🇲🇾 ', 'MZ': '🇲🇿 ', 'NA': '🇳🇦 ', 'NC': '🇳🇨 ', 'NE': '🇳🇪 ', 'NF': '🇳🇫 ', 'NG': '🇳🇬 ', 'NI': '🇳🇮 ', 'NL': '🇳🇱 ', 'NO': '🇳🇴 ', 'NP': '🇳🇵 ', 'NR': '🇳🇷 ', 'NU': '🇳🇺 ', 'NZ': '🇳🇿 ', 'OM': '🇴🇲 ', 'PA': '🇵🇦 ', 'PE': '🇵🇪 ', 'PF': '🇵🇫 ', 'PG': '🇵🇬 ', 'PH': '🇵🇭 ', 'PK': '🇵🇰 ', 'PL': '🇵🇱 ', 'PM': '🇵🇲 ', 'PN': '🇵🇳 ', 'PR': '🇵🇷 ', 'PS': '🇵🇸 ', 'PT': '🇵🇹 ', 'PW': '🇵🇼 ', 'PY': '🇵🇾 ', 'QA': '🇶🇦 ', 'RE': '🇷🇪 ', 'RO': '🇷🇴 ', 'RS': '🇷🇸 ', 'RU': '🇷🇺 ', 'RW': '🇷🇼 ', 'SA': '🇸🇦 ', 'SB': '🇸🇧 ', 'SC': '🇸🇨 ', 'SD': '🇸🇩 ', 'SE': '🇸🇪 ', 'SG': '🇸🇬 ', 'SH': '🇸🇭 ', 'SI': '🇸🇮 ', 'SJ': '🇸🇯 ', 'SK': '🇸🇰 ', 'SL': '🇸🇱 ', 'SM': '🇸🇲 ', 'SN': '🇸🇳 ', 'SO': '🇸🇴 ', 'SR': '🇸🇷 ', 'SS': '🇸🇸 ', 'ST': '🇸🇹 ', 'SV': '🇸🇻 ', 'SX': '🇸🇽 ', 'SY': '🇸🇾 ', 'SZ': '🇸🇿 ', 'TC': '🇹🇨 ', 'TD': '🇹🇩 ', 'TF': '🇹🇫 ', 'TG': '🇹🇬 ', 'TH': '🇹🇭 ', 'TJ': '🇹🇯 ', 'TK': '🇹🇰 ', 'TL': '🇹🇱 ', 'TM': '🇹🇲 ', 'TN': '🇹🇳 ', 'TO': '🇹🇴 ', 'TR': '🇹🇷 ', 'TT': '🇹🇹 ', 'TV': '🇹🇻 ', 'TW': '🇹🇼 ', 'TZ': '🇹🇿 ', 'UA': '🇺🇦 ', 'UG': '🇺🇬 ', 'UM': '🇺🇲 ', 'US': '🇺🇸 ', 'UY': '🇺🇾 ', 'UZ': '🇺🇿 ', 'VA': '🇻🇦 ', 'VC': '🇻🇨 ', 'VE': '🇻🇪 ', 'VG': '🇻🇬 ', 'VI': '🇻🇮 ', 'VN': '🇻🇳 ', 'VU': '🇻🇺 ', 'WF': '🇼🇫 ', 'WS': '🇼🇸 ', 'YE': '🇾🇪 ', 'YT': '🇾🇹 ', 'ZA': '🇿🇦 ', 'ZM': '🇿🇲 ', 'ZW': '🇿🇼 '}[upper(coalesce(event.properties.$geoip_country_code, ''))], '')}",
+          "{if(coalesce(if(empty(event.properties.$geoip_city_name), null, event.properties.$geoip_city_name), '') = '', coalesce(if(empty(event.properties.$geoip_country_name), null, event.properties.$geoip_country_name), 'Unknown country'), concat(coalesce(if(empty(event.properties.$geoip_city_name), null, event.properties.$geoip_city_name), ''), ', ', coalesce(if(empty(event.properties.$geoip_country_name), null, event.properties.$geoip_country_name), 'Unknown country')))}"
+        ],
+        "type": "paragraph"
+      },
+      {
+        "text": [
+          {
+            "text": "Device: ",
+            "type": "bold"
+          },
+          "{concat(coalesce(if(empty(event.properties.$device), null, event.properties.$device), if(empty(event.properties.$device_type), null, event.properties.$device_type), 'Unknown'), ' · ', coalesce(if(empty(event.properties.$os), null, event.properties.$os), 'Unknown'), ' · ', coalesce(if(empty(event.properties.$browser), null, event.properties.$browser), 'Unknown'))}"
+        ],
+        "type": "paragraph"
+      },
+      {
+        "text": [
+          {
+            "text": "In-app browser: ",
+            "type": "bold"
+          },
+          "{coalesce(if(empty(event.properties.$webview_app), null, event.properties.$webview_app), 'None recorded')}"
+        ],
+        "type": "paragraph"
+      },
+      {
+        "type": "paragraph",
+        "text": [
+          {
+            "type": "bold",
+            "text": "Browser language: "
+          },
+          "{coalesce(if(empty(event.properties.$browser_language), null, event.properties.$browser_language), 'Unknown')}"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": [
+          {
+            "type": "bold",
+            "text": "Site language: "
+          },
+          "{coalesce(event.properties.language, 'Unknown')}"
+        ]
+      },
+      {
+        "text": {
+          "url": "{event.url}",
+          "text": "Open PostHog event",
+          "type": "url"
+        },
+        "type": "paragraph"
+      }
+    ],
+    "skip_entity_detection": true
+  },
+  "message_thread_id": 43418
+}
