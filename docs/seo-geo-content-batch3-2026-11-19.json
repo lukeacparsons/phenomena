@@ -109,7 +109,8 @@
       }
     },
     "existing_duplicate_title_groups": 59,
-    "visual_artifact": "output/seo/gracia-mobile.png"
+    "visual_artifact": "output/seo/gracia-mobile.png",
+    "live_followup": "Live browser checks passed for VOSC and Gràcia exact-session actions, six comparison rooms, mobile layout and Today homepage date selection. HTTP verification caught missing new llms.txt links; all three destinations were added and the 22 publication tests passed again with assertions covering every discovery route and the comparison."
   },
   "limitations": [
     "Not live seat inventory or an adjacent-seat guarantee.",

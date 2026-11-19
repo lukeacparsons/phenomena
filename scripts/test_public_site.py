@@ -126,6 +126,7 @@ class PublicationTests(unittest.TestCase):
             self.assertEqual(links.links, [(True, True)] * len(PATHS))
             self.assertIn(f'href="/{lang}/?date=2026-11-19" data-today-link', home)
             for kind, paths in PATHS.items():
+                self.assertIn('https://vobarna.com' + paths['en'], (root / 'llms.txt').read_text())
                 html = (root / paths[lang].lstrip('/') / 'index.html').read_text()
                 self.assertIn(f'<html lang="{lang}">', html)
                 self.assertIn(f'<link rel="canonical" href="https://vobarna.com{paths[lang]}">', html)
@@ -203,6 +204,8 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('id="compare-phenomena-1"', html)
         self.assertIn('https://cinema.example/room', html)
         self.assertIn('cannot establish the biggest screen', html)
+        self.assertIn('https://vobarna.com/en/guides/cinema-screen-sound-formats/',
+                      (self.root / 'site/current/public/llms.txt').read_text())
 
     def test_discovery_actions_and_thin_archive_policy(self):
         self.data['films'].append({'id': 'thin', 'title': 'Unresolved archive', 'sessions': []})

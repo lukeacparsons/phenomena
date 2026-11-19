@@ -841,6 +841,9 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 - [35mm and 70mm]({origin}{DISCOVERY_PATHS['film']['en']}): separate film-format lists based on explicit session tags, with print and edition caveats.
 - [Films in English]({origin}{DISCOVERY_PATHS['english']['en']}): session-confirmed English audio over the next seven calendar days; multilingual films are separate.
 - [English subtitles and VOSI]({origin}{DISCOVERY_PATHS['subtitles']['en']}): subtitle labels explained, with upcoming confirmed English-subtitled sessions.
+- [Catalan subtitles and VOSC]({origin}{DISCOVERY_PATHS['vosc']['en']}): upcoming sessions with explicit Catalan subtitles; audio is checked separately.
+- [Original-language cinema in Gràcia]({origin}{DISCOVERY_PATHS['gracia']['en']}): four reviewed venues, seven calendar days, English from 20:00, separate multilingual results and entrance guidance.
+- [Compare screens, sound and seating]({origin}/en/{SECTIONS['en']['guides']}/{GUIDES['formats']['en']}/): six individual rooms with sourced dimensions, projection, sound and seating facts; missing measurements remain unknown.
 - [Film information]({origin}/en/films/): film facts, original audio, subtitles and official booking links.
 - [Cinema directory]({origin}/en/cinemas/): addresses and source-linked auditorium, seating and access research.
 - [Cinema guides]({origin}/en/guides/): version labels, screens and sound formats.
