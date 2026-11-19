@@ -30,12 +30,12 @@ def resolve_url(raw, manifest, now=None):
             target = manifest['screenings'].get(session, {}).get(lang)
             if not target or (film and manifest['films'].get(film, {}).get(lang) != target.split('#')[0]):
                 return 404, None
-            return 308, target
+            return 301, target
         for kind, key in [('films', film), ('cinemas', cinema)]:
             if key:
                 target = manifest[kind].get(key, {}).get(lang)
-                return (308, target) if target else (404, None)
-        return 308, '/en/' + ('?' + url.query if url.query else '')
+                return (301, target) if target else (404, None)
+        return 301, '/en/' + ('?' + url.query if url.query else '')
     if not normalized.endswith('/') and '.' not in normalized.split('/')[-1]:
         normalized += '/'
     if normalized in TODAY_PATHS.values():
@@ -45,7 +45,7 @@ def resolve_url(raw, manifest, now=None):
     if target not in manifest['pages']:
         return 404, None
     if target != url.path:
-        return 308, target + ('?' + url.query if url.query else '')
+        return 301, target + ('?' + url.query if url.query else '')
     return 200, target
 
 
@@ -58,7 +58,7 @@ def serve_public(handler, publication):
     manifest = json.loads((current / 'manifest.json').read_text())
     page_like = '.' not in url.path.rsplit('/', 1)[-1] or url.path.lower().endswith(('/cinemas.html', '/index.html', '/webmcp.html'))
     status, target = resolve_url(handler.path, manifest) if page_like else (200, url.path)
-    if status in (302, 308):
+    if status in (302, 301):
         handler.send_response(status)
         handler.send_header('Location', target)
         if status == 302:

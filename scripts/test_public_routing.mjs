@@ -6,18 +6,18 @@ import worker from '../src/vobarna-worker.mjs';
 const routes={pages:['/en/','/en/films/dune-1984/','/es/peliculas/dune-1984/'],redirects:{'/en/films/old-dune/':'/en/films/dune-1984/'},
   films:{'source:1984':{en:'/en/films/dune-1984/'}},cinemas:{},screenings:{s1:{en:'/en/films/dune-1984/#screening-s1'}}};
 test('legacy identities redirect and unknown entities are real 404s',()=>{
-  assert.deepEqual(resolvePublicURL('https://vobarna.com/cinemas.html?film=source%3A1984',routes),{status:308,location:'/en/films/dune-1984/'});
+  assert.deepEqual(resolvePublicURL('https://vobarna.com/cinemas.html?film=source%3A1984',routes),{status:301,location:'/en/films/dune-1984/'});
   assert.equal(resolvePublicURL('https://vobarna.com/cinemas.html?film=unknown',routes).status,404);
   assert.equal(resolvePublicURL('https://vobarna.com/en/films/missing/',routes).status,404);
   for(const path of ['/en/','/EN/index.html','/']){
-    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?film=source%3A1984&q=dune',routes),{status:308,location:'/en/films/dune-1984/'});
-    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?screening=s1',routes),{status:308,location:'/en/films/dune-1984/#screening-s1'});
+    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?film=source%3A1984&q=dune',routes),{status:301,location:'/en/films/dune-1984/'});
+    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?screening=s1',routes),{status:301,location:'/en/films/dune-1984/#screening-s1'});
     assert.equal(resolvePublicURL('https://vobarna.com'+path+'?film=unknown',routes).status,404);
   }
 });
 test('case, slash, aliases and index.html converge without loops',()=>{
   for(const path of ['/EN/FILMS/DUNE-1984','/en/films/dune-1984/index.html','/en/films/old-dune/'])
-    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path,routes),{status:308,location:'/en/films/dune-1984/'});
+    assert.deepEqual(resolvePublicURL('https://vobarna.com'+path,routes),{status:301,location:'/en/films/dune-1984/'});
   assert.equal(resolvePublicURL('https://vobarna.com/en/films/dune-1984/',routes).status,200);
 });
 test('filter pages are noindex and tracking duplicates remain canonicalizable',()=>{
@@ -71,7 +71,7 @@ test('worker loads only the relevant historical screening shard',async()=>{
     assert.match(path,/^\/route-data\/screenings\/[a-f0-9]{2}\.json$/);
     return Response.json(routes.screenings);
   }}});
-  assert.equal(response.status,308);
+  assert.equal(response.status,301);
   assert.equal(response.headers.get('Location'),'https://vobarna.com/en/films/dune-1984/#screening-s1');
   assert.equal(requested.length,2);
  }

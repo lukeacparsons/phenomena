@@ -18,6 +18,7 @@ VO Barna is hosted at **https://vobarna.com**, with Bunny DNS/CDN in front of th
 | Public hostnames | `vobarna.com`, `www.vobarna.com`; HTTPS required; www and the default CDN hostname permanently redirect to apex with path/query intact |
 | Data input | `/srv/vobarna/publication` on Otter, mounted at `/incoming` |
 | Rendered pages | `/app/.site`, private to each deployed container |
+| IndexNow state | `/srv/vobarna/indexnow` mounted at `/indexnow`, UID/GID 1000, mode 0700 |
 | Previous service | `vobarna`, UUID `jaksjk5shvd3mpkgyhsxomqn`, retained for recovery |
 
 DNS has an apex PullZone record, `www` CNAME to `vobarna.b-cdn.net`, and `origin` A to Otter. Bunny verifies the origin certificate. The bootstrap domain `vobarna-origin.luke.ac` belongs to the previous service and is not Bunny's origin.
@@ -66,6 +67,8 @@ The deployment uses `deploy/vobarna/Dockerfile.github`, `scripts/serve_deployed_
 If the activation script changes, install `deploy/vobarna/activate.py` as `/usr/local/libexec/vobarna-activate`, owned by root and executable, before publishing with the new version.
 
 ## Rollback and recovery
+
+IndexNow uses runtime `INDEXNOW_KEY` and `INDEXNOW_STATE_DIR=/indexnow`. Preserve its mounted state through deployments and rollback; see [Bing indexing operations](bing-indexing.md) for initialization, retries and verification. The public manifest checkpoint also preserves unchanged sitemap timestamps when a new container starts.
 
 To roll back content, pause the local publisher, inspect the two directories under `/srv/vobarna/publication/releases`, and run `/usr/local/libexec/vobarna-activate RELEASE_NAME` as `vobarna-publish` with the previous release name. Wait for the application to detect and render that input, then allow Bunny's 60-second HTML/data TTL. Resolve the bad source build before resuming publication.
 

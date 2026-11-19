@@ -41,6 +41,18 @@ class ImageOptimizationTests(unittest.TestCase):
         self.assertEqual((result['width'], result['height']), (60, 90))
         self.assertEqual([v['width'] for v in result['variants']], [60])
 
+    def test_new_artwork_gets_readable_names_without_renaming_existing_artwork(self):
+        Image.new('RGB', (90, 120), '#123456').save(self.path)
+        old = optimize_poster(self.url, self.static)
+        for manifest in (self.static / 'preview-data/images').glob('*.json'):
+            manifest.unlink()
+        with patch('optimize_images.webp', side_effect=AssertionError('Unnecessary re-encode')):
+            self.assertEqual(optimize_poster(self.url, self.static, title='Amélie', existing=old), old)
+        Image.new('RGB', (90, 120), '#654321').save(self.path)
+        new = optimize_poster(self.url, self.static, title='Amélie / ../../Paris', existing=old)
+        self.assertRegex(new['variants'][0]['url'], r'^/preview-data/images/amelie-paris-poster-[a-f0-9]{64}-90\.webp$')
+        self.assertTrue((self.static / old['variants'][0]['url'].lstrip('/')).is_file())
+
     def test_corrupt_missing_and_escaping_sources_do_not_break_programme(self):
         self.path.write_bytes(b'not an image')
         films = [{'poster_url': self.url, 'poster_image': {'source': 'old'}},

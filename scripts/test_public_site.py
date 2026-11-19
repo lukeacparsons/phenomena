@@ -355,6 +355,50 @@ class PublicationTests(unittest.TestCase):
         second = json.loads((self.root / 'site/current/manifest.json').read_text())
         self.assertEqual(first['pages']['/en/films/dune-1984/']['lastmod'], second['pages']['/en/films/dune-1984/']['lastmod'])
 
+    def test_discovery_freshness_ignores_rebuilds_but_tracks_schedule_changes(self):
+        from discovery_content import PATHS
+        self.data['films'][0]['sessions'][0].update(language='English', formats=['IMAX'])
+        self.write_input(); self.publish()
+        first = json.loads((self.root / 'site/current/manifest.json').read_text())
+        self.publish(NOW + timedelta(minutes=5))
+        second = json.loads((self.root / 'site/current/manifest.json').read_text())
+        for paths in PATHS.values():
+            for path in paths.values():
+                self.assertEqual(first['pages'][path], second['pages'][path])
+        self.data['films'][0]['sessions'][0].update(starts_at='2026-11-20T20:00:00+01:00', time='20:00')
+        self.write_input(); self.publish(NOW + timedelta(minutes=10))
+        third = json.loads((self.root / 'site/current/manifest.json').read_text())
+        path = PATHS['imax']['en']
+        self.assertNotEqual(second['pages'][path]['lastmod'], third['pages'][path]['lastmod'])
+        publication = json.loads((self.root / 'site/current/public/indexnow.json').read_text())
+        self.assertEqual(set(publication['pages']), {p for p, i in third['pages'].items() if i['index']})
+
+    def test_metadata_distinguishes_home_film_pages_and_guides(self):
+        import re
+        for i in range(26):
+            self.data['films'].append({'id': f'archive:{i}', 'title': f'Archive {i}', 'sessions': []})
+        self.write_input(); self.publish()
+        root = self.root / 'site/current/public'
+        for lang, films, guides in [('en', 'films', 'guides'), ('es', 'peliculas', 'guias'), ('ca', 'pellicules', 'guies')]:
+            descriptions = []
+            for path in [f'{lang}/', f'{lang}/{films}/', f'{lang}/{films}/page/2/', f'{lang}/{guides}/']:
+                html = (root / path / 'index.html').read_text()
+                descriptions.append(re.search(r'<meta name="description" content="([^"]+)"', html).group(1))
+            self.assertEqual(len(set(descriptions)), 4)
+
+    def test_restart_preserves_published_lastmod_and_today_link_is_not_a_content_change(self):
+        import os
+        self.publish()
+        checkpoint = self.root / 'checkpoint'; checkpoint.mkdir()
+        published = json.loads((self.root / 'site/current/public/indexnow.json').read_text())
+        (checkpoint / 'published-pages.json').write_text(json.dumps(published))
+        with patch.dict(os.environ, {'INDEXNOW_STATE_DIR': str(checkpoint)}):
+            build(programme_path=self.input, docs=self.docs, output=self.root / 'restart',
+                  registry_path=self.root / 'registry.json', now=NOW + timedelta(days=1))
+        restarted = json.loads((self.root / 'restart/current/manifest.json').read_text())
+        path = '/en/about/'
+        self.assertEqual(published['pages'][path], restarted['pages'][path])
+
     def test_failed_build_does_not_replace_active_publication(self):
         self.publish()
         old = (self.root / 'site/current').resolve()
@@ -377,15 +421,15 @@ class PublicationTests(unittest.TestCase):
     def test_unknown_routes_and_legacy_identity_links(self):
         self.publish()
         manifest = json.loads((self.root / 'site/current/manifest.json').read_text())
-        self.assertEqual(resolve_url('/cinemas.html?film=source%3A1984', manifest), (308, '/en/films/dune-1984/'))
-        self.assertEqual(resolve_url('/en/?film=source%3A1984&q=dune', manifest), (308, '/en/films/dune-1984/'))
-        self.assertEqual(resolve_url('/ES/index.html?film=source%3A1984', manifest), (308, '/es/peliculas/dune-1984/'))
+        self.assertEqual(resolve_url('/cinemas.html?film=source%3A1984', manifest), (301, '/en/films/dune-1984/'))
+        self.assertEqual(resolve_url('/en/?film=source%3A1984&q=dune', manifest), (301, '/en/films/dune-1984/'))
+        self.assertEqual(resolve_url('/ES/index.html?film=source%3A1984', manifest), (301, '/es/peliculas/dune-1984/'))
         self.assertEqual(resolve_url('/ca/?film=missing', manifest), (404, None))
         self.assertEqual(resolve_url('/en/?q=dune', manifest), (200, '/en/'))
         self.assertEqual(resolve_url('/cinemas.html?film=missing', manifest), (404, None))
         self.assertEqual(resolve_url('/en/films/missing/', manifest), (404, None))
-        self.assertEqual(resolve_url('/EN/FILMS/DUNE-1984', manifest), (308, '/en/films/dune-1984/'))
-        self.assertEqual(resolve_url('/en/films/dune-1984/index.html', manifest), (308, '/en/films/dune-1984/'))
+        self.assertEqual(resolve_url('/EN/FILMS/DUNE-1984', manifest), (301, '/en/films/dune-1984/'))
+        self.assertEqual(resolve_url('/en/films/dune-1984/index.html', manifest), (301, '/en/films/dune-1984/'))
 
     def test_naive_time_cannot_enter_published_showtimes(self):
         self.data['films'][0]['sessions'][0]['starts_at'] = '2026-11-20T19:00:00'

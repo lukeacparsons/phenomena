@@ -13,11 +13,11 @@ export function resolvePublicURL(input, routes, now=new Date()){
       const target=routes.screenings?.[screening]?.[lang];
       if(!target)return {status:404};
       if(film&&routes.films[film]?.[lang]!==target.split('#')[0])return {status:404};
-      return {status:308,location:target};
+      return {status:301,location:target};
     }
-    if(film)return routes.films[film]?.[lang]?{status:308,location:routes.films[film][lang]}:{status:404};
-    if(cinema)return routes.cinemas[cinema]?.[lang]?{status:308,location:routes.cinemas[cinema][lang]}:{status:404};
-    return {status:308,location:'/en/'+url.search};
+    if(film)return routes.films[film]?.[lang]?{status:301,location:routes.films[film][lang]}:{status:404};
+    if(cinema)return routes.cinemas[cinema]?.[lang]?{status:301,location:routes.cinemas[cinema][lang]}:{status:404};
+    return {status:301,location:'/en/'+url.search};
   }
   if(!path.endsWith('/')&&!path.split('/').at(-1).includes('.'))path+='/';
   const todayLocale={'/en/showtimes/today/':'en','/es/cartelera/hoy/':'es','/ca/cartellera/avui/':'ca'}[path];
@@ -29,6 +29,6 @@ export function resolvePublicURL(input, routes, now=new Date()){
   if(!routes.pages.includes(target))return {status:404};
   // Filters and searches remain usable but do not create indexed combinations.
   const noindex=[...query.keys()].some(k=>!k.startsWith('utm_')&&!['gclid','fbclid'].includes(k));
-  if(target!==url.pathname)return {status:308,location:target+url.search};
+  if(target!==url.pathname)return {status:301,location:target+url.search};
   return {status:200,path:target,noindex};
 }

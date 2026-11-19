@@ -15,6 +15,8 @@ import sys
 import threading
 import time
 
+from indexnow import start_notifier
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -70,6 +72,7 @@ def main():
         signal.signal(sig, lambda *_: stopped.set())
     source = rebuild(incoming, output)
     server = subprocess.Popen(['node', str(ROOT / 'src/vobarna-server.mjs')], cwd=ROOT)
+    notifier = start_notifier(stopped)
     refreshed = time.monotonic()
     try:
         while not stopped.wait(15):
@@ -84,6 +87,9 @@ def main():
                 # Atomic builds leave the last good publication serving requests.
                 print(json.dumps({'event': 'git_publication_refresh_failed', 'error': type(error).__name__}), flush=True)
     finally:
+        stopped.set()
+        if notifier:
+            notifier.join(timeout=1)
         server.terminate()
         try:
             server.wait(timeout=10)

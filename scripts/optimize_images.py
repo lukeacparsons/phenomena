@@ -8,6 +8,8 @@ import hashlib
 from io import BytesIO
 import json
 import os
+import re
+import unicodedata
 from pathlib import Path
 import tempfile
 import warnings
@@ -39,7 +41,7 @@ def webp(image, width, quality):
     return output.getvalue()
 
 
-def optimize_poster(url, static=ROOT / 'static'):
+def optimize_poster(url, static=ROOT / 'static', *, title=None, existing=None):
     static = Path(static)
     if not isinstance(url, str) or not url.startswith('/preview-data/posters/'):
         return None
@@ -56,6 +58,13 @@ def optimize_poster(url, static=ROOT / 'static'):
             return {**cached, 'source': url}
     except (OSError, ValueError, KeyError):
         pass
+    # Incoming publications carry image metadata but omit the private cache files.
+    # Reuse verified existing variants so a deployment does not rename old artwork.
+    if (existing and existing.get('source') == url and existing.get('variants')
+            and all(re.fullmatch(r'/preview-data/images/(?:[a-z0-9-]+-poster-)?' + key + r'-\d+\.webp', item.get('url', ''))
+                    and (static / item['url'].lstrip('/')).is_file() for item in existing['variants'])):
+        write_bytes(manifest, json.dumps(existing, separators=(',', ':')).encode())
+        return existing
     with warnings.catch_warnings():
         warnings.simplefilter('error', Image.DecompressionBombWarning)
         with Image.open(BytesIO(body)) as original:
@@ -66,7 +75,10 @@ def optimize_poster(url, static=ROOT / 'static'):
                   'variants': []}
         for width in widths:
             encoded = webp(image, width, 80)
-            filename = f'{key}-{width}.webp'
+            label = unicodedata.normalize('NFKD', str(title or '')).encode('ascii', 'ignore').decode().lower()
+            label = re.sub(r'[^a-z0-9]+', '-', label).strip('-')[:60].rstrip('-')
+            prefix = label + '-poster-' if label else ''
+            filename = f'{prefix}{key}-{width}.webp'
             write_bytes(directory / filename, encoded)
             result['variants'].append({'url': '/preview-data/images/' + filename, 'width': width, 'bytes': len(encoded)})
     write_bytes(manifest, json.dumps(result, separators=(',', ':')).encode())
@@ -79,7 +91,7 @@ def prepare_images(films, static=ROOT / 'static'):
         url = film.get('poster_url')
         if url not in cached:
             try:
-                cached[url] = optimize_poster(url, static)
+                cached[url] = optimize_poster(url, static, title=film.get('title'), existing=film.get('poster_image'))
             except (OSError, ValueError, Image.DecompressionBombError, Image.DecompressionBombWarning):
                 # A bad artwork file must not take the programme offline.
                 cached[url] = None

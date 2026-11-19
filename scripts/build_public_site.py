@@ -229,7 +229,9 @@ class Publication:
 <main id="main">{navigation}{breadcrumb}{body}</main>
 <footer class="site-footer">{footer}</footer>
 {'<dialog id="filmDialog" aria-labelledby="dialogTitle"></dialog>' if interactive else ''}</body></html>'''
-        digest = hashlib.sha256(html.encode()).hexdigest()
+        # The global Today link rolls over daily without changing this page's facts.
+        version_html = re.sub(r'(href="/(?:en|es|ca)/\?date=)\d{4}-\d{2}-\d{2}(" data-today-link)', r'\1TODAY\2', html)
+        digest = hashlib.sha256(version_html.encode()).hexdigest()
         old = self.previous.get('pages', {}).get(path, {})
         modified = old.get('lastmod') if old.get('hash') == digest else self.now.isoformat()
         self.pages[path] = {'hash': digest, 'lastmod': modified, 'index': index, 'lang': lang}
@@ -509,7 +511,7 @@ class Publication:
                     if 1 <= number <= pages:
                         body += link(f'/{lang}/{SECTIONS[lang]["films"]}/' + ('' if number == 1 else f'page/{number}/'), label)
                 body += '</nav>'
-                self.page(alternatives[lang], lang, f'{t["films"]} · {t["page"]} {page} | VO Barna', t['intro'], body, alternatives=alternatives)
+                self.page(alternatives[lang], lang, f'{t["films"]} · {t["page"]} {page} | VO Barna', t['film_index_description'].format(page=page, pages=pages), body, alternatives=alternatives)
             paths = {l: f'/{l}/{SECTIONS[l]["cinemas"]}/' for l in LOCALES}
             search = f'''<div id="cinemaFilters" class="directory-filters" role="search" aria-label="{t['cinema_search']}" hidden><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only">{t['cinema_search']}</span><input type="search" id="cinemaSearch" placeholder="{t['cinema_placeholder']}" maxlength="500" autocomplete="off" aria-controls="cinemaList"></label><button type="button" id="cinemaReset" hidden>{t['reset']}</button></div></div>'''
             rows = []
@@ -536,7 +538,7 @@ class Publication:
             links.extend('<li>' + link(paths[lang], DISCOVERY_COPY[lang][key]) + '</li>'
                          for key, paths in DISCOVERY_PATHS.items() if key in ('subtitles', 'imax', 'film', 'vosc', 'gracia'))
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
-            self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['intro'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
+            self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
             body = f'<h1>{t["about"]}</h1><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
             body += f'<h2>{t["analytics_title"]}</h2><p>{text(t["analytics_body"])}</p>'
@@ -565,7 +567,7 @@ class Publication:
                 description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
                 body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
-                body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])} · {text(d["built"])}: {stamp(self.now.isoformat())}</p>'
+                body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])}</p>'
                 if kind in ('weekend', 'film', 'imax', 'gracia'):
                     jumps = [(group, d.get(group + '_group', d.get(group))) for group, selected in groups.items()
                              if selected or kind == 'weekend' or group in ('35mm', '70mm')]
@@ -743,6 +745,11 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
         venues = {v['id']: v for v in programme['cinemas']}
         venues.update({v['id']: {**venues.get(v['id'], {}), **v} for v in research['dossiers']['cinemas']})
         previous = read_json(output / 'current/manifest.json', {})
+        checkpoint = os.environ.get('INDEXNOW_STATE_DIR')
+        if not previous and checkpoint:
+            published = read_json(Path(checkpoint) / 'published-pages.json', {})
+            if published.get('origin') == origin:
+                previous = published
         registry = read_json(output / 'current/registry.json', read_json(registry_path, new_registry()))
         registry = update_registry(registry, programme, list(venues.values()), now.isoformat(), read_json(ROOT / 'data/site-slug-overrides.json', {}))
         prepare_images([record['film'] for record in registry['entities'].values() if record['kind'] == 'films'])
@@ -832,6 +839,9 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             sitemap = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
             sitemap += ''.join(f'<url><loc>{text(origin + path)}</loc><lastmod>{text(info["lastmod"])}</lastmod></url>' for path, info in site.pages.items() if info['index'])
             (dest / 'sitemap.xml').write_text(sitemap + '</urlset>')
+            # Public, noindex change manifest; contains only the sitemap's pages.
+            dump(dest / 'indexnow.json', {'origin': origin, 'pages': {
+                path: info for path, info in site.pages.items() if info['index']}})
             (dest / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nSitemap: {origin}/sitemap.xml\n')
             (dest / 'llms.txt').write_text(f'''# VO Barna
 

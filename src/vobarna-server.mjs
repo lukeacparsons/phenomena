@@ -15,7 +15,7 @@ const types={'.html':'text/html; charset=utf-8','.json':'application/json; chars
   '.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.ico':'image/x-icon',
   '.woff2':'font/woff2','.ttf':'font/ttf'};
 
-export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com'}={}) {
+export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY}={}) {
   let active;
   const canonical=new URL(origin);
   async function release() {
@@ -42,7 +42,9 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       const url=new URL(req.url,canonical);
       if(!req.url.startsWith('/')||req.url.startsWith('//'))return reply(400,'Bad request');
       if(req.headers.host?.split(':')[0]==='www.'+canonical.hostname)
-        return reply(308,'',{'Location':canonical.origin+url.pathname+url.search});
+        return reply(301,'',{'Location':canonical.origin+url.pathname+url.search});
+      if(/^[A-Za-z0-9-]{8,128}$/.test(indexNowKey||'')&&url.pathname===`/${indexNowKey}.txt`)
+        return reply(200,indexNowKey,{'X-Robots-Tag':'noindex','Cache-Control':'public, max-age=60'});
       const current=await release();
       if(url.pathname==='/healthz')return reply(200,JSON.stringify({ok:true,release:current.root.split(sep).at(-2),commit:process.env.SOURCE_COMMIT||null}),{'Content-Type':'application/json','X-Robots-Tag':'noindex'});
       let status=200, path=url.pathname;
@@ -55,7 +57,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
           routes={...routes,screenings:JSON.parse(await readFile(resolve(current.root,'route-data/screenings',shard+'.json'),'utf8'))};
         }
         const decision=resolvePublicURL(url.href,routes);
-        if(decision.status===302||decision.status===308)return reply(decision.status,'',{'Location':decision.location,'Cache-Control':decision.status===302?'no-store':'public, max-age=60'});
+        if(decision.status===302||decision.status===301)return reply(decision.status,'',{'Location':decision.location,'Cache-Control':decision.status===302?'no-store':'public, max-age=60'});
         if(decision.status===404){status=404;path='/404.html';}
         else {path=decision.path+'index.html';if(decision.noindex)res.setHeader('X-Robots-Tag','noindex, follow');}
       } else if(path.endsWith('.html')) {status=404;path='/404.html';}
@@ -76,7 +78,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       const compressed=info.size>=1024&&/^(text\/|application\/(json|xml)|image\/svg)/.test(type)
         &&String(req.headers['accept-encoding']||'').split(',').some(part=>/^gzip(?:\s*;\s*q=(?!0(?:\.0*)?$)[0-9.]+)?$/i.test(part.trim()));
       const etag='W/"'+info.size.toString(16)+'-'+info.mtimeMs.toString(16)+'"';
-      const immutable=status===200&&/^\/preview-data\/images\/[a-f0-9]{64}-\d+\.webp$/.test(path);
+      const immutable=status===200&&/^\/preview-data\/images\/(?:[a-z0-9-]+-poster-)?[a-f0-9]{64}-\d+\.webp$/.test(path);
       res.setHeader('Content-Type',type);
       res.setHeader('Cache-Control',status===404?'no-store':immutable?'public, max-age=31536000, immutable':'public, max-age=60');
       res.setHeader('Vary','Accept-Encoding');

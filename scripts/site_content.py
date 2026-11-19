@@ -3,6 +3,8 @@ PUBLISHER = {'name': 'Luke Parsons', 'email': 'vobarna@luke.ac'}
 
 COPY = {
 'en': {
+ 'film_index_description':'Browse page {page} of {pages} of the VO Barna film catalogue. Find film details and available original-language screenings in Barcelona and nearby cinemas.',
+ 'guide_index_description':'Understand VOSE, VOSC and VOSI, compare cinema screens and sound, and find guides to IMAX, film projection and original-language cinema in Gràcia.',
  'analytics_title':'Audience measurement', 'analytics_body':'VO Barna uses PostHog US Cloud to measure page visits, search result counts and clicks on cinema ticket links without analytics cookies. We exclude search text and booking URLs, and do not enable session recordings or personal profiles. Analytics is disabled when your browser sends Do Not Track or Global Privacy Control.',
  'main_navigation':'Main navigation', 'screening_dates':'Screening dates', 'reset':'Reset', 'cinema_search':'Search cinemas by name, neighbourhood or address', 'cinema_placeholder':'Cinemas, neighbourhoods, addresses…', 'cinema_empty':'No cinemas match. Try another name or area, or clear your search.', 'select_screening':'Select screening', 'expired_screening':'This screening is no longer in the upcoming programme. Choose another session below.',
  'breadcrumb':'Breadcrumb', 'language_navigation':'Language', 'agent_guide':'WebMCP & agents',
@@ -33,6 +35,8 @@ COPY = {
  'format_body':'Compare the individual auditorium and screening, not just the cinema brand. IMAX, iSense, Dolby Atmos, Laser ULTRA, 35mm and 70mm describe different aspects of presentation. An Atmos-equipped cinema may also have rooms without Atmos. Our “big screens only” search is a curated premium selection that also includes comfort-focused venues; it is not a ranking of measured screen size. Use the session’s advertised format and the cinema profile’s sourced room information together.',
 },
 'es': {
+ 'film_index_description':'Consulta la página {page} de {pages} del catálogo de películas de VO Barna, con fichas y sesiones disponibles en versión original en Barcelona y alrededores.',
+ 'guide_index_description':'Entiende VOSE, VOSC y VOSI, compara pantallas y sonido y consulta guías de IMAX, proyección en celuloide y cine en versión original en Gràcia.',
  'analytics_title':'Medición de audiencia', 'analytics_body':'VO Barna utiliza PostHog US Cloud para medir visitas, recuentos de resultados y clics en enlaces de entradas sin cookies de analítica. Excluimos el texto de las búsquedas y las URL de compra, y no activamos grabaciones de sesiones ni perfiles personales. La analítica se desactiva si el navegador envía Do Not Track o Global Privacy Control.',
  'main_navigation':'Navegación principal', 'screening_dates':'Fechas de las sesiones', 'reset':'Restablecer', 'cinema_search':'Buscar cines por nombre, barrio o dirección', 'cinema_placeholder':'Cines, barrios, direcciones…', 'cinema_empty':'No hay cines que coincidan. Prueba otro nombre o zona, o borra la búsqueda.', 'select_screening':'Seleccionar sesión', 'expired_screening':'Esta sesión ya no está en la próxima cartelera. Elige otra sesión más abajo.',
  'breadcrumb':'Ruta de navegación', 'language_navigation':'Idioma', 'agent_guide':'WebMCP y agentes',
@@ -63,6 +67,8 @@ COPY = {
  'format_body':'Compara la sala y la sesión concretas, además de la marca del cine. IMAX, iSense, Dolby Atmos, Laser ULTRA, 35mm y 70mm describen aspectos distintos de la proyección. Un cine con Atmos puede tener salas sin Atmos. La búsqueda «Solo pantallas grandes» es una selección de salas prémium que también incluye espacios centrados en la comodidad; no es una clasificación de pantallas medidas. Consulta el formato anunciado para la sesión junto con la información documentada de la sala.',
 },
 'ca': {
+ 'film_index_description':'Consulta la pàgina {page} de {pages} del catàleg de pel·lícules de VO Barna, amb fitxes i sessions disponibles en versió original a Barcelona i rodalia.',
+ 'guide_index_description':'Entén VOSE, VOSC i VOSI, compara pantalles i so i consulta guies d’IMAX, projecció en cel·luloide i cinema en versió original a Gràcia.',
  'analytics_title':'Mesurament de l’audiència', 'analytics_body':'VO Barna utilitza PostHog US Cloud per mesurar visites, recomptes de resultats i clics als enllaços d’entrades sense galetes d’analítica. Excloem el text de les cerques i els URL de compra, i no activem enregistraments de sessions ni perfils personals. L’analítica es desactiva si el navegador envia Do Not Track o Global Privacy Control.',
  'main_navigation':'Navegació principal', 'screening_dates':'Dates de les sessions', 'reset':'Restableix', 'cinema_search':'Cerca cinemes per nom, barri o adreça', 'cinema_placeholder':'Cinemes, barris, adreces…', 'cinema_empty':'No hi ha cinemes que coincideixin. Prova un altre nom o zona, o esborra la cerca.', 'select_screening':'Selecciona la sessió', 'expired_screening':'Aquesta sessió ja no és a la propera cartellera. Tria una altra sessió més avall.',
  'breadcrumb':'Ruta de navegació', 'language_navigation':'Idioma', 'agent_guide':'WebMCP i agents',

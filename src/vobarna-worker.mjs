@@ -4,7 +4,7 @@ async function assets(request,env,status,headers={}){
   const response=await env.ASSETS.fetch(request);
   const output=new Response(response.body,{status:status||response.status,headers:response.headers});
   for(const [key,value] of Object.entries(headers))output.headers.set(key,value);
-  if((response.ok||response.status===304)&&/^\/preview-data\/images\/[a-f0-9]{64}-\d+\.webp$/.test(new URL(request.url).pathname)){
+  if((response.ok||response.status===304)&&/^\/preview-data\/images\/(?:[a-z0-9-]+-poster-)?[a-f0-9]{64}-\d+\.webp$/.test(new URL(request.url).pathname)){
     output.headers.set('Cache-Control','public, max-age=31536000, immutable');
   }
   output.headers.set('X-Content-Type-Options','nosniff');
@@ -17,7 +17,7 @@ export default {
     if(!['GET','HEAD'].includes(request.method))return new Response('Method not allowed',{status:405,headers:{Allow:'GET, HEAD'}});
     if(url.hostname==='www.vobarna.com'){
       url.hostname='vobarna.com';url.protocol='https:';
-      return Response.redirect(url.href,308);
+      return Response.redirect(url.href,301);
     }
     const pageLike=!/\.[a-z0-9]+$/i.test(url.pathname)||/\/(?:cinemas|index|webmcp)\.html$/i.test(url.pathname);
     if(!pageLike){
@@ -41,7 +41,7 @@ export default {
       }
       const decision=resolvePublicURL(url.href,routes);
       if(decision.status===302)return new Response(null,{status:302,headers:{Location:new URL(decision.location,url).href,'Cache-Control':'no-store'}});
-      if(decision.status===308)return Response.redirect(new URL(decision.location,url).href,308);
+      if(decision.status===301)return Response.redirect(new URL(decision.location,url).href,301);
       if(decision.status===404)return assets(request,env,404,{'X-Robots-Tag':'noindex'});
       return assets(new Request(new URL(decision.path,url),request),env,undefined,
         {'Cache-Control':'public, max-age=60',...(decision.noindex?{'X-Robots-Tag':'noindex, follow'}:{})});
