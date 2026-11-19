@@ -1,5 +1,5 @@
 FROM node:24-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5
-RUN apk add --no-cache python3 py3-pillow
+RUN apk add --no-cache python3 py3-pillow tzdata
 WORKDIR /app
 ARG SOURCE_COMMIT=unknown
 ENV NODE_ENV=production PORT=8787 PUBLICATION_ROOT=/app/.site PUBLIC_ORIGIN=https://vobarna.com VOBARNA_INPUT_ROOT=/incoming SOURCE_COMMIT=$SOURCE_COMMIT
