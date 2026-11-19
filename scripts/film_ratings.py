@@ -15,7 +15,7 @@ import threading
 from urllib.parse import quote, urlencode
 
 from cinesa_showtimes import atomic_write
-from poster_fallbacks import IDENTITIES, identity, enrich as enrich_posters, meets_target
+from poster_fallbacks import IDENTITIES, SOURCES, identity, enrich as enrich_posters, meets_target
 from poster_policy import copy_poster
 from film_details import enrich as enrich_details
 from film_grouping import deduplicate_programme
@@ -416,7 +416,9 @@ def refresh_programme(path, *, now=None, force=False, fetch=None):
     # A newly verified identity should immediately repair inadequate artwork,
     # including during daily metadata refreshes (not just full schedule runs).
     posters = {f["id"]: f.get("poster_url") for f in data["films"]}
-    eligible = [f for f in data["films"] if re.fullmatch(r"tt\d{7,10}", f.get("imdb_id") or "")]
+    source_posters = json.loads(SOURCES.read_text())
+    eligible = [f for f in data["films"] if re.fullmatch(r"tt\d{7,10}", f.get("imdb_id") or "")
+                or any(key in source_posters for key in [f['id'], *f.get('merged_ids', [])])]
     if eligible:
         target_path = path.parent / "posters/posters.json"
         target = json.loads(target_path.read_text()).get("target", {}) if target_path.exists() else {}

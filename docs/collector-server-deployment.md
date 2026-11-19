@@ -13,7 +13,7 @@ These directories belong to UID/GID 1000 and survive container replacement. The 
 
 The collector uses the same scheduling and adapters as the tested local service: programmes hourly, seats every 15 minutes, metadata daily, publication every five minutes, health every five minutes. `scripts/run_crawler.py` supervises its threads. A file lock admits only one writer across rolling deployments. A new container reports standby while the previous one owns the lock, then starts collection after the old process exits. Docker's health check requires a live process and a recent runtime receipt. Provider failures remain visible through the independent freshness monitor.
 
-After a successful server collection has been verified, add `/srv/vobarna/collector-publication` as the website's `/collector-input` mount and set its runtime `VOBARNA_INPUT_ROOT=/collector-input`. Retain the existing `/incoming` mount of `/srv/vobarna/publication` for rollback. The website reads data and images and renders them with its own deployed Git templates. Internal `catalogue.json`, price observations, credentials and crawler caches are not served publicly.
+The website mounts `/srv/vobarna/collector-publication` at `/collector-input` and uses runtime `VOBARNA_INPUT_ROOT=/collector-input`. The existing `/incoming` mount of `/srv/vobarna/publication` is retained for rollback. The website reads data and images and renders them with its own deployed Git templates. Internal `catalogue.json`, price observations, credentials and crawler caches are not served publicly.
 
 ## Provider routes
 
@@ -38,6 +38,8 @@ Deploy receiver code with `wrangler deploy --config wrangler.heartbeat.jsonc`; p
 `npm test` includes receiver authentication, request bounds, freshness, failure acknowledgement, server bootstrap, persistent registry, runtime health, and an actual two-process collector lock handoff. Existing catalogue, original-audio, seat-cache and alert tests run alongside them.
 
 Inspect Coolify deployment status, the container's health, `collector-health.json` inside `/tmp`, and the persistent `crawl-attempts.json`, `crawler-health.json` and `monitor-publisher.json`. A successful process start is not proof of a successful crawl: verify all 38 per-cinema receipts and the subsequent website input release.
+
+The first complete Otter crawl finished on 19 November 2026 at 22:20:31 UTC: 38 accepted sources, zero failures and 2,992 upcoming screenings. Every screening had original-audio evidence and a unique identity. A real Python 3.13.5 publication produced 1,238 pages; public programme data contained no price fields, and the independent heartbeat receiver acknowledged the resulting 38-healthy report. Validation included 332 Python tests, 57 Node tests and 53 targeted tests inside the built Linux image.
 
 After server verification and website cutover, disable the Mac's `com.vobarna.crawler` and `com.vobarna.publisher` LaunchAgents to avoid duplicate provider requests and competing watchdog reports. For rollback, stop the server collector first, restore the website mount to `/srv/vobarna/publication`, and deliberately re-enable the local collector/publisher. Never run both as active production collectors. Source failures preserve last good data; do not delete the persistent directories to resolve a provider failure.
 

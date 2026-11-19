@@ -1,3 +1,103 @@
+// Give the programme subtitle its own line above the dates on small screens.
+const subtitle = document.querySelector('.logo-subtitle');
+const dateSlider = document.getElementById('dates');
+if (subtitle && dateSlider) {
+  const logoCopy = subtitle.parentElement;
+  const mobile = matchMedia('(max-width: 600px)');
+  const positionSubtitle = () => {
+    subtitle.classList.toggle('programme-subtitle', mobile.matches);
+    if (mobile.matches) dateSlider.before(subtitle);
+    else logoCopy.append(subtitle);
+  };
+  positionSubtitle();
+  mobile.addEventListener('change', positionSubtitle);
+}
+
+// Keep the original language links and buttons inside the mobile disclosure.
+for (const [index, navigation] of [...document.querySelectorAll('.lang-switch')].entries()) {
+  const choices = [...navigation.querySelectorAll('a[hreflang], button[data-lang]')];
+  if (!choices.length) continue;
+  const names = {en: 'English', es: 'Español', ca: 'Català'};
+  const mobile = matchMedia('(max-width: 600px)');
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'language-toggle';
+  toggle.innerHTML = '<span class="language-current"></span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>';
+  const options = document.createElement('div');
+  options.className = 'language-options';
+  options.id = `language-options-${index}`;
+  toggle.setAttribute('aria-controls', options.id);
+  for (const choice of choices) {
+    const code = choice.getAttribute('hreflang') || choice.dataset.lang;
+    const abbreviation = document.createElement('span');
+    abbreviation.className = 'language-code';
+    abbreviation.textContent = choice.textContent.trim();
+    const name = document.createElement('span');
+    name.className = 'language-name';
+    name.lang = code;
+    name.textContent = names[code] || code;
+    choice.replaceChildren(abbreviation, name);
+    options.append(choice);
+  }
+  const setOpen = (open, restoreFocus = false) => {
+    navigation.classList.toggle('is-language-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    if (restoreFocus) toggle.focus();
+  };
+  const sync = () => {
+    const language = document.documentElement.lang;
+    toggle.querySelector('.language-current').textContent = language.toUpperCase();
+    toggle.setAttribute('aria-label', `${language === 'en' ? 'Language' : 'Idioma'}: ${names[language] || language}`);
+  };
+  toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  navigation.addEventListener('click', event => {
+    const choice = event.target.closest('a[hreflang], button[data-lang]');
+    if (!choice || !mobile.matches) return;
+    setOpen(false, true);
+    // Venue pages can have a new-tab base target; changing language stays here.
+    if (choice.hasAttribute('href') && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      location.assign(choice.href);
+    }
+  });
+  navigation.addEventListener('keydown', event => {
+    if (!mobile.matches) return;
+    if (event.key === 'Escape') {
+      if (toggle.getAttribute('aria-expanded') === 'true') {
+        event.preventDefault();
+        setOpen(false, true);
+      }
+    } else if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      event.preventDefault();
+      setOpen(true);
+      const current = choices.indexOf(document.activeElement);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? choices.length - 1 :
+        current < 0 ? (event.key === 'ArrowUp' ? choices.length - 1 : 0) :
+        (current + (event.key === 'ArrowUp' ? -1 : 1) + choices.length) % choices.length;
+      choices[next].focus();
+    }
+  });
+  navigation.addEventListener('focusout', event => {
+    if (!navigation.contains(event.relatedTarget)) setOpen(false);
+  });
+  document.addEventListener('click', event => {
+    if (!navigation.contains(event.target)) setOpen(false);
+  });
+  mobile.addEventListener('change', () => {
+    if (navigation.contains(document.activeElement)) {
+      if (mobile.matches) toggle.focus();
+      else choices.find(choice => choice.hasAttribute('aria-current') || choice.getAttribute('aria-pressed') === 'true')?.focus();
+    }
+    setOpen(false);
+  });
+  sync();
+  setOpen(false);
+  navigation.append(toggle, options);
+  navigation.classList.add('has-language-menu');
+  new MutationObserver(sync).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
+  window.addEventListener('pageshow', () => {sync(); setOpen(false);});
+}
+
 // Clint is a separate button; the adjacent title remains the home link.
 const logo = document.querySelector('.logo-mark');
 const button = document.querySelector('.clint-button');

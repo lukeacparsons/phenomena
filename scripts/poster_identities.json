@@ -37,5 +37,261 @@
       "https://www.imdb.com/title/tt36933402/",
       "https://www.filmaffinity.com/es/film236550.html"
     ]
+  },
+  "texas:8593": {
+    "imdb_id": "tt32252801",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; BLUE HERON.",
+    "source_urls": [
+      "https://espaitexas.cat/pelicula/blue-heron/",
+      "https://www.imdb.com/title/tt32252801/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-le-mohican/": {
+    "imdb_id": "tt33030107",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «LE MOHICAN».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-le-mohican/",
+      "https://www.imdb.com/title/tt33030107/"
+    ]
+  },
+  "filmoteca:1025:10": {
+    "imdb_id": "tt0039417",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Deutschland im Jahre Null / Germania anno zero.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/deutschland-im-jahre-null-germania-anno-zero",
+      "https://www.imdb.com/title/tt0039417/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-a-bras-le-corps-2/": {
+    "imdb_id": "tt34973241",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «À BRAS-LE-CORPS».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-a-bras-le-corps-2/",
+      "https://www.imdb.com/title/tt34973241/"
+    ]
+  },
+  "filmoteca:967:33": {
+    "imdb_id": "tt0074151",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Dong fu ren / The Arch.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/dong-fu-ren",
+      "https://www.imdb.com/title/tt0074151/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-magma/": {
+    "imdb_id": "tt33298339",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «MAGMA».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-magma/",
+      "https://www.imdb.com/title/tt33298339/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-les-yeux-verts/": {
+    "imdb_id": "tt34671488",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «LES YEUX VERTS».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-les-yeux-verts/",
+      "https://www.imdb.com/title/tt34671488/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-adieu-monde-cruel/": {
+    "imdb_id": "tt34427439",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «ADIEU MONDE CRUEL».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-adieu-monde-cruel/",
+      "https://www.imdb.com/title/tt34427439/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-congo-boy/": {
+    "imdb_id": "tt41592086",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «CONGO BOY».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-congo-boy/",
+      "https://www.imdb.com/title/tt41592086/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-le-chant-des-forets/": {
+    "imdb_id": "tt32368068",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «LE CHANT DES FORÊTS».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-le-chant-des-forets/",
+      "https://www.imdb.com/title/tt32368068/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-la-baleine-et-le-musicien/": {
+    "imdb_id": "tt35618773",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival | «LA BALEINE ET LE MUSICIEN».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-la-baleine-et-le-musicien/",
+      "https://www.imdb.com/title/tt35618773/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/ohlala-festival-clausura-ni-vue-ni-connue/": {
+    "imdb_id": "tt37799310",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Ohlalà Festival – Clausura | «NI VUE NI CONNUE».",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/ohlala-festival-clausura-ni-vue-ni-connue/",
+      "https://www.imdb.com/title/tt37799310/"
+    ]
+  },
+  "filmoteca:1023:7": {
+    "imdb_id": "tt17555654",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; O Trio em Mi Bemoll / El trio en mi bemoll.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/o-trio-em-mi-bemoll",
+      "https://www.imdb.com/title/tt17555654/"
+    ]
+  },
+  "institut-francais:/barcelona/evento/festival-wallay-nha-fala-de-flora-gomes/": {
+    "imdb_id": "tt0296099",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Festival WALLAY! | «Nha Fala» de Flora Gomes.",
+    "source_urls": [
+      "https://www.institutfrancais.es/barcelona/evento/festival-wallay-nha-fala-de-flora-gomes/",
+      "https://www.imdb.com/title/tt0296099/"
+    ]
+  },
+  "cinema-capri:/activitats/cineclub-ernest-cole-lost-and-found": {
+    "imdb_id": "tt27760132",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; Cine_club: Ernest Cole: Lost and found.",
+    "source_urls": [
+      "https://quefer.elprat.cat/activitats/cineclub-ernest-cole-lost-and-found",
+      "https://www.imdb.com/title/tt27760132/"
+    ]
+  },
+  "filmoteca:1023:19": {
+    "imdb_id": "tt17555654",
+    "note": "Reviewed the named film on the cinema programme and its matching theatrical poster; O Trio em Mi Bemoll / El trio en mi bemol.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/o-trio-em-mi-bemoll",
+      "https://www.imdb.com/title/tt17555654/"
+    ]
+  },
+  "filmoteca:959:99": {
+    "imdb_id": "tt0017925",
+    "note": "The General | Cine-Concert; Filmoteca identifies Buster Keaton, Clyde Bruckman. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/general",
+      "https://www.imdb.com/title/tt0017925/"
+    ]
+  },
+  "filmoteca:966:39": {
+    "imdb_id": "tt0109489",
+    "note": "Costa Brava (Family Album); Filmoteca identifies Marta Balletbò-Coll. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/costa-brava-family-album",
+      "https://www.imdb.com/title/tt0109489/"
+    ]
+  },
+  "filmoteca:1029:13": {
+    "imdb_id": "tt15376894",
+    "note": "Saint Omer; Filmoteca identifies Alice Diop. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/saint-omer",
+      "https://www.imdb.com/title/tt15376894/"
+    ]
+  },
+  "filmoteca:966:41": {
+    "imdb_id": "tt0068327",
+    "note": "Cabaret; Filmoteca identifies Bob Fosse. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/cabaret",
+      "https://www.imdb.com/title/tt0068327/"
+    ]
+  },
+  "filmoteca:969:6": {
+    "imdb_id": "tt0080752",
+    "note": "Forbidden Zone; Filmoteca identifies Richard Elfman. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/forbidden-zone",
+      "https://www.imdb.com/title/tt0080752/"
+    ]
+  },
+  "filmoteca:966:43": {
+    "imdb_id": "tt0765014",
+    "note": "Honey, I've Sent the Men to the Moon!; Filmoteca identifies Marta Balletbò-Coll, Ana Simón Cerezo. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/honey-ive-sent-men-moon",
+      "https://www.imdb.com/title/tt0765014/"
+    ]
+  },
+  "filmoteca:966:45": {
+    "imdb_id": "tt0080339",
+    "note": "Airplane!; Filmoteca identifies Jim Abrahams, Jerry Zucker, David Zucker. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/airplane",
+      "https://www.imdb.com/title/tt0080339/"
+    ]
+  },
+  "filmoteca:1025:20": {
+    "imdb_id": "tt0042477",
+    "note": "Francesco, giullare di Dio; Filmoteca identifies Roberto Rossellini. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/francesco-giullare-di-dio",
+      "https://www.imdb.com/title/tt0042477/"
+    ]
+  },
+  "filmoteca:1025:22": {
+    "imdb_id": "tt0053856",
+    "note": "Il generale Della Rovere; Filmoteca identifies Roberto Rossellini. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/il-generale-della-rovere",
+      "https://www.imdb.com/title/tt0053856/"
+    ]
+  },
+  "filmoteca:1025:24": {
+    "imdb_id": "tt0052923",
+    "note": "India: Matri Bhumi; Filmoteca identifies Roberto Rossellini. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/india-matri-bhumi",
+      "https://www.imdb.com/title/tt0052923/"
+    ]
+  },
+  "filmoteca:966:49": {
+    "imdb_id": "tt0042192",
+    "note": "All About Eve; Filmoteca identifies Joseph L. Mankiewicz. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/all-about-eve",
+      "https://www.imdb.com/title/tt0042192/"
+    ]
+  },
+  "filmoteca:1032:9": {
+    "imdb_id": "tt0050706",
+    "note": "Mon Oncle; Filmoteca identifies Jacques Tati. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/mon-oncle",
+      "https://www.imdb.com/title/tt0050706/"
+    ]
+  },
+  "filmoteca:1025:27": {
+    "imdb_id": "tt0054447",
+    "note": "Viva l'Italia; Filmoteca identifies Roberto Rossellini. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/viva-litalia",
+      "https://www.imdb.com/title/tt0054447/"
+    ]
+  },
+  "filmoteca:1033:4": {
+    "imdb_id": "tt0080678",
+    "note": "The Elephant Man; Filmoteca identifies David Lynch. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/elephant-man",
+      "https://www.imdb.com/title/tt0080678/"
+    ]
+  },
+  "filmoteca:1025:29": {
+    "imdb_id": "tt0052781",
+    "note": "Era notte a Roma; Filmoteca identifies Roberto Rossellini. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/era-notte-roma",
+      "https://www.imdb.com/title/tt0052781/"
+    ]
+  },
+  "filmoteca:1032:11": {
+    "imdb_id": "tt0062136",
+    "note": "Playtime; Filmoteca identifies Jacques Tati. Reviewed original title and director; cinema production year may differ from release year.",
+    "source_urls": [
+      "https://www.filmoteca.cat/web/ca/film/playtime",
+      "https://www.imdb.com/title/tt0062136/"
+    ]
   }
 }

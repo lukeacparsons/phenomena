@@ -26,7 +26,8 @@ ALLOWED_HOSTS = {"www.bizcochito.es", "cms.elqueque.com", "eu-static.yelmocines.
                  "media.pillalas.com", "cache-c.koobin.com", "static.portalticket.com",
                  "euromus.cultura.gencat.cat", "www.cinemamalda.com",
                  "images.admit-one.eu", "www.cinebaix.cat", "www.casaelizalde.com",
-                 "caixaforum.org", "www.ohlalafilmfestival.com", "www.institutfrancais.es"}
+                 "caixaforum.org", "www.ohlalafilmfestival.com", "www.institutfrancais.es",
+                 "espaitexas.cat"}
 FORMATS = {"JPEG": ("jpg", "image/jpeg"), "PNG": ("png", "image/png"),
            "WEBP": ("webp", "image/webp"), "AVIF": ("avif", "image/avif")}
 MAX_BYTES = 20 * 1024 * 1024

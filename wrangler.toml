@@ -12,7 +12,7 @@ binding = "KV"
 id = "6af788121c174b05aaefcd0853b7839d"
 
 [triggers]
-crons = ["0,30 6-20 * * *"]
+crons = ["0,30 6-20 * * *", "*/15 * * * *"]
 
 [vars]
 SITE_HOST = "phenomena-experience.com"

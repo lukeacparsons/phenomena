@@ -84,6 +84,15 @@ class FilmGroupingTests(unittest.TestCase):
         b = film("cinema:1", "Film", "b", imdb_id="tt0000001", poster_url="/square.jpg", poster_width=2000, poster_height=2000)
         self.assertEqual(self.group([a, b])["films"][0]["poster_url"], "/verified.jpg")
 
+    def test_grouping_keeps_smaller_portrait_and_its_derivatives_over_banner(self):
+        a = film("imdb:tt0000001", "Film", "a", poster_url="/portrait.jpg", poster_width=500, poster_height=721,
+                 poster_image={"source": "/portrait.jpg"})
+        b = film("cinema:1", "Film", "b", imdb_id="tt0000001", poster_url="/banner.jpg", poster_width=2000, poster_height=1000,
+                 poster_image={"source": "/banner.jpg"})
+        result = self.group([b, a])["films"][0]
+        self.assertEqual(result["poster_url"], "/portrait.jpg")
+        self.assertEqual(result["poster_image"]["source"], "/portrait.jpg")
+
     def test_editions_seasons_and_double_bills_remain_distinct(self):
         films = [film("imdb:tt0075148", "Rocky", "a"),
                  film("edition:rocky-50", "Rocky", "b", imdb_id="tt0075148"),

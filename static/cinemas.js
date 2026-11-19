@@ -161,8 +161,9 @@ function applySearch(filters){
 function renderFilterChips(){
   const labels={en:{remove:'Remove',big:'Big screens only',from:'From',to:'Until'},es:{remove:'Quitar',big:'Solo pantallas grandes',from:'Desde',to:'Hasta'},ca:{remove:'Treu',big:'Només pantalles grans',from:'Des de',to:'Fins a'}}[language];
   const chips=[];
-  if(state.date_from||state.date_to){
-    const label=state.date_from===state.date_to?displayDate(state.date_from):[state.date_from?labels.from+' '+displayDate(state.date_from):'',state.date_to?labels.to+' '+displayDate(state.date_to):''].filter(Boolean).join(' · ');
+  // A single date is already highlighted on the film strip.
+  if((state.date_from||state.date_to)&&state.date_from!==state.date_to){
+    const label=[state.date_from?labels.from+' '+displayDate(state.date_from):'',state.date_to?labels.to+' '+displayDate(state.date_to):''].filter(Boolean).join(' · ');
     chips.push({field:'dates',value:'',label});
   }
   for(const id of state.cinema_ids)chips.push({field:'cinema_ids',value:id,label:cinema(id)?.name||id});

@@ -13,6 +13,8 @@
   "github_repository": "lukeacparsons/phenomena",
   "github_branch": "main",
   "dockerfile": "deploy/vobarna/Dockerfile.github",
-  "input_directory": "/srv/vobarna/publication",
-  "automatic_deployments": true
+  "input_directory": "/srv/vobarna/collector-publication",
+  "automatic_deployments": true,
+  "input_mount": "/collector-input",
+  "previous_input_directory": "/srv/vobarna/publication"
 }

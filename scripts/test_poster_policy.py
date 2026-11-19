@@ -1,0 +1,29 @@
+"""Portrait selection and the shared 20% height range."""
+
+import unittest
+
+from poster_policy import is_portrait, meets_target, prefer_poster
+
+
+class PosterPolicyTests(unittest.TestCase):
+    def test_height_range_includes_both_boundaries_and_standard_posters(self):
+        for size in ((600, 800), (600, 900), (600, 960)):
+            self.assertTrue(is_portrait(*size), size)
+        for size in ((600, 799), (600, 961), (600, 600), (1200, 630), (0, 900)):
+            self.assertFalse(is_portrait(*size), size)
+
+    def test_portrait_quality_takes_priority_over_pixel_count(self):
+        portrait = dict(poster_url='/portrait.jpg', poster_width=500, poster_height=721)
+        banner = dict(poster_url='/banner.jpg', poster_width=2560, poster_height=1440)
+        self.assertFalse(meets_target(500, 721))
+        self.assertTrue(prefer_poster(portrait, banner))
+        self.assertFalse(prefer_poster(banner, portrait))
+
+    def test_target_shape_preferred_to_larger_short_portrait(self):
+        poster = dict(poster_url='/poster.jpg', poster_width=600, poster_height=900)
+        short = dict(poster_url='/short.jpg', poster_width=2000, poster_height=2500)
+        self.assertTrue(prefer_poster(poster, short))
+
+
+if __name__ == '__main__':
+    unittest.main()

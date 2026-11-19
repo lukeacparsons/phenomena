@@ -6,8 +6,10 @@
  *   /api/availability — live seat counts for an event
  *   /api/health      — health check + last refresh info
  *   /api/logs        — recent refresh logs
- *   Cron trigger     — refreshes programme data every 15 min
+ *   Cron triggers    — existing programme refresh and 15-minute crawler health
  */
+
+import {monitorCrawler, MONITOR_CRON} from './crawler-watchdog.mjs';
 
 const SITE = 'phenomena-experience.com';
 const POSTER_PATH_RE = /^\/obj\/LCinesD_dat\/eventos\/[A-Za-z0-9_-]+\.(?:jpe?g|png|webp)$/i;
@@ -790,6 +792,13 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(refreshData(env));
+    if (event.cron === MONITOR_CRON) {
+      ctx.waitUntil(monitorCrawler(env).catch(error => {
+        console.error(JSON.stringify({event:'crawler_watchdog_failed',type:error.name}));
+        throw error;
+      }));
+    } else {
+      ctx.waitUntil(refreshData(env));
+    }
   },
 };
