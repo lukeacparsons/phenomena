@@ -1,0 +1,145 @@
+{
+  "checked_at": "2026-11-19T20:33:03.277169+00:00",
+  "scope": [
+    "P01 today/tonight",
+    "P03 English audio: seven calendar days",
+    "P04 English subtitles guide",
+    "VO/VOSE/VOSC/VOSI guide expansion",
+    "collapsed-footer discovery navigation"
+  ],
+  "language_policy": "Explicit session audio/subtitle fields only; exact existing normalizer; unknowns excluded; multilingual English kept separate; film-level inference and typed browser filters deferred.",
+  "unit_checks": {
+    "python_tests": 302,
+    "python_result": "passed",
+    "node_tests": 38,
+    "node_result": "passed",
+    "search_and_date_checks": "passed",
+    "publication_tests_after_final_layout_change": 20,
+    "note": "Removed an obsolete assertion referencing a deleted cache variable; its existing behavioral cache-refresh checks still pass."
+  },
+  "browser_checks": {
+    "new_pages": "all nine locales passed with and without JavaScript",
+    "modal": "selected exact session, reload, keyboard focus and Tab to Tickets passed",
+    "mobile": "390px: no document overflow; screening actions fit without horizontal scrolling",
+    "time": "started sessions removed, counts updated, Madrid date rollover requires refresh",
+    "homepage_footer": "all three locales: navigation absent from main and inside a closed footer disclosure",
+    "broad_existing_browser_suite": "Timed out in homepage hydration selector during wider concurrent homepage changes; no full-suite pass claimed. Focused homepage check recorded separately.",
+    "focused_homepage": "Passed: JavaScript enhancement, Dune search, closed footer open/close, preserved search/results, film modal open and Escape close. The existing infinite list can load more cards when scrolling to the footer; the bounded check uses a short search."
+  },
+  "static_audit": {
+    "release": "/private/tmp/vobarna-discovery-review/releases/build-tagipp3w",
+    "built_at": "2026-11-19T20:23:09.443309+00:00",
+    "pages": 1226,
+    "indexable": 1204,
+    "issues": {},
+    "missing_assets": [],
+    "broken_internal_links": [],
+    "broken_internal_fragments": [],
+    "alternate_errors": [],
+    "unreachable_indexable": [],
+    "sitemap": {
+      "urls": 1204,
+      "duplicates": 0,
+      "missing": [],
+      "extra": [],
+      "lastmod_mismatch": [],
+      "wrong_origin": []
+    }
+  },
+  "lighthouse": [
+    {
+      "url": "http://127.0.0.1:8792/en/guides/english-subtitles-barcelona/",
+      "form_factor": "mobile",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "report": "/private/tmp/vobarna-discovery-accessibility/report.json"
+    },
+    {
+      "url": "http://127.0.0.1:8792/en/guides/english-subtitles-barcelona/",
+      "form_factor": "desktop",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "report": "/private/tmp/vobarna-discovery-audio-accessibility/report.json"
+    }
+  ],
+  "live": {
+    "pages": [
+      {
+        "path": "/en/showtimes/today/",
+        "status": 200,
+        "bytes": 104311,
+        "session_cards": 61
+      },
+      {
+        "path": "/es/cartelera/hoy/",
+        "status": 200,
+        "bytes": 107132,
+        "session_cards": 61
+      },
+      {
+        "path": "/ca/cartellera/avui/",
+        "status": 200,
+        "bytes": 107614,
+        "session_cards": 61
+      },
+      {
+        "path": "/en/showtimes/english-language/",
+        "status": 200,
+        "bytes": 891464,
+        "session_cards": 561
+      },
+      {
+        "path": "/es/cartelera/peliculas-en-ingles/",
+        "status": 200,
+        "bytes": 911557,
+        "session_cards": 561
+      },
+      {
+        "path": "/ca/cartellera/pellicules-en-angles/",
+        "status": 200,
+        "bytes": 915045,
+        "session_cards": 561
+      },
+      {
+        "path": "/en/guides/english-subtitles-barcelona/",
+        "status": 200,
+        "bytes": 41543,
+        "session_cards": 18
+      },
+      {
+        "path": "/es/guias/cine-subtitulos-ingles-barcelona/",
+        "status": 200,
+        "bytes": 42714,
+        "session_cards": 18
+      },
+      {
+        "path": "/ca/guies/cinema-subtitols-angles-barcelona/",
+        "status": 200,
+        "bytes": 42872,
+        "session_cards": 18
+      }
+    ],
+    "sitemap": "all nine present",
+    "llms": "all three English entry pages present",
+    "homepage_footer": "all three locales closed with the new links inside"
+  },
+  "publication": {
+    "digest": "f5445827a454b3cb0fdb3342b983f81a2729fb64159181b0b3e5f11ef77813e0",
+    "local_release": "build-a2jk1tu5",
+    "release": "release-20261119T203116-f5445827a454",
+    "published_at": "2026-11-19T20:32:51.083067+00:00"
+  },
+  "plan": "docs/search-intent-page-plan-2026-11-19.md",
+  "screenshots": [
+    "output/seo/english-audio-desktop.png",
+    "output/seo/english-subtitles-mobile.png"
+  ]
+}

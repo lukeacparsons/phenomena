@@ -1,0 +1,1023 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-11-19",
+  "scope": "Follow-up to the existing Barcelona inventory: 16 cultural leads (including already-listed Ateneu), 23 civic locations, nine unintegrated nearby cinemas, 12 regional leads and three seasonal programmes. Programme records are not necessarily distinct physical venues. The 22 integrated cinema directory entries were already verified by live catalogue collection.",
+  "method": "Official operator programmes, public booking catalogues/APIs, and municipal agendas. Regularity describes screening activity, not guaranteed original-language availability or exact opening days. No tickets or reservations were made.",
+  "summary": {
+    "regular_programme": 6,
+    "recurring_cycle": 2,
+    "recent_recurring": 1,
+    "occasional_festival": 4,
+    "unconfirmed_current": 3,
+    "regular_cinema": 21,
+    "seasonal_circuit": 23,
+    "summer_season": 3
+  },
+  "venues": [
+    {
+      "id": "institut-francais",
+      "name": "Institut Français de Barcelona",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Repeated screenings across the year; festivals add concentrated runs.",
+      "evidence": "November 16 screening; Ohlalà November 19–28; Sanguine November 24; Nha Fala December 3. The agenda also recommends off-site events: verify the actual venue.",
+      "sources": [
+        "https://www.institutfrancais.es/barcelona/esdeveniments/els-nostres-esdeveniments/",
+        "https://www.ohlalafilmfestival.com/es/parrilla/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cccb",
+      "name": "CCCB",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Xcèntric recurring winter/spring programme plus festivals and summer cinema.",
+      "evidence": "2026 programme and November 27–29 Xcèntric anniversary screenings; L’Alternativa November 12–22. Archive viewing and exhibitions are not public showtimes.",
+      "sources": [
+        "https://www.cccb.org/rcs_gene/extra/doc_corpo/programa/cccb_programa_2026_en.pdf",
+        "https://www.cccb.org/documents/4284035/8027379/Ndp_25%2Banys%2BXc%C3%A8ntric%2B2026_cast.pdf/e9334a30-da4c-673f-b7fc-17ec24eb46b2?t=1793961870929"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "caixaforum-barcelona",
+      "name": "CaixaForum Barcelona",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Ongoing cineclub, family cycles and film festivals.",
+      "evidence": "Cineclub season September 17–December 17; next listed Imade & Farrucas December 17 at 10:30. Family and festival programmes add dates.",
+      "sources": [
+        "https://caixaforum.org/es/barcelona/p/tiempo-de-cine.-el-cineclub-de-caixaforum-barcelona",
+        "https://caixaforum.org/es/barcelona/ciclos"
+      ],
+      "original_audio": "Mixed programme: family screenings can be dubbed. Require session-level version evidence.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "casa-elizalde",
+      "name": "La Casa Elizalde",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Regular Tuesday cinema during the season; documentary strands also recur monthly.",
+      "evidence": "Mirades lists October 27, November 3, 10, 24 and December 1. December 15 La Pietà also announced. A film-related performance is not automatically a film screening.",
+      "sources": [
+        "https://www.casaelizalde.com/categoria-cinema/mirades/",
+        "https://www.casaelizalde.com/cinema/historic-de-cinema/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "centre-cultural-albareda",
+      "name": "Centre Cultural Albareda",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Recurring documentary and music-film cycles, roughly monthly.",
+      "evidence": "Arcadi November 18; Deep Listening November 19 at 18:30; Palestinian Vibes December 10 at 18:30. Free reservations.",
+      "sources": [
+        "https://albareda.inscripcionscc.com/MiramModular/buscador/buscador.jsp?c=13&f=15&g=1&t=CE",
+        "https://agenda500.barcelona.cat/ca/detall/projeccio-arcadi_99400786550.html"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "can-carol",
+      "name": "Casal de Barri Can Carol",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "regular_programme",
+      "cadence": "Roughly monthly autumn screenings plus family/summer cycles.",
+      "evidence": "La Torre October 9; Veus Transhumants November 20 at 18:30; Les noies del Carmel December 11 at 19:00. Free until capacity.",
+      "sources": [
+        "https://cancarol.cat/tag/cineforum/",
+        "https://cancarol.cat/events/projeccions-tardor-les-noies-del-carmel/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "caixaforum-macaya",
+      "name": "CaixaForum Macaya",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "recurring_cycle",
+      "cadence": "Weekly Friday cineforum within a finite November cycle.",
+      "evidence": "Four Fridays November 6, 13, 20, 27. November 20 at 17:00: Mambar Pierrette; November 27 at 17:00: Manzanas, pollos y quimeras. Free reservation; event duration includes discussion.",
+      "sources": [
+        "https://palaumacaya.fundacionlacaixa.org/es/p/trabajar-cuidar-hacerse-un-lugar",
+        "https://palaumacaya.fundacionlacaixa.org/es/p/suenos-que-cruzan-fronteras"
+      ],
+      "original_audio": "Mambar Pierrette explicitly VOSE. Verify other screenings separately.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "casal-trinitat-nova",
+      "name": "Casal de Barri de Trinitat Nova",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "recent_recurring",
+      "cadence": "Recent approximately monthly cineforum; next date not confirmed.",
+      "evidence": "Screenings September 4 and 25; Nosotros October 23 at 17:00. Evidence supports recurrence, not an assumed future monthly schedule.",
+      "sources": [
+        "https://guia.barcelona.cat/es/detall/cineforum-nosotros_99400788520.html",
+        "https://guia.barcelona.cat/en/detall/casal-de-barri-de-trinitat-nova_99400582519.html"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "monitor",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "la-bonne",
+      "name": "La Bonne",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "recurring_cycle",
+      "cadence": "Festival and summer family cycles; no fixed year-round weekly schedule established.",
+      "evidence": "Visibles tenth edition: November 23, Les visibles at 18:00 and The Archivettes at 18:30. Xiquibonne returned for July/August. Film workshops do not count as public screenings.",
+      "sources": [
+        "https://labonne.org/festival-visibles-2026/",
+        "https://labonne.org/xiquibonne-torna-el-cicle-de-cinema-familiar-a-la-bonne/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "cycle_import",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "muec-montcada",
+      "name": "Museu Etnològic i de Cultures del Món – Montcada",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "occasional_festival",
+      "cadence": "Annual ethnographic-film festival cycle.",
+      "evidence": "Sixteenth annual festival with screenings November 3, 10 and 17. No year-round weekly programme established.",
+      "sources": [
+        "https://www.barcelona.cat/museu-etnologic-culturesmon/ca/node/2530",
+        "https://guia.barcelona.cat/en/detall/event_99400765522.html"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "cycle_import",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cosmocaixa",
+      "name": "CosmoCaixa Barcelona",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "occasional_festival",
+      "cadence": "Festival screenings confirmed; continuous cinema programme not established.",
+      "evidence": "SUNCINE: TRASH November 14. Planetarium shows are a separate activity and are not counted as film listings.",
+      "sources": [
+        "https://cosmocaixa.org/ca/p/suncine"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "cycle_import",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "fabra-i-coats",
+      "name": "Fabra i Coats – Fàbrica de Creació",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "occasional_festival",
+      "cadence": "Repeated festival-host screenings, no fixed cinema cadence established.",
+      "evidence": "Carrie November 8 at 11:00; Dansa i arquitectura shorts November 19 at 19:00. Film workshops, concerts and installations must be filtered out.",
+      "sources": [
+        "https://guia.barcelona.cat/en/detall/sessio-de-curtmetratges-dansa-i-arquitectura_99400787482.html",
+        "https://guia.barcelona.cat/en/detall/projeccio-audiovisual-cinquanta-anys-de-carrie-projeccio-de-la-pel-licula_99400699669.html"
+      ],
+      "original_audio": "Carrie advertised in original version with subtitles; check other events individually.",
+      "integration_priority": "cycle_import",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "biblioteca-jaume-fuster",
+      "name": "Biblioteca Jaume Fuster",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "occasional_festival",
+      "cadence": "Festival-host screenings; regular independent cadence not confirmed.",
+      "evidence": "BCN Film Fest official grid lists a free film screening April 19 at 11:30, not just talks.",
+      "sources": [
+        "https://www.bcnfilmfest.com/sites/default/files/festival-pdfs/horaris-bcn-film-fest-2026_final_15.pdf"
+      ],
+      "original_audio": "Sample April screening explicitly VOSCAT.",
+      "integration_priority": "cycle_import",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "casa-seat",
+      "name": "CASA SEAT",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "unconfirmed_current",
+      "cadence": "No regular public film-screening programme confirmed.",
+      "evidence": "BCN Film Fest venue listing led to author encounters, Cinema Talks and industry sessions. Current agenda is not evidence of recurring film screenings.",
+      "sources": [
+        "https://www.casa.seat/es/agenda.html",
+        "https://www.bcnfilmfest.com/sites/default/files/festival-pdfs/horaris-bcn-film-fest-2026_final_15.pdf"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "monitor",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "macba",
+      "name": "MACBA",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "unconfirmed_current",
+      "cadence": "Historical cineclub verified; current dated film series not confirmed.",
+      "evidence": "Cineclub pages found refer to completed 2019/2024 activity. Current collection videos and guided visits must not become screening times; an off-site Cinema Catalunya installation is not a MACBA session.",
+      "sources": [
+        "https://www.macba.cat/es/actividades/cineclub-3/",
+        "https://www.macba.cat/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "monitor",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "ateneu-barcelones",
+      "name": "Ateneu Barcelonès",
+      "municipality": "Barcelona",
+      "inventory_category": "cultural_screening_venue",
+      "classification": "unconfirmed_current",
+      "cadence": "Established cinema section, but no upcoming public films in the classified feed.",
+      "evidence": "Already in the directory. The cinema section and past projections establish film activity, but talks and courses do not prove a current screening schedule.",
+      "sources": [
+        "https://ateneubcn.cat/seccions/cinema/",
+        "https://ateneubcn.cat/programacio/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "monitor",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinebaix",
+      "name": "CineBaix",
+      "municipality": "Sant Feliu de Llobregat",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Weekly Friday–Monday programme.",
+      "evidence": "November 20–23 dated programme with several films.",
+      "sources": [
+        "https://www.cinebaix.cat/"
+      ],
+      "original_audio": "VOSE, VOE and VOC qualify; DOE/DOC are dubbed.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinema-capri",
+      "name": "Cinema Capri",
+      "municipality": "El Prat de Llobregat",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Regular weekend runs plus cineclub.",
+      "evidence": "November 20–22 and 27–29; December 17–20 and 25–27 advertised.",
+      "sources": [
+        "https://www.cinecaprielprat.com/"
+      ],
+      "original_audio": "Main programme versions need confirmation per film.",
+      "integration_priority": "later",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "sant-cugat-cinemas",
+      "name": "Sant Cugat Cinemas",
+      "municipality": "Sant Cugat del Vallès",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Regular multiplex programme with a dedicated original-version cycle.",
+      "evidence": "Indexed official dated programme November 8–12 and current dedicated cinema d’autor VOSE category. Direct programme requests returned HTTP 202 during probing.",
+      "sources": [
+        "https://www.cinemessantcugat.com/cartelera/cicle-cinema-d27autor-vose"
+      ],
+      "original_audio": "Dedicated VOSE cycle; verify other variants.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinemes-montcada",
+      "name": "Cinemes Montcada",
+      "municipality": "Montcada i Reixac",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Regular multi-day weekly programme.",
+      "evidence": "Official November 14–19 programme; Godzilla Minus Zero VOSE on multiple dates.",
+      "sources": [
+        "https://www.cinemesmontcada.com/cartellera"
+      ],
+      "original_audio": "Explicit VOSE sessions mixed with other versions.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "can-castellet",
+      "name": "Cinemes Can Castellet",
+      "municipality": "Sant Boi de Llobregat",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Active regular cinema booking catalogue.",
+      "evidence": "Several films with repeated ticket links (17 links on the sampled Clayface page). Exact date headings were not recoverable in the text probe; do not invent the weekly opening days.",
+      "sources": [
+        "https://www.cinemescancastellet.com/cartellera"
+      ],
+      "original_audio": "Version and exact date extraction still needs booking-feed investigation.",
+      "integration_priority": "later",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-barnasud",
+      "name": "Cinesa LUXE Barnasud",
+      "municipality": "Gavà",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme.",
+      "evidence": "35 published dates November 19–January 7. All-version samples: 18 sessions November 20, 18 November 21, 23 November 22.",
+      "sources": [
+        "https://www.cinesa.es/cines/barnasud/"
+      ],
+      "original_audio": "Existing Cinesa version filter can be reused; these totals include dubbed sessions.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-castelldefels",
+      "name": "Yelmo Premium Castelldefels",
+      "municipality": "Castelldefels",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme with advance sales.",
+      "evidence": "Public now-playing feed: 51 date groups and 336 sessions across all versions.",
+      "sources": [
+        "https://www.yelmocines.es/cartelera/barcelona/premium-castelldefels"
+      ],
+      "original_audio": "Multiple explicit VOSE variants. Bare Spanish language remains insufficient.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-sant-cugat",
+      "name": "Yelmo Premium Sant Cugat",
+      "municipality": "Sant Cugat del Vallès",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme with advance sales.",
+      "evidence": "Public now-playing feed: 31 date groups and 257 sessions across all versions.",
+      "sources": [
+        "https://www.yelmocines.es/cartelera/barcelona/premium-sant-cugat"
+      ],
+      "original_audio": "VOSE and VOSI variants present.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "ocine-magic",
+      "name": "OCINE Màgic Badalona",
+      "municipality": "Badalona",
+      "inventory_category": "nearby_cinema",
+      "classification": "regular_cinema",
+      "cadence": "Regular multiplex programme.",
+      "evidence": "Live official booking catalogue rendered November 19, including Hunger Games and Wild Horse Nine VOSE variants.",
+      "sources": [
+        "https://tickets.ocinemagic.es/?idioma=ca&nocap=1#/SeleccioPelicula"
+      ],
+      "original_audio": "Explicit VOSE variants mixed with dubbed films.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-abrera",
+      "name": "Yelmo Abrera",
+      "municipality": "Abrera",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme with advance sales.",
+      "evidence": "Public feed: 31 date groups and 260 sessions across all versions.",
+      "sources": [
+        "https://yelmocines.es/"
+      ],
+      "original_audio": "VOSE and VOSI variants present; feed cinema ID 810.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-baricentro",
+      "name": "Yelmo Baricentro",
+      "municipality": "Barberà del Vallès",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme with advance sales.",
+      "evidence": "Public feed: 30 date groups and 262 sessions across all versions.",
+      "sources": [
+        "https://yelmocines.es/cartelera/barcelona/baricentro"
+      ],
+      "original_audio": "English/Japanese VOSE variants present; feed cinema ID 781.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-parc-valles",
+      "name": "Cinesa Parc Vallès",
+      "municipality": "Terrassa",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme.",
+      "evidence": "39 published dates November 19–January 7. All-version samples: 52 sessions November 20, 70 November 21, 69 November 22.",
+      "sources": [
+        "https://www.cinesa.es/cines/parc-valles/"
+      ],
+      "original_audio": "Reuse the Cinesa per-session version filter; counts include dubbed sessions.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinema-catalunya",
+      "name": "Cinema Catalunya",
+      "municipality": "Terrassa",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Regular weekly cinema plus Filmoteca strand.",
+      "evidence": "Film pages updated November 18; Gran Torino Filmoteca screening November 19.",
+      "sources": [
+        "https://cinemacatalunya.cat/category/cartellera/"
+      ],
+      "original_audio": "Mixed VOSE and dubbed; La bola negra explicitly original Spanish.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-macia",
+      "name": "Multicines Eix Macià",
+      "municipality": "Sabadell",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme.",
+      "evidence": "Live November 19 booking page: Godzilla Minus Zero VOSE 20:15/22:45; Scrooge VOSE 16:00/18:15/20:30/22:45.",
+      "sources": [
+        "https://www.cinemeseixmacia.com:8443//#/SeleccioPelicula"
+      ],
+      "original_audio": "Explicit VOSE variants.",
+      "integration_priority": "later",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "imperial",
+      "name": "Cines Imperial",
+      "municipality": "Sabadell",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme.",
+      "evidence": "Live November 19 booking page: Wild Horse Nine VOSE 16:00/18:15/20:30/22:45 and other films.",
+      "sources": [
+        "https://tickets.cinesimperial.com:5443/#/SeleccioPelicula"
+      ],
+      "original_audio": "Explicit VOSE variants.",
+      "integration_priority": "later",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "kinepolis-mataro",
+      "name": "Kinépolis Mataró Parc",
+      "municipality": "Mataró",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Daily multiplex programme with advance sales.",
+      "evidence": "Official embedded programme, filtered to ESMAT: 1,074 sessions across all versions; consecutive dates November 19–29 and further advance dates.",
+      "sources": [
+        "https://kinepolis.es/movies/overview/?complex=ESMAT"
+      ],
+      "original_audio": "Reuse exact screening audio/original-language comparison; total is not an original-version count.",
+      "integration_priority": "provider_extension",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "foment-mataroni",
+      "name": "Foment Mataroní",
+      "municipality": "Mataró",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Weekly weekend/Monday cinema plus Thursday cineclub.",
+      "evidence": "Moscas November 19 at 20:15; films November 21–23 and November 29–30. Official site now fomentmataroni.cat.",
+      "sources": [
+        "https://fomentmataroni.cat/"
+      ],
+      "original_audio": "Moscas identified as original Spanish; check each variant.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "calandria",
+      "name": "La Calàndria",
+      "municipality": "El Masnou",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Regular Friday–Monday cinema.",
+      "evidence": "Scrooge sessions November 27–30, with different versions on different days.",
+      "sources": [
+        "https://www.cinemalacalandria.com/sessions/cartellera/scrooge-y-los-fantasmas-de-la-navidad"
+      ],
+      "original_audio": "November 28/29 original with Spanish subtitles; November 27/30 dubbed.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinema-edison",
+      "name": "Cinema Edison",
+      "municipality": "Granollers",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Regular Friday–Monday cinema and further weekly runs.",
+      "evidence": "La vida de una mujer November 20–23; additional programmes begin November 27 and December 4.",
+      "sources": [
+        "https://cinemaedison.cat/cartellera/la-vida-de-una-mujer/"
+      ],
+      "original_audio": "VOSC and VE variants coexist; original French means the VE sessions are dubbed.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "ocine-granollers",
+      "name": "OCINE Granollers",
+      "municipality": "Granollers",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Regular multiplex programme.",
+      "evidence": "Live official booking catalogue on November 19 showed 28 films, including VOSE variants.",
+      "sources": [
+        "https://tickets.ocinegranollers.es/?idioma=ca&nocap=1#/SeleccioPelicula"
+      ],
+      "original_audio": "Hunger Games and Wild Horse Nine explicitly VOSE.",
+      "integration_priority": "later",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "espai-amistat",
+      "name": "Espai l’Amistat",
+      "municipality": "Premià de Mar",
+      "inventory_category": "regional_lead",
+      "classification": "regular_cinema",
+      "cadence": "Recurring weekly cinema within a mixed performing-arts venue.",
+      "evidence": "Programme November 19, 22, 23; Scrooge November 23 at 20:00 VOSE alongside dubbed sessions.",
+      "sources": [
+        "https://espailamistat.cat/programacio-diaria/"
+      ],
+      "original_audio": "Use cinema/VO categories and per-session versions; exclude theatre.",
+      "integration_priority": "next",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-ateneu-fort-pienc",
+      "name": "Centre Cívic Ateneu Fort Pienc",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-ateneu-fort-pienc",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-del-besos-i-el-maresme",
+      "name": "Centre Cívic del Besòs i el Maresme",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-del-besos-i-el-maresme",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-can-baste",
+      "name": "Centre Cívic Can Basté",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-can-baste",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-casa-del-rellotge",
+      "name": "Centre Cívic La Marina - Casa del Rellotge",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-casa-del-rellotge",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-casa-groga",
+      "name": "Centre Cívic Casa Groga",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-casa-groga",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-villa-urania",
+      "name": "Centre Cívic Vil·la Urània",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-villa-urania",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-cotxeres-borrell",
+      "name": "Centre Cívic Cotxeres Borrell",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-cotxeres-borrell",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-cotxeres-de-sants",
+      "name": "Centre Cívic Cotxeres de Sants",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-cotxeres-de-sants",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-bon-pastor",
+      "name": "Centre Cívic Bon Pastor",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-bon-pastor",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-joan-oliver-pere-quart",
+      "name": "Centre Cívic Joan Oliver - Pere Quart",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-joan-oliver-pere-quart",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-la-sagrera-la-barraca",
+      "name": "Centre Cívic La Sagrera - La Barraca",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-la-sagrera-la-barraca",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-la-sedeta",
+      "name": "Centre Cívic La Sedeta",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-la-sedeta",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-matas-i-ramis",
+      "name": "Centre Cívic Matas i Ramis",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-matas-i-ramis",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-pati-llimona",
+      "name": "Centre Cívic Pati Llimona",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-pati-llimona",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-josep-maria-trias-i-peitx",
+      "name": "Centre Cívic Josep Maria Trias i Peitx",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-josep-maria-trias-i-peitx",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-teixonera",
+      "name": "Centre Cívic Teixonera",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-teixonera",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-urgell",
+      "name": "Centre Cívic Urgell",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-urgell",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-villa-florida",
+      "name": "Centre Cívic Vil·la Florida",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-villa-florida",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-baro-de-viver",
+      "name": "Centre Cívic Baró de Viver",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-baro-de-viver",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-zona-nord",
+      "name": "Centre Cívic Zona Nord",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-zona-nord",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-centre-civic-can-clariana-cultural",
+      "name": "Centre Cívic Can Clariana Cultural",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-can-clariana-cultural",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-auditori-sant-marti",
+      "name": "Auditori Sant Martí",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/auditori-sant-marti",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "pantalla-sala-la-pau",
+      "name": "Sala La Pau",
+      "municipality": "Barcelona",
+      "inventory_category": "civic_screening_venue",
+      "classification": "seasonal_circuit",
+      "cadence": "Recurring sessions within the October 2026–March 2027 Pantalla season; cadence varies by centre.",
+      "evidence": "Official season advertises 165 screenings across 23 locations, ending March 21, 2027. This confirms programme membership, not daily screenings at each centre. Use the dated room/location in the programme.",
+      "sources": [
+        "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+        "https://beteve.cat/agenda/pantalla-barcelona-cinema-centres-civics/",
+        "https://guia.barcelona.cat/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html"
+      ],
+      "original_audio": "Mixed adult/family programme: confirm original audio per screening.",
+      "integration_priority": "shared_circuit",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "sala-montjuic",
+      "name": "Sala Montjuïc",
+      "municipality": "Barcelona",
+      "inventory_category": "seasonal_screening_programme",
+      "classification": "summer_season",
+      "cadence": "Recurring summer outdoor cinema; not a November programme.",
+      "evidence": "Inventory recorded July 10–August 5, 2026. Operator page was unavailable in this recheck; exact 2027 dates are not confirmed.",
+      "sources": [
+        "https://www.salamontjuic.org/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "seasonal",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cinema-lliure-barcelona",
+      "name": "Cinema Lliure a la Platja – Barcelona",
+      "municipality": "Barcelona",
+      "inventory_category": "seasonal_screening_programme",
+      "classification": "summer_season",
+      "cadence": "Recurring summer outdoor screenings.",
+      "evidence": "Operator homepage explicitly preparing the June–August 2027 edition; Barcelona-specific dates and films not yet published. Regional season span must not be treated as individual Barcelona sessions.",
+      "sources": [
+        "https://cinemalliure.com/"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "seasonal",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "gandules",
+      "name": "Gandules / CCCB outdoor cinema",
+      "municipality": "Barcelona",
+      "inventory_category": "seasonal_screening_programme",
+      "classification": "summer_season",
+      "cadence": "Annual CCCB outdoor film cycle.",
+      "evidence": "2026 official programme lists nine screenings July 28–August 13. Shares CCCB location; not another permanent cinema.",
+      "sources": [
+        "https://www.cccb.org/en/w/seasons/gandules-2026"
+      ],
+      "original_audio": "Check the actual session version before importing.",
+      "integration_priority": "seasonal",
+      "checked_on": "2026-11-19"
+    }
+  ]
+}

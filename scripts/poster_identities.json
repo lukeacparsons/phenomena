@@ -1,0 +1,41 @@
+{
+  "edition:rocky-50": {
+    "imdb_id": "tt0075148",
+    "note": "Rocky (1976), original film's 50th anniversary in 2026; retain the separate anniversary listing."
+  },
+  "phenomena:2697": {
+    "imdb_id": "tt0090756",
+    "note": "Terciopelo azul / Blue Velvet (1986); cinema synopsis identifies Jeffrey Beaumont, Kyle MacLachlan and Isabella Rossellini."
+  },
+  "phenomena:706": {
+    "imdb_id": "tt0109424",
+    "note": "Chungking Express (1994); exact title and cinema synopsis describe its two Hong Kong policemen."
+  },
+  "phenomena:65": {
+    "imdb_id": "tt0103874",
+    "note": "The cinema's explicit title is Dracula de Bram Stoker (1992), not another Dracula adaptation."
+  },
+  "phenomena:101": {
+    "imdb_id": "tt0119698",
+    "note": "La princesa Mononoke / Princess Mononoke (1997)."
+  },
+  "phenomena:459": {
+    "imdb_id": "tt0094625",
+    "note": "Akira (1988), Japanese animated film."
+  },
+  "cinesa:HO00003930": {
+    "imdb_id": "tt36408401",
+    "note": "Las nuevas desventuras de Cliff Booth / The Further Mis-Adventures of Cliff Booth (2026)."
+  },
+  "imdb:tt37436831": {
+    "imdb_id": "tt36933402",
+    "superseded_imdb_ids": [
+      "tt37436831"
+    ],
+    "note": "Cocorico 2 / Ooh La La! ¿Quién lo hubiera pensado? (2026). The cinema-provided ID has no IMDb suggestion result; IMDb and FilmAffinity identify the Julien Hervé sequel with Clavier and Bourdon as tt36933402.",
+    "source_urls": [
+      "https://www.imdb.com/title/tt36933402/",
+      "https://www.filmaffinity.com/es/film236550.html"
+    ]
+  }
+}

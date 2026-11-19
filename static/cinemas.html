@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens.">
+  <title>VO Barna — What’s on</title>
+  <link rel="icon" href="/clint-logo.webp" type="image/png">
+  <link rel="preload" href="/fonts/Bungee-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/cinemas.css">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="help" href="/webmcp.html" title="Using VO Barna with AI agents">
+  <script type="module" src="/cinemas.js"></script>
+  <script type="module" src="/site-header.js"></script>
+</head>
+<body>
+  <a class="skip" href="#results" data-i18n="skip">Skip to screenings</a>
+  <div class="header-wrap">
+    <header>
+      <div class="logo"><button class="clint-button" type="button" aria-label="Poke Clint"><img class="logo-mark" src="/clint-idle.webp" alt="" width="66" height="66"></button><a href="/cinemas.html" class="logo-copy"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">Original version cinema in Barcelona</span></a></div>
+      <div class="header-actions">
+        <nav class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+          <button type="button" data-lang="ca" aria-pressed="false">CA</button>
+        </nav>
+      </div>
+    </header>
+  </div>
+  <main>
+    <h1 class="sr-only">VO Barna</h1>
+    <section class="filters" aria-label="Filter screenings">
+      <nav class="dates" id="dates" aria-label="Screening date"><button type="button" class="all-dates" aria-pressed="true" data-date="all" data-i18n="allDates">All dates</button></nav>
+      <div class="filter-row">
+        <label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">Search films, people, genres, languages, countries, cinemas, formats or dates</span><input id="search" type="search" placeholder="Films, languages, theatres, directors" autocomplete="off" maxlength="500" aria-keyshortcuts="/"></label>
+        <button type="button" id="clearFilters" class="clear-button" hidden data-i18n="reset">Reset</button>
+      </div>
+      <div id="filterChips" class="filter-chips" hidden></div>
+      <p id="linkNotice" class="link-notice" role="status" hidden></p>
+    </section>
+
+    <section id="results" tabindex="-1" aria-label="Screenings">
+      <p class="sr-only" id="resultCount" role="status" hidden aria-live="polite" data-i18n="loading">Loading the programme…</p>
+      <div class="grid" id="grid" aria-busy="true"><div class="skeleton card"></div><div class="skeleton card"></div><div class="skeleton card"></div><div class="skeleton card"></div></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <details class="agent-disclosure">
+      <summary data-i18n="moreInfo">More info</summary>
+      <a href="/webmcp.html" data-i18n="readAgentGuide">Read the WebMCP guide</a>
+    </details>
+  </footer>
+
+  <dialog id="filmDialog" aria-labelledby="dialogTitle"></dialog>
+</body>
+</html>

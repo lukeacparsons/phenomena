@@ -1,0 +1,185 @@
+{
+  "researched_on": "2026-11-19",
+  "summary": {
+    "researched_venues": 59,
+    "current_directory_entries": 38,
+    "question_groups": 8,
+    "question_entries": 472,
+    "new_facts": 49,
+    "new_price_observations": 11,
+    "new_source_records": 23,
+    "venues_with_new_facts": 28,
+    "corrected_fact_ids": [
+      "all-texas-access"
+    ],
+    "programme_language_venue_observations": 34,
+    "all_practical_fact_records": 160,
+    "all_price_observations": 151,
+    "source_records": 474,
+    "question_entries_with_some_evidence": 248,
+    "fully_answered_question_groups_claimed": 0
+  },
+  "checks": [
+    {
+      "check": "no concurrent changes to cinema-comprehensive-research",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes to cinema-dossiers",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes to auditoriums",
+      "passed": true
+    },
+    {
+      "check": "all current entries included",
+      "passed": true
+    },
+    {
+      "check": "59 unique venue profiles",
+      "passed": true
+    },
+    {
+      "check": "eight distinct question groups per venue",
+      "passed": true
+    },
+    {
+      "check": "all answer claims belong to their venue",
+      "passed": true
+    },
+    {
+      "check": "claim sources resolve",
+      "passed": true
+    },
+    {
+      "check": "new facts and prices unique",
+      "passed": true
+    },
+    {
+      "check": "existing prices preserved",
+      "passed": true
+    },
+    {
+      "check": "hire tariffs excluded from visitor-cost answers",
+      "passed": true
+    },
+    {
+      "check": "all room IDs and capacity/screen data preserved",
+      "passed": true
+    },
+    {
+      "check": "images and reviews unchanged",
+      "passed": true
+    },
+    {
+      "check": "incorrect Texas claim removed from active datasets",
+      "passed": true
+    },
+    {
+      "check": "Texas no-alternative cinema limit present",
+      "passed": true
+    },
+    {
+      "check": "past sensory screening remains dated",
+      "passed": true
+    },
+    {
+      "check": "Junior interval restricted to confirmed room",
+      "passed": true
+    },
+    {
+      "check": "34 programme snapshots retain unknown subtitles",
+      "passed": true
+    },
+    {
+      "check": "all venue sections rendered",
+      "passed": true
+    },
+    {
+      "check": "no full completeness claim",
+      "passed": true
+    },
+    {
+      "check": "all updated core source references resolve",
+      "passed": true
+    },
+    {
+      "check": "saved JSON parses; 59 readable venue sections; central coverage table refreshed",
+      "passed": true
+    }
+  ],
+  "checks_passed": 22,
+  "access_attempts": [
+    {
+      "id": "texas-practical",
+      "url": "https://espaitexas.cat/informacio-practica/",
+      "resolved_url": "https://espaitexas.cat/informacio-practica/",
+      "http_status": 200,
+      "chars": 10428
+    },
+    {
+      "id": "renoir-faq",
+      "url": "https://www.cinesrenoir.com/faq-preguntas-frecuentes/",
+      "resolved_url": "https://www.cinesrenoir.com/faq-preguntas-frecuentes/",
+      "http_status": 200,
+      "chars": 19207
+    },
+    {
+      "id": "filmoteca-practical",
+      "url": "https://www.filmoteca.cat/web/ca/informacio-practica",
+      "resolved_url": "https://www.filmoteca.cat/web/ca/informacio-practica",
+      "http_status": 200,
+      "chars": 5332
+    },
+    {
+      "id": "filmoteca-terms",
+      "url": "https://filmoteca.cat/web/ca/article/condicions-generals-de-venda-dentrades",
+      "resolved_url": "https://filmoteca.cat/web/ca/article/condicions-generals-de-venda-dentrades",
+      "http_status": 200,
+      "chars": 7340
+    },
+    {
+      "id": "filmax-faq",
+      "url": "https://cinesfilmax.com/faq",
+      "resolved_url": "https://cinesfilmax.com/faq",
+      "http_status": 202
+    },
+    {
+      "id": "cinesa-child",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/7535976786589--A-partir-de-qu%C3%A9-edad-debe-un-ni%C3%B1o-a-pagar-entrada-un-bebe-puede-entrar-a-la-sala",
+      "resolved_url": "https://ayuda.cinesa.es/hc/es/articles/7535976786589--A-partir-de-qu%C3%A9-edad-debe-un-ni%C3%B1o-a-pagar-entrada-un-bebe-puede-entrar-a-la-sala",
+      "http_status": 403
+    }
+  ],
+  "additional_access_failure": {
+    "url": "https://kinepolis.es/faq-page/productos-de-nuestras-tiendas-0/",
+    "status": 403,
+    "action": "No bypass/retry; already indexed individual-article text used where available."
+  },
+  "method": [
+    "Answers use prior research plus official public FAQs and municipal event pages. Every broad question remains partial unless all its subparts can be established.",
+    "Chains, individual venues, rooms, museums and dated events retain separate scopes. No cinema availability is inferred from a chain format list.",
+    "Prices remain observations, not a computed checkout total. Venue-hire prices are excluded from film-visit cost answers.",
+    "No trailer-length assumption or exact ending time is generated. Historical sensory events are not advertised as upcoming.",
+    "No product is labelled allergen-free. Public allergen-resource links do not establish local food handling.",
+    "No seat reservation, purchase, contact message, browser automation or deployment occurred."
+  ],
+  "corrections": [
+    {
+      "fact_id": "all-texas-access",
+      "value": "The basement cinemas use a stairlift rated to 150 kg for the person and wheelchair, with no alternative route above that limit. The theatre has a separate alternative entrance. The hall/bar and adapted toilet are at street level.",
+      "source_ids": [
+        "exp-texas-practical"
+      ],
+      "status": "corrected_against_full_operator_faq",
+      "reason": "The earlier summary wrongly restricted the 150 kg statement to the theatre; the same page explicitly states a separate cinema limit."
+    }
+  ],
+  "limitations": [
+    "Child boosters, pushchair storage, changing facilities and current sensory-event schedules remain incomplete.",
+    "Exact end times, universal trailer lengths, seat-by-seat sightlines and legroom were not invented.",
+    "Some new claims reuse known pages with more detailed extraction. New source count includes 22 online records and one local programme snapshot.",
+    "No application code, booking state, credentials, live availability or deployment changed."
+  ]
+}

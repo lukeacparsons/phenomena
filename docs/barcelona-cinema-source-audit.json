@@ -1,0 +1,279 @@
+{
+  "researched_on": "2026-11-19",
+  "counts_scope": "Published source sessions dated 19 November 2026 onward, including already elapsed times on that date. These are programme counts, not available-seat counts.",
+  "captures": [
+    {
+      "url": "https://www.moobycinemas.com/aribau",
+      "captured_at": "2026-11-19T15:21:38.210270+00:00",
+      "sha256": "fa32c925d64a537028a83ec632135dace240ecfb1c6b254a20073c8e7cff3b60"
+    },
+    {
+      "url": "https://barcelona.cines-verdi.com/api/get-events",
+      "captured_at": "2026-11-19T15:23:51.689279+00:00",
+      "sha256": "7ef8bde42ca6543dff2e08ac9218be8f911b277ad85f40598f7d5f82d7b0fe75"
+    },
+    {
+      "url": "https://www.cinemesgirona.cat/api/get-events",
+      "captured_at": "2026-11-19T15:23:51.602249+00:00",
+      "sha256": "033cea1436d2774d50e42c637249ee1e316fb9b28a7f9ebdde8fed3afeed7c8a"
+    },
+    {
+      "url": "https://www.cinesrenoir.com/cine/renoir-floridablanca/cartelera/",
+      "captured_at": "2026-11-19T15:22:55.428582+00:00",
+      "sha256": "4600a34a4da967d5535055d23510e64f15b58194b4b6c90f10be10518beccbfa"
+    },
+    {
+      "url": "https://englishcinemabarcelona.com/cinemas",
+      "captured_at": "2026-11-19T15:32:55.499174+00:00",
+      "sha256": "667dd963873cb88d2bbe9e82d6496cbd8340685a649dc2b0ecf84e354c0f0e11"
+    }
+  ],
+  "mooby": [
+    {
+      "code": "BAL-ARENAS",
+      "theatre_id": 24,
+      "name": "MOOBY ARENAS",
+      "address": "Gran Vía Corts Catalanes, 385",
+      "all_session_count": 362,
+      "vose_session_count": 134,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12"
+      ],
+      "latest_vose": "20261224174000",
+      "booking_template": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    },
+    {
+      "code": "BAL-ARIBAU",
+      "theatre_id": 28,
+      "name": "MOOBY ARIBAU | ARIBAU CINEMA",
+      "address": "Aribau, 8-10",
+      "all_session_count": 132,
+      "vose_session_count": 63,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ],
+      "latest_vose": "20270505200000",
+      "booking_template": "https://moobycinemas-aribau.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    },
+    {
+      "code": "BAL-BALMES",
+      "theatre_id": 29,
+      "name": "MOOBY BALMES",
+      "address": "Balmes 422-424",
+      "all_session_count": 333,
+      "vose_session_count": 267,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12"
+      ],
+      "latest_vose": "20261224173000",
+      "booking_template": "https://moobycinemas-balmes.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    },
+    {
+      "code": "BAL-BOSQUE",
+      "theatre_id": 27,
+      "name": "MOOBY BOSQUE",
+      "address": "Rambla de Prat, 16",
+      "all_session_count": 247,
+      "vose_session_count": 60,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09"
+      ],
+      "latest_vose": "20270505200000",
+      "booking_template": "https://moobycinemas-bosque.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    },
+    {
+      "code": "BAL-GLORIAS",
+      "theatre_id": 25,
+      "name": "MOOBY GLÒRIES",
+      "address": "Diagonal, 208 (C.C. Westfield Glòries)",
+      "all_session_count": 251,
+      "vose_session_count": 118,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08"
+      ],
+      "latest_vose": "20261224173000",
+      "booking_template": "https://moobycinemas-glorias.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    },
+    {
+      "code": "BAL-SARRIA",
+      "theatre_id": 26,
+      "name": "MOOBY GRAN SARRIÀ CLUB",
+      "address": "Ronda General Mitre, 38-44",
+      "all_session_count": 268,
+      "vose_session_count": 84,
+      "observed_rooms": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08"
+      ],
+      "latest_vose": "20270505200000",
+      "booking_template": "https://moobycinemas-sarria.admit-one.eu/?p=tickets&perfCode=%s&language=%s&theatre=%s",
+      "unreliable_source_screen_count": 5
+    }
+  ],
+  "a1": [
+    {
+      "provider": "verdi",
+      "theatres": [
+        {
+          "id": 46,
+          "name": "Cines Verdi",
+          "code": "VERDIBCN",
+          "shop_url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=%s&language=%s"
+        }
+      ],
+      "variants": 58,
+      "all_session_count": 301,
+      "vose_session_count": 190,
+      "latest_vose": "202612182230",
+      "version_counts": {
+        "V.O. SUB. CASTELLANO": 33,
+        "": 5,
+        "OPERA": 2,
+        "CASTELLANO": 11,
+        "BALLET": 1,
+        "V.O. SUB. INGLÉS": 1,
+        "SENSE DIÀLEGS": 1,
+        "VARIOS": 3,
+        "ESPAÑOL": 1
+      },
+      "room_fields_present": false,
+      "warning": "Do not infer sold-out from data.available=false. Do not automatically trust every syntactically valid imdbid; Girona has values that mirror internal event codes. Validate film identity before joining."
+    },
+    {
+      "provider": "girona",
+      "theatres": [
+        {
+          "id": 31,
+          "name": "CINEMES GIRONA",
+          "code": "GIRONA",
+          "shop_url": "https://girona.admit-one.eu/?p=tickets&perfCode=%s&language=%s"
+        }
+      ],
+      "variants": 40,
+      "all_session_count": 91,
+      "vose_session_count": 38,
+      "latest_vose": "202702231945",
+      "version_counts": {
+        "VOSE": 17,
+        "VOSC": 1,
+        "": 9,
+        "CATALÀ": 5,
+        "CASTELLÀ": 8
+      },
+      "room_fields_present": false,
+      "warning": "Do not infer sold-out from data.available=false. Do not automatically trust every syntactically valid imdbid; Girona has values that mirror internal event codes. Validate film identity before joining."
+    }
+  ],
+  "cinesa": [
+    {
+      "slug": "diagonal",
+      "site_id": "012",
+      "sample_date": "2026-11-20",
+      "all_session_count": 28,
+      "vose_session_count": 4,
+      "latest_published_date": "2027-06-17",
+      "published_date_count": 41,
+      "checked_at": "2026-11-19T16:25:22.867929+01:00",
+      "sample_session_ids": [
+        "012-57495",
+        "012-56495",
+        "012-57505",
+        "012-56490"
+      ],
+      "note": "One-day programme probe only; calendar end does not establish complete daily or VOSE coverage."
+    },
+    {
+      "slug": "som-multiespai",
+      "site_id": "017",
+      "sample_date": "2026-11-20",
+      "all_session_count": 31,
+      "vose_session_count": 6,
+      "latest_published_date": "2026-12-30",
+      "published_date_count": 30,
+      "checked_at": "2026-11-19T16:25:23.048441+01:00",
+      "sample_session_ids": [
+        "017-62718",
+        "017-62695",
+        "017-61770",
+        "017-62699",
+        "017-62691",
+        "017-61767"
+      ],
+      "note": "One-day programme probe only; calendar end does not establish complete daily or VOSE coverage."
+    }
+  ],
+  "renoir": {
+    "sample_date": "2026-11-19",
+    "dated_options": [
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-19",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-20",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-21",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-22",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-23",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-24",
+      "/cine/renoir-floridablanca/cartelera/?fecha=2026-11-25"
+    ],
+    "time_link_occurrences": 51,
+    "unique_time_links": 17,
+    "note": "All languages; counts demonstrate repeated HTML rather than a normalized VOSE extraction."
+  },
+  "civic_programme": {
+    "advertised_centres": 23,
+    "linked_centres": 22,
+    "additional_dated_location": "Sala La Pau",
+    "source_url": "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+    "note": "Different event locations can be attached to a centre. Urgell screenings may use IES Poeta Maragall; Marina uses Sala Maremar."
+  }
+}

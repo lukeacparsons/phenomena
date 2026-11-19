@@ -1,3 +1,14 @@
 node_modules/
 .wrangler/
 .dev.vars
+__pycache__/
+.venv/
+static/preview-data/
+.site/
+output/
+.crawler-secrets/
+.deploy-secrets/
+
+# Local metadata API credentials
+.env.tmdb
+.DS_Store

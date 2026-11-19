@@ -1,0 +1,60 @@
+.public-site main{padding-top:20px}.site-nav,.pagination{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:24px}.site-nav a,.breadcrumbs a,.site-footer a,.public-site main section a,.pagination a,.venue-list a{color:var(--tx);text-decoration:underline;text-underline-offset:3px}.lang-switch a{padding:6px 9px;border:1px solid transparent;border-radius:4px;font-size:12px}.lang-switch a[aria-current]{background:var(--tx);color:var(--bg)}.site-intro{max-width:760px;margin:12px 0 28px;font-size:17px;line-height:1.7}.public-site main h1{font-size:clamp(25px,4vw,38px);line-height:1.2;margin:12px 0 20px;letter-spacing:-.5px}.public-site main h2{font-size:22px;margin:24px 0 14px}.public-site main h3{font-size:18px;margin:18px 0 10px}.public-site main h4{margin:12px 0 6px}.public-site :where(main,footer) p{margin:10px 0;line-height:1.65}.public-site main li{margin:8px 0;line-height:1.6}.public-site main ul{padding-left:22px}.breadcrumbs{font-size:13px;margin-bottom:20px}.facts{display:grid;grid-template-columns:minmax(100px,180px) 1fr;gap:8px 16px;margin:18px 0}.facts dt,.session-facts dt{font-weight:600}.facts dd{margin:0;overflow-wrap:anywhere}.film-facts{display:flex;gap:30px;align-items:flex-start}.public-poster{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover}.film-facts .public-poster{width:180px;flex-shrink:0}.public-site .card h2{font-size:18px;margin:0}.public-site .card p{font-size:13px}.public-site .card a{color:inherit}.public-site .card .poster-button{display:block}.public-site .card .public-poster{aspect-ratio:2/3}.table-scroll{overflow:auto}.screenings{border-collapse:collapse;width:100%;text-align:left;font-size:14px}.screenings th,.screenings td{padding:16px 12px;border-bottom:1px solid var(--border);vertical-align:top}.screenings thead{background:var(--s2)}.screenings tbody th{font-weight:500;min-width:155px}.session-facts{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px;margin-top:10px}.session-facts dd{margin:0}.public-site .ticket-link{display:inline-block;padding:8px 10px;border:1px solid var(--action-bg);border-radius:4px;min-width:100px;background:var(--action-bg);color:#fff;text-decoration:none}.public-site .ticket-link:hover,.public-site .ticket-link:focus-visible{background:var(--action-hover);border-color:var(--action-hover)}.source-note,.fineprint,.citations,.freshness{font-size:12px;color:var(--tx2)}.citations{display:block;margin-top:6px}.facts small{display:block;margin-top:5px}.room{padding:14px 20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);border-radius:4px}.room details{font-size:13px;margin-top:12px}.venue-list{columns:3;column-gap:35px}.venue-list li{break-inside:avoid}.editorial{max-width:800px;font-size:17px}.public-site main section{margin-bottom:30px}.public-site .filters{margin-bottom:0}.public-site .search span{font-size:12px;color:var(--tx2)}.public-site .site-footer{padding:24px}.public-site [id]{scroll-margin-top:90px}.public-site .past-screening{opacity:.65}.public-site .pagination{margin-top:24px}.public-site .grid{padding-bottom:10px}.public-site .site-nav a:focus-visible{outline:2px solid var(--tx)}@media(max-width:730px){.venue-list{columns:2}.film-facts{gap:16px}.film-facts .public-poster{width:110px}.facts{grid-template-columns:1fr;gap:4px}.facts dd{margin-bottom:8px}}@media(max-width:460px){.venue-list{columns:1}.site-nav{gap:16px;font-size:14px}.screenings th,.screenings td{padding:10px 7px}.film-facts{display:block}.film-facts .public-poster{float:right;margin:0 0 15px 15px;width:90px}.session-facts{display:block}.session-facts dd{margin-bottom:5px}.public-site .lang-switch a{padding:5px}.public-site .facts{font-size:14px}}
+
+/* The homepage already gets its header gap from main; do not add it twice. */
+.public-site main>.sr-only+.filters{padding-top:0}
+
+/* Keep previous cached HTML stable until its controls are enhanced. */
+.public-site .filters[hidden]{display:block;visibility:hidden}
+.public-site [hidden]{display:none}
+.directory-filters{margin:24px 0}
+.directory-filters .filter-row{padding-inline:0}
+.venue-list li a{display:inline-block;min-height:32px;padding:4px 0}
+.public-site main .venue-list-address{font-size:.8125rem;color:var(--tx2);margin:0 0 18px;overflow-wrap:anywhere}
+.screening-action{display:block;padding:8px 0;margin-bottom:8px;min-height:44px}
+.buyrow:focus-visible,.dialog-title:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
+.site-information{max-width:1120px;margin:auto;font-size:13px;color:var(--tx2)}.site-information summary{cursor:pointer}.site-information[open] summary{margin-bottom:20px}.site-information .site-intro{font-size:13px}.site-information .site-nav{margin-top:20px}
+.discovery-links ul{list-style:none;padding:0;margin:20px 0}.discovery-links a{display:inline-block;padding:8px 0;min-height:36px}.discovery-film{padding:0 0 18px;border-bottom:1px solid var(--border)}.discovery-film summary{cursor:pointer;padding:8px 0;min-height:44px}.discovery-film details[open]>summary{margin-bottom:12px}.discovery-reload{padding:10px 14px;min-height:44px;border:1px solid var(--border);border-radius:4px}
+.discovery-screenings{list-style:none;padding:0}.discovery .discovery-session{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,3fr) minmax(140px,.8fr);gap:24px;margin:0;padding:24px 0;border-bottom:1px solid var(--border)}.discovery-session[hidden]{display:none}.discovery-time{font-weight:600;font-size:14px}.discovery .session-facts{font-size:14px}.discovery .source-note{overflow-wrap:anywhere}.discovery .discovery-actions a{min-height:44px}.discovery .screening-action{color:var(--tx);text-decoration:underline}
+@media(max-width:730px){.discovery .discovery-session{grid-template-columns:1fr;gap:12px}.discovery .session-facts{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:4px 12px}.discovery .session-facts dd{margin:0}.discovery-actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.discovery-actions .screening-action{margin:0}}
+
+/* Cinema profiles: the programme is the page; supporting research is opt-in. */
+.venue-page main{padding-top:16px}
+.venue-page .breadcrumbs{font-size:.875rem;color:var(--tx2);margin:0 0 24px}
+.venue-page .breadcrumbs a{text-decoration:none}
+.venue-page .breadcrumbs a:hover{text-decoration:underline}
+.venue-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 0 28px;border-bottom:1px solid var(--border)}
+.venue-page main .venue-heading h1{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.045em;margin:0 0 12px;line-height:1.12}
+.venue-heading>div:first-child{min-width:0}
+.venue-page .venue-address{display:flex;gap:8px;align-items:flex-start;max-width:70ch;margin:0;font-size:.875rem;line-height:1.6;color:var(--tx2)}
+.venue-address svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;margin-top:2px}
+.venue-address a:hover{text-decoration:underline;text-underline-offset:3px}
+.venue-actions{display:flex;gap:8px;flex-shrink:0}
+.venue-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:4px;background:var(--s1);font-size:.875rem}
+.venue-action:hover{background:var(--s2)}
+.venue-action-primary{background:var(--tx);border-color:var(--tx);color:var(--s1)}
+.venue-action-primary:hover{background:var(--primary-hover)}
+.venue-page .venue-programme-link a{text-decoration:underline;text-underline-offset:3px;font-size:.875rem}
+.venue-page main .venue-information{margin:48px 0 0;padding-top:24px;border-top:1px solid var(--border)}
+.venue-page main .venue-information>h2{margin:0 0 16px;font-size:1.25rem}
+.venue-disclosure{border-bottom:1px solid var(--border)}
+.venue-disclosure>summary{display:flex;align-items:center;gap:12px;min-height:64px;padding:16px 2px;list-style:none;cursor:pointer;font-size:1rem}
+.venue-disclosure>summary::-webkit-details-marker{display:none}
+.venue-disclosure>summary::after{content:'+';font-size:1.5rem;font-weight:400;line-height:1;margin-left:auto;color:var(--tx2)}
+.venue-disclosure[open]>summary::after{content:'−'}
+.venue-disclosure>summary:hover{color:var(--red)}
+.venue-disclosure summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.venue-room-count{font-size:.8125rem;color:var(--tx2);border:1px solid var(--border);padding:1px 7px;border-radius:4px}
+.venue-disclosure-body{padding:0 0 24px;font-size:1rem;overflow-wrap:anywhere}
+.venue-disclosure-body .citations,.venue-disclosure-body .fineprint{font-size:.8125rem}
+.venue-page .venue-disclosure-body .table-scroll{overflow-x:auto}
+.venue-page .venue-disclosure-body .screenings{min-width:640px}
+.venue-page .site-footer{display:block}
+@media(max-width:1000px){.venue-heading{align-items:flex-start}.venue-actions{flex-direction:column}}
+@media(max-width:730px){
+ .venue-page main{padding-top:8px}
+ .venue-page .breadcrumbs{margin-bottom:12px}
+ .venue-heading{display:block;padding-bottom:16px}
+ .venue-actions{flex-direction:row;margin-top:14px}
+ .venue-page main .venue-heading h1{font-size:2rem;letter-spacing:-.035em;margin-bottom:8px}
+ .venue-page main .venue-information{margin-top:36px}
+}

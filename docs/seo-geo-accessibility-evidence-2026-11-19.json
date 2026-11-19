@@ -1,0 +1,1079 @@
+{
+  "release": "/Users/luke/dev/phenomena/.site/releases/build-2a2y43ib",
+  "built_at": "2026-11-19T19:13:44.755595+00:00",
+  "programme_generated_at": "2026-11-19T18:52:47.163254+00:00",
+  "pages": 1214,
+  "indexable": 1213,
+  "issues": {},
+  "missing_assets": [],
+  "broken_internal_links": [],
+  "broken_internal_fragments": [],
+  "alternate_errors": [],
+  "unreachable_indexable": [],
+  "duplicate_titles": {
+    "Dos fiscales (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/dos-fiscales-vose/",
+      "/en/films/dos-fiscales-vose-0b378f16/"
+    ],
+    "Sesiones de Dos fiscales (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/dos-fiscales-vose/",
+      "/es/peliculas/dos-fiscales-vose-0b378f16/"
+    ],
+    "Sessions de Dos fiscales (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/dos-fiscales-vose/",
+      "/ca/pellicules/dos-fiscales-vose-0b378f16/"
+    ],
+    "Omaha (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/omaha-vose/",
+      "/en/films/omaha-vose-72d1e82e/"
+    ],
+    "Sesiones de Omaha (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/omaha-vose/",
+      "/es/peliculas/omaha-vose-72d1e82e/"
+    ],
+    "Sessions de Omaha (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/omaha-vose/",
+      "/ca/pellicules/omaha-vose-72d1e82e/"
+    ],
+    "Conoce a los bárbaros (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/conoce-a-los-barbaros-vose/",
+      "/en/films/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Sesiones de Conoce a los bárbaros (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/conoce-a-los-barbaros-vose/",
+      "/es/peliculas/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Sessions de Conoce a los bárbaros (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/conoce-a-los-barbaros-vose/",
+      "/ca/pellicules/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Vivir la tierra (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/vivir-la-tierra-vose/",
+      "/en/films/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Sesiones de Vivir la tierra (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/vivir-la-tierra-vose/",
+      "/es/peliculas/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Sessions de Vivir la tierra (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/vivir-la-tierra-vose/",
+      "/ca/pellicules/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Bad Apples (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/bad-apples-vose/",
+      "/en/films/bad-apples-vose-759cd9db/"
+    ],
+    "Sesiones de Bad Apples (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/bad-apples-vose/",
+      "/es/peliculas/bad-apples-vose-759cd9db/"
+    ],
+    "Sessions de Bad Apples (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/bad-apples-vose/",
+      "/ca/pellicules/bad-apples-vose-759cd9db/"
+    ],
+    "Ateneu Barcelonès | VO Barna": [
+      "/en/cinemas/ateneu-barcelones/",
+      "/es/cines/ateneu-barcelones/",
+      "/ca/cinemes/ateneu-barcelones/"
+    ],
+    "Biblioteca Jaume Fuster | VO Barna": [
+      "/en/cinemas/biblioteca-jaume-fuster/",
+      "/es/cines/biblioteca-jaume-fuster/",
+      "/ca/cinemes/biblioteca-jaume-fuster/"
+    ],
+    "CaixaForum Barcelona | VO Barna": [
+      "/en/cinemas/caixaforum-barcelona/",
+      "/es/cines/caixaforum-barcelona/",
+      "/ca/cinemes/caixaforum-barcelona/"
+    ],
+    "CaixaForum Macaya | VO Barna": [
+      "/en/cinemas/caixaforum-macaya/",
+      "/es/cines/caixaforum-macaya/",
+      "/ca/cinemes/caixaforum-macaya/"
+    ],
+    "La Calàndria | VO Barna": [
+      "/en/cinemas/la-calandria/",
+      "/es/cines/la-calandria/",
+      "/ca/cinemes/la-calandria/"
+    ],
+    "Casal de Barri Can Carol | VO Barna": [
+      "/en/cinemas/casal-de-barri-can-carol/",
+      "/es/cines/casal-de-barri-can-carol/",
+      "/ca/cinemes/casal-de-barri-can-carol/"
+    ],
+    "Cinemes Can Castellet | VO Barna": [
+      "/en/cinemas/cinemes-can-castellet/",
+      "/es/cines/cinemes-can-castellet/",
+      "/ca/cinemes/cinemes-can-castellet/"
+    ],
+    "La Casa Elizalde | VO Barna": [
+      "/en/cinemas/la-casa-elizalde/",
+      "/es/cines/la-casa-elizalde/",
+      "/ca/cinemes/la-casa-elizalde/"
+    ],
+    "CASA SEAT | VO Barna": [
+      "/en/cinemas/casa-seat/",
+      "/es/cines/casa-seat/",
+      "/ca/cinemes/casa-seat/"
+    ],
+    "Casal de Barri de Trinitat Nova | VO Barna": [
+      "/en/cinemas/casal-de-barri-de-trinitat-nova/",
+      "/es/cines/casal-de-barri-de-trinitat-nova/",
+      "/ca/cinemes/casal-de-barri-de-trinitat-nova/"
+    ],
+    "CCCB | VO Barna": [
+      "/en/cinemas/cccb/",
+      "/es/cines/cccb/",
+      "/ca/cinemes/cccb/"
+    ],
+    "Centre Cultural Albareda | VO Barna": [
+      "/en/cinemas/centre-cultural-albareda/",
+      "/es/cines/centre-cultural-albareda/",
+      "/ca/cinemes/centre-cultural-albareda/"
+    ],
+    "CineBaix | VO Barna": [
+      "/en/cinemas/cinebaix/",
+      "/es/cines/cinebaix/",
+      "/ca/cinemes/cinebaix/"
+    ],
+    "Cinema Capri | VO Barna": [
+      "/en/cinemas/cinema-capri/",
+      "/es/cines/cinema-capri/",
+      "/ca/cinemes/cinema-capri/"
+    ],
+    "Cinema Catalunya | VO Barna": [
+      "/en/cinemas/cinema-catalunya/",
+      "/es/cines/cinema-catalunya/",
+      "/ca/cinemes/cinema-catalunya/"
+    ],
+    "Cinema Edison | VO Barna": [
+      "/en/cinemas/cinema-edison/",
+      "/es/cines/cinema-edison/",
+      "/ca/cinemes/cinema-edison/"
+    ],
+    "Cinema Maldà | VO Barna": [
+      "/en/cinemas/cinema-malda/",
+      "/es/cines/cinema-malda/",
+      "/ca/cinemes/cinema-malda/"
+    ],
+    "Cinemes Girona | VO Barna": [
+      "/en/cinemas/cinemes-girona/",
+      "/es/cines/cinemes-girona/",
+      "/ca/cinemes/cinemes-girona/"
+    ],
+    "Cinemes Montcada | VO Barna": [
+      "/en/cinemas/cinemes-montcada/",
+      "/es/cines/cinemes-montcada/",
+      "/ca/cinemes/cinemes-montcada/"
+    ],
+    "Cinesa LUXE Barnasud | VO Barna": [
+      "/en/cinemas/cinesa-luxe-barnasud/",
+      "/es/cines/cinesa-luxe-barnasud/",
+      "/ca/cinemes/cinesa-luxe-barnasud/"
+    ],
+    "Cinesa Diagonal | VO Barna": [
+      "/en/cinemas/cinesa-diagonal/",
+      "/es/cines/cinesa-diagonal/",
+      "/ca/cinemes/cinesa-diagonal/"
+    ],
+    "Cinesa Diagonal Mar | VO Barna": [
+      "/en/cinemas/cinesa-diagonal-mar/",
+      "/es/cines/cinesa-diagonal-mar/",
+      "/ca/cinemes/cinesa-diagonal-mar/"
+    ],
+    "Cinesa LUXE La Farga | VO Barna": [
+      "/en/cinemas/cinesa-luxe-la-farga/",
+      "/es/cines/cinesa-luxe-la-farga/",
+      "/ca/cinemes/cinesa-luxe-la-farga/"
+    ],
+    "Cinesa Parc Vallès | VO Barna": [
+      "/en/cinemas/cinesa-parc-valles/",
+      "/es/cines/cinesa-parc-valles/",
+      "/ca/cinemes/cinesa-parc-valles/"
+    ],
+    "Cinesa SOM Multiespai | VO Barna": [
+      "/en/cinemas/cinesa-som-multiespai/",
+      "/es/cines/cinesa-som-multiespai/",
+      "/ca/cinemes/cinesa-som-multiespai/"
+    ],
+    "CosmoCaixa Barcelona | VO Barna": [
+      "/en/cinemas/cosmocaixa-barcelona/",
+      "/es/cines/cosmocaixa-barcelona/",
+      "/ca/cinemes/cosmocaixa-barcelona/"
+    ],
+    "Multicines Eix Macià | VO Barna": [
+      "/en/cinemas/multicines-eix-macia/",
+      "/es/cines/multicines-eix-macia/",
+      "/ca/cinemes/multicines-eix-macia/"
+    ],
+    "Espai l’Amistat | VO Barna": [
+      "/en/cinemas/espai-lamistat/",
+      "/es/cines/espai-lamistat/",
+      "/ca/cinemes/espai-lamistat/"
+    ],
+    "Espai Texas | VO Barna": [
+      "/en/cinemas/espai-texas/",
+      "/es/cines/espai-texas/",
+      "/ca/cinemes/espai-texas/"
+    ],
+    "Fabra i Coats – Fàbrica de Creació | VO Barna": [
+      "/en/cinemas/fabra-i-coats-fabrica-de-creacio/",
+      "/es/cines/fabra-i-coats-fabrica-de-creacio/",
+      "/ca/cinemes/fabra-i-coats-fabrica-de-creacio/"
+    ],
+    "Filmax Gran Via | VO Barna": [
+      "/en/cinemas/filmax-gran-via/",
+      "/es/cines/filmax-gran-via/",
+      "/ca/cinemes/filmax-gran-via/"
+    ],
+    "Filmoteca de Catalunya | VO Barna": [
+      "/en/cinemas/filmoteca-de-catalunya/",
+      "/es/cines/filmoteca-de-catalunya/",
+      "/ca/cinemes/filmoteca-de-catalunya/"
+    ],
+    "Foment Mataroní | VO Barna": [
+      "/en/cinemas/foment-mataroni/",
+      "/es/cines/foment-mataroni/",
+      "/ca/cinemes/foment-mataroni/"
+    ],
+    "Cines Imperial | VO Barna": [
+      "/en/cinemas/cines-imperial/",
+      "/es/cines/cines-imperial/",
+      "/ca/cinemes/cines-imperial/"
+    ],
+    "Institut Français de Barcelona | VO Barna": [
+      "/en/cinemas/institut-francais-de-barcelona/",
+      "/es/cines/institut-francais-de-barcelona/",
+      "/ca/cinemes/institut-francais-de-barcelona/"
+    ],
+    "Kinépolis Mataró Parc | VO Barna": [
+      "/en/cinemas/kinepolis-mataro-parc/",
+      "/es/cines/kinepolis-mataro-parc/",
+      "/ca/cinemes/kinepolis-mataro-parc/"
+    ],
+    "Kinépolis Barcelona Splau | VO Barna": [
+      "/en/cinemas/kinepolis-barcelona-splau/",
+      "/es/cines/kinepolis-barcelona-splau/",
+      "/ca/cinemes/kinepolis-barcelona-splau/"
+    ],
+    "La Bonne | VO Barna": [
+      "/en/cinemas/la-bonne/",
+      "/es/cines/la-bonne/",
+      "/ca/cinemes/la-bonne/"
+    ],
+    "MACBA | VO Barna": [
+      "/en/cinemas/macba/",
+      "/es/cines/macba/",
+      "/ca/cinemes/macba/"
+    ],
+    "Mooby Arenas de Barcelona | VO Barna": [
+      "/en/cinemas/mooby-arenas-de-barcelona/",
+      "/es/cines/mooby-arenas-de-barcelona/",
+      "/ca/cinemes/mooby-arenas-de-barcelona/"
+    ],
+    "Mooby Aribau | VO Barna": [
+      "/en/cinemas/mooby-aribau/",
+      "/es/cines/mooby-aribau/",
+      "/ca/cinemes/mooby-aribau/"
+    ],
+    "Mooby Balmes | VO Barna": [
+      "/en/cinemas/mooby-balmes/",
+      "/es/cines/mooby-balmes/",
+      "/ca/cinemes/mooby-balmes/"
+    ],
+    "Mooby Bosque | VO Barna": [
+      "/en/cinemas/mooby-bosque/",
+      "/es/cines/mooby-bosque/",
+      "/ca/cinemes/mooby-bosque/"
+    ],
+    "Mooby Glòries | VO Barna": [
+      "/en/cinemas/mooby-glories/",
+      "/es/cines/mooby-glories/",
+      "/ca/cinemes/mooby-glories/"
+    ],
+    "Mooby Gran Sarrià Club | VO Barna": [
+      "/en/cinemas/mooby-gran-sarria-club/",
+      "/es/cines/mooby-gran-sarria-club/",
+      "/ca/cinemes/mooby-gran-sarria-club/"
+    ],
+    "Museu Etnològic i de Cultures del Món – Montcada | VO Barna": [
+      "/en/cinemas/museu-etnologic-i-de-cultures-del-mon-montcada/",
+      "/es/cines/museu-etnologic-i-de-cultures-del-mon-montcada/",
+      "/ca/cinemes/museu-etnologic-i-de-cultures-del-mon-montcada/"
+    ],
+    "OCINE Granollers | VO Barna": [
+      "/en/cinemas/ocine-granollers/",
+      "/es/cines/ocine-granollers/",
+      "/ca/cinemes/ocine-granollers/"
+    ],
+    "OCINE Màgic Badalona | VO Barna": [
+      "/en/cinemas/ocine-magic-badalona/",
+      "/es/cines/ocine-magic-badalona/",
+      "/ca/cinemes/ocine-magic-badalona/"
+    ],
+    "Phenomena Experience | VO Barna": [
+      "/en/cinemas/phenomena-experience/",
+      "/es/cines/phenomena-experience/",
+      "/ca/cinemes/phenomena-experience/"
+    ],
+    "Renoir Floridablanca | VO Barna": [
+      "/en/cinemas/renoir-floridablanca/",
+      "/es/cines/renoir-floridablanca/",
+      "/ca/cinemes/renoir-floridablanca/"
+    ],
+    "Sant Cugat Cinemas | VO Barna": [
+      "/en/cinemas/sant-cugat-cinemas/",
+      "/es/cines/sant-cugat-cinemas/",
+      "/ca/cinemes/sant-cugat-cinemas/"
+    ],
+    "Cinemes Verdi | VO Barna": [
+      "/en/cinemas/cinemes-verdi/",
+      "/es/cines/cinemes-verdi/",
+      "/ca/cinemes/cinemes-verdi/"
+    ],
+    "Cinemes Verdi Park | VO Barna": [
+      "/en/cinemas/cinemes-verdi-park/",
+      "/es/cines/cinemes-verdi-park/",
+      "/ca/cinemes/cinemes-verdi-park/"
+    ],
+    "Yelmo Abrera | VO Barna": [
+      "/en/cinemas/yelmo-abrera/",
+      "/es/cines/yelmo-abrera/",
+      "/ca/cinemes/yelmo-abrera/"
+    ],
+    "Yelmo Baricentro | VO Barna": [
+      "/en/cinemas/yelmo-baricentro/",
+      "/es/cines/yelmo-baricentro/",
+      "/ca/cinemes/yelmo-baricentro/"
+    ],
+    "Yelmo Premium Castelldefels | VO Barna": [
+      "/en/cinemas/yelmo-premium-castelldefels/",
+      "/es/cines/yelmo-premium-castelldefels/",
+      "/ca/cinemes/yelmo-premium-castelldefels/"
+    ],
+    "Yelmo Premium La Maquinista | VO Barna": [
+      "/en/cinemas/yelmo-premium-la-maquinista/",
+      "/es/cines/yelmo-premium-la-maquinista/",
+      "/ca/cinemes/yelmo-premium-la-maquinista/"
+    ],
+    "Yelmo Premium Sant Cugat | VO Barna": [
+      "/en/cinemas/yelmo-premium-sant-cugat/",
+      "/es/cines/yelmo-premium-sant-cugat/",
+      "/ca/cinemes/yelmo-premium-sant-cugat/"
+    ],
+    "Zumzeig Cinecooperativa | VO Barna": [
+      "/en/cinemas/zumzeig-cinecooperativa/",
+      "/es/cines/zumzeig-cinecooperativa/",
+      "/ca/cinemes/zumzeig-cinecooperativa/"
+    ]
+  },
+  "schema_type_counts": {
+    "WebPage": 1213,
+    "Person": 1213,
+    "WebSite": 3,
+    "CreativeWork": 435,
+    "ScreeningEvent": 9249,
+    "BreadcrumbList": 1152,
+    "Movie": 540,
+    "Place": 54,
+    "MovieTheater": 123
+  },
+  "sitemap": {
+    "urls": 1213,
+    "duplicates": 0,
+    "missing": [],
+    "extra": [],
+    "lastmod_mismatch": [],
+    "wrong_origin": []
+  },
+  "page_samples": {
+    "/en/": {
+      "title": "Original-language cinema in Barcelona | VO Barna",
+      "description": [
+        "Find original-language screenings in Barcelona and nearby cinemas. Compare dates, venues, audio, subtitles and formats, then book with the cinema."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "en",
+      "h1": [
+        "Original-language cinema in Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/es/": {
+      "title": "Cine en versión original en Barcelona | VO Barna",
+      "description": [
+        "Encuentra sesiones en versión original en Barcelona y cines cercanos. Compara fechas, cines, audio, subtítulos y formatos, y compra las entradas en el cine."
+      ],
+      "canonical": [
+        "https://vobarna.com/es/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "es",
+      "h1": [
+        "Cine en versión original en Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/ca/": {
+      "title": "Cinema en versió original a Barcelona | VO Barna",
+      "description": [
+        "Troba sessions en versió original a Barcelona i cinemes propers. Compara dates, cinemes, àudio, subtítols i formats, i compra les entrades al cinema."
+      ],
+      "canonical": [
+        "https://vobarna.com/ca/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "ca",
+      "h1": [
+        "Cinema en versió original a Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/webmcp/": {
+      "title": "VO Barna WebMCP guide — Cinema tools for AI agents",
+      "description": [
+        "Use VO Barna’s six WebMCP tools to find original-version cinema screenings around Barcelona, read film details and cached availability, and show official booking links. Includes inputs, examples and data limits."
+      ],
+      "canonical": [
+        "https://vobarna.com/webmcp/"
+      ],
+      "alternates": {},
+      "lang": "en",
+      "h1": [
+        "VO Barna with your AI agent"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "anchor_count": 25,
+      "graph_types": []
+    },
+    "/en/films/rocky-1976/": {
+      "title": "Rocky (1976) screenings in Barcelona | VO Barna",
+      "description": [
+        "Screenings of Rocky (1976) in Barcelona and nearby cinemas, with dates, original audio, subtitles and official booking links."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/films/rocky-1976/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/films/rocky-1976/",
+        "es": "https://vobarna.com/es/peliculas/rocky-1976/",
+        "ca": "https://vobarna.com/ca/pellicules/rocky-1976/",
+        "x-default": "https://vobarna.com/en/films/rocky-1976/"
+      },
+      "lang": "en",
+      "h1": [
+        "Rocky (1976)"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 39,
+      "graph_types": []
+    },
+    "/en/cinemas/mooby-balmes/": {
+      "title": "Mooby Balmes | VO Barna",
+      "description": [
+        "Find screenings, address, auditorium information and official links for Mooby Balmes."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/cinemas/mooby-balmes/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/cinemas/mooby-balmes/",
+        "es": "https://vobarna.com/es/cines/mooby-balmes/",
+        "ca": "https://vobarna.com/ca/cinemes/mooby-balmes/",
+        "x-default": "https://vobarna.com/en/cinemas/mooby-balmes/"
+      },
+      "lang": "en",
+      "h1": [
+        "Mooby Balmes"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 1345,
+      "graph_types": []
+    },
+    "/en/guides/vose-vosc-original-version/": {
+      "title": "VOSE, VOSC and original-version cinema | VO Barna",
+      "description": [
+        "Original version describes the soundtrack used for a screening. VOSE has original audio with Spanish subtitles; VOSC has original audio with Catalan subtitles. VO can mean original audio without subtitles. A French film "
+      ],
+      "canonical": [
+        "https://vobarna.com/en/guides/vose-vosc-original-version/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/guides/vose-vosc-original-version/",
+        "es": "https://vobarna.com/es/guias/vose-vosc-version-original/",
+        "ca": "https://vobarna.com/ca/guies/vose-vosc-versio-original/",
+        "x-default": "https://vobarna.com/en/guides/vose-vosc-original-version/"
+      },
+      "lang": "en",
+      "h1": [
+        "VOSE, VOSC and original-version cinema"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 12,
+      "graph_types": []
+    }
+  },
+  "same_locale_duplicate_titles": {
+    "Dos fiscales (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/dos-fiscales-vose/",
+      "/en/films/dos-fiscales-vose-0b378f16/"
+    ],
+    "Sesiones de Dos fiscales (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/dos-fiscales-vose/",
+      "/es/peliculas/dos-fiscales-vose-0b378f16/"
+    ],
+    "Sessions de Dos fiscales (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/dos-fiscales-vose/",
+      "/ca/pellicules/dos-fiscales-vose-0b378f16/"
+    ],
+    "Omaha (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/omaha-vose/",
+      "/en/films/omaha-vose-72d1e82e/"
+    ],
+    "Sesiones de Omaha (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/omaha-vose/",
+      "/es/peliculas/omaha-vose-72d1e82e/"
+    ],
+    "Sessions de Omaha (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/omaha-vose/",
+      "/ca/pellicules/omaha-vose-72d1e82e/"
+    ],
+    "Conoce a los bárbaros (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/conoce-a-los-barbaros-vose/",
+      "/en/films/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Sesiones de Conoce a los bárbaros (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/conoce-a-los-barbaros-vose/",
+      "/es/peliculas/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Sessions de Conoce a los bárbaros (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/conoce-a-los-barbaros-vose/",
+      "/ca/pellicules/conoce-a-los-barbaros-vose-d9f6768f/"
+    ],
+    "Vivir la tierra (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/vivir-la-tierra-vose/",
+      "/en/films/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Sesiones de Vivir la tierra (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/vivir-la-tierra-vose/",
+      "/es/peliculas/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Sessions de Vivir la tierra (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/vivir-la-tierra-vose/",
+      "/ca/pellicules/vivir-la-tierra-vose-b687e73b/"
+    ],
+    "Bad Apples (VOSE) screenings in Barcelona | VO Barna": [
+      "/en/films/bad-apples-vose/",
+      "/en/films/bad-apples-vose-759cd9db/"
+    ],
+    "Sesiones de Bad Apples (VOSE) en Barcelona | VO Barna": [
+      "/es/peliculas/bad-apples-vose/",
+      "/es/peliculas/bad-apples-vose-759cd9db/"
+    ],
+    "Sessions de Bad Apples (VOSE) a Barcelona | VO Barna": [
+      "/ca/pellicules/bad-apples-vose/",
+      "/ca/pellicules/bad-apples-vose-759cd9db/"
+    ]
+  },
+  "lighthouse": {
+    "home": {
+      "version": "13.5.0",
+      "url": "http://127.0.0.1:8765/en/",
+      "fetch_time": "2026-11-19T19:11:05.383Z",
+      "scores": {
+        "accessibility": 0.96,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failures": [
+        {
+          "id": "label-content-name-mismatch",
+          "title": "Elements with visible text labels do not have matching accessible names.",
+          "count": 82,
+          "examples": [
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-0-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,1,SECTION,0,NAV,1,BUTTON",
+                "selector": "main#main > section.filters > nav#dates > button",
+                "boundingRect": {
+                  "top": 124,
+                  "bottom": 216,
+                  "left": 104,
+                  "right": 176,
+                  "width": 72,
+                  "height": 92
+                },
+                "snippet": "<button type=\"button\" data-date=\"2026-11-19\" aria-pressed=\"false\" aria-label=\"Thu 19 Nov\">",
+                "nodeLabel": "Today\n19\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-1-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,1,SECTION,0,NAV,2,BUTTON",
+                "selector": "main#main > section.filters > nav#dates > button",
+                "boundingRect": {
+                  "top": 124,
+                  "bottom": 216,
+                  "left": 176,
+                  "right": 248,
+                  "width": 72,
+                  "height": 92
+                },
+                "snippet": "<button type=\"button\" data-date=\"2026-11-20\" aria-pressed=\"false\" aria-label=\"Fri 20 Nov\">",
+                "nodeLabel": "Fri\n20\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-2-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,1,SECTION,0,NAV,3,BUTTON",
+                "selector": "main#main > section.filters > nav#dates > button",
+                "boundingRect": {
+                  "top": 124,
+                  "bottom": 216,
+                  "left": 248,
+                  "right": 320,
+                  "width": 72,
+                  "height": 92
+                },
+                "snippet": "<button type=\"button\" data-date=\"2026-11-21\" aria-pressed=\"false\" aria-label=\"Sat 21 Nov\">",
+                "nodeLabel": "Sat\n21\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            }
+          ]
+        },
+        {
+          "id": "target-size",
+          "title": "Touch targets do not have sufficient size or spacing.",
+          "count": 9,
+          "examples": [
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-82-A",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,1,ARTICLE,1,DIV,1,SECTION,1,DIV,1,DIV,0,A",
+                "selector": "section.card-day > div.card-cinemas > div.card-cinema > a.card-cinema-name",
+                "boundingRect": {
+                  "top": 728,
+                  "bottom": 747,
+                  "left": 225,
+                  "right": 385,
+                  "width": 160,
+                  "height": 20
+                },
+                "snippet": "<a class=\"card-cinema-name\" href=\"/en/cinemas/cinemes-verdi-park/\">",
+                "nodeLabel": "Verdi Park",
+                "explanation": "Fix any of the following:\n  Target has insufficient size (160px by 19.5px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 11.6px instead of at least 24px."
+              },
+              "subItems": {
+                "type": "subitems",
+                "items": [
+                  {
+                    "relatedNode": {
+                      "type": "node",
+                      "lhId": "1-83-BUTTON",
+                      "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,1,ARTICLE,1,DIV,1,SECTION,1,DIV,1,DIV,1,DIV,1,BUTTON",
+                      "selector": "div.card-cinemas > div.card-cinema > div.card-times > button.card-showtime",
+                      "boundingRect": {
+                        "top": 739,
+                        "bottom": 783,
+                        "left": 279,
+                        "right": 323,
+                        "width": 44,
+                        "height": 44
+                      },
+                      "snippet": "<button type=\"button\" class=\"card-showtime\" data-open=\"imdb:tt15799564\" data-session=\"verdi:46:222411\" aria-haspopup=\"dialog\" aria-label=\"Thu 19 Nov · 22:30 · Cinemes Verdi Park\">",
+                      "nodeLabel": "22:30"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-84-A",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,1,ARTICLE,1,DIV,1,SECTION,1,DIV,2,DIV,0,A",
+                "selector": "section.card-day > div.card-cinemas > div.card-cinema > a.card-cinema-name",
+                "boundingRect": {
+                  "top": 783,
+                  "bottom": 803,
+                  "left": 225,
+                  "right": 385,
+                  "width": 160,
+                  "height": 20
+                },
+                "snippet": "<a class=\"card-cinema-name\" href=\"/en/cinemas/mooby-gran-sarria-club/\">",
+                "nodeLabel": "Gran Sarrià",
+                "explanation": "Fix any of the following:\n  Target has insufficient size (160px by 19.5px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 11.6px instead of at least 24px."
+              },
+              "subItems": {
+                "type": "subitems",
+                "items": [
+                  {
+                    "relatedNode": {
+                      "type": "node",
+                      "lhId": "1-83-BUTTON",
+                      "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,1,ARTICLE,1,DIV,1,SECTION,1,DIV,1,DIV,1,DIV,1,BUTTON",
+                      "selector": "div.card-cinemas > div.card-cinema > div.card-times > button.card-showtime",
+                      "boundingRect": {
+                        "top": 739,
+                        "bottom": 783,
+                        "left": 279,
+                        "right": 323,
+                        "width": 44,
+                        "height": 44
+                      },
+                      "snippet": "<button type=\"button\" class=\"card-showtime\" data-open=\"imdb:tt15799564\" data-session=\"verdi:46:222411\" aria-haspopup=\"dialog\" aria-label=\"Thu 19 Nov · 22:30 · Cinemes Verdi Park\">",
+                      "nodeLabel": "22:30"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-85-A",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,2,ARTICLE,1,DIV,1,SECTION,1,DIV,0,DIV,0,A",
+                "selector": "section.card-day > div.card-cinemas > div.card-cinema > a.card-cinema-name",
+                "boundingRect": {
+                  "top": 1404,
+                  "bottom": 1424,
+                  "left": 27,
+                  "right": 187,
+                  "width": 160,
+                  "height": 20
+                },
+                "snippet": "<a class=\"card-cinema-name\" href=\"/en/cinemas/cinemes-verdi/\">",
+                "nodeLabel": "Verdi",
+                "explanation": "Fix any of the following:\n  Target has insufficient size (160px by 19.5px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 11.6px instead of at least 24px."
+              },
+              "subItems": {
+                "type": "subitems",
+                "items": [
+                  {
+                    "relatedNode": {
+                      "type": "node",
+                      "lhId": "1-86-BUTTON",
+                      "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,DIV,2,ARTICLE,1,DIV,1,SECTION,1,DIV,0,DIV,1,DIV,1,BUTTON",
+                      "selector": "div.card-cinemas > div.card-cinema > div.card-times > button.card-showtime",
+                      "boundingRect": {
+                        "top": 1416,
+                        "bottom": 1460,
+                        "left": 81,
+                        "right": 125,
+                        "width": 44,
+                        "height": 44
+                      },
+                      "snippet": "<button type=\"button\" class=\"card-showtime\" data-open=\"imdb:tt38773219\" data-session=\"verdi:46:222414\" aria-haspopup=\"dialog\" aria-label=\"Thu 19 Nov · 22:30 · Cinemes Verdi\">",
+                      "nodeLabel": "22:30"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "report_path": "/private/tmp/vobarna-seo-a11y-home/report.html"
+    },
+    "modal": {
+      "version": "13.5.0",
+      "url": "http://127.0.0.1:8765/en/films/rocky-1976/#screening-611539dcfad7dfcb",
+      "fetch_time": "2026-11-19T19:12:11.261Z",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failures": [
+        {
+          "id": "label-content-name-mismatch",
+          "title": "Elements with visible text labels do not have matching accessible names.",
+          "count": 4,
+          "examples": [
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-325-A",
+                "path": "1,HTML,1,BODY,4,DIALOG,1,DIV,1,DIV,2,DIV,0,A",
+                "selector": "div.dialog-head > div.dialog-heading > div.film-ratings > a.film-rating",
+                "boundingRect": {
+                  "top": 778,
+                  "bottom": 822,
+                  "left": 355,
+                  "right": 500,
+                  "width": 145,
+                  "height": 44
+                },
+                "snippet": "<a class=\"film-rating\" href=\"https://www.rottentomatoes.com/m/1017776-rocky\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Rotten Tomatoes · Tomatometer · 95%\">",
+                "nodeLabel": "95%\nRT · Critics",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-326-A",
+                "path": "1,HTML,1,BODY,4,DIALOG,1,DIV,1,DIV,2,DIV,1,A",
+                "selector": "div.dialog-head > div.dialog-heading > div.film-ratings > a.film-rating",
+                "boundingRect": {
+                  "top": 778,
+                  "bottom": 822,
+                  "left": 516,
+                  "right": 660,
+                  "width": 145,
+                  "height": 44
+                },
+                "snippet": "<a class=\"film-rating\" href=\"https://www.rottentomatoes.com/m/1017776-rocky/reviews/all-audience\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Rotten Tomatoes · Popcornmeter · 69% · 250,000+ Ratings\">",
+                "nodeLabel": "69%\nRT · Audience",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-327-A",
+                "path": "1,HTML,1,BODY,4,DIALOG,1,DIV,1,DIV,2,DIV,2,A",
+                "selector": "div.dialog-head > div.dialog-heading > div.film-ratings > a.film-rating",
+                "boundingRect": {
+                  "top": 778,
+                  "bottom": 822,
+                  "left": 676,
+                  "right": 821,
+                  "width": 145,
+                  "height": 44
+                },
+                "snippet": "<a class=\"film-rating\" href=\"https://www.filmaffinity.com/es/film192554.html\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"FilmAffinity · 7.1/10\">",
+                "nodeLabel": "7.1/10\nFilmAffinity",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            }
+          ]
+        }
+      ],
+      "report_path": "/private/tmp/vobarna-seo-a11y-modal/report.html"
+    },
+    "cinema": {
+      "version": "13.5.0",
+      "url": "http://127.0.0.1:8765/en/cinemas/mooby-balmes/",
+      "fetch_time": "2026-11-19T19:14:06.122Z",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failures": [
+        {
+          "id": "label-content-name-mismatch",
+          "title": "Elements with visible text labels do not have matching accessible names.",
+          "count": 30,
+          "examples": [
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-0-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,NAV,1,BUTTON",
+                "selector": "main#main > section.venue-programme > nav.venue-dates > button",
+                "boundingRect": {
+                  "top": 363,
+                  "bottom": 429,
+                  "left": 114,
+                  "right": 188,
+                  "width": 74,
+                  "height": 66
+                },
+                "snippet": "<button type=\"button\" data-venue-date=\"2026-11-19\" aria-pressed=\"true\" aria-label=\"Today 19 Nov 2026\">",
+                "nodeLabel": "Today\n19\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-1-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,NAV,2,BUTTON",
+                "selector": "main#main > section.venue-programme > nav.venue-dates > button",
+                "boundingRect": {
+                  "top": 363,
+                  "bottom": 429,
+                  "left": 196,
+                  "right": 270,
+                  "width": 74,
+                  "height": 66
+                },
+                "snippet": "<button type=\"button\" data-venue-date=\"2026-11-20\" aria-pressed=\"false\" aria-label=\"Tomorrow 20 Nov 2026\">",
+                "nodeLabel": "Tomorrow\n20\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            },
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-2-BUTTON",
+                "path": "1,HTML,1,BODY,2,MAIN,2,SECTION,1,NAV,3,BUTTON",
+                "selector": "main#main > section.venue-programme > nav.venue-dates > button",
+                "boundingRect": {
+                  "top": 363,
+                  "bottom": 429,
+                  "left": 278,
+                  "right": 352,
+                  "width": 74,
+                  "height": 66
+                },
+                "snippet": "<button type=\"button\" data-venue-date=\"2026-11-21\" aria-pressed=\"false\" aria-label=\"Sat 21 Nov 2026\">",
+                "nodeLabel": "Sat\n21\nNov",
+                "explanation": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+              }
+            }
+          ]
+        }
+      ],
+      "report_path": "/private/tmp/vobarna-seo-a11y-cinema/report.html"
+    },
+    "film": {
+      "version": "13.5.0",
+      "url": "http://127.0.0.1:8765/en/films/rocky-1976/",
+      "fetch_time": "2026-11-19T19:16:59.195Z",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failures": [],
+      "report_path": "/private/tmp/vobarna-seo-a11y-film/report.html"
+    }
+  },
+  "manual_checks": {
+    "home_status_hidden": true,
+    "spanish_reset_label": "Reset",
+    "spanish_zero_results_status_hidden": true,
+    "modal_initial_focus": "Close button",
+    "modal_escape_closes": true,
+    "modal_focus_restored": true,
+    "native_dialog_modal": true,
+    "reverse_tab_boundary": "Browser chrome receives focus briefly; next reverse tab returns to last dialog link. No background-page control received focus.",
+    "direct_film_page_has_modal": false,
+    "film_reflow_320px": {
+      "viewport": 320,
+      "document_scroll_width": 320,
+      "table_scroll_container": "overflow:auto"
+    },
+    "public_dns_A": "37.19.215.33",
+    "public_https_check": "curl timeouts inside and outside sandbox; Chrome navigation timed out; web fetch failed. Deployment documentation records successful public checks separately.",
+    "known_duplicate_film_pairs": 5,
+    "same_locale_duplicate_pages": 30,
+    "english_film_pages": 325,
+    "english_film_pages_without_session_rows": 24
+  },
+  "http_preview_checks": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "robots_header": null
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "robots_header": null
+    },
+    {
+      "path": "/llms.txt",
+      "status": 404,
+      "robots_header": "noindex, follow"
+    },
+    {
+      "path": "/llms.text",
+      "status": 404,
+      "robots_header": "noindex, follow"
+    },
+    {
+      "path": "/en/?q=English",
+      "status": 200,
+      "robots_header": "noindex, follow"
+    },
+    {
+      "path": "/en/?utm_source=audit",
+      "status": 200,
+      "robots_header": null
+    },
+    {
+      "path": "/definitely-not-a-page/",
+      "status": 404,
+      "robots_header": "noindex, follow"
+    },
+    {
+      "path": "/programme.json",
+      "status": 200,
+      "robots_header": "noindex, follow"
+    },
+    {
+      "path": "/webmcp/",
+      "status": 200,
+      "robots_header": null
+    }
+  ],
+  "performance": {
+    "url": "http://127.0.0.1:8765/en/",
+    "cache": "cold trace reload",
+    "cpu_throttling": 1,
+    "network_throttling": "none, localhost",
+    "lcp_ms": 546,
+    "cls": 0.02,
+    "ttfb_ms": 5,
+    "field_data": null,
+    "inp": "not established",
+    "trace_file": "/private/tmp/vobarna-seo-a11y-trace.json.gz"
+  }
+}

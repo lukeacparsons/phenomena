@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vobarna-source-reader",
+  "main": "src/provider-source-reader.mjs",
+  "compatibility_date": "2026-11-19",
+  "account_id": "39143dcc2da52fa6724dce616eb7bf4d",
+  "workers_dev": true,
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}

@@ -1,0 +1,180 @@
+{
+  "checked_at": "2026-11-19T16:31:10.698504+00:00",
+  "scope": "21 nearby/regional candidates; source and schema validation, not independent physical verification.",
+  "checks": [
+    {
+      "check": "All 21 selected candidates have profiles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Unique cinemas IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Unique rooms IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Unique images IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Previous cinemas records preserved",
+      "passed": true,
+      "detail": 23
+    },
+    {
+      "check": "Previous rooms records preserved",
+      "passed": true,
+      "detail": 174
+    },
+    {
+      "check": "Previous images records preserved",
+      "passed": true,
+      "detail": 124
+    },
+    {
+      "check": "Previous sources preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All evidence source references resolve",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Cinema-room joins resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "New rooms have source-identified identities, no invented placeholders",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Image-room joins resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All 19 cached images decode and match checksums/dimensions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Duplicate image bytes absent in new batch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Historical Imperial photos not assigned to modern rooms",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Maps links are explicit search URLs with no fabricated Place IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Mataró has 12 capacities and raw screen pairs with inferred-axis flags",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Stage/auxiliary-screen measurements not stored as main cinema screen sizes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Capri legacy dimensions/capacity excluded from verified current fields",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Baricentro conflict remains unresolved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Parc Vallès capacity remains an announcement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Four source conflicts retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Catalogue totals reconcile",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All active directory entries covered without changing directory membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Nearby and regional inventory coverage reconciles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "No new review observations invented",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All 24 prices join to their cinema and source",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Local report/gallery links resolve",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "summary": {
+    "passed": 28,
+    "failed": 0
+  },
+  "research_summary": {
+    "cinemas": 21,
+    "room_records": 28,
+    "rooms_with_capacity_observations": 21,
+    "rooms_with_current_published_capacity": 18,
+    "rooms_with_dated_launch_capacity": 2,
+    "rooms_with_announced_capacity": 1,
+    "rooms_with_screen_dimension_pairs": 12,
+    "screen_pairs_with_inferred_axes": 12,
+    "rooms_with_published_floor_area": 2,
+    "complex_capacity_observations": 5,
+    "downloaded_image_references": 19,
+    "downloaded_photographs": 18,
+    "historical_drawings": 1,
+    "venues_with_downloaded_images": 8,
+    "venues_with_non_predecessor_photos": 7,
+    "rooms_with_identified_interior_photos": 4,
+    "maps_links": 21,
+    "verified_google_place_ids": 0,
+    "price_records": 24,
+    "source_records": 72,
+    "unresolved_conflicts": 4,
+    "new_review_observations": 0
+  },
+  "limitations": [
+    "No live Google/Tripadvisor review export.",
+    "Photos cover eight venues, including historical Imperial imagery; only four current named auditoriums have source-identified interiors.",
+    "Only 28 source-identified room records; many other salas lack individual details.",
+    "Room capacities include historic and announced figures and must not be treated uniformly as current certified seat totals."
+  ]
+}

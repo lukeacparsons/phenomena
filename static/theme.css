@@ -1,0 +1,78 @@
+/* Shared by the programme, detail pages and guide. */
+:root{
+  --background-base:var(--bg);
+  --background-filter:none;
+  --film-stock:#cbbda9;
+  --date-selected:#514b43;
+  --poster-gradient:linear-gradient(150deg,#ede2cf,#ded0b8);
+  --dialog-shadow:#40301c38;
+  --dialog-backdrop:#352b1f70;
+  --action-bg:#b7353f;
+  --action-hover:#9e2932;
+  --primary-hover:#454037;
+  --format-bg:#a2752412;
+  --format-border:#a2752420;
+}
+
+/* Keep this palette and the device-preference fallback below identical. */
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#181818;--s1:#232323;--s2:#2e2d2b;--s3:#3b3936;--border:#4a4641;
+  --tx:#f3eee5;--tx2:#cbc3b7;--tx3:#aaa296;
+  --red:#f3959c;--red-h:#ffb1b6;--green:#8ccca9;--gold:#e4bd7c;--focus:#e4bd7c;
+  --background-base:#e7e7e7;--background-wash:linear-gradient(#e7e7e7b3,#e7e7e7b3);--background-filter:invert(1) grayscale(1);
+  --film-stock:#46413b;--date-selected:#e0d6c6;
+  --poster-gradient:linear-gradient(150deg,var(--s2),var(--s3));
+  --dialog-shadow:#0009;--dialog-backdrop:#000a;--primary-hover:#d4cbbb;
+  --format-bg:#e4bd7c12;--format-border:#e4bd7c40;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    color-scheme:dark;
+    --bg:#181818;--s1:#232323;--s2:#2e2d2b;--s3:#3b3936;--border:#4a4641;
+    --tx:#f3eee5;--tx2:#cbc3b7;--tx3:#aaa296;
+    --red:#f3959c;--red-h:#ffb1b6;--green:#8ccca9;--gold:#e4bd7c;--focus:#e4bd7c;
+    --background-base:#e7e7e7;--background-wash:linear-gradient(#e7e7e7b3,#e7e7e7b3);--background-filter:invert(1) grayscale(1);
+    --film-stock:#46413b;--date-selected:#e0d6c6;
+    --poster-gradient:linear-gradient(150deg,var(--s2),var(--s3));
+    --dialog-shadow:#0009;--dialog-backdrop:#000a;--primary-hover:#d4cbbb;
+    --format-bg:#e4bd7c12;--format-border:#e4bd7c40;
+  }
+}
+
+.header-actions{gap:12px}
+.theme-toggle{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:44px;height:44px;padding:0;
+  border:0;border-radius:var(--radius);
+  background:transparent;color:var(--tx2);
+  --cinema-toggle-focus:var(--focus);
+}
+.theme-toggle img{width:44px;height:44px;object-fit:contain}
+
+/* Keep the live curtain drawing above the two page snapshots. */
+:root[data-theme-reveal] .theme-toggle{view-transition-name:cinema-curtains}
+:root[data-theme-reveal]::view-transition{pointer-events:none}
+:root[data-theme-reveal]::view-transition-group(root),
+:root[data-theme-reveal]::view-transition-group(cinema-curtains){animation:none}
+:root[data-theme-reveal]::view-transition-old(root),
+:root[data-theme-reveal]::view-transition-new(root),
+:root[data-theme-reveal]::view-transition-new(cinema-curtains){animation:none;mix-blend-mode:normal;opacity:1}
+:root[data-theme-reveal]::view-transition-image-pair(root){isolation:auto}
+:root[data-theme-reveal]::view-transition-old(cinema-curtains){display:none}
+:root[data-theme-reveal]::view-transition-group(cinema-curtains){z-index:2}
+:root[data-theme-reveal=light]::view-transition-new(root),
+:root[data-theme-reveal=dark]::view-transition-old(root){z-index:1}
+:root[data-theme-reveal=light]::view-transition-old(root),
+:root[data-theme-reveal=dark]::view-transition-new(root){z-index:0}
+@media(max-width:460px){
+  header{gap:8px}
+  .header-actions{gap:4px}
+}
+@media(max-width:380px){
+  :root{--header-height:98px}
+  .header-actions{flex-wrap:wrap;justify-content:flex-end;max-width:100px}
+}
+@media print{
+  .theme-toggle{display:none}
+}

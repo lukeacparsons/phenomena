@@ -1,0 +1,211 @@
+{
+  "checked_on": "2026-11-19",
+  "update": {
+    "id": "technical-deep-2026-11-19",
+    "researched_on": "2026-11-19",
+    "new_facts": 10,
+    "new_price_observations": 0,
+    "new_source_records": 7,
+    "venues_with_new_facts": 3,
+    "new_room_identities": 6,
+    "net_new_room_records": 5,
+    "retired_anonymous_inventory_placeholders": 1,
+    "new_individual_capacity_observations": 4,
+    "ambiguous_group_capacity_observations": 2,
+    "new_unique_image_references": 19,
+    "new_source_identified_interior_rooms": 0,
+    "gallery_image_occurrences_checked": 35,
+    "cross_venue_reused_photographs": 2,
+    "new_fact_ids": [
+      "deep4-barnasud-room-labels",
+      "deep4-som-5-seats",
+      "deep4-som-6-seats",
+      "deep4-som-8-seats",
+      "deep4-barnasud-5-seats",
+      "deep4-barnasud-12-group-capacity",
+      "deep4-barnasud-67-group-capacity",
+      "deep4-capri-digital-conversion",
+      "deep4-barnasud-hire-technology",
+      "deep4-som-hire-technology"
+    ],
+    "new_source_ids": [
+      "deep4-barnasud-5",
+      "deep4-barnasud-67",
+      "deep4-barnasud-12",
+      "deep4-som-5",
+      "deep4-som-6",
+      "deep4-som-8",
+      "deep4-capri-2022"
+    ],
+    "report": "cinema-technical-deep-research.md",
+    "validation": "cinema-technical-deep-log.json"
+  },
+  "checks": [
+    {
+      "check": "no concurrent edits: cinema-comprehensive-research",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: cinema-visitor-questions",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: cinema-dossiers",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: auditoriums",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: auditorium-images",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: cinema-research-next-steps",
+      "passed": true
+    },
+    {
+      "check": "all 38 directory IDs remain covered",
+      "passed": true
+    },
+    {
+      "check": "59 profiles and 224 unique active room records",
+      "passed": true
+    },
+    {
+      "check": "205 facts and 496 unique source IDs",
+      "passed": true
+    },
+    {
+      "check": "existing facts, prices, reviews and sources preserved",
+      "passed": true
+    },
+    {
+      "check": "retired room was an empty anonymous slot",
+      "passed": true
+    },
+    {
+      "check": "all prior real room identities preserved",
+      "passed": true
+    },
+    {
+      "check": "no altered screen or physical-room dimensions",
+      "passed": true
+    },
+    {
+      "check": "four new individual seat observations only",
+      "passed": true
+    },
+    {
+      "check": "grouped capacities never assigned per room",
+      "passed": true
+    },
+    {
+      "check": "SOM Sala 8 seated 222 distinct from event maximum 223",
+      "passed": true
+    },
+    {
+      "check": "26 anonymous placeholders remain and SOM count stays 12",
+      "passed": true
+    },
+    {
+      "check": "all active room joins resolve",
+      "passed": true
+    },
+    {
+      "check": "35 gallery occurrences yield 19 new unique images",
+      "passed": true
+    },
+    {
+      "check": "old image metadata preserved except added provenance annotations",
+      "passed": true
+    },
+    {
+      "check": "no unlabelled new photos promoted to room identity",
+      "passed": true
+    },
+    {
+      "check": "source-identified interior-room count remains 34",
+      "passed": true
+    },
+    {
+      "check": "all images and new source caches exist and hashes match",
+      "passed": true
+    },
+    {
+      "check": "new facts and gallery sources resolve",
+      "passed": true
+    },
+    {
+      "check": "Q&A claims belong to their venues and retain 8 groups",
+      "passed": true
+    },
+    {
+      "check": "historical Capri conversion does not invent current equipment",
+      "passed": true
+    },
+    {
+      "check": "all outreach remains unsent",
+      "passed": true
+    },
+    {
+      "check": "interior count definition preserved: 104 auditorium interiors, 112 with details/history",
+      "passed": true
+    },
+    {
+      "check": "unrelated venue profiles unchanged",
+      "passed": true
+    },
+    {
+      "check": "all visitor new-fact IDs resolve to claims",
+      "passed": true
+    },
+    {
+      "check": "affected readable sala sections match recorded seat counts",
+      "passed": true
+    }
+  ],
+  "checks_passed": 31,
+  "findings": {
+    "room_records": 224,
+    "room_records_with_any_capacity_evidence": 180,
+    "unmapped_placeholders": 26,
+    "image_references": 182,
+    "interior_image_references": 104,
+    "source_identified_interior_rooms": 34,
+    "screen_display_pairs_unchanged": 58,
+    "full_room_dimension_sets_unchanged": 0,
+    "interior_and_seating_detail_or_historical_references": 112
+  },
+  "rejected_or_unresolved_leads": [
+    {
+      "venue": "CineBaix",
+      "source_url": "https://contractaciopublica.cat/portal-api/descarrega-document/301980602/613371B5EDAFB66D918B2DC0FD90962F",
+      "page": 27,
+      "finding": "Truffaut hire-price comparison: 156 and 63 are Truffaut room labels, not documented CineBaix capacities. Visually checked; neither assigned to CineBaix."
+    },
+    {
+      "venue": "Cinemes Can Castellet",
+      "finding": "559 whole-complex seats already recorded; not a new observation and cannot be allocated to five salas."
+    },
+    {
+      "venue": "Filmax Gran Via",
+      "finding": "Third 4DX announcement already in catalogue; complex format inventory does not establish sala dimensions or room labels."
+    },
+    {
+      "venue": "Barnasud",
+      "finding": "Two photographs also listed for La Farga; reject verified venue/room assignment."
+    },
+    {
+      "venue": "CineBaix",
+      "finding": "Approved fire/accessibility project remains a lead; current final plans, room capacities and work completion not established."
+    }
+  ],
+  "limitations": [
+    "Four individual counts come from event marketplaces; current operator confirmation is outstanding.",
+    "No newly established screen measurements, room L/W/H, projector models or source-identified sala interiors.",
+    "Gallery images have unknown capture dates and reuse rights; all new interior-room associations are provisional.",
+    "No email, enquiry form, booking, seat selection, purchase, app change or deployment made."
+  ]
+}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VO Barna WebMCP guide — Cinema tools for AI agents</title>
+  <meta name="description" content="Use VO Barna’s six WebMCP tools to find original-version cinema screenings around Barcelona, read film details and cached availability, and show official booking links. Includes inputs, examples and data limits.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VO Barna WebMCP guide — Cinema tools for AI agents">
+  <meta property="og:description" content="Find screenings, compare film details and show the right booking link. A guide to VO Barna’s six browser agent tools.">
+  <link rel="icon" href="/clint-logo.webp" type="image/png">
+  <link rel="preload" href="/fonts/Bungee-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/cinemas.css">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/webmcp-guide.css">
+  <link rel="alternate" type="application/json" href="/webmcp-tools.json" title="VO Barna WebMCP tool definitions">
+</head>
+<body class="agent-guide">
+  <a class="skip" href="#guide">Skip to the guide</a>
+  <div class="header-wrap">
+    <header>
+      <a href="/en/" class="logo"><img class="logo-mark" src="/clint-logo.webp" alt="" width="60" height="60"><span class="logo-copy"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">Original version cinema in Barcelona</span></span></a>
+      <nav aria-label="Main navigation"><a class="guide-back" href="/en/">What’s on</a></nav>
+    </header>
+  </div>
+  <main id="guide" class="guide-main">
+    <article>
+      <div class="guide-intro">
+        <p class="guide-eyebrow">WebMCP guide</p>
+        <h1>VO Barna with your AI agent</h1>
+        <p class="guide-lead">Find an original-version screening around Barcelona, explore the film, and bring up its official ticket link. Your assistant can help through six tools that work alongside the page.</p>
+        <div class="guide-actions">
+          <a class="guide-primary" href="/en/">Browse screenings</a>
+          <a href="/webmcp-tools.json">Tool definitions (JSON)</a>
+        </div>
+      </div>
+
+      <nav class="guide-contents" aria-label="On this page">
+        <a href="#possibilities">What you can do</a>
+        <a href="#tools">The six tools</a>
+        <a href="#inputs">Search inputs</a>
+        <a href="#workflow">Example workflow</a>
+        <a href="#data">Understanding the data</a>
+        <a href="#access">Access for agents</a>
+      </nav>
+
+      <section class="guide-section" id="possibilities" aria-labelledby="possibilities-title">
+        <h2 id="possibilities-title">What you can do</h2>
+        <ul class="guide-examples">
+          <li>“Find science fiction in IMAX this weekend.”</li>
+          <li>“Compare these films’ ratings and tell me who directed them.”</li>
+          <li>“Show me that screening and its ticket link.”</li>
+          <li lang="es">“Busca comedias para mañana.”</li>
+          <li lang="ca">“Mostra’m les sessions de dissabte.”</li>
+        </ul>
+        <p>Search understands film titles, actors and other searchable credits, genres, languages, countries, cinemas, formats and date phrases in English, Spanish and Catalan. Language names also match production nationality: try <code>espanol IMAX</code>, <code>catala</code> or <code>French tomorrow</code>. An agent can compare returned film facts and ratings, then apply a search or open a particular screening for you to review.</p>
+        <p>Results depend on the collected programme. Examples illustrate requests you can make; they do not promise that matching screenings are available. Ticket selection and payment take place with the cinema.</p>
+      </section>
+
+      <section class="guide-section" id="tools" aria-labelledby="tools-title">
+        <h2 id="tools-title">The six tools</h2>
+        <p>The tools are registered on the <a href="/en/">screenings page</a> after its programme loads. Four read information. Two update the visible page and its shareable URL.</p>
+
+        <section class="guide-tool" id="get_context" aria-labelledby="get-context-title">
+          <div class="tool-heading"><h3 id="get-context-title"><code>get_context</code></h3><span class="tool-kind">Reads information</span></div>
+          <p>Discover the supported cinema IDs and formats, current filters, interface language, selected film or screening, programme coverage and collection timestamps. Dates are interpreted in <code>Europe/Madrid</code>.</p>
+          <p><strong>Input:</strong> <code>{}</code>. Use this to learn what is available and understand the user’s current view.</p>
+        </section>
+
+        <section class="guide-tool" id="search_screenings" aria-labelledby="search-screenings-title">
+          <div class="tool-heading"><h3 id="search-screenings-title"><code>search_screenings</code></h3><span class="tool-kind">Reads information</span></div>
+          <p>Find upcoming sessions without changing the page. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
+          <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>, plus optional <code>limit</code> and <code>offset</code>. An empty object searches all upcoming collected sessions, independently of the page’s current filters.</p>
+          <pre><code>{ "query": "Villeneuve this weekend", "formats": ["IMAX"], "limit": 10 }</code></pre>
+          <p>Results include <code>total_screenings</code>, <code>total_films</code>, the resolved date range, a shareable search URL and <code>next_offset</code>. Sessions are ordered by start time, then screening ID. Use the same filters with <code>next_offset</code> to fetch the next page; <code>null</code> means there is no next page.</p>
+        </section>
+
+        <section class="guide-tool" id="get_film" aria-labelledby="get-film-title">
+          <div class="tool-heading"><h3 id="get-film-title"><code>get_film</code></h3><span class="tool-kind">Reads information</span></div>
+          <p>Read collected film facts, credits, original languages, release information, runtime and ratings with their source links and observation dates. This includes details an assistant can use when comparing films.</p>
+          <p><strong>Required input:</strong> <code>film_id</code>, copied from a search result. Film titles alone are not identifiers: different adaptations and double bills can be distinct entries.</p>
+        </section>
+
+        <section class="guide-tool" id="get_screening" aria-labelledby="get-screening-title">
+          <div class="tool-heading"><h3 id="get-screening-title"><code>get_screening</code></h3><span class="tool-kind">Reads information</span></div>
+          <p>Inspect one session’s room, format, date, time and cached seat availability. Returns the official <code>booking_url</code>, its <code>booking_scope</code>, a VO Barna link and whether the screening has started.</p>
+          <p><strong>Required input:</strong> <code>screening_id</code>, copied from a search result. This reads the shared cache; it does not make a fresh request to the cinema.</p>
+        </section>
+
+        <section class="guide-tool" id="set_search" aria-labelledby="set-search-title">
+          <div class="tool-heading"><h3 id="set-search-title"><code>set_search</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
+          <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Structured filters appear as removable chips. Returns the first 20 matching sessions.</p>
+          <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>. Omitted filters are cleared. Pass <code>{}</code> to reset everything. Pagination arguments apply only to <code>search_screenings</code>.</p>
+          <pre><code>{ "query": "comedia mañana" }</code></pre>
+        </section>
+
+        <section class="guide-tool" id="show_screening" aria-labelledby="show-screening-title">
+          <div class="tool-heading"><h3 id="show-screening-title"><code>show_screening</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
+          <p>Open an upcoming session in the film dialog and highlight its official ticket link. If the current filters hide that session, the dialog shows the film’s upcoming sessions while preserving the underlying search.</p>
+          <p><strong>Required input:</strong> <code>screening_id</code>, copied from a search result. The shareable URL leads to the film’s permanent page at the selected screening row. Opening the dialog does not reserve a seat, open checkout or purchase a ticket.</p>
+        </section>
+      </section>
+
+      <section class="guide-section" id="inputs" aria-labelledby="inputs-title">
+        <h2 id="inputs-title">Search inputs</h2>
+        <p>These inputs are shared by <code>search_screenings</code> and <code>set_search</code>. All are optional.</p>
+        <table>
+          <caption>Filters and their meaning</caption>
+          <thead><tr><th scope="col">Input</th><th scope="col">Meaning</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>query</code></th><td>A string of up to 500 characters. Combine searchable words with natural dates, such as <code>Villeneuve this weekend</code>, <code>comedia mañana</code> or <code>ciència-ficció dissabte</code>.</td></tr>
+            <tr><th scope="row"><code>date_from</code><br><code>date_to</code></th><td>Inclusive <code>YYYY-MM-DD</code> date bounds, or <code>null</code>. Use the same date for both to select one day. A single bound is open-ended. Explicit bounds override dates embedded in the query.</td></tr>
+            <tr><th scope="row"><code>cinema_ids</code></th><td>Up to 20 cinema IDs from <code>get_context</code>. A screening can match <strong>any</strong> listed cinema. An empty array means all cinemas.</td></tr>
+            <tr><th scope="row"><code>formats</code></th><td>Up to 20 format values from <code>get_context</code>. <strong>Every</strong> requested format must belong to the same screening. An empty array adds no format restriction.</td></tr>
+            <tr><th scope="row"><code>big_screens_only</code></th><td>A boolean, default <code>false</code>. Selects VO Barna’s curated premium selection, which includes comfort-focused venues. It is not a ranking by measured screen size.</td></tr>
+          </tbody>
+        </table>
+        <p><code>search_screenings</code> additionally accepts <code>limit</code> (an integer from 1 to 50, default 20) and <code>offset</code> (an integer from 0 to 100000, default 0).</p>
+        <p>Relative dates use Barcelona’s calendar. Weeks run Monday–Sunday; a bare weekday means its next occurrence, including today. “In 2 weeks” selects a date 14 days ahead; “next 2 weeks” covers today and the following 13 days. Exact film titles and quoted phrases are protected from date parsing. Producer-only credits are excluded from search; other collected credits remain searchable.</p>
+      </section>
+
+      <section class="guide-section" id="workflow" aria-labelledby="workflow-title">
+        <h2 id="workflow-title">From a request to a screening</h2>
+        <ol class="guide-steps">
+          <li><strong>Read the context.</strong> Call <code>get_context({})</code> for supported cinemas, formats and date coverage.</li>
+          <li><strong>Find options.</strong> Call <code>search_screenings</code> with the user’s criteria. Follow <code>next_offset</code> if you need more results.</li>
+          <li><strong>Compare the details.</strong> Use returned IDs with <code>get_film</code> for credits and ratings, or <code>get_screening</code> for a session’s cached availability and booking destination.</li>
+          <li><strong>Show the choice.</strong> Use <code>set_search</code> to display a filtered programme, or <code>show_screening</code> to highlight the chosen session.</li>
+          <li><strong>Continue with the cinema.</strong> The official ticket link leads to the cinema’s booking or event page. Seat selection, final availability, fees and payment are handled there.</li>
+        </ol>
+        <p>Each returned <code>url</code> links back to VO Barna. Film links use permanent, language-specific paths such as <code>/en/films/wicker-2026/</code>; screening links add a stable <code>#screening-…</code> anchor. Search links use the current language’s listings page with query parameters. Use the URLs returned by tools rather than constructing a slug from a title or an anchor from a screening ID.</p>
+        <p>Use <code>canonical_url</code> to cite the information page and <code>action_url</code> to open the film dialog with the recommended screening selected. Action links work in a fresh tab and after reloading; the visitor then clicks Tickets. A film action without a selected session uses <code>#showtimes</code>. If a screening has expired or disappeared, its information page explains this rather than selecting a different session.</p>
+        <p>When asked for three films, recommend three distinct <code>film_id</code> values, each with a suitable session. Use the cinema profiles for source-linked seating, access and location facts; unknown facts cannot establish a match.</p>
+        <p>A <code>booking_url</code> points directly to the cinema’s provider and is independent of VO Barna’s slugs. Check <code>booking_scope</code>: an event-level link may still require choosing the date or session on the cinema’s site.</p>
+        <p>Try an ordinary shareable search: <a href="/en/?q=Villeneuve%20this%20weekend">Villeneuve this weekend</a>. The same page can be used manually, with or without an agent.</p>
+      </section>
+
+      <section class="guide-section" id="data" aria-labelledby="data-title">
+        <h2 id="data-title">Understanding the data</h2>
+        <dl class="guide-facts">
+          <div><dt>Coverage and freshness</dt><dd>The programme covers collected listings at the cinemas returned by <code>get_context</code>. A date with no matches may be unpublished or outside collected coverage. Use source collection timestamps and each session’s <code>schedule_fetched_at</code>; the overall <code>programme_generated_at</code> is not a fresh check of every provider.</dd></div>
+          <div><dt>Seat availability</dt><dd>Counts are cached observations. Responses include <code>checked_at</code>, <code>age_seconds</code>, <code>stale</code>, <code>refresh_failed</code> and provider support. A count is stale once it is older than the configured collection interval, available from <code>get_context</code>. A refresh failure can leave an older count in place.</dd></div>
+          <div><dt>What a seat count means</dt><dd>The <code>kind</code> field distinguishes ordinary seats, provider-reported totals and area counts. Wheelchair and companion spaces remain separate where supplied. Counts do not establish adjacent seats or reserve tickets. Status can be <code>reported_available</code>, <code>sold_out</code>, <code>booking_closed</code> or <code>unknown</code>; zero is not interpreted identically across count types.</dd></div>
+          <div><dt>Language and format</dt><dd>VOSE means original audio with Spanish subtitles, not necessarily English audio. Film-level original languages and a session’s confirmed audio language are different facts. Use the session’s format tags; venue equipment does not guarantee a particular performance format.</dd></div>
+          <div><dt>Ratings</dt><dd>Ratings retain the publisher’s scale and observation date; critics’ and audience scores are separate. Unknown values remain unknown.</dd></div>
+          <div><dt>Current limits</dt><dd>The tools do not offer seat selection, reservations or payment. Time-of-day filters, rating-threshold filters, proximity searches and cinema/auditorium research are not part of the current tool inputs. Returned film facts and session times can still help an assistant compare options.</dd></div>
+        </dl>
+      </section>
+
+      <section class="guide-section" id="access" aria-labelledby="access-title">
+        <h2 id="access-title">Access for agents and developers</h2>
+        <p>This guide is static HTML. Its content, links and the <a href="/webmcp-tools.json">JSON tool reference</a> can be read without JavaScript, an account or a WebMCP-enabled browser. The JSON reference is generated from the implemented tool definitions and includes each tool’s description, input schema and annotations.</p>
+        <p><strong>To execute tools, open <a href="/en/">the screenings page</a> in a WebMCP-capable browser agent and allow its programme to load.</strong> VO Barna registers its tools through <code>document.modelContext.registerTool()</code>. Tools are available on the <a href="/en/">English</a>, <a href="/es/">Spanish</a> and <a href="/ca/">Catalan</a> listings pages. Direct film and cinema pages provide static details and ticket links; return to a listings page to execute tools. This guide does not register them. Tool names are in-page operations, not HTTP API routes; the JSON file is documentation, not an executable endpoint.</p>
+        <p>In a browser that supports discovery and execution through the current API, an example console call on the screenings page is:</p>
+        <pre><code>const tools = await document.modelContext.getTools();
+const search = tools.find(tool =&gt; tool.name === 'search_screenings');
+await document.modelContext.executeTool(search, {
+  query: 'Villeneuve this weekend',
+  limit: 10
+});</code></pre>
+        <p>Tool results are JSON-serializable values. Successful operations return <code>ok: true</code>. Application failures use this shape:</p>
+        <pre><code>{
+  "ok": false,
+  "error": {
+    "code": "not_found",
+    "message": "Screening not found in the current programme. Search again for its current ID."
+  }
+}</code></pre>
+        <p>Other error codes include <code>invalid_input</code>, <code>not_ready</code>, <code>screening_started</code>, <code>cancelled</code> and <code>operation_failed</code>. Unknown arguments and invalid IDs or dates are rejected before page changes. A cancellation received before execution makes no change.</p>
+        <p>The four information tools have <code>readOnlyHint: true</code>; the two page actions have <code>readOnlyHint: false</code>. All six mark their outputs with <code>untrustedContentHint: true</code> because they can include external cinema and film data. These annotations describe the tools; they are not access-control guarantees.</p>
+        <p>WebMCP and browser support are evolving. See <a href="https://developer.chrome.com/docs/ai/webmcp">Chrome’s WebMCP documentation</a>, the <a href="https://webmachinelearning.github.io/webmcp/">WebMCP specification</a> and the <a href="https://webmcp.com/">WebMCP directory</a> for background. The regular VO Barna interface remains available when tools are unsupported.</p>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer guide-footer">
+    <span>VO Barna · Original-version cinema around Barcelona</span>
+    <nav aria-label="Related pages"><a href="/en/">What’s on</a><a href="/webmcp-tools.json">Tool definitions (JSON)</a></nav>
+  </footer>
+</body>
+</html>

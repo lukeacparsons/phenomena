@@ -1,0 +1,245 @@
+{
+  "researched_on": "2026-11-19",
+  "scope": "Authorized practical-information and remaining-gap research; no application code changes or outreach.",
+  "outputs": [
+    "cinema-practical-info.json",
+    "cinema-practical-info.md",
+    "cinema-dossiers.json",
+    "cinema-dossier.md",
+    "README.md",
+    "auditoriums.json",
+    "auditorium-research.md"
+  ],
+  "coverage": {
+    "cinemas": 8,
+    "fact_records": 53,
+    "price_records": 33,
+    "google_attribute_observations": 27,
+    "source_records": 44,
+    "current_exact_screen_dimensions": 29,
+    "current_source_identified_interior_rooms": 6,
+    "new_room_photos": 0,
+    "new_exact_screen_dimensions": 0
+  },
+  "method": [
+    "Primary operator, transport and shopping-centre pages; festival-organizer access notes; public PDF technical/legal documents.",
+    "Reused same-day public operator HTML and saved Google listing snapshots without requesting account/browser access.",
+    "Decoded publicly delivered shopping-centre page content for transport directions; no cart, customer or payment APIs used.",
+    "Normalized Maps positive/negative display values rather than assuming an accessibility icon means yes.",
+    "Prices deduplicated across venues; membership and subscriber extras never mixed with ordinary admission.",
+    "Source/date/condition and explicit unresolved fields retained. Public business entity identifiers retained; individual IDs from PDFs excluded."
+  ],
+  "excluded_or_unconfirmed_leads": [
+    "Teatro del Bosque in Móstoles is not Mooby Bosque.",
+    "La Farga event-auditorium 213 seats and 3x3 m screen are not the Cinesa multiplex.",
+    "Aribau 66 bar screen is not Mooby Aribau.",
+    "Balmes architectural 25x25 m concrete screens are structural walls, not cinema projection screens.",
+    "Generic chain accessibility apps and 2015/2020 references do not establish current support in each sala.",
+    "Secondary IMAX area estimates cannot establish measured width and height.",
+    "Old Maquinista 13-screen/2463-seat listings and inconsistent directory prices are not current Premium cinema tariffs.",
+    "Bosque large-room captions without a number and temporary Aribau theatre-production photographs do not identify new current sala interiors.",
+    "Phenomena legacy cash-only statement, historical bus routes, and indexed template price placeholders are not current visitor instructions.",
+    "No outside-food, late-admission, hearing-loop or payment-method policy inferred from customer complaints or missing text."
+  ],
+  "conflicts": [
+    {
+      "id": "splau-accessible-seating",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "room-splau-es",
+        "google-kinepolis-splau"
+      ],
+      "description": "Google listing says no accessible seating, but the operator lists wheelchair positions in all 28 rooms. Neither statement is silently discarded; use the room table for published counts and confirm the required route."
+    },
+    {
+      "id": "splau-refunds",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "pr-kinepolis-online-refund",
+        "pr-kinepolis-wrong-cinema",
+        "pr-kinepolis-purchase-conditions"
+      ],
+      "description": "Different Kinépolis FAQs give before/after-start refund deadlines; general terms are more restrictive. Scenarios and source statements are kept separate."
+    },
+    {
+      "id": "diagonal-parking-unit",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "source_ids": [
+        "pr-diagonal-services",
+        "pr-diagonal-accessible-parking"
+      ],
+      "description": "Both language versions say 0.05 cents per minute. This may be a unit error; no EUR-per-minute number is inferred."
+    },
+    {
+      "id": "splau-friends-price",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "description": "Fresh same-day operator HTML says EUR 7; an older indexed excerpt says EUR 6.90. The captured HTML is used, dated 2026-11-19."
+    },
+    {
+      "id": "mooby-sunday-heading",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "description": "The EUR 10 English heading names Friday, Saturday and holidays, but not Sunday. The separate EUR 13 Sunday-inclusive heading applies to Gran Sarrià only and is not borrowed."
+    }
+  ],
+  "access_limits": [
+    "Earlier denied Chrome access and blocked Maps galleries not retried or bypassed.",
+    "HTTP 403 responses were not bypassed; previously available text and public indexed excerpts are labelled.",
+    "Kinépolis local rules PDF, general-conditions PDF and Movie Club page were inaccessible; detailed terms are not invented.",
+    "No messages sent, accounts created, tickets purchased or operator contacts submitted."
+  ],
+  "http_results": [
+    {
+      "id": "mooby-prices",
+      "url": "https://www.moobycinemas.com/prices",
+      "resolved_url": "https://www.moobycinemas.com/prices",
+      "status": 403
+    },
+    {
+      "id": "inedit-access",
+      "url": "https://es.in-edit.org/informacion-practica-in-edit/",
+      "resolved_url": "https://es.in-edit.org/informacion-practica-in-edit/",
+      "status": 200,
+      "chars": 5106
+    },
+    {
+      "id": "bosque-access",
+      "url": "https://www.apropacultura.org/es/equipamiento/mooby-bosque",
+      "resolved_url": "https://www.apropacultura.org/es/equipamiento/mooby-bosque",
+      "status": 200,
+      "chars": 1640
+    },
+    {
+      "id": "diagonal-services",
+      "url": "https://www.diagonalmarcentre.es/servicios/",
+      "resolved_url": "https://www.diagonalmarcentre.es/servicios/",
+      "status": 403
+    },
+    {
+      "id": "diagonal-transport",
+      "url": "https://www.diagonalmarcentre.es/la-terrassa-del-mar/",
+      "resolved_url": "https://www.diagonalmarcentre.es/la-terrassa-del-mar/",
+      "status": 403
+    },
+    {
+      "id": "maquinista-parking",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/parking",
+      "resolved_url": "https://www.westfield.com/es/spain/lamaquinista/parking",
+      "status": 200,
+      "chars": 1492
+    },
+    {
+      "id": "maquinista-services",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/nuestros-servicios",
+      "resolved_url": "https://www.westfield.com/es/spain/lamaquinista/nuestros-servicios",
+      "status": 200,
+      "chars": 3383
+    },
+    {
+      "id": "splau-parking",
+      "url": "https://www.westfield.com/es/spain/splau/servicios-club/free-parking",
+      "resolved_url": "https://www.westfield.com/es/spain/splau/servicios-club/free-parking",
+      "status": 200,
+      "chars": 804
+    },
+    {
+      "id": "splau-rules",
+      "url": "https://kinepolis.es/sites/kinepolis.es/files/rules/normativa_kinepolis_barcelona_splau_esp.pdf",
+      "resolved_url": "https://kinepolis.es/sites/kinepolis.es/files/rules/normativa_kinepolis_barcelona_splau_esp.pdf",
+      "status": 403
+    },
+    {
+      "id": "kinepolis-conditions",
+      "url": "https://kinepolis.es/sites/kinepolis.es/files/pdf-attachments/1acondiciones_generala_de_venta_v_final_19_final.pdf",
+      "resolved_url": "https://kinepolis.es/sites/kinepolis.es/files/pdf-attachments/1acondiciones_generala_de_venta_v_final_19_final.pdf",
+      "status": 403
+    },
+    {
+      "id": "cinesa-access",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/7536206355101--Mi-cine-cercano-est%C3%A1-adaptado",
+      "resolved_url": "https://ayuda.cinesa.es/hc/es/articles/7536206355101--Mi-cine-cercano-est%C3%A1-adaptado",
+      "status": 403
+    },
+    {
+      "id": "cinesa-contact",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/8486862026781-Tramitar-consultas-solicitudes-reclamaciones-o-felicitaciones",
+      "resolved_url": "https://ayuda.cinesa.es/hc/es/articles/8486862026781-Tramitar-consultas-solicitudes-reclamaciones-o-felicitaciones",
+      "status": 403
+    },
+    {
+      "id": "maquinista-access",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/acceso",
+      "resolved_url": "https://www.westfield.com/es/spain/lamaquinista/acceso",
+      "status": 200,
+      "chars": 121
+    },
+    {
+      "id": "farga-access",
+      "url": "https://centrolafarga.com/informacion-y-contacto/",
+      "resolved_url": "https://centrolafarga.com/informacion-y-contacto/",
+      "status": 200,
+      "chars": 1449
+    },
+    {
+      "id": "phenomena-club",
+      "url": "https://phenomena-experience.com/index?pag=condiciones-club",
+      "resolved_url": "https://phenomena-experience.com/index?pag=condiciones-club",
+      "status": 200,
+      "chars": 10538
+    },
+    {
+      "id": "bosque-energy",
+      "url": "https://www.moobycinemas.com/assets/Informe-projectes-mes-100-kw-bosque.pdf",
+      "resolved_url": "https://www.moobycinemas.com/assets/Informe-projectes-mes-100-kw-bosque.pdf",
+      "status": 200,
+      "bytes": 859321
+    },
+    {
+      "id": "yelmo-legal-current",
+      "url": "https://pimcore-content.cinepolis.com/assets/Espa%C3%B1a/PDF/Aviso_Legal_Cine_Yelmo_act%20sep%202026.pdf",
+      "resolved_url": "https://pimcore-content.cinepolis.com/assets/Espa%C3%B1a/PDF/Aviso_Legal_Cine_Yelmo_act%20sep%202026.pdf",
+      "status": 200,
+      "bytes": 121112
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "checked_on": "2026-11-19",
+    "checks": [
+      "All eight cinema IDs, place IDs and practical fact/price joins reconcile.",
+      "53 distinct sourced facts, 33 typed price records and 27 positive/negative Maps attribute observations reconcile.",
+      "Every source reference resolves across practical data, central dossiers and room catalogue.",
+      "All local report links and explicit venue anchors resolve.",
+      "La Farga EUR 0.055/min retains its three-decimal precision in JSON and the readable table.",
+      "85 rooms, 85 capacity-observation records, 29 measured screens, 56 layouts, 86 image references and four tours remain unchanged.",
+      "All 86 cached image files exist; six source-identified interior-room associations remain unchanged.",
+      "Aribau access notes join to all five rooms; positions are kept separate from seat capacities.",
+      "Yelmo legal PDF relevant pages visually checked; published policy scope and refund conflicts remain explicit."
+    ],
+    "application_tests": "Not run: research data and documentation only; application code unchanged."
+  },
+  "room_accessibility_updates": [
+    "mooby-aribau:1",
+    "mooby-aribau:2",
+    "mooby-aribau:3",
+    "mooby-aribau:4",
+    "mooby-aribau:5"
+  ]
+}

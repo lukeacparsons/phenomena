@@ -1,0 +1,1805 @@
+{
+  "version": 1,
+  "translations": {
+    "Public programme evidence names rooms 5, 6, 10 and 14; an event listing additionally names Sala 8. Twelve reported rooms does not establish numbers 1–12; seven room identities remain placeholders.": {
+      "es": "La información de la cartelera pública identifica las salas 5, 6, 10 y 14; una ficha de eventos identifica además la Sala 8. Que se indiquen doce salas no acredita una numeración del 1 al 12; la identidad de siete salas sigue pendiente y se representa mediante marcadores.",
+      "ca": "La informació de la cartellera pública identifica les sales 5, 6, 10 i 14; una fitxa d’esdeveniments identifica també la Sala 8. Que s’indiquin dotze sales no acredita una numeració de l’1 al 12; la identitat de set sales continua pendent i es representa mitjançant marcadors."
+    },
+    "Grouped listing capacity is ambiguous; see fact deep4-barnasud-12-group-capacity. Do not allocate the figure to this individual sala.": {
+      "es": "El aforo de la ficha agrupada es ambiguo; consulta el dato deep4-barnasud-12-group-capacity. No atribuyas la cifra a esta sala individual.",
+      "ca": "L’aforament de la fitxa agrupada és ambigu; consulta la dada deep4-barnasud-12-group-capacity. No atribueixis la xifra a aquesta sala individual."
+    },
+    "Grouped listing capacity is ambiguous; see fact deep4-barnasud-67-group-capacity. Do not allocate the figure to this individual sala.": {
+      "es": "El aforo de la ficha agrupada es ambiguo; consulta el dato deep4-barnasud-67-group-capacity. No atribuyas la cifra a esta sala individual.",
+      "ca": "L’aforament de la fitxa agrupada és ambigu; consulta la dada deep4-barnasud-67-group-capacity. No atribueixis la xifra a aquesta sala individual."
+    },
+    "Seated people in a private-event marketplace listing; no independently confirmed current seat plan or wheelchair-count semantics.": {
+      "es": "Personas sentadas según una ficha de una plataforma de eventos privados; no se han confirmado de forma independiente un plano de butacas vigente ni el significado de los recuentos de plazas para sillas de ruedas.",
+      "ca": "Persones assegudes segons una fitxa d’una plataforma d’esdeveniments privats; no s’han confirmat de manera independent un plànol de butaques vigent ni el significat dels recomptes de places per a cadires de rodes."
+    },
+    "Two unconfirmed Venuu images also appear byte-for-byte in Barnasud listings; photo venue and room association remain disputed.": {
+      "es": "Dos imágenes no confirmadas de Venuu también aparecen, idénticas byte a byte, en fichas de Barnasud; la identificación del cine y la sala de las fotos sigue siendo controvertida.",
+      "ca": "Dues imatges no confirmades de Venuu també apareixen, idèntiques byte a byte, en fitxes de Barnasud; la identificació del cinema i la sala de les fotos continua sent controvertida."
+    },
+    "Venuu adds a named Sala 8 and seated counts for Salas 5/6/8. Seven anonymous inventory placeholders remain; figures are event-marketplace observations and images recur across Salas 5/6/8.": {
+      "es": "Venuu añade una Sala 8 identificada y recuentos de personas sentadas para las salas 5, 6 y 8. Quedan siete marcadores anónimos en el inventario; las cifras proceden de una plataforma de eventos y las imágenes se repiten entre las salas 5, 6 y 8.",
+      "ca": "Venuu afegeix una Sala 8 identificada i recomptes de persones assegudes per a les sales 5, 6 i 8. Queden set marcadors anònims a l’inventari; les xifres provenen d’una plataforma d’esdeveniments i les imatges es repeteixen entre les sales 5, 6 i 8."
+    },
+    "Venuu names Salas 1, 2, 5, 6 and 7. Shared photographs also appear under La Farga; downloaded gallery references do not verify a sala or current configuration.": {
+      "es": "Venuu identifica las salas 1, 2, 5, 6 y 7. Las fotografías compartidas también aparecen bajo La Farga; las referencias descargadas de la galería no verifican una sala ni su configuración actual.",
+      "ca": "Venuu identifica les sales 1, 2, 5, 6 i 7. Les fotografies compartides també apareixen sota La Farga; les referències descarregades de la galeria no verifiquen una sala ni la configuració actual."
+    },
+    "CaixaForum Barcelona lists a nursing room. Baby admission and pushchair storage for individual film events are not specified.": {
+      "es": "CaixaForum Barcelona dispone de una sala de lactancia. No se especifican las condiciones de acceso de bebés ni el almacenamiento de cochecitos para cada sesión de cine.",
+      "ca": "CaixaForum Barcelona disposa d’una sala de lactància. No s’especifiquen les condicions d’accés de nadons ni on deixar els cotxets per a cada sessió de cinema."
+    },
+    "Centre information lists accessible toilets, reserved Auditori spaces and loan wheelchairs at the lobby information point, subject to availability. It does not give wheelchair-position counts or event-specific allocation.": {
+      "es": "La información del centro indica aseos accesibles, espacios reservados en el Auditori y préstamo de sillas de ruedas en el punto de información del vestíbulo, según disponibilidad. No indica cuántas plazas hay para sillas de ruedas ni su asignación para cada evento.",
+      "ca": "La informació del centre indica lavabos accessibles, espais reservats a l’Auditori i préstec de cadires de rodes al punt d’informació del vestíbul, segons disponibilitat. No indica quantes places hi ha per a cadires de rodes ni l’assignació per a cada esdeveniment."
+    },
+    "Cinema Relax uses reduced sound and partial lighting; movement, vocal responses and leaving/re-entering are permitted. A marked lobby area provides a break space. The advertised 27 June 2026 session is past; no upcoming date is established.": {
+      "es": "Cinema Relax utiliza sonido reducido e iluminación parcial; se permite moverse, expresarse en voz alta y salir y volver a entrar. Una zona señalizada del vestíbulo permite descansar. La sesión anunciada del 27 de junio de 2026 ya pasó; no se ha establecido una próxima fecha.",
+      "ca": "Cinema Relax utilitza so reduït i il·luminació parcial; es permet moure’s, expressar-se en veu alta i sortir i tornar a entrar. Una zona senyalitzada del vestíbul permet descansar. La sessió anunciada del 27 de juny de 2026 ja ha passat; no s’ha establert cap pròxima data."
+    },
+    "FIRE!! states that the Institut Francès screening room is wheelchair accessible. Route details, wheelchair counts and lift limits are not specified.": {
+      "es": "FIRE!! indica que la sala de proyección del Institut Francès es accesible en silla de ruedas. No especifica el recorrido, el número de plazas para sillas de ruedas ni las limitaciones del ascensor.",
+      "ca": "FIRE!! indica que la sala de projecció de l’Institut Francès és accessible en cadira de rodes. No especifica el recorregut, el nombre de places per a cadires de rodes ni les limitacions de l’ascensor."
+    },
+    "Indexed tables on the same OCINE page disagree: Spanish weekday €8.50 versus Catalan €7.20; Friday/holiday €9.50 versus €8.20; spectator day Wednesday €6.90 versus Thursday €6.50. No definitive current base price or spectator day is established.": {
+      "es": "Las tablas indexadas de la misma página de OCINE discrepan: entre semana, 8,50 € en castellano frente a 7,20 € en catalán; viernes y festivos, 9,50 € frente a 8,20 €; día del espectador, miércoles a 6,90 € frente a jueves a 6,50 €. No se ha establecido un precio base ni un día del espectador definitivos y vigentes.",
+      "ca": "Les taules indexades de la mateixa pàgina d’OCINE discrepen: entre setmana, 8,50 € en castellà davant de 7,20 € en català; divendres i festius, 9,50 € davant de 8,20 €; dia de l’espectador, dimecres a 6,90 € davant de dijous a 6,50 €. No s’ha establert un preu base ni un dia de l’espectador definitius i vigents."
+    },
+    "Mi vida en Versalles is listed for 21 November 2026 at 11:30, in Catalan with audio description. This is a specific Mi Primer Festival session; availability was not checked.": {
+      "es": "Mi vida en Versalles figura para el 21 de noviembre de 2026 a las 11:30, en catalán con audiodescripción. Es una sesión concreta de Mi Primer Festival; no se comprobó la disponibilidad.",
+      "ca": "Mi vida en Versalles figura per al 21 de novembre de 2026 a les 11:30, en català amb audiodescripció. És una sessió concreta de Mi Primer Festival; no es va comprovar la disponibilitat."
+    },
+    "Noise-reducing ear defenders for autistic visitors or people with sound sensitivity may be requested at reception. This is a centre service, not proof of a relaxed film session.": {
+      "es": "En recepción se pueden solicitar protectores auditivos para visitantes autistas o personas con sensibilidad al sonido. Es un servicio del centro y no acredita que una sesión de cine sea relajada.",
+      "ca": "A recepció es poden demanar protectors auditius per a visitants autistes o persones amb sensibilitat al so. És un servei del centre i no acredita que una sessió de cinema sigui relaxada."
+    },
+    "Past example: Expedición en la jungla, 14 November 2026 at 17:00, was listed in Catalan with audio description. This does not establish a recurring service at every Girona screening.": {
+      "es": "Ejemplo pasado: Expedición en la jungla, el 14 de noviembre de 2026 a las 17:00, figuraba en catalán con audiodescripción. Esto no acredita un servicio habitual en todas las sesiones de Girona.",
+      "ca": "Exemple passat: Expedición en la jungla, el 14 de novembre de 2026 a les 17:00, figurava en català amb audiodescripció. Això no acredita un servei habitual a totes les sessions de Girona."
+    },
+    "Past examples: Pequeños experimentos animados (14 November, 12:00; no dialogue) and Crazy stop motion (15 November 2026, 12:00; VOSC) were listed as relaxed screenings, with ambient light, reduced sound, freedom to move and pictogram preparation guides.": {
+      "es": "Ejemplos pasados: Pequeños experimentos animados (14 de noviembre, 12:00; sin diálogos) y Crazy stop motion (15 de noviembre de 2026, 12:00; VOSC) figuraban como sesiones relajadas, con luz ambiental, sonido reducido, libertad de movimiento y guías de preparación con pictogramas.",
+      "ca": "Exemples passats: Pequeños experimentos animados (14 de novembre, 12:00; sense diàlegs) i Crazy stop motion (15 de novembre de 2026, 12:00; VOSC) figuraven com a sessions relaxades, amb llum ambiental, so reduït, llibertat de moviment i guies de preparació amb pictogrames."
+    },
+    "Placeholder accounts for a published room total; it is not an actual sala number.": {
+      "es": "El marcador refleja un total publicado de salas; no corresponde a un número de sala real.",
+      "ca": "El marcador reflecteix un total publicat de sales; no correspon a un número de sala real."
+    },
+    "Promotions are box-office only. The family offer requires at least two adults and two children under 13, Friday–Sunday/holidays. Birthday packs cover ages 6–12, minimum five children, with one day’s advance reservation.": {
+      "es": "Las promociones solo se aplican en taquilla. La oferta familiar exige al menos dos adultos y dos menores de 13 años, de viernes a domingo y festivos. Los paquetes de cumpleaños son para edades de 6 a 12 años, con un mínimo de cinco niños y reserva con un día de antelación.",
+      "ca": "Les promocions només s’apliquen a taquilla. L’oferta familiar exigeix almenys dos adults i dos menors de 13 anys, de divendres a diumenge i festius. Els paquets d’aniversari són per a edats de 6 a 12 anys, amb un mínim de cinc infants i reserva amb un dia d’antelació."
+    },
+    "Purchase terms allow checkout without an account and state that confirmation is sent by email.": {
+      "es": "Las condiciones de compra permiten comprar sin una cuenta e indican que la confirmación se envía por correo electrónico.",
+      "ca": "Les condicions de compra permeten comprar sense un compte i indiquen que la confirmació s’envia per correu electrònic."
+    },
+    "Purchase terms state that displayed prices include VAT. A base tariff and any separate service fees are not established by this page.": {
+      "es": "Las condiciones de compra indican que los precios mostrados incluyen el IVA. Esta página no establece una tarifa base ni posibles gastos de gestión adicionales.",
+      "ca": "Les condicions de compra indiquen que els preus mostrats inclouen l’IVA. Aquesta pàgina no estableix una tarifa base ni possibles despeses de gestió addicionals."
+    },
+    "Shopping-centre parking allows three free hours per vehicle registration per day; longer stays are charged by the minute. Individual entrance hours differ; the FAQ gives 01:15 as the latest closing time.": {
+      "es": "El aparcamiento del centro comercial ofrece tres horas gratis por matrícula y día; las estancias más largas se cobran por minuto. Los horarios de cada entrada difieren; las preguntas frecuentes indican las 01:15 como hora de cierre más tardía.",
+      "ca": "L’aparcament del centre comercial ofereix tres hores gratuïtes per matrícula i dia; les estades més llargues es cobren per minut. Els horaris de cada entrada difereixen; les preguntes freqüents indiquen la 01:15 com a hora de tancament més tardana."
+    },
+    "The 2025 report lists a lift, entrance ramp, compliant room door widths and adaptable tables, plus ramp access to Plaça Farigola. It gives no measured widths, load limits or screening-room wheelchair allocation.": {
+      "es": "El informe de 2025 enumera un ascensor, una rampa de entrada, anchuras reglamentarias de las puertas de las salas y mesas adaptables, además de acceso por rampa a la Plaça Farigola. No aporta anchuras medidas, límites de carga ni la asignación de plazas para sillas de ruedas en la sala de proyección.",
+      "ca": "L’informe de 2025 enumera un ascensor, una rampa d’entrada, amplades reglamentàries de les portes de les sales i taules adaptables, a més d’accés per rampa a la Plaça Farigola. No aporta amplades mesurades, límits de càrrega ni l’assignació de places per a cadires de rodes a la sala de projecció."
+    },
+    "The accessibility page quotes €6 with a disability card for Cinema Relax; the tariff page quotes €6.50. Neither is treated as the confirmed current charge.": {
+      "es": "La página de accesibilidad indica 6 € con tarjeta de discapacidad para Cinema Relax; la página de tarifas indica 6,50 €. Ninguno se considera el precio vigente confirmado.",
+      "ca": "La pàgina d’accessibilitat indica 6 € amb targeta de discapacitat per a Cinema Relax; la pàgina de tarifes indica 6,50 €. Cap dels dos es considera el preu vigent confirmat."
+    },
+    "The centre permits guide and assistance dogs.": {
+      "es": "El centro permite el acceso de perros guía y de asistencia.",
+      "ca": "El centre permet l’accés de gossos pigall i d’assistència."
+    },
+    "The festival lists its +10 short-film competition on 22 November 2026 at 17:00 in its deaf-access programme: hearing loop, descriptive subtitles, Catalan sign interpretation and live captions for presentations/discussions. Not a venue-wide guarantee.": {
+      "es": "El festival incluye su competición de cortometrajes +10 del 22 de noviembre de 2026 a las 17:00 en su programa accesible para personas sordas: bucle magnético, subtítulos descriptivos, interpretación en lengua de signos catalana y subtitulado en directo de presentaciones y coloquios. No es una garantía para todo el recinto.",
+      "ca": "El festival inclou la seva competició de curtmetratges +10 del 22 de novembre de 2026 a les 17:00 en el programa accessible per a persones sordes: bucle magnètic, subtítols descriptius, interpretació en llengua de signes catalana i subtitulació en directe de presentacions i col·loquis. No és una garantia per a tot el recinte."
+    },
+    "The indexed KIDS page describes a slide and games, play before the film and a ten-minute mid-film break. Play equipment is closed while the film runs. The sala number is unverified.": {
+      "es": "La página KIDS indexada describe un tobogán y juegos, tiempo de juego antes de la película y una pausa de diez minutos a mitad de la proyección. Los juegos permanecen cerrados durante la película. El número de sala no está verificado.",
+      "ca": "La pàgina KIDS indexada descriu un tobogan i jocs, temps de joc abans de la pel·lícula i una pausa de deu minuts a mitja projecció. Els jocs romanen tancats durant la pel·lícula. El número de sala no està verificat."
+    },
+    "The indexed Spanish tariff offers a free companion admission at the cinema, excluding supplements, when the disability card explicitly establishes the need for accompaniment. Confirm its current application with the venue.": {
+      "es": "La tarifa indexada en castellano ofrece una entrada gratuita para el acompañante en el cine, sin suplementos, cuando la tarjeta de discapacidad acredita expresamente la necesidad de acompañamiento. Confirma con el cine su aplicación actual.",
+      "ca": "La tarifa indexada en castellà ofereix una entrada gratuïta per a l’acompanyant al cinema, sense suplements, quan la targeta de discapacitat acredita expressament la necessitat d’acompanyament. Confirma amb el cinema l’aplicació actual."
+    },
+    "The indexed birthday offer starts at €11.50 per child: admission, 90 g salted popcorn and 50 cl drink/water. Minimum ten children aged 3–13 plus an adult; the adult and applicable supplements are excluded. This age range describes the package, not general admission.": {
+      "es": "La oferta de cumpleaños indexada parte de 11,50 € por niño: entrada, 90 g de palomitas saladas y 50 cl de bebida o agua. Exige un mínimo de diez niños de 3 a 13 años y un adulto; el adulto y los suplementos aplicables no están incluidos. Esta franja de edad describe el paquete, no las condiciones generales de admisión.",
+      "ca": "L’oferta d’aniversari indexada parteix d’11,50 € per infant: entrada, 90 g de crispetes salades i 50 cl de beguda o aigua. Exigeix un mínim de deu infants de 3 a 13 anys i un adult; l’adult i els suplements aplicables no estan inclosos. Aquesta franja d’edat descriu el paquet, no les condicions generals d’admissió."
+    },
+    "The operator describes a ramp beside the stairs for access to the salas and an adapted toilet. Room-specific wheelchair positions and route dimensions are not published here.": {
+      "es": "El operador describe una rampa junto a las escaleras para acceder a las salas y un aseo adaptado. No publica aquí las plazas para sillas de ruedas de cada sala ni las dimensiones del recorrido.",
+      "ca": "L’operador descriu una rampa al costat de les escales per accedir a les sales i un lavabo adaptat. No publica aquí les places per a cadires de rodes de cada sala ni les dimensions del recorregut."
+    },
+    "The operator estimates an eleven-minute walk from Montcada Ripollet station, and three minutes from the nearby Passeig Sant Jordi bus stops. Walking estimates are not a live route or rail-service check.": {
+      "es": "El operador estima once minutos a pie desde la estación de Montcada Ripollet y tres minutos desde las paradas de autobús cercanas del Passeig Sant Jordi. Estas estimaciones no son una comprobación en tiempo real del recorrido ni del servicio ferroviario.",
+      "ca": "L’operador estima onze minuts a peu des de l’estació de Montcada Ripollet i tres minuts des de les parades d’autobús properes del Passeig Sant Jordi. Aquestes estimacions no són una comprovació en temps real del recorregut ni del servei ferroviari."
+    },
+    "The operator says prices displayed at the box office or purchase checkout take precedence over the website tariff table. Existing published price observations remain dated estimates.": {
+      "es": "El operador indica que los precios mostrados en taquilla o al finalizar la compra prevalecen sobre la tabla de tarifas de la web. Las observaciones de precios publicadas siguen siendo estimaciones fechadas.",
+      "ca": "L’operador indica que els preus mostrats a taquilla o en finalitzar la compra prevalen sobre la taula de tarifes del web. Les observacions de preus publicades continuen sent estimacions datades."
+    },
+    "The operator’s purchase terms reject refunds. This records the published policy, not a conclusion about statutory rights or cancellation exceptions.": {
+      "es": "Las condiciones de compra del operador rechazan los reembolsos. Se recoge la política publicada, sin concluir nada sobre los derechos legales ni las excepciones por cancelación.",
+      "ca": "Les condicions de compra de l’operador rebutgen els reemborsaments. Es recull la política publicada, sense concloure res sobre els drets legals ni les excepcions per cancel·lació."
+    },
+    "The shopping centre advertises lifts, reserved parking and accessible toilets. This does not verify the route or wheelchair positions in each OCINE sala.": {
+      "es": "El centro comercial anuncia ascensores, aparcamiento reservado y aseos accesibles. Esto no verifica el recorrido ni las plazas para sillas de ruedas en cada sala de OCINE.",
+      "ca": "El centre comercial anuncia ascensors, aparcament reservat i lavabos accessibles. Això no verifica el recorregut ni les places per a cadires de rodes a cada sala d’OCINE."
+    },
+    "The shopping centre lists nursing rooms and baby-changing facilities in several areas. Their location inside the cinema and access after shop closing are not established.": {
+      "es": "El centro comercial indica salas de lactancia y cambiadores en varias zonas. No se ha establecido si están dentro del cine ni si se puede acceder tras el cierre de las tiendas.",
+      "ca": "El centre comercial indica sales de lactància i canviadors en diverses zones. No s’ha establert si són dins del cinema ni si s’hi pot accedir després del tancament de les botigues."
+    },
+    "The tariff page says under-threes enter free; it does not specify whether this includes a separate seat.": {
+      "es": "La página de tarifas indica que los menores de tres años entran gratis; no especifica si esto incluye un asiento propio.",
+      "ca": "La pàgina de tarifes indica que els menors de tres anys entren gratuïtament; no especifica si això inclou un seient propi."
+    },
+    "Unnumbered seating; groups sharing one QR must enter together; late admission may be refused.": {
+      "es": "Asientos sin numerar; los grupos que comparten un QR deben entrar juntos; se puede denegar el acceso una vez iniciada la sesión.",
+      "ca": "Seients sense numerar; els grups que comparteixen un QR han d’entrar junts; es pot denegar l’accés un cop començada la sessió."
+    },
+    "Operator terms prohibit outside food/drink and bikes, scooters or bulky objects. Recorded as the published policy, without assessing its legal enforceability.": {
+      "es": "Las condiciones del operador prohíben comida y bebida del exterior, bicicletas, patinetes y objetos voluminosos. Se recoge la política publicada, sin valorar su exigibilidad legal.",
+      "ca": "Les condicions de l’operador prohibeixen menjar i beguda de l’exterior, bicicletes, patinets i objectes voluminosos. Es recull la política publicada, sense valorar-ne l’exigibilitat legal."
+    },
+    "2026 renovation changes equipment and seating; old technical sheets may be stale.": {
+      "es": "La reforma de 2026 cambia el equipamiento y las butacas; las fichas técnicas antiguas pueden estar desactualizadas.",
+      "ca": "La reforma de 2026 canvia l’equipament i les butaques; les fitxes tècniques antigues poden estar desactualitzades."
+    },
+    "On-site parking advertised by the operator; current cinema validation tariff not verified.": {
+      "es": "El operador anuncia aparcamiento en el recinto; no se ha verificado la tarifa actual con validación del cine.",
+      "ca": "L’operador anuncia aparcament al recinte; no s’ha verificat la tarifa actual amb validació del cinema."
+    },
+    "Nearby FGC stops: El Putxet and Avinguda Tibidabo. Walking-time estimates omitted.": {
+      "es": "Paradas de FGC cercanas: El Putxet y Avinguda Tibidabo. Se omiten las estimaciones del tiempo a pie.",
+      "ca": "Parades d’FGC properes: El Putxet i Avinguda Tibidabo. S’ometen les estimacions del temps a peu."
+    },
+    "Only rooms 1, 6, 8 and 9 are explicitly identified as laser in the operator description. Only rooms 8 and 9 are explicitly identified as Atmos.": {
+      "es": "La descripción del operador solo identifica expresamente las salas 1, 6, 8 y 9 como láser. Solo identifica expresamente las salas 8 y 9 como Atmos.",
+      "ca": "La descripció de l’operador només identifica expressament les sales 1, 6, 8 i 9 com a làser. Només identifica expressament les sales 8 i 9 com a Atmos."
+    },
+    "The Infinity Vision page mentions Balmes without identifying a room; no room-level certification inferred.": {
+      "es": "La página de Infinity Vision menciona Balmes sin identificar una sala; no se infiere ninguna certificación de sala.",
+      "ca": "La pàgina d’Infinity Vision esmenta Balmes sense identificar cap sala; no se n’infereix cap certificació de sala."
+    },
+    "March 2026 operator interview describes the circuit as digital, with phased laser/Atmos upgrades and no active 35/70 mm projection. It does not identify models or upgrade dates for individual rooms.": {
+      "es": "Una entrevista al operador de marzo de 2026 describe el circuito como digital, con mejoras graduales a láser/Atmos y sin proyección activa de 35/70 mm. No identifica modelos ni fechas de actualización de salas concretas.",
+      "ca": "Una entrevista a l’operador del març de 2026 descriu el circuit com a digital, amb millores graduals a làser/Atmos i sense projecció activa de 35/70 mm. No identifica models ni dates d’actualització de sales concretes."
+    },
+    "Apropa Cultura provides a venue accessibility listing; detailed current provision should be checked there.": {
+      "es": "Apropa Cultura ofrece una ficha de accesibilidad del espacio; consulta allí las prestaciones actuales detalladas.",
+      "ca": "Apropa Cultura ofereix una fitxa d’accessibilitat de l’espai; consulta-hi les prestacions actuals detallades."
+    },
+    "3D is advertised at venue level; room coverage was not established.": {
+      "es": "Se anuncia 3D para el cine en general; no se ha determinado qué salas lo ofrecen.",
+      "ca": "S’anuncia 3D per al cinema en general; no s’ha determinat quines sales n’ofereixen."
+    },
+    "Room 5 is the large Aribau Cinema auditorium. Rooms 1–4 have a separate operator-linked tour.": {
+      "es": "La sala 5 es la gran sala de Aribau Cinema. Las salas 1–4 tienen una visita virtual independiente enlazada por el operador.",
+      "ca": "La sala 5 és la gran sala d’Aribau Cinema. Les sales 1–4 tenen una visita virtual independent enllaçada per l’operador."
+    },
+    "Located within Diagonal Mar shopping centre. Check the centre for current access and parking conditions.": {
+      "es": "Situado en el centro comercial Diagonal Mar. Consulta al centro las condiciones actuales de acceso y aparcamiento.",
+      "ca": "Situat al centre comercial Diagonal Mar. Consulta al centre les condicions actuals d’accés i aparcament."
+    },
+    "Published room guide and live seat maps disagree for all 11 rooms. Room 9 wheelchair counts also disagree: guide 4, map 2.": {
+      "es": "La guía publicada de salas y los planos de asientos del sistema de reservas discrepan en las 11 salas. También discrepan las plazas para sillas de ruedas de la sala 9: 4 en la guía y 2 en el plano.",
+      "ca": "La guia publicada de sales i els plànols de seients del sistema de reserves discrepen en les 11 sales. També discrepen les places per a cadires de rodes de la sala 9: 4 a la guia i 2 al plànol."
+    },
+    "IMAX and iSense screen sizes and exact projector models remain unverified.": {
+      "es": "Las dimensiones de las pantallas IMAX e iSense y los modelos exactos de los proyectores siguen sin verificarse.",
+      "ca": "Les dimensions de les pantalles IMAX i iSense i els models exactes dels projectors continuen sense verificar-se."
+    },
+    "Centre advertises three hours of free parking during a Cinesa film visit; confirm validation at the venue.": {
+      "es": "El centro anuncia tres horas de aparcamiento gratuito al asistir a una película de Cinesa; confirma la validación en el recinto.",
+      "ca": "El centre anuncia tres hores d’aparcament gratuït en assistir a una pel·lícula de Cinesa; confirma la validació al recinte."
+    },
+    "All seven rooms are operator-listed as 4K / Dolby 7.1 / LUXE. No room-level Atmos or iSense claim found.": {
+      "es": "El operador describe las siete salas como 4K / Dolby 7.1 / LUXE. No se ha encontrado ninguna afirmación sobre Atmos o iSense para salas concretas.",
+      "ca": "L’operador descriu les set sales com a 4K / Dolby 7.1 / LUXE. No s’ha trobat cap afirmació sobre Atmos o iSense per a sales concretes."
+    },
+    "Published butacas match total mapped positions, including wheelchair and companion positions. Do not add the separate wheelchair figures again.": {
+      "es": "Las butacas publicadas coinciden con el total de posiciones del plano, incluidas las de sillas de ruedas y acompañantes. No deben sumarse de nuevo las cifras separadas de sillas de ruedas.",
+      "ca": "Les butaques publicades coincideixen amb el total de posicions del plànol, incloses les de cadires de rodes i acompanyants. No s’hi han de tornar a sumar les xifres separades de cadires de rodes."
+    },
+    "Westfield lists cinema on floor 2. Published venue hours: Mon–Thu 15:45–01:00; Fri 15:45–02:00; Sat 12:00–02:00; Sun 12:00–01:00. Hours are a dated listing, not guaranteed performance times.": {
+      "es": "Westfield sitúa el cine en la planta 2. Horario publicado: de lunes a jueves, 15:45–01:00; viernes, 15:45–02:00; sábado, 12:00–02:00; domingo, 12:00–01:00. Es una información fechada, no un horario garantizado de sesiones.",
+      "ca": "Westfield situa el cinema a la planta 2. Horari publicat: de dilluns a dijous, 15:45–01:00; divendres, 15:45–02:00; dissabte, 12:00–02:00; diumenge, 12:00–01:00. És una informació datada, no un horari garantit de sessions."
+    },
+    "The 2025 technical feature reports all 12 rooms use Barco Series IV 4K laser; Dolby speakers/servers, some Barco servers, and Arts Alliance Media Screenwriter TMS. Kelonik handled projection/audio.": {
+      "es": "El reportaje técnico de 2025 indica que las 12 salas utilizan láser Barco Series IV 4K, altavoces y servidores Dolby, algunos servidores Barco y el TMS Screenwriter de Arts Alliance Media. Kelonik se encargó de la proyección y el audio.",
+      "ca": "El reportatge tècnic de 2025 indica que les 12 sales utilitzen làser Barco Series IV 4K, altaveus i servidors Dolby, alguns servidors Barco i el TMS Screenwriter d’Arts Alliance Media. Kelonik es va encarregar de la projecció i l’àudio."
+    },
+    "All 12 room layouts collected and joined to public schedule plus booking summary. Counts are mapped positions, not certified capacities. Sala 12 has 403 row entries versus a 402-position API area total.": {
+      "es": "Se recopilaron los planos de las 12 salas y se cruzaron con la cartelera pública y el resumen de reservas. Los recuentos son posiciones de los planos, no aforos certificados. La sala 12 tiene 403 registros de filas frente a un total de 402 posiciones de zona en la API.",
+      "ca": "Es van recopilar els plànols de les 12 sales i es van creuar amb la cartellera pública i el resum de reserves. Els recomptes són posicions dels plànols, no aforaments certificats. La sala 12 té 403 registres de files davant d’un total de 402 posicions de zona a l’API."
+    },
+    "Current sessions identify XE in both 8 and 9; a February 2025 distributor list also specifies two XE rooms. Exact screen measurements per XE room remain unverified.": {
+      "es": "Las sesiones actuales identifican XE tanto en la sala 8 como en la 9; una lista del distribuidor de febrero de 2025 también especifica dos salas XE. Las medidas exactas de la pantalla de cada sala XE siguen sin verificarse.",
+      "ca": "Les sessions actuals identifiquen XE tant a la sala 8 com a la 9; una llista del distribuïdor del febrer de 2025 també especifica dues sales XE. Les mides exactes de la pantalla de cada sala XE continuen sense verificar-se."
+    },
+    "Spanish room table sums to 2,594 seats; PMR column sums to 45. Neither 2,594 nor 2,639 equals the page introduction’s 2,687. Definitions/currentness unresolved.": {
+      "es": "La tabla de salas en español suma 2.594 asientos; la columna PMR suma 45. Ni 2.594 ni 2.639 coinciden con los 2.687 de la introducción de la página. Las definiciones y la vigencia siguen sin aclararse.",
+      "ca": "La taula de sales en castellà suma 2.594 seients; la columna PMR suma 45. Ni 2.594 ni 2.639 coincideixen amb els 2.687 de la introducció de la pàgina. Les definicions i la vigència continuen sense aclarir-se."
+    },
+    "Catalan table differs on room 2 capacity and room 19 screen size. Spanish values are the displayed reference, not a claim that the conflict is resolved.": {
+      "es": "La tabla en catalán difiere en el aforo de la sala 2 y el tamaño de pantalla de la sala 19. Se muestran los valores en español como referencia, sin dar por resuelta la discrepancia.",
+      "ca": "La taula en català difereix en l’aforament de la sala 2 i la mida de pantalla de la sala 19. Es mostren els valors en castellà com a referència, sense donar per resolta la discrepància."
+    },
+    "Screen axes are inferred; raw source order retained. Screen area, aspect ratio, room length/width/height and viewing angles are not inferred.": {
+      "es": "Los ejes de la pantalla son inferidos; se conserva el orden original de la fuente. No se infieren la superficie de pantalla, la relación de aspecto, la longitud, anchura o altura de la sala ni los ángulos de visión.",
+      "ca": "Els eixos de la pantalla són inferits; es conserva l’ordre original de la font. No s’infereixen la superfície de pantalla, la relació d’aspecte, la longitud, amplada o alçada de la sala ni els angles de visió."
+    },
+    "Corporate site advertises stages up to 85 m², without room mapping.": {
+      "es": "La web corporativa anuncia escenarios de hasta 85 m², sin asignarlos a salas concretas.",
+      "ca": "El web corporatiu anuncia escenaris de fins a 85 m², sense assignar-los a sales concretes."
+    },
+    "Historical dossier names Barco 2K/4K laser and Christie 2K/4K xenon at venue level, curved screens and Eyes3Shut 3D in rooms 7, 9, 11, 16, 18, 20, 22, 27, 28. These are not current room-equipment confirmations.": {
+      "es": "Un dosier histórico menciona láser Barco 2K/4K y xenón Christie 2K/4K para el cine en general, pantallas curvas y 3D Eyes3Shut en las salas 7, 9, 11, 16, 18, 20, 22, 27 y 28. No son confirmaciones del equipamiento actual de cada sala.",
+      "ca": "Un dossier històric esmenta làser Barco 2K/4K i xenó Christie 2K/4K per al cinema en general, pantalles corbes i 3D Eyes3Shut a les sales 7, 9, 11, 16, 18, 20, 22, 27 i 28. No són confirmacions de l’equipament actual de cada sala."
+    },
+    "Three hours of free parking with a cinema ticket.": {
+      "es": "Tres horas de aparcamiento gratuito con una entrada de cine.",
+      "ca": "Tres hores d’aparcament gratuït amb una entrada de cinema."
+    },
+    "Electric scooters and electric unicycles are prohibited by the venue.": {
+      "es": "El recinto prohíbe los patinetes eléctricos y los monociclos eléctricos.",
+      "ca": "El recinte prohibeix els patinets elèctrics i els monocicles elèctrics."
+    },
+    "Venue-level 3D or premium branding is not a specification for every room.": {
+      "es": "La publicidad de 3D o de una marca prémium para el cine en general no especifica el equipamiento de todas las salas.",
+      "ca": "La publicitat de 3D o d’una marca prèmium per al cinema en general no especifica l’equipament de totes les sales."
+    },
+    "Official gallery room numbers are not captioned.": {
+      "es": "Las imágenes de la galería oficial no indican los números de sala.",
+      "ca": "Les imatges de la galeria oficial no indiquen els números de sala."
+    },
+    "Operator advertises two hours of free parking; current mall conditions were not independently reconciled.": {
+      "es": "El operador anuncia dos horas de aparcamiento gratuito; no se han contrastado de forma independiente las condiciones actuales del centro comercial.",
+      "ca": "L’operador anuncia dues hores d’aparcament gratuït; no s’han contrastat de manera independent les condicions actuals del centre comercial."
+    },
+    "Official cinema page returned HTTP 403; no browser or alternate-transport workaround used.": {
+      "es": "La página oficial del cine devolvió HTTP 403; no se intentó sortearlo mediante un navegador u otro medio de conexión.",
+      "ca": "La pàgina oficial del cinema va retornar HTTP 403; no es va intentar eludir-ho mitjançant un navegador o un altre mitjà de connexió."
+    },
+    "Cinesa Diagonal and Cinesa Diagonal Mar are separate cinemas.": {
+      "es": "Cinesa Diagonal y Cinesa Diagonal Mar son cines distintos.",
+      "ca": "Cinesa Diagonal i Cinesa Diagonal Mar són cinemes diferents."
+    },
+    "Venuu Sala 2 capacity is internally inconsistent and its photo is retained only as a candidate pending venue-specific provenance.": {
+      "es": "El aforo de la sala 2 indicado en Venuu presenta contradicciones internas y su foto se conserva únicamente como candidata, pendiente de confirmar su procedencia para este cine.",
+      "ca": "L’aforament de la sala 2 indicat a Venuu presenta contradiccions internes i la foto es conserva únicament com a candidata, pendent de confirmar-ne la procedència per a aquest cinema."
+    },
+    "Host lists Mon–Sat 15:30–01:00 and Sun/holidays 11:30–01:00; screening schedule controls attendance.": {
+      "es": "El centro publica un horario de lunes a sábado de 15:30–01:00 y domingos/festivos de 11:30–01:00; la asistencia depende de la cartelera.",
+      "ca": "El centre publica un horari de dilluns a dissabte de 15:30–01:00 i diumenges/festius d’11:30–01:00; l’assistència depèn de la cartellera."
+    },
+    "Former Heron City descriptions refer to 16 rooms; historical room count must not replace the current 12.": {
+      "es": "Las antiguas descripciones de Heron City mencionan 16 salas; esa cifra histórica no debe sustituir a las 12 actuales.",
+      "ca": "Les antigues descripcions d’Heron City esmenten 16 sales; aquesta xifra històrica no ha de substituir les 12 actuals."
+    },
+    "Current public programme confirms rooms 5, 6, 10 and 14. Twelve rooms does not mean numbers 1–12; remaining room identities are placeholders.": {
+      "es": "La cartelera pública actual confirma las salas 5, 6, 10 y 14. Tener doce salas no implica numerarlas del 1 al 12; las identidades de las restantes están pendientes de determinar.",
+      "ca": "La cartellera pública actual confirma les sales 5, 6, 10 i 14. Tenir dotze sales no implica numerar-les de l’1 al 12; les identitats de les restants estan pendents de determinar."
+    },
+    "Metro Fontana L3 / Joanic L4; FGC Gràcia. Check current service before travelling.": {
+      "es": "Metro Fontana L3 / Joanic L4; FGC Gràcia. Consulta el servicio actual antes de desplazarte.",
+      "ca": "Metro Fontana L3 / Joanic L4; FGC Gràcia. Consulta el servei actual abans de desplaçar-te."
+    },
+    "Operator says most rooms have adapted routes and wheelchair positions; it does not identify every accessible sala. Contact the box office before visiting if assistance is needed.": {
+      "es": "El operador indica que la mayoría de las salas tienen recorridos adaptados y plazas para sillas de ruedas; no identifica todas las salas accesibles. Contacta con la taquilla antes de la visita si necesitas asistencia.",
+      "ca": "L’operador indica que la majoria de les sales tenen recorreguts adaptats i places per a cadires de rodes; no identifica totes les sales accessibles. Contacta amb la taquilla abans de la visita si necessites assistència."
+    },
+    "Nearby paid options listed: NN Gràcia, Torrent de l’Olla 220, and Bruniquer. No cinema validation or free period established.": {
+      "es": "Aparcamientos de pago cercanos publicados: NN Gràcia, Torrent de l’Olla 220 y Bruniquer. No se ha confirmado ninguna validación del cine ni periodo gratuito.",
+      "ca": "Aparcaments de pagament propers publicats: NN Gràcia, Torrent de l’Olla 220 i Bruniquer. No s’ha confirmat cap validació del cinema ni període gratuït."
+    },
+    "PDF/QR tickets can be shown on a phone; printing is unnecessary.": {
+      "es": "Las entradas PDF/QR pueden mostrarse en el móvil; no es necesario imprimirlas.",
+      "ca": "Les entrades PDF/QR es poden mostrar al mòbil; no cal imprimir-les."
+    },
+    "Amigos de los Verdi, senior, youth-card and student discounts are listed; eligibility and session price must be checked.": {
+      "es": "Se anuncian descuentos para Amigos de los Verdi, mayores, carnet joven y estudiantes; hay que comprobar los requisitos y el precio de cada sesión.",
+      "ca": "S’anuncien descomptes per a Amigos de los Verdi, gent gran, carnet jove i estudiants; cal comprovar els requisits i el preu de cada sessió."
+    },
+    "Bono Cultural Joven accepted at the box office and online.": {
+      "es": "Se acepta el Bono Cultural Joven en taquilla y por internet.",
+      "ca": "S’accepta el Bono Cultural Joven a taquilla i per internet."
+    },
+    "Two additional rooms announced for 2026; opening, numbering and equipment not verified. This catalogue follows the nine rooms actually listed by the operator.": {
+      "es": "Se anunciaron dos salas adicionales para 2026; no se han verificado su apertura, numeración ni equipamiento. Este catálogo recoge las nueve salas que el operador enumera realmente.",
+      "ca": "Es van anunciar dues sales addicionals per a 2026; no se n’han verificat l’obertura, la numeració ni l’equipament. Aquest catàleg recull les nou sales que l’operador enumera realment."
+    },
+    "Metro Universitat / Sant Antoni. Parking Urgell SL, Floridablanca 119–121: first hour free. Saba Bamsa Urgell, Comte d’Urgell 12: 25% discount; request voucher at cinema.": {
+      "es": "Metro Universitat / Sant Antoni. Parking Urgell SL, Floridablanca 119–121: primera hora gratuita. Saba Bamsa Urgell, Comte d’Urgell 12: 25 % de descuento; solicita el vale en el cine.",
+      "ca": "Metro Universitat / Sant Antoni. Parking Urgell SL, Floridablanca 119–121: primera hora gratuïta. Saba Bamsa Urgell, Comte d’Urgell 12: 25 % de descompte; demana el val al cinema."
+    },
+    "Operator describes the venue as adapted for reduced mobility. Room-specific routes and wheelchair-space counts are not supplied.": {
+      "es": "El operador describe el cine como adaptado para personas con movilidad reducida. No facilita recorridos por sala ni recuentos de plazas para sillas de ruedas.",
+      "ca": "L’operador descriu el cinema com a adaptat per a persones amb mobilitat reduïda. No facilita recorreguts per sala ni recomptes de places per a cadires de rodes."
+    },
+    "Operator advertises one free hour at Parking Urgell, Floridablanca 119–121. Validation conditions are not detailed.": {
+      "es": "El operador anuncia una hora gratuita en Parking Urgell, Floridablanca 119–121. No detalla las condiciones de validación.",
+      "ca": "L’operador anuncia una hora gratuïta a Parking Urgell, Floridablanca 119–121. No detalla les condicions de validació."
+    },
+    "Accessible entrance and toilets; guide dogs accepted; wheelchair places available.": {
+      "es": "Entrada y aseos accesibles; se admiten perros guía; hay plazas para sillas de ruedas.",
+      "ca": "Entrada i lavabos accessibles; s’admeten gossos pigall; hi ha places per a cadires de rodes."
+    },
+    "Operator says all salas have adapted access routes and reserved wheelchair spaces. Counts and exact positions are not given.": {
+      "es": "El operador afirma que todas las salas tienen recorridos de acceso adaptados y plazas reservadas para sillas de ruedas. No indica el número ni la ubicación exacta.",
+      "ca": "L’operador afirma que totes les sales tenen recorreguts d’accés adaptats i places reservades per a cadires de rodes. No n’indica el nombre ni la ubicació exacta."
+    },
+    "Operator lists Verdaguer L4/L5, Girona or Joanic L4, and buses 39, 47 and H8. Route listings are a source snapshot, not live service verification.": {
+      "es": "El operador indica Verdaguer L4/L5, Girona o Joanic L4 y los autobuses 39, 47 y H8. Las rutas reflejan la fuente consultada; no se ha verificado el servicio en tiempo real.",
+      "ca": "L’operador indica Verdaguer L4/L5, Girona o Joanic L4 i els autobusos 39, 47 i H8. Les rutes reflecteixen la font consultada; no s’ha verificat el servei en temps real."
+    },
+    "Published satisfaction policy offers a replacement ticket if leaving within the first 20 minutes; event exclusions and limits apply (one request/week, at most four same-session tickets, six changes/year). It is not an unconditional cash refund.": {
+      "es": "La política de satisfacción publicada ofrece una entrada de sustitución si se abandona la sesión durante los primeros 20 minutos; se aplican exclusiones de eventos y límites (una solicitud por semana, un máximo de cuatro entradas para la misma sesión y seis cambios al año). No es un reembolso incondicional en efectivo.",
+      "ca": "La política de satisfacció publicada ofereix una entrada de substitució si s’abandona la sessió durant els primers 20 minuts; s’hi apliquen exclusions d’esdeveniments i límits (una sol·licitud per setmana, un màxim de quatre entrades per a la mateixa sessió i sis canvis a l’any). No és un reemborsament incondicional en efectiu."
+    },
+    "Online confirmation includes PDF/QR tickets; a phone display is accepted.": {
+      "es": "La confirmación de compra en línea incluye entradas PDF/QR; se acepta mostrarlas en el móvil.",
+      "ca": "La confirmació de compra en línia inclou entrades PDF/QR; s’accepta mostrar-les al mòbil."
+    },
+    "Non-holiday Wednesday spectator discount and Club Cinemes Girona member rates are advertised; use the dated tariff records for amounts.": {
+      "es": "Se anuncian descuentos del día del espectador los miércoles no festivos y tarifas para socios del Club Cinemes Girona; consulta los importes en los registros de tarifas fechados.",
+      "ca": "S’anuncien descomptes del dia de l’espectador els dimecres no festius i tarifes per a socis del Club Cinemes Girona; consulta els imports als registres de tarifes datats."
+    },
+    "641 headline capacity = 637 seats + 4 wheelchair positions, not 641 fixed seats.": {
+      "es": "El aforo anunciado de 641 equivale a 637 butacas + 4 plazas para sillas de ruedas, no a 641 butacas fijas.",
+      "ca": "L’aforament anunciat de 641 equival a 637 butaques + 4 places per a cadires de rodes, no a 641 butaques fixes."
+    },
+    "An indexed obsolete privacy page named an unrelated Sitges organisation; rejected in favour of current legal terms.": {
+      "es": "Una página de privacidad obsoleta indexada mencionaba una entidad de Sitges sin relación; se descartó a favor de las condiciones legales actuales.",
+      "ca": "Una pàgina de privacitat obsoleta indexada esmentava una entitat de Sitges sense relació; es va descartar a favor de les condicions legals actuals."
+    },
+    "Cinema rooms are in basement -1. Stairlift limit is 150 kg including person and wheelchair; operator states no alternative route. Adapted toilet and bar are on street level.": {
+      "es": "Las salas de cine están en el sótano -1. El salvaescaleras admite un máximo de 150 kg entre la persona y la silla de ruedas; el operador indica que no hay un recorrido alternativo. El aseo adaptado y el bar están a nivel de calle.",
+      "ca": "Les sales de cinema són al soterrani -1. El salvaescales admet un màxim de 150 kg entre la persona i la cadira de rodes; l’operador indica que no hi ha cap recorregut alternatiu. El lavabo adaptat i el bar són a peu de carrer."
+    },
+    "The operator describes both cinemas, the theatre and bar as adapted for reduced mobility. The 150 kg stairlift limit refers to the theatre, not automatically to either cinema sala.": {
+      "es": "El operador describe las dos salas de cine, el teatro y el bar como adaptados para personas con movilidad reducida. El límite de 150 kg del salvaescaleras se refiere al teatro y no se aplica automáticamente a ninguna de las salas de cine.",
+      "ca": "L’operador descriu les dues sales de cinema, el teatre i el bar com a adaptats per a persones amb mobilitat reduïda. El límit de 150 kg del salvaescales es refereix al teatre i no s’aplica automàticament a cap de les sales de cinema."
+    },
+    "Cinema box office opens 30 minutes before first screening. Theatre access/box-office rules are separate.": {
+      "es": "La taquilla del cine abre 30 minutos antes de la primera sesión. Las normas de acceso y taquilla del teatro son independientes.",
+      "ca": "La taquilla del cinema obre 30 minuts abans de la primera sessió. Les normes d’accés i taquilla del teatre són independents."
+    },
+    "Tickets are sold at the box office. Day ticket permits several films that day, excluding separately marked festivals/special sessions.": {
+      "es": "Las entradas se venden en taquilla. La entrada del día permite ver varias películas ese día, salvo festivales y sesiones especiales señalados por separado.",
+      "ca": "Les entrades es venen a taquilla. L’entrada del dia permet veure diverses pel·lícules aquell dia, excepte festivals i sessions especials assenyalats per separat."
+    },
+    "175 is a dated 2019 observation; current seats require revalidation.": {
+      "es": "La cifra de 175 corresponde a una observación de 2019; es necesario volver a verificar las plazas actuales.",
+      "ca": "La xifra de 175 correspon a una observació de 2019; cal tornar a verificar les places actuals."
+    },
+    "FILMO10 vouchers cannot be redeemed online according to the ticketing information.": {
+      "es": "Según la información de venta de entradas, los abonos FILMO10 no pueden canjearse por internet.",
+      "ca": "Segons la informació de venda d’entrades, els abonaments FILMO10 no es poden bescanviar per internet."
+    },
+    "Adapted entrance/toilet; guide dogs accepted with documentation. No hearing loop. Wheelchair accommodation described at row 7 seat 3 and row 1 seats 1, 2, 8, 9, 10; these are configuration locations, not six additional permanent places.": {
+      "es": "Entrada y aseo adaptados; se admiten perros guía con documentación. No hay bucle magnético. Se indica espacio para sillas de ruedas en la fila 7, asiento 3, y en la fila 1, asientos 1, 2, 8, 9 y 10; son ubicaciones según la configuración, no seis plazas permanentes adicionales.",
+      "ca": "Entrada i lavabo adaptats; s’admeten gossos pigall amb documentació. No hi ha bucle magnètic. S’indica espai per a cadires de rodes a la fila 7, seient 3, i a la fila 1, seients 1, 2, 8, 9 i 10; són ubicacions segons la configuració, no sis places permanents addicionals."
+    },
+    "One building entrance and the cinema entrance are adapted; an accessible toilet is available.": {
+      "es": "Una entrada del edificio y la entrada del cine están adaptadas; hay un aseo accesible.",
+      "ca": "Una entrada de l’edifici i l’entrada del cinema estan adaptades; hi ha un lavabo accessible."
+    },
+    "Wheelchair accommodation is listed at row 7 seat 3 and row 1 seats 1, 2, 8, 9 and 10. These are published locations, not six seats to add to the 73-seat total.": {
+      "es": "Se indica espacio para sillas de ruedas en la fila 7, asiento 3, y en la fila 1, asientos 1, 2, 8, 9 y 10. Son ubicaciones publicadas, no seis asientos que deban sumarse al total de 73.",
+      "ca": "S’indica espai per a cadires de rodes a la fila 7, seient 3, i a la fila 1, seients 1, 2, 8, 9 i 10. Són ubicacions publicades, no sis seients que s’hagin de sumar al total de 73."
+    },
+    "The operator explicitly states that there is no induction loop.": {
+      "es": "El operador indica expresamente que no hay bucle magnético.",
+      "ca": "L’operador indica expressament que no hi ha bucle magnètic."
+    },
+    "Films with accessible subtitles are identified individually in their programme entry; availability is not universal.": {
+      "es": "Las películas con subtítulos accesibles se identifican individualmente en su ficha de programación; no están disponibles en todas las sesiones.",
+      "ca": "Les pel·lícules amb subtítols accessibles s’identifiquen individualment a la seva fitxa de programació; no estan disponibles en totes les sessions."
+    },
+    "Documented guide dogs are admitted; drinking bowls are available. Door/furniture contrast is limited in some areas.": {
+      "es": "Se admiten perros guía acreditados; hay cuencos de agua. El contraste de puertas y mobiliario es limitado en algunas zonas.",
+      "ca": "S’admeten gossos pigall acreditats; hi ha bols d’aigua. El contrast de portes i mobiliari és limitat en algunes zones."
+    },
+    "Gran Via 2 parking: three hours free Mon–Sat; unlimited on Sunday.": {
+      "es": "Aparcamiento de Gran Via 2: tres horas gratuitas de lunes a sábado; sin límite los domingos.",
+      "ca": "Aparcament de Gran Via 2: tres hores gratuïtes de dilluns a dissabte; sense límit els diumenges."
+    },
+    "Free loyalty programme with member prices and points; points expire after six months.": {
+      "es": "Programa de fidelización gratuito con precios para socios y puntos; los puntos caducan a los seis meses.",
+      "ca": "Programa de fidelització gratuït amb preus per a socis i punts; els punts caduquen als sis mesos."
+    },
+    "Operator 4DX rules exclude under-4s, people shorter than 1 m and specified medical/mobility categories; under-120 cm children require an adult. Consult the full operator rules for this format.": {
+      "es": "Las normas 4DX del operador excluyen a menores de 4 años, personas de menos de 1 m y determinadas situaciones médicas o de movilidad; los menores de 120 cm deben ir acompañados de un adulto. Consulta las normas completas del operador para este formato.",
+      "ca": "Les normes 4DX de l’operador exclouen menors de 4 anys, persones de menys d’1 m i determinades situacions mèdiques o de mobilitat; els menors de 120 cm han d’anar acompanyats d’un adult. Consulta les normes completes de l’operador per a aquest format."
+    },
+    "Catalunya L1/L3 and FGC L6/L7/S1/S2. Nearby Saba Plaça Catalunya parking; no cinema discount established.": {
+      "es": "Catalunya L1/L3 y FGC L6/L7/S1/S2. Aparcamiento Saba Plaça Catalunya cercano; no se ha confirmado ningún descuento del cine.",
+      "ca": "Catalunya L1/L3 i FGC L6/L7/S1/S2. Aparcament Saba Plaça Catalunya proper; no s’ha confirmat cap descompte del cinema."
+    },
+    "Venue hours Mon–Sat 09:00–23:30, Sun 09:00–20:30. These are not film-showing times; attendance and non-member admission depend on each event.": {
+      "es": "Horario del espacio: de lunes a sábado, 09:00–23:30; domingo, 09:00–20:30. No son horarios de proyección; la asistencia y la entrada de personas no socias dependen de cada actividad.",
+      "ca": "Horari de l’espai: de dilluns a dissabte, 09:00–23:30; diumenge, 09:00–20:30. No són horaris de projecció; l’assistència i l’entrada de persones no sòcies depenen de cada activitat."
+    },
+    "The previously verified film event was 21 November 2025, not 2026. Venue programme is separate from permanent cinema listings.": {
+      "es": "La actividad cinematográfica verificada anteriormente fue el 21 de noviembre de 2025, no de 2026. La programación del espacio es independiente de la cartelera de cines permanentes.",
+      "ca": "L’activitat cinematogràfica verificada anteriorment va ser el 21 de novembre de 2025, no de 2026. La programació de l’espai és independent de la cartellera de cinemes permanents."
+    },
+    "Published complex room count does not establish room numbers. No invented 1–N room records were created.": {
+      "es": "El número de salas publicado del complejo no determina su numeración. No se han creado registros inventados de salas del 1 al total anunciado.",
+      "ca": "El nombre de sales publicat del complex no en determina la numeració. No s’han creat registres inventats de sales de l’1 al total anunciat."
+    },
+    "Separate venue from the four-screen Cinemes Sant Cugat at Pla del Vinyet.": {
+      "es": "Es un espacio distinto de Cinemes Sant Cugat, con cuatro salas en Pla del Vinyet.",
+      "ca": "És un espai diferent de Cinemes Sant Cugat, amb quatre sales al Pla del Vinyet."
+    },
+    "Municipal listing uses Plaça de Victòria dels Àngels, 1; operator uses Pla del Vinyet. Preserve both address descriptions.": {
+      "es": "La ficha municipal utiliza Plaça de Victòria dels Àngels, 1; el operador utiliza Pla del Vinyet. Se conservan ambas descripciones de la dirección.",
+      "ca": "La fitxa municipal utilitza Plaça de Victòria dels Àngels, 1; l’operador utilitza Pla del Vinyet. Es conserven totes dues descripcions de l’adreça."
+    },
+    "Guided tours require at least ten attendees according to the tour page; this is not a minimum cinema audience or capacity.": {
+      "es": "Según la página de visitas, las visitas guiadas requieren al menos diez asistentes; no es un público mínimo ni el aforo del cine.",
+      "ca": "Segons la pàgina de visites, les visites guiades requereixen almenys deu assistents; no és un públic mínim ni l’aforament del cinema."
+    },
+    "Operator explicitly says box-office and actual online checkout prices take precedence over this tariff page.": {
+      "es": "El operador indica expresamente que los precios de taquilla y del proceso real de compra en línea prevalecen sobre esta página de tarifas.",
+      "ca": "L’operador indica expressament que els preus de taquilla i del procés real de compra en línia prevalen sobre aquesta pàgina de tarifes."
+    },
+    "Legacy secondary page gives 894 seats and a 12.25 × 6 m screen; retained as a research lead, excluded from verified-current totals.": {
+      "es": "Una página secundaria antigua indica 894 asientos y una pantalla de 12,25 × 6 m; se conserva como pista de investigación y se excluye de los totales actuales verificados.",
+      "ca": "Una pàgina secundària antiga indica 894 seients i una pantalla de 12,25 × 6 m; es conserva com a pista de recerca i s’exclou dels totals actuals verificats."
+    },
+    "Floor 1, local 26 in Montserrat Centre.": {
+      "es": "Planta 1, local 26 de Montserrat Centre.",
+      "ca": "Planta 1, local 26 de Montserrat Centre."
+    },
+    "Wednesday spectator promotion advertised; no fixed current price captured.": {
+      "es": "Se anuncia la promoción del día del espectador los miércoles; no se ha registrado un precio fijo actual.",
+      "ca": "S’anuncia la promoció del dia de l’espectador els dimecres; no s’ha registrat cap preu fix actual."
+    },
+    "Municipal cultural-facilities listing identifies wheelchair/limited-mobility access; exact routes and lift dimensions unverified.": {
+      "es": "La ficha municipal de equipamientos culturales indica acceso para sillas de ruedas y personas con movilidad reducida; no se han verificado los recorridos exactos ni las dimensiones del ascensor.",
+      "ca": "La fitxa municipal d’equipaments culturals indica accés per a cadires de rodes i persones amb mobilitat reduïda; no s’han verificat els recorreguts exactes ni les dimensions de l’ascensor."
+    },
+    "Nearby TUS stops listed by city: Francesc Macià, Paraires and Plaça Concòrdia. Routes should be rechecked for travel.": {
+      "es": "Paradas de TUS cercanas indicadas por el ayuntamiento: Francesc Macià, Paraires y Plaça Concòrdia. Conviene volver a comprobar las rutas antes de desplazarse.",
+      "ca": "Parades de TUS properes indicades per l’ajuntament: Francesc Macià, Paraires i Plaça Concòrdia. Convé tornar a comprovar les rutes abans de desplaçar-se."
+    },
+    "Hire page advertises accessibility and parking capacity up to 4,000 shared with the complex; exact wheelchair routes unverified.": {
+      "es": "La página de alquiler anuncia accesibilidad y un aparcamiento de hasta 4.000 plazas compartido con el complejo; no se han verificado los recorridos exactos para sillas de ruedas.",
+      "ca": "La pàgina de lloguer anuncia accessibilitat i un aparcament de fins a 4.000 places compartit amb el complex; no s’han verificat els recorreguts exactes per a cadires de rodes."
+    },
+    "Twelve dimension pairs are published; width/height orientation is inferred and retained explicitly.": {
+      "es": "Se publican doce pares de dimensiones; la asignación de anchura y altura es inferida y se indica expresamente.",
+      "ca": "Es publiquen dotze parelles de dimensions; l’assignació d’amplada i alçada és inferida i s’indica expressament."
+    },
+    "The published 2018 terms distinguish unnumbered cinema tickets from numbered live opera/ballet seats. Current session-specific exceptions were not checked.": {
+      "es": "Las condiciones publicadas de 2018 distinguen las entradas de cine sin numerar de los asientos numerados de ópera y ballet en directo. No se han comprobado las excepciones actuales de cada sesión.",
+      "ca": "Les condicions publicades de 2018 distingeixen les entrades de cinema sense numerar dels seients numerats d’òpera i ballet en directe. No s’han comprovat les excepcions actuals de cada sessió."
+    },
+    "Published terms reject ordinary exchanges/refunds; cinema-caused error or technical failure can be refunded within a stated maximum of 30 days.": {
+      "es": "Las condiciones publicadas excluyen los cambios y devoluciones ordinarios; los errores del cine o fallos técnicos pueden dar lugar a un reembolso en un plazo máximo declarado de 30 días.",
+      "ca": "Les condicions publicades exclouen els canvis i les devolucions ordinaris; els errors del cinema o les fallades tècniques poden donar lloc a un reemborsament en un termini màxim declarat de 30 dies."
+    },
+    "The sales terms restrict online purchasing to adults with capacity to contract; this is not an admission age limit for films.": {
+      "es": "Las condiciones de venta limitan la compra en línea a personas adultas con capacidad para contratar; no es un límite de edad para asistir a las películas.",
+      "ca": "Les condicions de venda limiten la compra en línia a persones adultes amb capacitat per contractar; no és un límit d’edat per assistir a les pel·lícules."
+    },
+    "Ramps and lifts connect the venue. The entrance ramp has a 14% gradient; some routes require staff assistance.": {
+      "es": "El espacio dispone de rampas y ascensores. La rampa de entrada tiene una pendiente del 14 %; algunos recorridos requieren ayuda del personal.",
+      "ca": "L’espai disposa de rampes i ascensors. La rampa d’entrada té un pendent del 14 %; alguns recorreguts requereixen ajuda del personal."
+    },
+    "Adapted toilets on floors −2, 3 and 4; two loan wheelchairs can be reserved.": {
+      "es": "Aseos adaptados en las plantas −2, 3 y 4; se pueden reservar dos sillas de ruedas de préstamo.",
+      "ca": "Lavabos adaptats a les plantes −2, 3 i 4; es poden reservar dues cadires de rodes de préstec."
+    },
+    "Two designated accessible parking bays are listed in front of the Montalegre entrance.": {
+      "es": "Se indican dos plazas de aparcamiento accesibles reservadas frente a la entrada de Montalegre.",
+      "ca": "S’indiquen dues places d’aparcament accessibles reservades davant de l’entrada de Montalegre."
+    },
+    "Auditori has two reserved wheelchair places. Other rooms are described as flat-floor chair layouts; no fixed wheelchair-space count is supplied for them.": {
+      "es": "El Auditori tiene dos plazas reservadas para sillas de ruedas. Las demás salas se describen como espacios de suelo plano con sillas; no se facilita un número fijo de plazas para sillas de ruedas en ellas.",
+      "ca": "L’Auditori té dues places reservades per a cadires de rodes. Les altres sales es descriuen com a espais de terra pla amb cadires; no s’hi facilita cap nombre fix de places per a cadires de rodes."
+    },
+    "Portable induction loops can be requested at the ticket desk, preferably reserved with the booking; compatible hearing aids need the T setting.": {
+      "es": "Se pueden solicitar bucles magnéticos portátiles en taquilla, preferiblemente al reservar; los audífonos compatibles necesitan la posición T.",
+      "ca": "Es poden demanar bucles magnètics portàtils a taquilla, preferiblement en reservar; els audiòfons compatibles necessiten la posició T."
+    },
+    "Catalan sign-language interpretation is available for selected activities or by request; accessible subtitles depend on the event.": {
+      "es": "Hay interpretación en lengua de signos catalana para determinadas actividades o bajo petición; los subtítulos accesibles dependen del evento.",
+      "ca": "Hi ha interpretació en llengua de signes catalana per a determinades activitats o a petició; els subtítols accessibles depenen de l’esdeveniment."
+    },
+    "Guide dogs admitted with documentation. Braille, large-print and audiovisual exhibition resources should not be assumed to apply to every screening.": {
+      "es": "Se admiten perros guía con documentación. No debe suponerse que los recursos de exposición en braille, letra grande y audiovisuales estén disponibles en todas las proyecciones.",
+      "ca": "S’admeten gossos pigall amb documentació. No s’ha de suposar que els recursos d’exposició en braille, lletra gran i audiovisuals estiguin disponibles en totes les projeccions."
+    },
+    "Reception/ticket counters are reported at 1.10–1.20 m high, without a lowered accessible section.": {
+      "es": "Se indica que los mostradores de recepción y taquilla tienen una altura de 1,10–1,20 m, sin un tramo rebajado accesible.",
+      "ca": "S’indica que els taulells de recepció i taquilla tenen una alçada d’1,10–1,20 m, sense cap tram rebaixat accessible."
+    },
+    "Induction loops advertised in Auditori and Espais A–D; museum accessibility information is separate from a film’s accessibility.": {
+      "es": "Se anuncian bucles magnéticos en el Auditori y los Espais A–D; la información de accesibilidad del museo es independiente de la accesibilidad de una película.",
+      "ca": "S’anuncien bucles magnètics a l’Auditori i als Espais A–D; la informació d’accessibilitat del museu és independent de l’accessibilitat d’una pel·lícula."
+    },
+    "336 is a performance admission limit, not a competing audited seat count for the auditorium.": {
+      "es": "La cifra de 336 es un límite de admisión para espectáculos, no otro recuento auditado de asientos del auditorio.",
+      "ca": "La xifra de 336 és un límit d’admissió per a espectacles, no un altre recompte auditat de seients de l’auditori."
+    },
+    "Museum admission and screening registration are distinct; consult each event.": {
+      "es": "La entrada al museo y la inscripción a las proyecciones son independientes; consulta cada actividad.",
+      "ca": "L’entrada al museu i la inscripció a les projeccions són independents; consulta cada activitat."
+    },
+    "Municipal profile marks physical-disability access.": {
+      "es": "La ficha municipal indica acceso para personas con discapacidad física.",
+      "ca": "La fitxa municipal indica accés per a persones amb discapacitat física."
+    },
+    "A municipal hire-table figure of 105 is not promoted to seats without verifying its column heading; it may describe a combined area.": {
+      "es": "Una cifra de 105 en la tabla municipal de alquiler no se presenta como número de asientos sin verificar el encabezado de su columna; podría describir una superficie conjunta.",
+      "ca": "Una xifra de 105 a la taula municipal de lloguer no es presenta com a nombre de seients sense verificar l’encapçalament de la columna; podria descriure una superfície conjunta."
+    },
+    "Film reservations open one week before; no entry after the screening starts.": {
+      "es": "Las reservas de cine se abren una semana antes; no se permite entrar una vez iniciada la proyección.",
+      "ca": "Les reserves de cinema s’obren una setmana abans; no es permet entrar un cop començada la projecció."
+    },
+    "The separate municipal music-school auditorium in the Fabra i Coats complex is not assumed to be the Festival 42 screening room.": {
+      "es": "No se da por hecho que el auditorio independiente de la escuela municipal de música del complejo Fabra i Coats sea la sala de proyección del Festival 42.",
+      "ca": "No es dona per fet que l’auditori independent de l’escola municipal de música del complex Fabra i Coats sigui la sala de projecció del Festival 42."
+    },
+    "This particular cineforum offered access for blind/low-vision participants with advance registration and admitted assistance dogs; not generalized to every event.": {
+      "es": "Este cinefórum concreto ofrecía acceso a personas ciegas o con baja visión mediante inscripción previa y admitía perros de asistencia; no se generaliza a todas las actividades.",
+      "ca": "Aquest cinefòrum concret oferia accés a persones cegues o amb baixa visió mitjançant inscripció prèvia i admetia gossos d’assistència; no es generalitza a totes les activitats."
+    },
+    "Municipal directory marks physical-disability access.": {
+      "es": "El directorio municipal indica acceso para personas con discapacidad física.",
+      "ca": "El directori municipal indica accés per a persones amb discapacitat física."
+    },
+    "July La Cuina doors open 30 minutes before screenings. July 29/August 5 outdoor shows were at Pou de la Figuera, not inside La Bonne.": {
+      "es": "En julio, las puertas de La Cuina abren 30 minutos antes de las proyecciones. Las sesiones al aire libre del 29 de julio y el 5 de agosto fueron en Pou de la Figuera, no dentro de La Bonne.",
+      "ca": "Al juliol, les portes de La Cuina obren 30 minuts abans de les projeccions. Les sessions a l’aire lliure del 29 de juliol i el 5 d’agost van ser al Pou de la Figuera, no dins de La Bonne."
+    },
+    "Priority entry, ramps/lifts and rest seating or folding chairs are provided.": {
+      "es": "Se ofrecen entrada prioritaria, rampas y ascensores, y asientos de descanso o sillas plegables.",
+      "ca": "S’ofereixen entrada prioritària, rampes i ascensors, i seients de descans o cadires plegables."
+    },
+    "Adapted toilets on floors 0 and 1; two loan wheelchairs are listed.": {
+      "es": "Aseos adaptados en las plantas 0 y 1; se indican dos sillas de ruedas de préstamo.",
+      "ca": "Lavabos adaptats a les plantes 0 i 1; s’indiquen dues cadires de rodes de préstec."
+    },
+    "Induction loops are listed at reception. Auditorium loop coverage is not established by this page.": {
+      "es": "Se indican bucles magnéticos en recepción. Esta página no confirma la cobertura de bucle magnético del auditorio.",
+      "ca": "S’indiquen bucles magnètics a recepció. Aquesta pàgina no confirma la cobertura de bucle magnètic de l’auditori."
+    },
+    "Magnifiers/monoculars, assistance-dog water bowls and app audio descriptions of artworks are listed; these are museum services.": {
+      "es": "Se indican lupas y monoculares, cuencos de agua para perros de asistencia y audiodescripciones de obras de arte mediante una aplicación; son servicios del museo.",
+      "ca": "S’indiquen lupes i monoculars, bols d’aigua per a gossos d’assistència i audiodescripcions d’obres d’art mitjançant una aplicació; són serveis del museu."
+    },
+    "Adapted cognitive-access visits are available; individual film-session provision is unverified.": {
+      "es": "Hay visitas adaptadas de accesibilidad cognitiva; no se han verificado las prestaciones de cada sesión de cine.",
+      "ca": "Hi ha visites adaptades d’accessibilitat cognitiva; no s’han verificat les prestacions de cada sessió de cinema."
+    },
+    "Free exhibition admission for visitors with disabilities and one companion with supporting documentation; this does not establish admission to every film event.": {
+      "es": "Entrada gratuita a exposiciones para visitantes con discapacidad y un acompañante, con documentación acreditativa; esto no confirma la entrada a todas las actividades de cine.",
+      "ca": "Entrada gratuïta a exposicions per a visitants amb discapacitat i un acompanyant, amb documentació acreditativa; això no confirma l’entrada a totes les activitats de cinema."
+    },
+    "Post-renovation seats reported by technical visitor": {
+      "es": "Asientos tras la reforma según una visita técnica",
+      "ca": "Seients després de la reforma segons una visita tècnica"
+    },
+    "Capacity field in indexed sessions; not independently certified capacity": {
+      "es": "Campo de aforo de las sesiones indexadas; no es un aforo certificado de forma independiente",
+      "ca": "Camp d’aforament de les sessions indexades; no és un aforament certificat de manera independent"
+    },
+    "Christie CP4435-RGB · 4K RGB laser": {
+      "es": "Christie CP4435-RGB · láser RGB 4K",
+      "ca": "Christie CP4435-RGB · làser RGB 4K"
+    },
+    "35 mm and 70 mm film projection retained": {
+      "es": "Se mantiene la proyección en película de 35 mm y 70 mm",
+      "ca": "Es manté la projecció en pel·lícula de 35 mm i 70 mm"
+    },
+    "Cinemeccanica Victoria 8; UXL-5000HR 5,000 W xenon lamp": {
+      "es": "Cinemeccanica Victoria 8; lámpara de xenón UXL-5000HR de 5.000 W",
+      "ca": "Cinemeccanica Victoria 8; làmpada de xenó UXL-5000HR de 5.000 W"
+    },
+    "Dolby Atmos; CP850 digital and CP650 film processors": {
+      "es": "Dolby Atmos; procesador digital CP850 y procesador para película CP650",
+      "ca": "Dolby Atmos; processador digital CP850 i processador per a pel·lícula CP650"
+    },
+    "5 Dolby 136 screen systems; 10 SB218XL screen subwoofers; 4 surround subwoofers": {
+      "es": "5 sistemas de pantalla Dolby 136; 10 subwoofers de pantalla SB218XL; 4 subwoofers envolventes",
+      "ca": "5 sistemes de pantalla Dolby 136; 10 subwoofers de pantalla SB218XL; 4 subwoofers envoltants"
+    },
+    "28 Dolby DSR1260/1280 surrounds: 10 side, 8 rear, 10 ceiling": {
+      "es": "28 altavoces envolventes Dolby DSR1260/1280: 10 laterales, 8 traseros y 10 de techo",
+      "ca": "28 altaveus envoltants Dolby DSR1260/1280: 10 laterals, 8 posteriors i 10 de sostre"
+    },
+    "15 QSC amplifiers; Q-SYS Core 110f; AES67 audio network": {
+      "es": "15 amplificadores QSC; Q-SYS Core 110f; red de audio AES67",
+      "ca": "15 amplificadors QSC; Q-SYS Core 110f; xarxa d’àudio AES67"
+    },
+    "The current programme reports 419; the 2026 visit reports 420. Older 450-seat descriptions predate the renovation.": {
+      "es": "La cartelera actual indica 419; la visita de 2026 indica 420. Las descripciones antiguas de 450 asientos son anteriores a la reforma.",
+      "ca": "La cartellera actual indica 419; la visita de 2026 indica 420. Les descripcions antigues de 450 seients són anteriors a la reforma."
+    },
+    "Screen material is reported as microperforated in the technical visit.": {
+      "es": "La visita técnica describe el material de la pantalla como microperforado.",
+      "ca": "La visita tècnica descriu el material de la pantalla com a microperforat."
+    },
+    "Model power/brightness ratings are not auditorium measurements.": {
+      "es": "Las especificaciones de potencia y luminosidad de los modelos no son mediciones realizadas en la sala.",
+      "ca": "Les especificacions de potència i lluminositat dels models no són mesures fetes a la sala."
+    },
+    "Laser projection": {
+      "es": "Proyección láser",
+      "ca": "Projecció làser"
+    },
+    "Digital projection": {
+      "es": "Proyección digital",
+      "ca": "Projecció digital"
+    },
+    "Dolby Atmos": {
+      "es": "Dolby Atmos",
+      "ca": "Dolby Atmos"
+    },
+    "Christie RealLaser branding on room-labelled promotional image; projector model not specified.": {
+      "es": "Marca Christie RealLaser en una imagen promocional identificada con la sala; no se especifica el modelo del proyector.",
+      "ca": "Marca Christie RealLaser en una imatge promocional identificada amb la sala; no s’especifica el model del projector."
+    },
+    "Published seats": {
+      "es": "Asientos publicados",
+      "ca": "Seients publicats"
+    },
+    "4K projection": {
+      "es": "Proyección 4K",
+      "ca": "Projecció 4K"
+    },
+    "Operator says more than 1,100 seats; not an exact total": {
+      "es": "El operador indica más de 1.100 asientos; no es un total exacto",
+      "ca": "L’operador indica més de 1.100 seients; no és un total exacte"
+    },
+    "Operator promotional capacity exceeds the 1,053 mapped positions. No evidence establishes whether closed sections explain the difference.": {
+      "es": "El aforo promocional del operador supera las 1.053 posiciones del plano. No hay pruebas de que las zonas cerradas expliquen la diferencia.",
+      "ca": "L’aforament promocional de l’operador supera les 1.053 posicions del plànol. No hi ha proves que les zones tancades expliquin la diferència."
+    },
+    "May 2026 photos show partial seating replacement; older gallery views may predate it. This does not resolve the published-versus-mapped capacity difference.": {
+      "es": "Las fotos de mayo de 2026 muestran una sustitución parcial de butacas; las imágenes antiguas de la galería pueden ser anteriores. Esto no resuelve la diferencia entre el aforo publicado y las posiciones del plano.",
+      "ca": "Les fotos del maig de 2026 mostren una substitució parcial de butaques; les imatges antigues de la galeria poden ser anteriors. Això no resol la diferència entre l’aforament publicat i les posicions del plànol."
+    },
+    "Published butacas figure; source does not explicitly define inclusion of wheelchair/VIP counts": {
+      "es": "Cifra publicada de butacas; la fuente no define expresamente si incluye las plazas para sillas de ruedas o VIP",
+      "ca": "Xifra publicada de butaques; la font no defineix expressament si inclou les places per a cadires de rodes o VIP"
+    },
+    "2K projection": {
+      "es": "Proyección 2K",
+      "ca": "Projecció 2K"
+    },
+    "Dolby 7.1": {
+      "es": "Dolby 7.1",
+      "ca": "Dolby 7.1"
+    },
+    "Published seat count differs from booking-map position count; definitions may differ. Both retained without choosing an absolute capacity.": {
+      "es": "El número publicado de asientos difiere de las posiciones del plano de reservas; las definiciones pueden ser distintas. Se conservan ambos sin elegir un aforo absoluto.",
+      "ca": "El nombre publicat de seients difereix de les posicions del plànol de reserves; les definicions poden ser diferents. Es conserven tots dos sense triar un aforament absolut."
+    },
+    "IMAX sound": {
+      "es": "Sonido IMAX",
+      "ca": "So IMAX"
+    },
+    "Public Sala 11 has provider screen ID 032-12. Internal numeric suffix is not the public room number.": {
+      "es": "La sala pública 11 tiene el identificador de pantalla 032-12 del proveedor. El sufijo numérico interno no es el número público de sala.",
+      "ca": "La sala pública 11 té l’identificador de pantalla 032-12 del proveïdor. El sufix numèric intern no és el número públic de sala."
+    },
+    "Event seated capacity; numerically equals mapped positions less wheelchair positions, but source does not define that inclusion rule.": {
+      "es": "Aforo sentado para eventos; coincide numéricamente con las posiciones del plano menos las de sillas de ruedas, pero la fuente no define ese criterio de inclusión.",
+      "ca": "Aforament assegut per a esdeveniments; coincideix numèricament amb les posicions del plànol menys les de cadires de rodes, però la font no defineix aquest criteri d’inclusió."
+    },
+    "Barco Series IV · 4K laser": {
+      "es": "Barco Series IV · láser 4K",
+      "ca": "Barco Series IV · làser 4K"
+    },
+    "Dolby 7.1 is reported as the venue baseline; exact room configuration not verified": {
+      "es": "Se indica Dolby 7.1 como equipamiento básico del cine; no se ha verificado la configuración exacta de la sala",
+      "ca": "S’indica Dolby 7.1 com a equipament bàsic del cinema; no s’ha verificat la configuració exacta de la sala"
+    },
+    "Layout area names differ from the public schedule room number. Schedule and booking summary both identify the room by this showtime; retain original area names without renumbering. Original labels: SALA 2.": {
+      "es": "Los nombres de zona del plano difieren del número de sala de la cartelera pública. Tanto la cartelera como el resumen de reservas identifican la sala para esta sesión; se conservan los nombres originales de zona sin renumerarlos. Etiquetas originales: SALA 2.",
+      "ca": "Els noms de zona del plànol difereixen del número de sala de la cartellera pública. Tant la cartellera com el resum de reserves identifiquen la sala per a aquesta sessió; es conserven els noms originals de zona sense renumerar-los. Etiquetes originals: SALA 2."
+    },
+    "Layout area names differ from the public schedule room number. Schedule and booking summary both identify the room by this showtime; retain original area names without renumbering. Original labels: SALA 3.": {
+      "es": "Los nombres de zona del plano difieren del número de sala de la cartelera pública. Tanto la cartelera como el resumen de reservas identifican la sala para esta sesión; se conservan los nombres originales de zona sin renumerarlos. Etiquetas originales: SALA 3.",
+      "ca": "Els noms de zona del plànol difereixen del número de sala de la cartellera pública. Tant la cartellera com el resum de reserves identifiquen la sala per a aquesta sessió; es conserven els noms originals de zona sense renumerar-los. Etiquetes originals: SALA 3."
+    },
+    "Layout area names differ from the public schedule room number. Schedule and booking summary both identify the room by this showtime; retain original area names without renumbering. Original labels: SALA 4.": {
+      "es": "Los nombres de zona del plano difieren del número de sala de la cartelera pública. Tanto la cartelera como el resumen de reservas identifican la sala para esta sesión; se conservan los nombres originales de zona sin renumerarlos. Etiquetas originales: SALA 4.",
+      "ca": "Els noms de zona del plànol difereixen del número de sala de la cartellera pública. Tant la cartellera com el resum de reserves identifiquen la sala per a aquesta sessió; es conserven els noms originals de zona sense renumerar-los. Etiquetes originals: SALA 4."
+    },
+    "Movement, water, air, aroma, vibration, wind and light effects described by operator; Lumma integration reported by Rubik.": {
+      "es": "El operador describe efectos de movimiento, agua, aire, aroma, vibración, viento y luz; Rubik informa de la integración de Lumma.",
+      "ca": "L’operador descriu efectes de moviment, aigua, aire, aroma, vibració, vent i llum; Rubik informa de la integració de Lumma."
+    },
+    "Layout area names differ from the public schedule room number. Schedule and booking summary both identify the room by this showtime; retain original area names without renumbering. Original labels: SALA 5.": {
+      "es": "Los nombres de zona del plano difieren del número de sala de la cartelera pública. Tanto la cartelera como el resumen de reservas identifican la sala para esta sesión; se conservan los nombres originales de zona sin renumerarlos. Etiquetas originales: SALA 5.",
+      "ca": "Els noms de zona del plànol difereixen del número de sala de la cartellera pública. Tant la cartellera com el resum de reserves identifiquen la sala per a aquesta sessió; es conserven els noms originals de zona sense renumerar-los. Etiquetes originals: SALA 5."
+    },
+    "Layout area names differ from the public schedule room number. Schedule and booking summary both identify the room by this showtime; retain original area names without renumbering. Original labels: TRADICIONAL, TUMBONA, SUPER PUFF.": {
+      "es": "Los nombres de zona del plano difieren del número de sala de la cartelera pública. Tanto la cartelera como el resumen de reservas identifican la sala para esta sesión; se conservan los nombres originales de zona sin renumerarlos. Etiquetas originales: TRADICIONAL, TUMBONA, SUPER PUFF.",
+      "ca": "Els noms de zona del plànol difereixen del número de sala de la cartellera pública. Tant la cartellera com el resum de reserves identifiquen la sala per a aquesta sessió; es conserven els noms originals de zona sense renumerar-los. Etiquetes originals: TRADICIONAL, TUMBONA, SUPER PUFF."
+    },
+    "Junior photo is captioned by room type; assignment to Sala 7 is a corroborated inference from its unique SJ label and seating zones, not a numbered photo caption.": {
+      "es": "La foto Junior está identificada por tipo de sala; su asignación a la sala 7 es una inferencia corroborada por su etiqueta SJ única y sus zonas de asientos, no por un pie de foto numerado.",
+      "ca": "La foto Junior està identificada per tipus de sala; l’assignació a la sala 7 és una inferència corroborada per la seva etiqueta SJ única i les zones de seients, no per un peu de foto numerat."
+    },
+    "XE sessions in both 8 and 9 are corroborated by a distributor list specifying two XE rooms. The older feature describes one; individual screen dimensions and Atmos installations still need room-specific confirmation.": {
+      "es": "Una lista del distribuidor que especifica dos salas XE corrobora las sesiones XE tanto en la 8 como en la 9. El reportaje antiguo describe una sola; las dimensiones de cada pantalla y las instalaciones Atmos todavía requieren confirmación por sala.",
+      "ca": "Una llista del distribuïdor que especifica dues sales XE corrobora les sessions XE tant a la 8 com a la 9. El reportatge antic en descriu una de sola; les dimensions de cada pantalla i les instal·lacions Atmos encara requereixen confirmació per sala."
+    },
+    "API area summary reports 402 positions, but its rows contain 403 distinct row/seat labels. Difference unresolved; neither is a certified capacity.": {
+      "es": "El resumen de zona de la API indica 402 posiciones, pero sus filas contienen 403 etiquetas distintas de fila/asiento. La diferencia no está resuelta; ninguna cifra es un aforo certificado.",
+      "ca": "El resum de zona de l’API indica 402 posicions, però les files contenen 403 etiquetes diferents de fila/seient. La diferència no està resolta; cap xifra no és un aforament certificat."
+    },
+    "A December 2025 photo article labels the Atmos room 13; current programme/entrance evidence identifies 12. New interior photo remains a candidate, not a renumbering assertion.": {
+      "es": "Un artículo fotográfico de diciembre de 2025 identifica la sala Atmos como la 13; la cartelera y las imágenes de entrada actuales identifican la 12. La nueva foto interior sigue siendo una candidata, no una confirmación de renumeración.",
+      "ca": "Un article fotogràfic del desembre de 2025 identifica la sala Atmos com la 13; la cartellera i les imatges d’entrada actuals identifiquen la 12. La nova foto interior continua sent una candidata, no una confirmació de renumeració."
+    },
+    "Total butacas column; PMR column kept separately": {
+      "es": "Columna Total butacas; la columna PMR se conserva por separado",
+      "ca": "Columna Total butacas; la columna PMR es conserva per separat"
+    },
+    "Conflicting Catalan table seats": {
+      "es": "Asientos de la tabla en catalán que discrepan",
+      "ca": "Seients de la taula en català que discrepen"
+    },
+    "Spanish table lists 38 seats; Catalan table lists 39.": {
+      "es": "La tabla en español indica 38 asientos; la tabla en catalán indica 39.",
+      "ca": "La taula en castellà indica 38 seients; la taula en català indica 39."
+    },
+    "Laser ULTRA · 4K laser": {
+      "es": "Laser ULTRA · láser 4K",
+      "ca": "Laser ULTRA · làser 4K"
+    },
+    "Spanish screen dimensions differ from the Catalan page; both retained.": {
+      "es": "Las dimensiones de pantalla en español difieren de la página en catalán; se conservan ambas.",
+      "ca": "Les dimensions de pantalla en castellà difereixen de la pàgina en català; es conserven totes dues."
+    },
+    "Operator-published seats; wheelchair inclusion unspecified": {
+      "es": "Asientos publicados por el operador; no se especifica la inclusión de sillas de ruedas",
+      "ca": "Seients publicats per l’operador; no s’especifica la inclusió de cadires de rodes"
+    },
+    "4K RGB laser; 35 mm formats 1.37/1.66/1.85/2.35/1.19": {
+      "es": "Láser RGB 4K; formatos de 35 mm 1.37/1.66/1.85/2.35/1.19",
+      "ca": "Làser RGB 4K; formats de 35 mm 1.37/1.66/1.85/2.35/1.19"
+    },
+    "Dolby CP750, 7.1, 6,500 W": {
+      "es": "Dolby CP750, 7.1, 6.500 W",
+      "ca": "Dolby CP750, 7.1, 6.500 W"
+    },
+    "2K HD": {
+      "es": "2K HD",
+      "ca": "2K HD"
+    },
+    "Dolby 7.1, 1,800 W": {
+      "es": "Dolby 7.1, 1.800 W",
+      "ca": "Dolby 7.1, 1.800 W"
+    },
+    "1,800 W; processor/format not stated": {
+      "es": "1.800 W; no se indica el procesador ni el formato",
+      "ca": "1.800 W; no s’indica el processador ni el format"
+    },
+    "2K; ISCO Ultra Star lenses": {
+      "es": "2K; lentes ISCO Ultra Star",
+      "ca": "2K; lents ISCO Ultra Star"
+    },
+    "Dolby 7.1, 2,400 W": {
+      "es": "Dolby 7.1, 2.400 W",
+      "ca": "Dolby 7.1, 2.400 W"
+    },
+    "2K": {
+      "es": "2K",
+      "ca": "2K"
+    },
+    "1,700 W; format not stated": {
+      "es": "1.700 W; no se indica el formato",
+      "ca": "1.700 W; no s’indica el format"
+    },
+    "2K and 35 mm": {
+      "es": "2K y 35 mm",
+      "ca": "2K i 35 mm"
+    },
+    "3,900 W; format not stated": {
+      "es": "3.900 W; no se indica el formato",
+      "ca": "3.900 W; no s’indica el format"
+    },
+    "4K (published contrast 5,000:1), 35 mm, EclairColor HDR": {
+      "es": "4K (contraste publicado de 5.000:1), 35 mm, EclairColor HDR",
+      "ca": "4K (contrast publicat de 5.000:1), 35 mm, EclairColor HDR"
+    },
+    "Dolby 7.1, 3,900 W": {
+      "es": "Dolby 7.1, 3.900 W",
+      "ca": "Dolby 7.1, 3.900 W"
+    },
+    "3,000 W; format not stated": {
+      "es": "3.000 W; no se indica el formato",
+      "ca": "3.000 W; no s’indica el format"
+    },
+    "Operator-published capacity; inclusion of wheelchair places not specified": {
+      "es": "Aforo publicado por el operador; no se especifica si incluye plazas para sillas de ruedas",
+      "ca": "Aforament publicat per l’operador; no s’especifica si inclou places per a cadires de rodes"
+    },
+    "3D projection: no; HDMI connection available": {
+      "es": "Proyección 3D: no; conexión HDMI disponible",
+      "ca": "Projecció 3D: no; connexió HDMI disponible"
+    },
+    "Dolby Digital Surround": {
+      "es": "Dolby Digital Surround",
+      "ca": "Dolby Digital Surround"
+    },
+    "Published seats; 2 additional wheelchair positions listed separately": {
+      "es": "Asientos publicados; se indican por separado 2 plazas adicionales para sillas de ruedas",
+      "ca": "Seients publicats; s’indiquen per separat 2 places addicionals per a cadires de rodes"
+    },
+    "Published seats; wheelchair allocation not specified": {
+      "es": "Asientos publicados; no se especifican las plazas para sillas de ruedas",
+      "ca": "Seients publicats; no s’especifiquen les places per a cadires de rodes"
+    },
+    "Current published hire page; conflicts with other official page": {
+      "es": "Página de alquiler publicada actualmente; discrepa de otra página oficial",
+      "ca": "Pàgina de lloguer publicada actualment; discrepa d’una altra pàgina oficial"
+    },
+    "Body of Chomón room page; its heading itself says 360": {
+      "es": "Texto de la página de la sala Chomón; su propio encabezado indica 360",
+      "ca": "Text de la pàgina de la sala Chomón; el seu mateix encapçalament indica 360"
+    },
+    "2016 inventory: two Cinemeccanica Victoria 5 35 mm projectors; Bauer Selecton II 16 mm; Barco DP2K-10C (2048×1080); Doremi DCP2000; Panasonic PT-DW7000E audiovisual projector.": {
+      "es": "Inventario de 2016: dos proyectores de 35 mm Cinemeccanica Victoria 5; Bauer Selecton II de 16 mm; Barco DP2K-10C (2048×1080); Doremi DCP2000; proyector audiovisual Panasonic PT-DW7000E.",
+      "ca": "Inventari de 2016: dos projectors de 35 mm Cinemeccanica Victoria 5; Bauer Selecton II de 16 mm; Barco DP2K-10C (2048×1080); Doremi DCP2000; projector audiovisual Panasonic PT-DW7000E."
+    },
+    "The operator still publishes this 2016 inventory; current installed hardware must be confirmed separately.": {
+      "es": "El operador sigue publicando este inventario de 2016; el equipamiento instalado actualmente debe confirmarse por separado.",
+      "ca": "L’operador continua publicant aquest inventari de 2016; l’equipament instal·lat actualment s’ha de confirmar per separat."
+    },
+    "2016 inventory: two Cinemeccanica Victoria 5 35 mm projectors; Bauer Selecton II 16 mm; Barco DP2K-10C (2048×1080); Doremi ShowVault; Panasonic PT-DW7000E audiovisual projector.": {
+      "es": "Inventario de 2016: dos proyectores de 35 mm Cinemeccanica Victoria 5; Bauer Selecton II de 16 mm; Barco DP2K-10C (2048×1080); Doremi ShowVault; proyector audiovisual Panasonic PT-DW7000E.",
+      "ca": "Inventari de 2016: dos projectors de 35 mm Cinemeccanica Victoria 5; Bauer Selecton II de 16 mm; Barco DP2K-10C (2048×1080); Doremi ShowVault; projector audiovisual Panasonic PT-DW7000E."
+    },
+    "Operator-published seats": {
+      "es": "Asientos publicados por el operador",
+      "ca": "Seients publicats per l’operador"
+    },
+    "Christie Solaria and Barco DP2K-10S digital projection; 35 mm Kinoton FP30D; 16 mm Hortson; GDC SR1000 / Dolby DCP servers; Sony JH3 HDCAM and Blu-ray/DVD.": {
+      "es": "Proyección digital Christie Solaria y Barco DP2K-10S; Kinoton FP30D de 35 mm; Hortson de 16 mm; servidores GDC SR1000 / Dolby DCP; Sony JH3 HDCAM y Blu-ray/DVD.",
+      "ca": "Projecció digital Christie Solaria i Barco DP2K-10S; Kinoton FP30D de 35 mm; Hortson de 16 mm; servidors GDC SR1000 / Dolby DCP; Sony JH3 HDCAM i Blu-ray/DVD."
+    },
+    "Dolby CP650; operator lists mono, stereo, Dolby Stereo, 5.1, EX 6.1 and 7.1. Actual signal configuration not independently verified.": {
+      "es": "Dolby CP650; el operador enumera mono, estéreo, Dolby Stereo, 5.1, EX 6.1 y 7.1. La configuración real de la señal no se ha verificado de forma independiente.",
+      "ca": "Dolby CP650; l’operador enumera mono, estèreo, Dolby Stereo, 5.1, EX 6.1 i 7.1. La configuració real del senyal no s’ha verificat de manera independent."
+    },
+    "HTML describes Christie CP2406 as 2K; model/resolution inconsistency not reconciled. Do not normalize this into a verified projector specification.": {
+      "es": "El HTML describe el Christie CP2406 como 2K; la discrepancia entre modelo y resolución no se ha aclarado. No debe convertirse en una especificación verificada del proyector.",
+      "ca": "L’HTML descriu el Christie CP2406 com a 2K; la discrepància entre model i resolució no s’ha aclarit. No s’ha de convertir en una especificació verificada del projector."
+    },
+    "Accessibility observations do not alter the published seat total; inclusion of wheelchair positions in that total is not established.": {
+      "es": "Las observaciones de accesibilidad no modifican el total publicado de asientos; no se ha determinado si ese total incluye las plazas para sillas de ruedas.",
+      "ca": "Les observacions d’accessibilitat no modifiquen el total publicat de seients; no s’ha determinat si aquest total inclou les places per a cadires de rodes."
+    },
+    "Published capacity: 179 stalls + 60 amphitheatre": {
+      "es": "Aforo publicado: 179 en platea + 60 en anfiteatro",
+      "ca": "Aforament publicat: 179 a platea + 60 a l’amfiteatre"
+    },
+    "Cinema server described as DCS; projector model not stated.": {
+      "es": "El servidor de cine se describe como DCS; no se indica el modelo del proyector.",
+      "ca": "El servidor de cinema es descriu com a DCS; no s’indica el model del projector."
+    },
+    "7.1 capability listed as an option/configuration; Midas M32R + DL32 event mixing.": {
+      "es": "La capacidad 7.1 se presenta como opción o configuración; mezcla para eventos con Midas M32R + DL32.",
+      "ca": "La capacitat 7.1 es presenta com a opció o configuració; mescla per a esdeveniments amb Midas M32R + DL32."
+    },
+    "Published auditorium capacity; treatment of wheelchair positions is unspecified.": {
+      "es": "Aforo publicado del auditorio; no se especifica cómo se contabilizan las plazas para sillas de ruedas.",
+      "ca": "Aforament publicat de l’auditori; no s’especifica com es comptabilitzen les places per a cadires de rodes."
+    },
+    "IMAX with Laser, as announced by host centre.": {
+      "es": "IMAX with Laser, según lo anunciado por el centro comercial.",
+      "ca": "IMAX with Laser, segons el que anuncia el centre comercial."
+    },
+    "IMAX sound system; exact channel configuration not stated.": {
+      "es": "Sistema de sonido IMAX; no se indica la configuración exacta de canales.",
+      "ca": "Sistema de so IMAX; no s’indica la configuració exacta de canals."
+    },
+    "Neither screen dimensions nor numbered sala identity is established.": {
+      "es": "No se han determinado las dimensiones de pantalla ni el número que identifica la sala.",
+      "ca": "No s’han determinat les dimensions de pantalla ni el número que identifica la sala."
+    },
+    "Digital projection; model unspecified.": {
+      "es": "Proyección digital; modelo no especificado.",
+      "ca": "Projecció digital; model no especificat."
+    },
+    "35 mm projector retained.": {
+      "es": "Se conserva el proyector de 35 mm.",
+      "ca": "Es conserva el projector de 35 mm."
+    },
+    "Dolby Surround Digital": {
+      "es": "Dolby Surround Digital",
+      "ca": "Dolby Surround Digital"
+    },
+    "Dolby Surround": {
+      "es": "Dolby Surround",
+      "ca": "Dolby Surround"
+    },
+    "Operator column Total butacas. Two PMR places listed separately; inclusion in total is not defined.": {
+      "es": "Columna Total butacas del operador. Se indican dos plazas PMR por separado; no se define si están incluidas en el total.",
+      "ca": "Columna Total butacas de l’operador. S’indiquen dues places PMR per separat; no es defineix si estan incloses en el total."
+    },
+    "Laser; model and resolution not specified.": {
+      "es": "Láser; no se especifican el modelo ni la resolución.",
+      "ca": "Làser; no s’especifiquen el model ni la resolució."
+    },
+    "Digital projection, model unspecified; live opera/ballet screenings advertised.": {
+      "es": "Proyección digital, modelo no especificado; se anuncian retransmisiones de ópera y ballet en directo.",
+      "ca": "Projecció digital, model no especificat; s’anuncien retransmissions d’òpera i ballet en directe."
+    },
+    "BARCO digital cinema projector, SANYO auxiliary projector, Blu-ray playback (models unspecified).": {
+      "es": "Proyector de cine digital BARCO, proyector auxiliar SANYO y reproducción Blu-ray (modelos no especificados).",
+      "ca": "Projector de cinema digital BARCO, projector auxiliar SANYO i reproducció Blu-ray (models no especificats)."
+    },
+    "Digital cinema 7.1; wired, wireless and table microphones.": {
+      "es": "Cine digital 7.1; micrófonos con cable, inalámbricos y de mesa.",
+      "ca": "Cinema digital 7.1; micròfons amb cable, sense fil i de taula."
+    },
+    "ICE manufacturer format description specifies 4K laser; installation model not named.": {
+      "es": "La descripción del formato ICE del fabricante especifica láser 4K; no identifica el modelo instalado.",
+      "ca": "La descripció del format ICE del fabricant especifica làser 4K; no identifica el model instal·lat."
+    },
+    "Dolby Atmos in manufacturer’s ICE format description.": {
+      "es": "Dolby Atmos en la descripción del formato ICE del fabricante.",
+      "ca": "Dolby Atmos a la descripció del format ICE del fabricant."
+    },
+    "Municipality gives maximum capacity of 350 people; retractable seating/configuration means this is not an independently counted fixed-seat inventory.": {
+      "es": "El ayuntamiento indica un aforo máximo de 350 personas; las gradas retráctiles y la configuración implican que no es un inventario de asientos fijos contado de forma independiente.",
+      "ca": "L’ajuntament indica un aforament màxim de 350 persones; les grades retràctils i la configuració impliquen que no és un inventari de seients fixos comptat de manera independent."
+    },
+    "Venue describes 260 armchairs; festival partner describes 320 places for the cinema.": {
+      "es": "El espacio describe 260 butacas; una entidad colaboradora del festival describe 320 plazas para el cine.",
+      "ca": "L’espai descriu 260 butaques; una entitat col·laboradora del festival descriu 320 places per al cinema."
+    },
+    "Cinema capacity in festival guide; not reconciled with venue’s 260.": {
+      "es": "Aforo del cine en la guía del festival; no se ha aclarado la discrepancia con las 260 plazas del espacio.",
+      "ca": "Aforament del cinema a la guia del festival; no s’ha aclarit la discrepància amb les 260 places de l’espai."
+    },
+    "DCP cinema playback; projector/server models unspecified.": {
+      "es": "Reproducción de cine DCP; modelos de proyector y servidor no especificados.",
+      "ca": "Reproducció de cinema DCP; models de projector i servidor no especificats."
+    },
+    "186 fixed chairs.": {
+      "es": "186 sillas fijas.",
+      "ca": "186 cadires fixes."
+    },
+    "Panasonic PT-RCQ80, 1-DLP, 8,000 ANSI lumens; Roland V-1SDI mixer; Mac Mini M1.": {
+      "es": "Panasonic PT-RCQ80, 1-DLP, 8.000 lúmenes ANSI; mezclador Roland V-1SDI; Mac Mini M1.",
+      "ca": "Panasonic PT-RCQ80, 1-DLP, 8.000 lúmens ANSI; mesclador Roland V-1SDI; Mac Mini M1."
+    },
+    "Electro-Voice EVA/EVU loudspeakers, TX1181 subwoofer, Q-series amplifiers; Midas M32R console.": {
+      "es": "Altavoces Electro-Voice EVA/EVU, subwoofer TX1181 y amplificadores de la serie Q; consola Midas M32R.",
+      "ca": "Altaveus Electro-Voice EVA/EVU, subwoofer TX1181 i amplificadors de la sèrie Q; consola Midas M32R."
+    },
+    "Seated event configuration, not an invariant fixed-seat inventory.": {
+      "es": "Configuración de evento con público sentado, no un inventario invariable de asientos fijos.",
+      "ca": "Configuració d’esdeveniment amb públic assegut, no un inventari invariable de seients fixos."
+    },
+    "Panasonic PT-RCQ10, rated 10,000 lumens in operator sheet; Roland V-60HD and Blackmagic Videohub.": {
+      "es": "Panasonic PT-RCQ10, con 10.000 lúmenes nominales en la ficha del operador; Roland V-60HD y Blackmagic Videohub.",
+      "ca": "Panasonic PT-RCQ10, amb 10.000 lúmens nominals a la fitxa de l’operador; Roland V-60HD i Blackmagic Videohub."
+    },
+    "Nexo P12, L20 and ID24t loudspeakers; Yamaha QL5 console and TIO1608-D Dante stage boxes.": {
+      "es": "Altavoces Nexo P12, L20 e ID24t; consola Yamaha QL5 y cajas de escenario Dante TIO1608-D.",
+      "ca": "Altaveus Nexo P12, L20 i ID24t; consola Yamaha QL5 i caixes d’escenari Dante TIO1608-D."
+    },
+    "Panasonic PT-RZ120, 12,000 ANSI lumens, WUXGA; ET-DLE250 installed lens; Panasonic DMP-BD80EG-K Blu-ray player.": {
+      "es": "Panasonic PT-RZ120, 12.000 lúmenes ANSI, WUXGA; lente instalada ET-DLE250; reproductor Blu-ray Panasonic DMP-BD80EG-K.",
+      "ca": "Panasonic PT-RZ120, 12.000 lúmens ANSI, WUXGA; lent instal·lada ET-DLE250; reproductor Blu-ray Panasonic DMP-BD80EG-K."
+    },
+    "Cinema signal path: Dolby CP650D (Dolby A/SR/Digital), Crown CTS amps, JBL 4722N/4641/8320 speakers. Conference/concert path: Yamaha DM7 and Nexo GeoM1025/MSUB15/ID24/P10.": {
+      "es": "Cadena de señal de cine: Dolby CP650D (Dolby A/SR/Digital), amplificadores Crown CTS y altavoces JBL 4722N/4641/8320. Cadena para conferencias y conciertos: Yamaha DM7 y Nexo GeoM1025/MSUB15/ID24/P10.",
+      "ca": "Cadena de senyal de cinema: Dolby CP650D (Dolby A/SR/Digital), amplificadors Crown CTS i altaveus JBL 4722N/4641/8320. Cadena per a conferències i concerts: Yamaha DM7 i Nexo GeoM1025/MSUB15/ID24/P10."
+    },
+    "Sheet labels cinema sound for 35 mm or DCP, but does not identify the film or DCP projector/server; do not equate this auxiliary video projector with a DCI installation.": {
+      "es": "La ficha indica sonido de cine para 35 mm o DCP, pero no identifica el proyector de película ni el proyector o servidor DCP; este proyector de vídeo auxiliar no debe equipararse a una instalación DCI.",
+      "ca": "La fitxa indica so de cinema per a 35 mm o DCP, però no identifica el projector de pel·lícula ni el projector o servidor DCP; aquest projector de vídeo auxiliar no s’ha d’equiparar a una instal·lació DCI."
+    },
+    "Travel guide auditorium capacity, not independently checked against current seating.": {
+      "es": "Aforo del auditorio según una guía de viajes, sin comprobación independiente de los asientos actuales.",
+      "ca": "Aforament de l’auditori segons una guia de viatges, sense comprovació independent dels seients actuals."
+    },
+    "205 stalls places + 40 balcony places, maximum 245 people.": {
+      "es": "205 plazas en platea + 40 en el balcón, máximo de 245 personas.",
+      "ca": "205 places a platea + 40 al balcó, màxim de 245 persones."
+    },
+    "Stage LED display; HDMI inputs from stage and technical booth. Projection cannon mentioned but no model.": {
+      "es": "Pantalla LED de escenario; entradas HDMI desde el escenario y la cabina técnica. Se menciona un cañón de proyección sin indicar modelo.",
+      "ca": "Pantalla LED d’escenari; entrades HDMI des de l’escenari i la cabina tècnica. S’esmenta un canó de projecció sense indicar-ne el model."
+    },
+    "Professional PA, 32-input/16-output digital console, two stage monitors and wired/wireless microphones.": {
+      "es": "Sistema de sonorización profesional, consola digital de 32 entradas/16 salidas, dos monitores de escenario y micrófonos con cable e inalámbricos.",
+      "ca": "Sistema de sonorització professional, consola digital de 32 entrades/16 sortides, dos monitors d’escenari i micròfons amb cable i sense fil."
+    },
+    "2020 article’s normal event capacity; 100 was its temporary COVID limit. Current fixed seats unknown.": {
+      "es": "Aforo habitual para eventos según un artículo de 2020; 100 era el límite temporal por la COVID. Se desconoce el número actual de asientos fijos.",
+      "ca": "Aforament habitual per a esdeveniments segons un article de 2020; 100 era el límit temporal per la COVID. Es desconeix el nombre actual de seients fixos."
+    },
+    "Venue lists room capacity of 100 people.": {
+      "es": "El espacio indica un aforo de 100 personas en la sala.",
+      "ca": "L’espai indica un aforament de 100 persones a la sala."
+    },
+    "Epson EB-G6550WU ceiling projector, HDMI/VGA and shutter; motorized screen.": {
+      "es": "Proyector de techo Epson EB-G6550WU, HDMI/VGA y obturador; pantalla motorizada.",
+      "ca": "Projector de sostre Epson EB-G6550WU, HDMI/VGA i obturador; pantalla motoritzada."
+    },
+    "Behringer X32 digital console, left/right PA, two side-fill monitors and wired/wireless microphones.": {
+      "es": "Consola digital Behringer X32, sistema de sonorización izquierdo/derecho, dos monitores laterales y micrófonos con cable e inalámbricos.",
+      "ca": "Consola digital Behringer X32, sistema de sonorització esquerre/dret, dos monitors laterals i micròfons amb cable i sense fil."
+    },
+    "Maximum event capacity published by operator.": {
+      "es": "Aforo máximo para eventos publicado por el operador.",
+      "ca": "Aforament màxim per a esdeveniments publicat per l’operador."
+    },
+    "40 seated / 58 standing. Only the seated configuration is entered as cinema-relevant capacity.": {
+      "es": "40 personas sentadas / 58 de pie. Solo se registra la configuración sentada como aforo pertinente para cine.",
+      "ca": "40 persones assegudes / 58 dretes. Només es registra la configuració asseguda com a aforament pertinent per a cinema."
+    },
+    "One projector (listed only as “Projector 5000”) and projection screen; model, units and dimensions unspecified.": {
+      "es": "Un proyector (indicado únicamente como «Projector 5000») y una pantalla de proyección; modelo, unidades y dimensiones no especificados.",
+      "ca": "Un projector (indicat únicament com a «Projector 5000») i una pantalla de projecció; model, unitats i dimensions no especificats."
+    },
+    "Two speakers, graphic equalizer, mixing desk and wired/wireless microphones.": {
+      "es": "Dos altavoces, ecualizador gráfico, mesa de mezclas y micrófonos con cable e inalámbricos.",
+      "ca": "Dos altaveus, equalitzador gràfic, taula de mescles i micròfons amb cable i sense fil."
+    },
+    "2019 report: 135 people plus two wheelchair positions; not silently summed into a current seat count.": {
+      "es": "Informe de 2019: 135 personas más dos plazas para sillas de ruedas; no se suman sin advertencia para obtener un recuento actual de asientos.",
+      "ca": "Informe de 2019: 135 persones més dues places per a cadires de rodes; no se sumen sense advertiment per obtenir un recompte actual de seients."
+    },
+    "Hire dossier maximum seated capacity; subject to furniture arrangement and event use.": {
+      "es": "Aforo máximo sentado del dosier de alquiler; depende de la disposición del mobiliario y del uso del evento.",
+      "ca": "Aforament màxim assegut del dossier de lloguer; depèn de la disposició del mobiliari i de l’ús de l’esdeveniment."
+    },
+    "Panasonic PT-RCQ10, Panasonic ETDLE170 lens; 8.95 m projection distance (not room length). Blackmagic ATEM 1 and Videohub 40×40.": {
+      "es": "Panasonic PT-RCQ10, lente Panasonic ETDLE170; distancia de proyección de 8,95 m (no es la longitud de la sala). Blackmagic ATEM 1 y Videohub 40×40.",
+      "ca": "Panasonic PT-RCQ10, lent Panasonic ETDLE170; distància de projecció de 8,95 m (no és la longitud de la sala). Blackmagic ATEM 1 i Videohub 40×40."
+    },
+    "Midas M32/DL16, Bose FreeSpace32 ceiling speakers, Nexo PS10/L15 and NXAMP, Crown CT8200; Tascam SS-R250N recording.": {
+      "es": "Midas M32/DL16, altavoces de techo Bose FreeSpace32, Nexo PS10/L15 y NXAMP, Crown CT8200; grabación Tascam SS-R250N.",
+      "ca": "Midas M32/DL16, altaveus de sostre Bose FreeSpace32, Nexo PS10/L15 i NXAMP, Crown CT8200; enregistrament Tascam SS-R250N."
+    },
+    "Seat figure in municipal-media event report; current layout unverified.": {
+      "es": "Cifra de asientos de una crónica de un evento en un medio municipal; distribución actual no verificada.",
+      "ca": "Xifra de seients d’una crònica d’un esdeveniment en un mitjà municipal; distribució actual no verificada."
+    },
+    "Seated field; same page also says maximum 408 and standing 403.": {
+      "es": "Campo de público sentado; la misma página también indica un máximo de 408 y 403 de pie.",
+      "ca": "Camp de públic assegut; la mateixa pàgina també indica un màxim de 408 i 403 drets."
+    },
+    "Description maximum; not necessarily seated configuration.": {
+      "es": "Máximo indicado en la descripción; no corresponde necesariamente a la configuración sentada.",
+      "ca": "Màxim indicat a la descripció; no correspon necessàriament a la configuració asseguda."
+    },
+    "One unidentified placeholder is replaced by a source-named Sala 2; the published eleven-room complex count is unchanged.": {
+      "es": "Un registro pendiente de identificar se sustituye por la sala 2 nombrada en una fuente; el total publicado de once salas del complejo no cambia.",
+      "ca": "Un registre pendent d’identificar se substitueix per la sala 2 anomenada en una font; el total publicat d’onze sales del complex no canvia."
+    },
+    "Mooby says its cinemas support reduced-mobility access and asks wheelchair users to purchase at the cinema box office.": {
+      "es": "Mooby indica que sus cines permiten el acceso de personas con movilidad reducida y pide a quienes utilizan silla de ruedas que compren en la taquilla del cine.",
+      "ca": "Mooby indica que els seus cinemes permeten l’accés de persones amb mobilitat reduïda i demana a qui utilitza cadira de rodes que compri a la taquilla del cinema."
+    },
+    "Operator-wide policy; room routes require venue-specific evidence.": {
+      "es": "Política general del operador; los recorridos de las salas requieren pruebas específicas del cine.",
+      "ca": "Política general de l’operador; els recorreguts de les sales requereixen proves específiques del cinema."
+    },
+    "Mobile tickets are accepted. Published policy allows no ticket changes or refunds.": {
+      "es": "Se aceptan entradas en el móvil. La política publicada no permite cambios ni devoluciones.",
+      "ca": "S’accepten entrades al mòbil. La política publicada no permet canvis ni devolucions."
+    },
+    "Cinemas open 15 minutes before the first screening.": {
+      "es": "Los cines abren 15 minutos antes de la primera sesión.",
+      "ca": "Els cinemes obren 15 minuts abans de la primera sessió."
+    },
+    "info@moobycinemas.com; booking-process support chat Monday–Friday 15:00–20:00, Saturday/Sunday 12:00–20:00.": {
+      "es": "info@moobycinemas.com; chat de asistencia para la compra de lunes a viernes de 15:00–20:00 y sábados y domingos de 12:00–20:00.",
+      "ca": "info@moobycinemas.com; xat d’assistència per a la compra de dilluns a divendres de 15:00–20:00 i dissabtes i diumenges de 12:00–20:00."
+    },
+    "Private screenings and event hire are offered through the operator’s venue-hire enquiry form.": {
+      "es": "Se ofrecen proyecciones privadas y alquiler para eventos mediante el formulario de consulta de alquiler de espacios del operador.",
+      "ca": "S’ofereixen projeccions privades i lloguer per a esdeveniments mitjançant el formulari de consulta de lloguer d’espais de l’operador."
+    },
+    "Club Phenomena is for people over 16. The personal virtual card permits one discounted ticket per member per eligible session; ID may be checked. Fee and expiry vary by enrolment offer.": {
+      "es": "Club Phenomena es para mayores de 16 años. La tarjeta virtual personal permite una entrada con descuento por socio y sesión incluida; se puede pedir identificación. La cuota y la caducidad varían según la oferta de inscripción.",
+      "ca": "Club Phenomena és per a majors de 16 anys. La targeta virtual personal permet una entrada amb descompte per soci i sessió inclosa; es pot demanar identificació. La quota i la caducitat varien segons l’oferta d’inscripció."
+    },
+    "L5 Sant Pau / Dos de Maig is the metro stop listed by the operator’s legacy website.": {
+      "es": "Sant Pau / Dos de Maig de la L5 es la parada de metro indicada en la antigua web del operador.",
+      "ca": "Sant Pau / Dos de Maig de l’L5 és la parada de metro indicada a l’antic web de l’operador."
+    },
+    "Unnumbered seating. A group using one QR must enter together; late admission may be refused.": {
+      "es": "Asientos sin numerar. Un grupo que utiliza un solo QR debe entrar junto; se puede denegar el acceso una vez iniciada la sesión.",
+      "ca": "Seients sense numerar. Un grup que utilitza un sol QR ha d’entrar junt; es pot denegar l’accés un cop començada la sessió."
+    },
+    "Published terms prohibit outside food/drink, bicycles, scooters and bulky objects.": {
+      "es": "Las condiciones publicadas prohíben comida y bebida del exterior, bicicletas, patinetes y objetos voluminosos.",
+      "ca": "Les condicions publicades prohibeixen menjar i beguda de l’exterior, bicicletes, patinets i objectes voluminosos."
+    },
+    "Operator’s stated conditions; no assessment of enforceability.": {
+      "es": "Condiciones declaradas por el operador; no se valora su exigibilidad.",
+      "ca": "Condicions declarades per l’operador; no se’n valora l’exigibilitat."
+    },
+    "Online and app purchases carry an additional non-refundable service charge; its amount is not stated in the terms. Official channels also include the box office and cinema kiosks.": {
+      "es": "Las compras en la web y la aplicación llevan un cargo de servicio adicional no reembolsable; las condiciones no indican su importe. Los canales oficiales también incluyen la taquilla y los terminales del cine.",
+      "ca": "Les compres al web i l’aplicació porten un càrrec de servei addicional no reemborsable; les condicions no n’indiquen l’import. Els canals oficials també inclouen la taquilla i els terminals del cinema."
+    },
+    "Published terms reject ordinary changes/refunds. If the cinema cancels for technical or force-majeure reasons, it allows a refund request within 14 days.": {
+      "es": "Las condiciones publicadas excluyen los cambios y devoluciones ordinarios. Si el cine cancela por razones técnicas o de fuerza mayor, permite solicitar el reembolso en un plazo de 14 días.",
+      "ca": "Les condicions publicades exclouen els canvis i les devolucions ordinaris. Si el cinema cancel·la per raons tècniques o de força major, permet sol·licitar el reemborsament en un termini de 14 dies."
+    },
+    "The purchase terms mention under-12 and over-65 discounts and Club tickets, with official photo ID required. Discount amounts are not specified.": {
+      "es": "Las condiciones de compra mencionan descuentos para menores de 12 años y mayores de 65, además de entradas Club, con identificación oficial con foto obligatoria. No se especifican los importes de los descuentos.",
+      "ca": "Les condicions de compra esmenten descomptes per a menors de 12 anys i majors de 65, a més d’entrades Club, amb identificació oficial amb foto obligatòria. No s’especifiquen els imports dels descomptes."
+    },
+    "Parking is available in the same building; tariff and cinema validation were not verified.": {
+      "es": "Hay aparcamiento en el mismo edificio; no se han verificado la tarifa ni la validación del cine.",
+      "ca": "Hi ha aparcament al mateix edifici; no s’han verificat la tarifa ni la validació del cinema."
+    },
+    "Nearby FGC El Putxet is on L7. FGC lists lifts and accessibility facilities at that station.": {
+      "es": "La estación cercana de FGC El Putxet está en la L7. FGC indica ascensores y prestaciones de accesibilidad en esa estación.",
+      "ca": "L’estació propera d’FGC El Putxet és a l’L7. FGC indica ascensors i prestacions d’accessibilitat en aquesta estació."
+    },
+    "Station facilities do not establish a step-free route all the way to an auditorium.": {
+      "es": "Las prestaciones de la estación no garantizan un recorrido sin escalones hasta la sala.",
+      "ca": "Les prestacions de l’estació no garanteixen un recorregut sense esglaons fins a la sala."
+    },
+    "Electric scooters and unicycles are prohibited in the cinema.": {
+      "es": "Los patinetes y monociclos eléctricos están prohibidos en el cine.",
+      "ca": "Els patinets i monocicles elèctrics estan prohibits al cinema."
+    },
+    "The operator lists parking within the cinema complex; tariff and validation remain unverified.": {
+      "es": "El operador indica aparcamiento dentro del complejo del cine; la tarifa y la validación siguen sin verificarse.",
+      "ca": "L’operador indica aparcament dins del complex del cinema; la tarifa i la validació continuen sense verificar-se."
+    },
+    "Nearby Fontana is on metro L3.": {
+      "es": "La estación cercana de Fontana está en la L3 de metro.",
+      "ca": "L’estació propera de Fontana és a l’L3 de metro."
+    },
+    "Walking time and a step-free journey have not been measured.": {
+      "es": "No se han medido el tiempo a pie ni un recorrido sin escalones.",
+      "ca": "No s’han mesurat el temps a peu ni un recorregut sense esglaons."
+    },
+    "Apropa Cultura lists an accessible entrance, adapted lifts, accessible toilets and parking, wheelchair spaces, guide-dog access and easy-read information.": {
+      "es": "Apropa Cultura indica entrada accesible, ascensores adaptados, aseos y aparcamiento accesibles, plazas para sillas de ruedas, acceso con perro guía e información de lectura fácil.",
+      "ca": "Apropa Cultura indica entrada accessible, ascensors adaptats, lavabos i aparcament accessibles, places per a cadires de rodes, accés amb gos pigall i informació de lectura fàcil."
+    },
+    "Venue listing; no per-room wheelchair inventory or hearing-system specification.": {
+      "es": "Ficha del cine; no incluye un inventario por sala de plazas para sillas de ruedas ni especificaciones del sistema de ayuda auditiva.",
+      "ca": "Fitxa del cinema; no inclou un inventari per sala de places per a cadires de rodes ni especificacions del sistema d’ajuda auditiva."
+    },
+    "Cine Bosque, S.L. (NIF B08335549) is named as applicant for the thermal-energy project at Rambla de Prat 16.": {
+      "es": "Cine Bosque, S.L. (NIF B08335549) figura como solicitante del proyecto de energía térmica de Rambla de Prat 16.",
+      "ca": "Cine Bosque, S.L. (NIF B08335549) figura com a sol·licitant del projecte d’energia tèrmica de Rambla de Prat 16."
+    },
+    "Documented venue-associated company, not proof of property ownership or the current lease.": {
+      "es": "Empresa documentada vinculada al cine; no acredita la propiedad del inmueble ni el arrendamiento actual.",
+      "ca": "Empresa documentada vinculada al cinema; no acredita la propietat de l’immoble ni l’arrendament actual."
+    },
+    "Published aerothermal project: 725.6 kW; report lists Midea MV8i-560WV2RN1E(PRO), MV8i-450WV2RN1E(PRO) and CIAT VECTIOS IPJ 0240CTR, 0180CTR and 0160CTR equipment.": {
+      "es": "Proyecto de aerotermia publicado: 725,6 kW; el informe enumera equipos Midea MV8i-560WV2RN1E(PRO), MV8i-450WV2RN1E(PRO) y CIAT VECTIOS IPJ 0240CTR, 0180CTR y 0160CTR.",
+      "ca": "Projecte d’aerotèrmia publicat: 725,6 kW; l’informe enumera equips Midea MV8i-560WV2RN1E(PRO), MV8i-450WV2RN1E(PRO) i CIAT VECTIOS IPJ 0240CTR, 0180CTR i 0160CTR."
+    },
+    "Heating/cooling project, not projection equipment. Commissioning and final installed configuration are not established.": {
+      "es": "Proyecto de calefacción y refrigeración, no de proyección. No se han confirmado la puesta en servicio ni la configuración final instalada.",
+      "ca": "Projecte de calefacció i refrigeració, no de projecció. No s’han confirmat la posada en servei ni la configuració final instal·lada."
+    },
+    "The Catalan Film Academy marked Bosque as an operating centenary cinema with a plaque on 27 October 2020.": {
+      "es": "La Acadèmia del Cinema Català reconoció a Bosque como cine centenario en funcionamiento con una placa el 27 de octubre de 2020.",
+      "ca": "L’Acadèmia del Cinema Català va reconèixer Bosque com a cinema centenari en funcionament amb una placa el 27 d’octubre de 2020."
+    },
+    "IN-EDIT lists Universitat (L1/L2) and Catalunya (L1/L3); buses 52, 54, H12, V13, 59, 63, 67 and 68 at Gran Via/Balmes or Plaça Universitat.": {
+      "es": "IN-EDIT indica Universitat (L1/L2) y Catalunya (L1/L3); autobuses 52, 54, H12, V13, 59, 63, 67 y 68 en Gran Via/Balmes o Plaça Universitat.",
+      "ca": "IN-EDIT indica Universitat (L1/L2) i Catalunya (L1/L3); autobusos 52, 54, H12, V13, 59, 63, 67 i 68 a Gran Via/Balmes o Plaça Universitat."
+    },
+    "Organizer’s directions, not a live timetable.": {
+      "es": "Indicaciones del organizador, no un horario en tiempo real.",
+      "ca": "Indicacions de l’organitzador, no un horari en temps real."
+    },
+    "Rooms 1–4 have lift access, street-level accessible toilets and two wheelchair positions per room, according to IN-EDIT.": {
+      "es": "Según IN-EDIT, las salas 1–4 tienen acceso en ascensor, aseos accesibles a nivel de calle y dos plazas para sillas de ruedas por sala.",
+      "ca": "Segons IN-EDIT, les sales 1–4 tenen accés amb ascensor, lavabos accessibles a peu de carrer i dues places per a cadires de rodes per sala."
+    },
+    "Sala 5 uses a platform stairlift with a 300 kg limit. Wheelchair positions are in the aisle; accessible toilets are in rooms 1–4 opposite Sala 5.": {
+      "es": "La sala 5 utiliza una plataforma salvaescaleras con un límite de 300 kg. Las plazas para sillas de ruedas están en el pasillo; los aseos accesibles se encuentran en las salas 1–4, frente a la sala 5.",
+      "ca": "La sala 5 utilitza una plataforma salvaescales amb un límit de 300 kg. Les places per a cadires de rodes són al passadís; els lavabos accessibles es troben a les sales 1–4, davant de la sala 5."
+    },
+    "Unlimited has a three-month minimum. VIP seats are included where available; annual subscriptions do not receive a refund on cancellation.": {
+      "es": "Unlimited tiene una permanencia mínima de tres meses. Los asientos VIP están incluidos cuando están disponibles; las suscripciones anuales no se reembolsan al cancelarlas.",
+      "ca": "Unlimited té una permanència mínima de tres mesos. Els seients VIP estan inclosos quan estan disponibles; les subscripcions anuals no es reemborsen en cancel·lar-les."
+    },
+    "Formats and 3D glasses may add charges.": {
+      "es": "Los formatos y las gafas 3D pueden conllevar suplementos.",
+      "ca": "Els formats i les ulleres 3D poden comportar suplements."
+    },
+    "Published policy rejects ordinary changes/cancellations, with exceptions for cinema-caused technical failure or cancellation.": {
+      "es": "La política publicada excluye los cambios y cancelaciones ordinarios, con excepciones por fallos técnicos o cancelaciones atribuibles al cine.",
+      "ca": "La política publicada exclou els canvis i les cancel·lacions ordinaris, amb excepcions per fallades tècniques o cancel·lacions atribuïbles al cinema."
+    },
+    "Registered myCinesa users can change selected seats in the app; this is separate from changing or cancelling a screening.": {
+      "es": "Los usuarios registrados de myCinesa pueden cambiar los asientos seleccionados en la aplicación; esto es independiente de cambiar o cancelar una sesión.",
+      "ca": "Els usuaris registrats de myCinesa poden canviar els seients seleccionats a l’aplicació; això és independent de canviar o cancel·lar una sessió."
+    },
+    "Wheelchair positions are marked in online booking maps. Staff can assist with in-person booking and special assistance.": {
+      "es": "Las plazas para sillas de ruedas están señaladas en los planos de reserva en línea. El personal puede ayudar con la compra presencial y la asistencia especial.",
+      "ca": "Les places per a cadires de rodes estan assenyalades als plànols de reserva en línia. El personal pot ajudar amb la compra presencial i l’assistència especial."
+    },
+    "Chain policy; detailed accessible routes and hearing equipment remain separate questions.": {
+      "es": "Política de la cadena; los recorridos accesibles detallados y el equipamiento de ayuda auditiva son cuestiones independientes.",
+      "ca": "Política de la cadena; els recorreguts accessibles detallats i l’equipament d’ajuda auditiva són qüestions independents."
+    },
+    "The shopping centre lists El Maresme | Fòrum on L4.": {
+      "es": "El centro comercial indica El Maresme | Fòrum de la L4.",
+      "ca": "El centre comercial indica El Maresme | Fòrum de l’L4."
+    },
+    "Three free parking hours per day, plus one extra hour with the centre app or a cinema ticket presented at the manual cashier on P1 before payment.": {
+      "es": "Tres horas de aparcamiento gratuito al día, más una hora adicional con la aplicación del centro o una entrada de cine presentada en la caja manual de P1 antes de pagar.",
+      "ca": "Tres hores d’aparcament gratuït al dia, més una hora addicional amb l’aplicació del centre o una entrada de cinema presentada a la caixa manual de P1 abans de pagar."
+    },
+    "The centre lists 5,000 parking spaces across five underground levels; 54 are designated accessible spaces.": {
+      "es": "El centro indica 5.000 plazas de aparcamiento repartidas en cinco plantas subterráneas; 54 están señaladas como plazas accesibles.",
+      "ca": "El centre indica 5.000 places d’aparcament repartides en cinc plantes subterrànies; 54 estan assenyalades com a places accessibles."
+    },
+    "Winter parking: Monday–Thursday 08:30–01:00; Friday/Saturday/holiday eves 08:30–03:00; Sunday and closed shopping holidays 11:00–01:00.": {
+      "es": "Horario de invierno del aparcamiento: de lunes a jueves, 08:30–01:00; viernes, sábados y vísperas de festivos, 08:30–03:00; domingos y festivos de cierre comercial, 11:00–01:00.",
+      "ca": "Horari d’hivern de l’aparcament: de dilluns a dijous, 08:30–01:00; divendres, dissabtes i vigílies de festius, 08:30–03:00; diumenges i festius de tancament comercial, 11:00–01:00."
+    },
+    "Winter schedule, 1 October–31 May; shopping and cinema opening hours differ.": {
+      "es": "Horario de invierno, del 1 de octubre al 31 de mayo; los horarios comerciales y del cine son distintos.",
+      "ca": "Horari d’hivern, de l’1 d’octubre al 31 de maig; els horaris comercials i del cinema són diferents."
+    },
+    "Centre entrances: Calle de Barcelona 2 and Avenida Josep Tarradellas s/n. Published public transport: Rambla Just Oliveras metro, Hospitalet de Llobregat commuter rail, Sant Josep FGC, buses L12/LH2.": {
+      "es": "Entradas al centro: Calle de Barcelona 2 y Avenida Josep Tarradellas s/n. Transporte público publicado: metro Rambla Just Oliveras, cercanías Hospitalet de Llobregat, FGC Sant Josep y autobuses L12/LH2.",
+      "ca": "Entrades al centre: Calle de Barcelona 2 i Avenida Josep Tarradellas s/n. Transport públic publicat: metro Rambla Just Oliveras, rodalies Hospitalet de Llobregat, FGC Sant Josep i autobusos L12/LH2."
+    },
+    "Three hours of free parking are advertised while watching a film at Cinesa. The page does not explain the validation procedure.": {
+      "es": "Se anuncian tres horas de aparcamiento gratuito al ver una película en Cinesa. La página no explica el procedimiento de validación.",
+      "ca": "S’anuncien tres hores d’aparcament gratuït en veure una pel·lícula a Cinesa. La pàgina no explica el procediment de validació."
+    },
+    "Parking opens Monday–Thursday/Sunday 06:00–01:00 and Friday/Saturday/holiday eves 06:00–03:30.": {
+      "es": "El aparcamiento abre de lunes a jueves y domingos de 06:00–01:00, y viernes, sábados y vísperas de festivos de 06:00–03:30.",
+      "ca": "L’aparcament obre de dilluns a dijous i diumenges de 06:00–01:00, i divendres, dissabtes i vigílies de festius de 06:00–03:30."
+    },
+    "Parking enquiries: parking@centrolafarga.com; centre management: +34 933 380 737.": {
+      "es": "Consultas del aparcamiento: parking@centrolafarga.com; gerencia del centro: +34 933 380 737.",
+      "ca": "Consultes de l’aparcament: parking@centrolafarga.com; gerència del centre: +34 933 380 737."
+    },
+    "Shopping centre, not cinema box office.": {
+      "es": "Centro comercial, no taquilla del cine.",
+      "ca": "Centre comercial, no taquilla del cinema."
+    },
+    "Yelmo’s September 2026 notice names YELMO FILMS, S.L.U., NIF B82721473, as the website/app company.": {
+      "es": "El aviso de Yelmo de septiembre de 2026 identifica a YELMO FILMS, S.L.U., NIF B82721473, como empresa responsable de la web y la aplicación.",
+      "ca": "L’avís de Yelmo del setembre de 2026 identifica YELMO FILMS, S.L.U., NIF B82721473, com a empresa responsable del web i l’aplicació."
+    },
+    "Chain platform legal entity; current venue leaseholder and building title are not established.": {
+      "es": "Entidad jurídica de la plataforma de la cadena; no se han determinado el arrendatario actual del cine ni la titularidad del edificio.",
+      "ca": "Entitat jurídica de la plataforma de la cadena; no s’han determinat l’arrendatari actual del cinema ni la titularitat de l’edifici."
+    },
+    "Yelmo’s terms describe possible Senior (over 60), youth/student (13–30), child (3–13) and disability discounts. Disability eligibility is 33% or more and may include one companion. Categories and amounts are not guaranteed for every cinema/session.": {
+      "es": "Las condiciones de Yelmo describen posibles descuentos sénior (mayores de 60), joven/estudiante (13–30), infantil (3–13) y por discapacidad. Se requiere un grado de discapacidad del 33 % o superior y puede incluirse un acompañante. No se garantizan las categorías ni los importes para todos los cines y sesiones.",
+      "ca": "Les condicions de Yelmo descriuen possibles descomptes sènior (majors de 60), jove/estudiant (13–30), infantil (3–13) i per discapacitat. Es requereix un grau de discapacitat del 33 % o superior i es pot incloure un acompanyant. No es garanteixen les categories ni els imports per a tots els cinemes i sessions."
+    },
+    "Under-3s may enter without a ticket if they occupy no seat, except Sala Junior, where everyone needs a ticket.": {
+      "es": "Los menores de 3 años pueden entrar sin entrada si no ocupan asiento, salvo en Sala Junior, donde todas las personas necesitan entrada.",
+      "ca": "Els menors de 3 anys poden entrar sense entrada si no ocupen seient, excepte a Sala Junior, on tothom necessita entrada."
+    },
+    "Seat selection is part of purchase; the published conditions allow no changes or refunds after confirmation. Prices include VAT and may vary by date, time and format.": {
+      "es": "La selección de asiento forma parte de la compra; las condiciones publicadas no permiten cambios ni devoluciones tras la confirmación. Los precios incluyen IVA y pueden variar según fecha, hora y formato.",
+      "ca": "La selecció de seient forma part de la compra; les condicions publicades no permeten canvis ni devolucions després de la confirmació. Els preus inclouen IVA i poden variar segons la data, l’hora i el format."
+    },
+    "The terms mention MovieYELMO, with at most two tickets per web transaction and film/promotion exclusions. No current membership tariff was established.": {
+      "es": "Las condiciones mencionan MovieYELMO, con un máximo de dos entradas por compra web y exclusiones de películas y promociones. No se ha determinado una tarifa de suscripción actual.",
+      "ca": "Les condicions esmenten MovieYELMO, amb un màxim de dues entrades per compra web i exclusions de pel·lícules i promocions. No s’ha determinat cap tarifa de subscripció actual."
+    },
+    "The centre lists L1 Sant Andreu/Torras i Bages and L9/L10 Bon Pastor. Underground parking entrances are on Potosí and São Paulo; exterior parking is reached from República Dominicana.": {
+      "es": "El centro indica Sant Andreu/Torras i Bages de la L1 y Bon Pastor de la L9/L10. Las entradas al aparcamiento subterráneo están en Potosí y São Paulo; al aparcamiento exterior se accede desde República Dominicana.",
+      "ca": "El centre indica Sant Andreu/Torras i Bages de l’L1 i Bon Pastor de l’L9/L10. Les entrades a l’aparcament subterrani són a Potosí i São Paulo; a l’aparcament exterior s’hi accedeix des de República Dominicana."
+    },
+    "The L9/L10 directions refer to the northern branches; no walking time is asserted.": {
+      "es": "Las indicaciones de la L9/L10 se refieren a los tramos norte; no se afirma ningún tiempo a pie.",
+      "ca": "Les indicacions de l’L9/L10 es refereixen als trams nord; no s’afirma cap temps a peu."
+    },
+    "4,800 spaces across two underground levels and an exterior car park; 2.2 m height limit. First three hours free; Westfield Club adds one hour. A Carrefour purchase over EUR 20 can alternatively add one hour; benefits cannot be combined.": {
+      "es": "4.800 plazas repartidas en dos plantas subterráneas y un aparcamiento exterior; límite de altura de 2,2 m. Las tres primeras horas son gratuitas; Westfield Club añade una hora. Como alternativa, una compra de más de 20 EUR en Carrefour puede añadir una hora; las ventajas no son acumulables.",
+      "ca": "4.800 places repartides en dues plantes subterrànies i un aparcament exterior; límit d’alçada de 2,2 m. Les tres primeres hores són gratuïtes; Westfield Club hi afegeix una hora. Com a alternativa, una compra de més de 20 EUR a Carrefour pot afegir-hi una hora; els avantatges no són acumulables."
+    },
+    "Parking: Monday–Thursday/Sunday 08:30–01:30; Friday/Saturday 08:30–03:30.": {
+      "es": "Aparcamiento: de lunes a jueves y domingos, 08:30–01:30; viernes y sábados, 08:30–03:30.",
+      "ca": "Aparcament: de dilluns a dijous i diumenges, 08:30–01:30; divendres i dissabtes, 08:30–03:30."
+    },
+    "The centre lists accessible circulation/parking and wheelchair rental, plus electric charging and bicycle/motorcycle parking.": {
+      "es": "El centro indica recorridos y aparcamiento accesibles y alquiler de sillas de ruedas, además de recarga eléctrica y aparcamiento para bicicletas y motos.",
+      "ca": "El centre indica recorreguts i aparcament accessibles i lloguer de cadires de rodes, a més de recàrrega elèctrica i aparcament per a bicicletes i motos."
+    },
+    "Shopping-centre facilities; not a room-by-room cinema accessibility audit.": {
+      "es": "Prestaciones del centro comercial; no es una auditoría de accesibilidad del cine sala por sala.",
+      "ca": "Prestacions del centre comercial; no és una auditoria d’accessibilitat del cinema sala per sala."
+    },
+    "Reduced tickets: children through age 12 and disabled customers every day; age 65+, youth/student card holders Monday–Thursday excluding holidays/eves. Proof required. Under-3s enter free without occupying a seat; VIP/recliner discounts excluded on weekends/holidays.": {
+      "es": "Entradas reducidas: niños hasta los 12 años y personas con discapacidad todos los días; personas de 65 años o más y titulares de carnet joven o de estudiante de lunes a jueves, salvo festivos y vísperas. Se requiere acreditación. Los menores de 3 años entran gratis sin ocupar asiento; los descuentos VIP/reclinables se excluyen en fines de semana y festivos.",
+      "ca": "Entrades reduïdes: infants fins als 12 anys i persones amb discapacitat cada dia; persones de 65 anys o més i titulars de carnet jove o d’estudiant de dilluns a dijous, excepte festius i vigílies. Cal acreditació. Els menors de 3 anys entren gratis sense ocupar seient; els descomptes VIP/reclinables s’exclouen els caps de setmana i festius."
+    },
+    "Operator lists daily cinema hours 10:45–01:00 and box-office hours 10:30–23:00.": {
+      "es": "El operador indica un horario diario de cine de 10:45–01:00 y de taquilla de 10:30–23:00.",
+      "ca": "L’operador indica un horari diari de cinema de 10:45–01:00 i de taquilla de 10:30–23:00."
+    },
+    "info.espana@kinepolis.com is the operator’s published customer contact.": {
+      "es": "info.espana@kinepolis.com es el contacto de atención al cliente publicado por el operador.",
+      "ca": "info.espana@kinepolis.com és el contacte d’atenció al client publicat per l’operador."
+    },
+    "Operator lists Cornellà Riera FGC, Cornellà Centre metro L5, and T1/T2 tram at Cornellà Centre or Les Aigües.": {
+      "es": "El operador indica FGC Cornellà Riera, metro Cornellà Centre L5 y tranvías T1/T2 en Cornellà Centre o Les Aigües.",
+      "ca": "L’operador indica FGC Cornellà Riera, metro Cornellà Centre L5 i tramvies T1/T2 a Cornellà Centre o Les Aigües."
+    },
+    "Operator directions; older bus-route numbers were not propagated.": {
+      "es": "Indicaciones del operador; no se han reproducido los números antiguos de líneas de autobús.",
+      "ca": "Indicacions de l’operador; no s’han reproduït els números antics de línies d’autobús."
+    },
+    "The centre advertises 2,800 free underground spaces over two levels, with PMR, family and larger/smaller bays. Eight EV charging points are paid; entrances are on Carrer Progrés and Carretera del Mig.": {
+      "es": "El centro anuncia 2.800 plazas subterráneas gratuitas en dos plantas, con plazas PMR, familiares y de distintos tamaños. Los ocho puntos de recarga eléctrica son de pago; las entradas están en Carrer Progrés y Carretera del Mig.",
+      "ca": "El centre anuncia 2.800 places subterrànies gratuïtes en dues plantes, amb places PMR, familiars i de diferents mides. Els vuit punts de recàrrega elèctrica són de pagament; les entrades són a Carrer Progrés i Carretera del Mig."
+    },
+    "The operator’s current Spanish room table marks all 28 salas as accessible and lists wheelchair positions for each room. These positions are recorded separately from fixed seats in the room catalogue.": {
+      "es": "La tabla actual de salas en español del operador marca las 28 salas como accesibles e indica las plazas para sillas de ruedas de cada una. Estas posiciones se registran por separado de los asientos fijos en el catálogo de salas.",
+      "ca": "La taula actual de sales en castellà de l’operador marca les 28 sales com a accessibles i indica les places per a cadires de rodes de cadascuna. Aquestes posicions es registren per separat dels seients fixos al catàleg de sales."
+    },
+    "Operator claim, not an independent route or hearing-equipment audit.": {
+      "es": "Afirmación del operador, no una auditoría independiente de recorridos o equipamiento de ayuda auditiva.",
+      "ca": "Afirmació de l’operador, no una auditoria independent de recorreguts o equipament d’ajuda auditiva."
+    },
+    "Published rules conflict: the online-refund FAQ gives a request deadline 30 minutes after the start; the wrong-cinema FAQ says 30 minutes before; general conditions describe fixed-session tickets as non-refundable. Confirm the applicable case with customer support.": {
+      "es": "Las normas publicadas se contradicen: la pregunta frecuente sobre devoluciones en línea fija el plazo de solicitud en 30 minutos después del inicio; la relativa al cine equivocado indica 30 minutos antes; las condiciones generales describen las entradas para sesiones fijas como no reembolsables. Confirma el caso aplicable con atención al cliente.",
+      "ca": "Les normes publicades es contradiuen: la pregunta freqüent sobre devolucions en línia fixa el termini de sol·licitud en 30 minuts després de l’inici; la relativa al cinema equivocat indica 30 minuts abans; les condicions generals descriuen les entrades per a sessions fixes com a no reemborsables. Confirma el cas aplicable amb atenció al client."
+    },
+    "A 10 July 2013 report records the inauguration of ten additional rooms, expanding Full HD at Splau from 18 to 28; reported investment EUR 4 million.": {
+      "es": "Un reportaje del 10 de julio de 2013 recoge la inauguración de diez salas adicionales, que ampliaron Full HD de Splau de 18 a 28; inversión declarada de 4 millones de EUR.",
+      "ca": "Un reportatge del 10 de juliol de 2013 recull la inauguració de deu sales addicionals, que van ampliar Full HD de Splau de 18 a 28; inversió declarada de 4 milions d’EUR."
+    },
+    "General weekday": {
+      "es": "General entre semana",
+      "ca": "General entre setmana"
+    },
+    "Monday–Thursday, excluding public holidays; Wednesday and premiere exceptions below.": {
+      "es": "De lunes a jueves, excepto festivos; excepciones de miércoles y estrenos más abajo.",
+      "ca": "De dilluns a dijous, excepte festius; excepcions de dimecres i estrenes més avall."
+    },
+    "General Friday/Saturday/holiday": {
+      "es": "General de viernes, sábados y festivos",
+      "ca": "General de divendres, dissabtes i festius"
+    },
+    "Friday, Saturday and public holidays. Sunday is not explicit in the retrieved English heading; use the session price.": {
+      "es": "Viernes, sábados y festivos. El domingo no figura expresamente en el encabezado en inglés consultado; utiliza el precio de la sesión.",
+      "ca": "Divendres, dissabtes i festius. El diumenge no figura expressament a l’encapçalament en anglès consultat; utilitza el preu de la sessió."
+    },
+    "Wednesday": {
+      "es": "Miércoles",
+      "ca": "Dimecres"
+    },
+    "Published Wednesday offer; final session price and event exceptions apply.": {
+      "es": "Oferta publicada de los miércoles; se aplican el precio final de la sesión y las excepciones de eventos.",
+      "ca": "Oferta publicada dels dimecres; s’apliquen el preu final de la sessió i les excepcions d’esdeveniments."
+    },
+    "Age 65+ discount": {
+      "es": "Descuento a partir de 65 años",
+      "ca": "Descompte a partir de 65 anys"
+    },
+    "Monday and Thursday; age evidence may be required.": {
+      "es": "Lunes y jueves; puede requerirse acreditación de la edad.",
+      "ca": "Dilluns i dijous; es pot requerir acreditació de l’edat."
+    },
+    "Cine Sénior": {
+      "es": "Cine Sénior",
+      "ca": "Cine Sénior"
+    },
+    "Tuesday, age 65+; subject to the continuing programme and eligible session.": {
+      "es": "Martes, a partir de 65 años; sujeto a la continuidad del programa y a que la sesión esté incluida.",
+      "ca": "Dimarts, a partir de 65 anys; subjecte a la continuïtat del programa i al fet que la sessió hi estigui inclosa."
+    },
+    "Under 13": {
+      "es": "Menores de 13 años",
+      "ca": "Menors de 13 anys"
+    },
+    "Published everyday child rate.": {
+      "es": "Tarifa infantil publicada para todos los días.",
+      "ca": "Tarifa infantil publicada per a cada dia."
+    },
+    "Weekday premiere": {
+      "es": "Estreno entre semana",
+      "ca": "Estrena entre setmana"
+    },
+    "Published weekday release tariff.": {
+      "es": "Tarifa publicada de estrenos entre semana.",
+      "ca": "Tarifa publicada d’estrenes entre setmana."
+    },
+    "Original version with Spanish subtitles": {
+      "es": "Versión original con subtítulos en español",
+      "ca": "Versió original amb subtítols en castellà"
+    },
+    "Every day, eligible VOSE films.": {
+      "es": "Todos los días, películas VOSE incluidas en la oferta.",
+      "ca": "Cada dia, pel·lícules VOSE incloses en l’oferta."
+    },
+    "Sunday morning": {
+      "es": "Domingo por la mañana",
+      "ca": "Diumenge al matí"
+    },
+    "Sunday morning screenings.": {
+      "es": "Sesiones de domingo por la mañana.",
+      "ca": "Sessions de diumenge al matí."
+    },
+    "3D supplement": {
+      "es": "Suplemento 3D",
+      "ca": "Suplement 3D"
+    },
+    "Applicable 3D screenings.": {
+      "es": "Sesiones 3D a las que se aplica.",
+      "ca": "Sessions 3D a les quals s’aplica."
+    },
+    "Dolby Atmos supplement": {
+      "es": "Suplemento Dolby Atmos",
+      "ca": "Suplement Dolby Atmos"
+    },
+    "Applicable Dolby Atmos screenings.": {
+      "es": "Sesiones Dolby Atmos a las que se aplica.",
+      "ca": "Sessions Dolby Atmos a les quals s’aplica."
+    },
+    "Dune Part Three listed session": {
+      "es": "Sesión publicada de Dune Part Three",
+      "ca": "Sessió publicada de Dune Part Three"
+    },
+    "Listed performances from 18–24 December 2026; example only, not a general admission price.": {
+      "es": "Sesiones publicadas del 18 al 24 de diciembre de 2026; solo como ejemplo, no como precio de entrada general.",
+      "ca": "Sessions publicades del 18 al 24 de desembre de 2026; només com a exemple, no com a preu d’entrada general."
+    },
+    "Club enrolment commission": {
+      "es": "Comisión de inscripción al club",
+      "ca": "Comissió d’inscripció al club"
+    },
+    "Added to the announced membership fee; this is not a cinema-ticket booking fee.": {
+      "es": "Se añade a la cuota de socio anunciada; no es una comisión de compra de entradas de cine.",
+      "ca": "S’afegeix a la quota de soci anunciada; no és una comissió de compra d’entrades de cinema."
+    },
+    "Unlimited Standard monthly": {
+      "es": "Unlimited Standard mensual",
+      "ca": "Unlimited Standard mensual"
+    },
+    "Standard cinemas; minimum commitment below.": {
+      "es": "Cines estándar; permanencia mínima indicada más abajo.",
+      "ca": "Cinemes estàndard; permanència mínima indicada més avall."
+    },
+    "Unlimited Standard annual": {
+      "es": "Unlimited Standard anual",
+      "ca": "Unlimited Standard anual"
+    },
+    "Annual plan for standard cinemas.": {
+      "es": "Plan anual para cines estándar.",
+      "ca": "Pla anual per a cinemes estàndard."
+    },
+    "Unlimited LUXE monthly": {
+      "es": "Unlimited LUXE mensual",
+      "ca": "Unlimited LUXE mensual"
+    },
+    "Includes LUXE and standard cinemas; minimum commitment below.": {
+      "es": "Incluye cines LUXE y estándar; permanencia mínima indicada más abajo.",
+      "ca": "Inclou cinemes LUXE i estàndard; permanència mínima indicada més avall."
+    },
+    "Unlimited LUXE annual": {
+      "es": "Unlimited LUXE anual",
+      "ca": "Unlimited LUXE anual"
+    },
+    "Annual plan for LUXE and standard cinemas.": {
+      "es": "Plan anual para cines LUXE y estándar.",
+      "ca": "Pla anual per a cinemes LUXE i estàndard."
+    },
+    "Unlimited 3D extra": {
+      "es": "Suplemento Unlimited 3D",
+      "ca": "Suplement Unlimited 3D"
+    },
+    "Subscriber supplement; 3D glasses separately charged.": {
+      "es": "Suplemento para abonados; las gafas 3D se cobran por separado.",
+      "ca": "Suplement per a abonats; les ulleres 3D es cobren per separat."
+    },
+    "Unlimited IMAX extra": {
+      "es": "Suplemento Unlimited IMAX",
+      "ca": "Suplement Unlimited IMAX"
+    },
+    "Subscriber IMAX rate. Recliner-IMAX chain rate is not assigned to this venue.": {
+      "es": "Tarifa IMAX para abonados. La tarifa de la cadena para IMAX con butacas reclinables no se atribuye a este cine.",
+      "ca": "Tarifa IMAX per a abonats. La tarifa de la cadena per a IMAX amb butaques reclinables no s’atribueix a aquest cinema."
+    },
+    "Unlimited iSense extra": {
+      "es": "Suplemento Unlimited iSense",
+      "ca": "Suplement Unlimited iSense"
+    },
+    "Subscriber iSense rate.": {
+      "es": "Tarifa iSense para abonados.",
+      "ca": "Tarifa iSense per a abonats."
+    },
+    "Standard subscriber LUXE visit": {
+      "es": "Visita a LUXE con abono Standard",
+      "ca": "Visita a LUXE amb abonament Standard"
+    },
+    "Extra when a Standard Unlimited member attends a LUXE cinema.": {
+      "es": "Suplemento cuando un abonado de Standard Unlimited asiste a un cine LUXE.",
+      "ca": "Suplement quan un abonat de Standard Unlimited assisteix a un cinema LUXE."
+    },
+    "Parking daily maximum": {
+      "es": "Máximo diario de aparcamiento",
+      "ca": "Màxim diari d’aparcament"
+    },
+    "Published daily cap; per-minute amount is unresolved because the source says 0.05 cents/minute.": {
+      "es": "Límite diario publicado; el importe por minuto no está aclarado porque la fuente indica 0,05 céntimos/minuto.",
+      "ca": "Límit diari publicat; l’import per minut no està aclarit perquè la font indica 0,05 cèntims/minut."
+    },
+    "Parking per minute": {
+      "es": "Aparcamiento por minuto",
+      "ca": "Aparcament per minut"
+    },
+    "Outside the applicable free allowance; VAT included.": {
+      "es": "Fuera del periodo gratuito aplicable; IVA incluido.",
+      "ca": "Fora del període gratuït aplicable; IVA inclòs."
+    },
+    "Published daily cap; VAT included.": {
+      "es": "Límite diario publicado; IVA incluido.",
+      "ca": "Límit diari publicat; IVA inclòs."
+    },
+    "Parking hourly rate": {
+      "es": "Tarifa de aparcamiento por hora",
+      "ca": "Tarifa d’aparcament per hora"
+    },
+    "Published paid-parking rate after applicable free allowance; tariff panel explicitly labels the 4–24 hour band, so non-member hour 3–4 should be checked.": {
+      "es": "Tarifa de pago publicada tras el periodo gratuito aplicable; el panel de tarifas indica expresamente el tramo de 4–24 horas, por lo que debe comprobarse la hora de 3 a 4 para personas no socias.",
+      "ca": "Tarifa de pagament publicada després del període gratuït aplicable; el panell de tarifes indica expressament el tram de 4–24 hores, per la qual cosa cal comprovar l’hora de 3 a 4 per a persones no sòcies."
+    },
+    "Published daily cap.": {
+      "es": "Límite diario publicado.",
+      "ca": "Límit diari publicat."
+    },
+    "General admission": {
+      "es": "Entrada general",
+      "ca": "Entrada general"
+    },
+    "Standard published tariff; special formats/events may differ.": {
+      "es": "Tarifa estándar publicada; los formatos y eventos especiales pueden tener otros precios.",
+      "ca": "Tarifa estàndard publicada; els formats i esdeveniments especials poden tenir altres preus."
+    },
+    "Reduced admission": {
+      "es": "Entrada reducida",
+      "ca": "Entrada reduïda"
+    },
+    "Eligibility below.": {
+      "es": "Requisitos indicados más abajo.",
+      "ca": "Requisits indicats més avall."
+    },
+    "Grupo de Amigos loyalty code": {
+      "es": "Código de fidelización de Grupo de Amigos",
+      "ca": "Codi de fidelització de Grupo de Amigos"
+    },
+    "Monday–Thursday excluding public holidays and their eves.": {
+      "es": "De lunes a jueves, excepto festivos y sus vísperas.",
+      "ca": "De dilluns a dijous, excepte festius i les seves vigílies."
+    },
+    "Applicable 3D films.": {
+      "es": "Películas 3D a las que se aplica.",
+      "ca": "Pel·lícules 3D a les quals s’aplica."
+    },
+    "3D glasses rental": {
+      "es": "Alquiler de gafas 3D",
+      "ca": "Lloguer d’ulleres 3D"
+    },
+    "Additional to the 3D supplement.": {
+      "es": "Se añade al suplemento 3D.",
+      "ca": "S’afegeix al suplement 3D."
+    },
+    "3D glasses are a separate purchase. Compatible existing glasses can be reused after staff confirmation; IMAX 3D needs its own type. Glasses can be purchased online or at the cinema.": {
+      "es": "Las gafas 3D se compran por separado. Las gafas compatibles que ya tengas pueden reutilizarse tras confirmarlo con el personal; IMAX 3D requiere su propio tipo. Pueden comprarse por internet o en el cine.",
+      "ca": "Les ulleres 3D es compren per separat. Les ulleres compatibles que ja tinguis es poden reutilitzar després de confirmar-ho amb el personal; IMAX 3D requereix el seu propi tipus. Es poden comprar per internet o al cinema."
+    },
+    "A documented Hora Blava screening on 28 March 2026 used Sala 1 with ambient lighting, lower volume, no advertising, a quiet activity space and permitted breaks/re-entry; a pictogram guide and wheelchair platform lift were listed. This is a past event, not a verified upcoming schedule.": {
+      "es": "Una sesión documentada de Hora Blava del 28 de marzo de 2026 utilizó la sala 1 con luz ambiental, volumen reducido, sin publicidad, un espacio tranquilo de actividades y permiso para hacer pausas y volver a entrar; se indicaban una guía de pictogramas y una plataforma elevadora para sillas de ruedas. Es una actividad pasada, no una próxima programación verificada.",
+      "ca": "Una sessió documentada d’Hora Blava del 28 de març de 2026 va utilitzar la sala 1 amb llum ambiental, volum reduït, sense publicitat, un espai tranquil d’activitats i permís per fer pauses i tornar a entrar; s’indicaven una guia de pictogrames i una plataforma elevadora per a cadires de rodes. És una activitat passada, no una pròxima programació verificada."
+    },
+    "Activity admission is set on each event page. General exhibition tariffs and free Archivo Xcèntric appointments do not establish the price of a cinema screening.": {
+      "es": "La entrada a las actividades se determina en la página de cada evento. Las tarifas generales de exposiciones y las citas gratuitas del Archivo Xcèntric no determinan el precio de una proyección de cine.",
+      "ca": "L’entrada a les activitats es determina a la pàgina de cada esdeveniment. Les tarifes generals d’exposicions i les cites gratuïtes de l’Arxiu Xcèntric no determinen el preu d’una projecció de cinema."
+    },
+    "An official allergen-table PDF is available. Its existence is recorded here; individual products, local stock and cross-contact conditions have not been assessed.": {
+      "es": "Hay una tabla oficial de alérgenos en PDF. Aquí se recoge su existencia; no se han evaluado los productos concretos, la disponibilidad local ni las condiciones de contacto cruzado.",
+      "ca": "Hi ha una taula oficial d’al·lèrgens en PDF. Aquí se’n recull l’existència; no s’han avaluat els productes concrets, la disponibilitat local ni les condicions de contacte encreuat."
+    },
+    "Ask cinema staff during opening hours about a lost item; the operator says found objects are retained.": {
+      "es": "Consulta al personal del cine durante el horario de apertura si has perdido un objeto; el operador indica que conserva los objetos encontrados.",
+      "ca": "Consulta el personal del cinema durant l’horari d’obertura si has perdut un objecte; l’operador indica que conserva els objectes trobats."
+    },
+    "Assistance dogs are exempt from the published ban on animals.": {
+      "es": "Los perros de asistencia están exentos de la prohibición publicada de entrada de animales.",
+      "ca": "Els gossos d’assistència estan exempts de la prohibició publicada d’entrada d’animals."
+    },
+    "At Saba Illa Raval / Hotel Barceló Raval, Sant Rafael 15, ask Filmoteca box-office staff for a voucher and present it at the car park for the published 25% discount.": {
+      "es": "En Saba Illa Raval / Hotel Barceló Raval, Sant Rafael 15, solicita un vale en la taquilla de la Filmoteca y preséntalo en el aparcamiento para obtener el descuento publicado del 25 %.",
+      "ca": "A Saba Illa Raval / Hotel Barceló Raval, Sant Rafael 15, demana un val a la taquilla de la Filmoteca i presenta’l a l’aparcament per obtenir el descompte publicat del 25 %."
+    },
+    "Bicycles and scooters, including folding/non-electric models, are not admitted to the salas. Cinesa says it has no cinema storage for them; shopping-centre facilities must be checked separately.": {
+      "es": "No se admiten bicicletas ni patinetes en las salas, incluidos los modelos plegables y no eléctricos. Cinesa indica que no dispone de espacio para guardarlos; hay que consultar por separado las instalaciones del centro comercial.",
+      "ca": "No s’admeten bicicletes ni patinets a les sales, inclosos els models plegables i no elèctrics. Cinesa indica que no disposa d’espai per guardar-los; cal consultar per separat les instal·lacions del centre comercial."
+    },
+    "Box office: Tue–Thu 10:00–21:00; Fri 10:00–14:00 and 15:30–21:00; Sat/Sun/holidays 15:30–21:00. These are box-office hours, not auditorium-door times.": {
+      "es": "Taquilla: de martes a jueves, 10:00–21:00; viernes, 10:00–14:00 y 15:30–21:00; sábados, domingos y festivos, 15:30–21:00. Son horarios de taquilla, no de apertura de las salas.",
+      "ca": "Taquilla: de dimarts a dijous, 10:00–21:00; divendres, 10:00–14:00 i 15:30–21:00; dissabtes, diumenges i festius, 15:30–21:00. Són horaris de taquilla, no d’obertura de les sales."
+    },
+    "Bring the booking confirmation printed or downloaded on your phone.": {
+      "es": "Lleva la confirmación de reserva impresa o descargada en el móvil.",
+      "ca": "Porta la confirmació de reserva impresa o descarregada al mòbil."
+    },
+    "Children must remove shoes and wear socks in the play areas. Published play-area age/height restrictions also apply.": {
+      "es": "Los niños deben quitarse los zapatos y llevar calcetines en las zonas de juego. También se aplican las restricciones publicadas de edad y altura de esas zonas.",
+      "ca": "Els infants s’han de treure les sabates i portar mitjons a les zones de joc. També s’hi apliquen les restriccions publicades d’edat i alçada."
+    },
+    "Cinema 3/99’s Todo lo que baila lists free admission and CCCB Auditori sessions on 3–4 October and 12–13 December 2026. The 7–8 November screenings are explicitly at La Caldera, not CCCB.": {
+      "es": "Todo lo que baila, de Cinema 3/99, anuncia entrada gratuita y sesiones en el Auditori del CCCB los días 3–4 de octubre y 12–13 de diciembre de 2026. Las proyecciones del 7–8 de noviembre se sitúan expresamente en La Caldera, no en el CCCB.",
+      "ca": "Todo lo que baila, de Cinema 3/99, anuncia entrada gratuïta i sessions a l’Auditori del CCCB els dies 3–4 d’octubre i 12–13 de desembre de 2026. Les projeccions del 7–8 de novembre se situen expressament a La Caldera, no al CCCB."
+    },
+    "Cinesa publishes bar-product ingredient/allergen information online and makes it available at its cinemas. The catalogue does not certify any product as allergen-free or establish local cross-contact controls.": {
+      "es": "Cinesa publica en línea información de ingredientes y alérgenos de los productos del bar y la facilita en sus cines. El catálogo no certifica que ningún producto esté libre de alérgenos ni determina los controles locales de contacto cruzado.",
+      "ca": "Cinesa publica en línia informació d’ingredients i al·lèrgens dels productes del bar i la facilita als seus cinemes. El catàleg no certifica que cap producte estigui lliure d’al·lèrgens ni determina els controls locals de contacte encreuat."
+    },
+    "Cinesa states that all salas have wheelchair spaces and that adjoining seats can be bought preferentially for companions. Exact routes and positions still depend on the room.": {
+      "es": "Cinesa afirma que todas las salas tienen plazas para sillas de ruedas y que los acompañantes pueden adquirir preferentemente los asientos contiguos. Los recorridos y las posiciones exactas dependen de cada sala.",
+      "ca": "Cinesa afirma que totes les sales tenen places per a cadires de rodes i que els acompanyants poden adquirir preferentment els seients contigus. Els recorreguts i les posicions exactes depenen de cada sala."
+    },
+    "Club Renoir renewals are manual, not automatic. Renewing before expiry carries remaining invitations into the renewed membership.": {
+      "es": "Las renovaciones de Club Renoir son manuales, no automáticas. Si se renueva antes de caducar, las invitaciones restantes se conservan en la nueva suscripción.",
+      "ca": "Les renovacions de Club Renoir són manuals, no automàtiques. Si es renova abans de caducar, les invitacions restants es conserven a la nova subscripció."
+    },
+    "Club invitations are redeemed at the box office; member discounts can be used on Pillalas online.": {
+      "es": "Las invitaciones del club se canjean en taquilla; los descuentos de socio pueden utilizarse en Pillalas por internet.",
+      "ca": "Les invitacions del club es bescanvien a taquilla; els descomptes de soci es poden utilitzar a Pillalas per internet."
+    },
+    "Contact customer service with the date, cinema, sala, screening, row/seat and object description. Customer service checks with the cinema and responds when it has an outcome.": {
+      "es": "Contacta con atención al cliente indicando fecha, cine, sala, sesión, fila/asiento y descripción del objeto. Atención al cliente consulta con el cine y responde cuando tiene un resultado.",
+      "ca": "Contacta amb atenció al client indicant data, cinema, sala, sessió, fila/seient i descripció de l’objecte. Atenció al client consulta amb el cinema i respon quan té un resultat."
+    },
+    "Eating and drinking are prohibited in the screening rooms. Bicycles, scooters and skateboards are not admitted to the building.": {
+      "es": "Está prohibido comer y beber en las salas de proyección. No se admiten bicicletas, patinetes ni monopatines en el edificio.",
+      "ca": "Està prohibit menjar i beure a les sales de projecció. No s’admeten bicicletes, patinets ni monopatins a l’edifici."
+    },
+    "Family-programme tickets: €2 for children and €3 for accompanying adults, with at most two adults at that reduced rate. This is a programme-specific tariff, not a free-infant policy.": {
+      "es": "Entradas del programa familiar: 2 € para niños y 3 € para adultos acompañantes, con un máximo de dos adultos a esa tarifa reducida. Es una tarifa específica del programa, no una política de entrada gratuita para bebés.",
+      "ca": "Entrades del programa familiar: 2 € per a infants i 3 € per a adults acompanyants, amb un màxim de dos adults a aquesta tarifa reduïda. És una tarifa específica del programa, no una política d’entrada gratuïta per a nadons."
+    },
+    "Family/children’s screenings are occasional; the venue says it has no fixed children’s-activity programme.": {
+      "es": "Las sesiones familiares e infantiles son ocasionales; el espacio indica que no tiene una programación fija de actividades infantiles.",
+      "ca": "Les sessions familiars i infantils són ocasionals; l’espai indica que no té una programació fixa d’activitats infantils."
+    },
+    "Food and drink are permitted in the cinemas. The FAQ does not explicitly settle outside-food sourcing; its water-only restriction concerns the theatre.": {
+      "es": "Se permite comer y beber en los cines. Las preguntas frecuentes no aclaran expresamente si se puede traer comida del exterior; la restricción a solo agua se refiere al teatro.",
+      "ca": "Es permet menjar i beure als cinemes. Les preguntes freqüents no aclareixen expressament si es pot portar menjar de l’exterior; la restricció a només aigua es refereix al teatre."
+    },
+    "For a missing booking email, use the official customer-service form with booking and payment-identification details requested there. No recovery or refund is automatically guaranteed.": {
+      "es": "Si falta el correo de reserva, utiliza el formulario oficial de atención al cliente con los datos de reserva e identificación del pago que se solicitan allí. No se garantiza automáticamente la recuperación ni el reembolso.",
+      "ca": "Si falta el correu de reserva, utilitza el formulari oficial d’atenció al client amb les dades de reserva i identificació del pagament que s’hi demanen. No es garanteix automàticament la recuperació ni el reemborsament."
+    },
+    "For cinema screenings, staff decide whether late entry is possible. The theatre’s absolute no-late-entry rule is separate.": {
+      "es": "En las proyecciones de cine, el personal decide si es posible entrar tarde. La prohibición absoluta de entrar tarde al teatro es independiente.",
+      "ca": "En les projeccions de cinema, el personal decideix si és possible entrar tard. La prohibició absoluta d’entrar tard al teatre és independent."
+    },
+    "If tickets do not arrive, check spam, then request a resend at info@moobycinemas.com. Purchase-flow support chat operates Mon–Fri 15:00–20:00 and weekends 12:00–20:00.": {
+      "es": "Si las entradas no llegan, revisa el correo no deseado y después solicita el reenvío a info@moobycinemas.com. El chat de asistencia a la compra funciona de lunes a viernes de 15:00–20:00 y los fines de semana de 12:00–20:00.",
+      "ca": "Si les entrades no arriben, revisa el correu brossa i després demana’n el reenviament a info@moobycinemas.com. El xat d’assistència a la compra funciona de dilluns a divendres de 15:00–20:00 i els caps de setmana de 12:00–20:00."
+    },
+    "Lost-property enquiries can be sent to info.espana@kinepolis.com.": {
+      "es": "Las consultas sobre objetos perdidos pueden enviarse a info.espana@kinepolis.com.",
+      "ca": "Les consultes sobre objectes perduts es poden enviar a info.espana@kinepolis.com."
+    },
+    "No admission once the screening has begun.": {
+      "es": "No se permite entrar una vez iniciada la proyección.",
+      "ca": "No es permet entrar un cop començada la projecció."
+    },
+    "Online ticket purchase does not require a registered account or Club membership.": {
+      "es": "La compra de entradas en línea no requiere una cuenta registrada ni ser socio del club.",
+      "ca": "La compra d’entrades en línia no requereix un compte registrat ni ser soci del club."
+    },
+    "Online ticket sales close one hour before the screening. The online per-person/session limit is ten tickets in the published terms.": {
+      "es": "La venta en línea cierra una hora antes de la sesión. Las condiciones publicadas limitan la compra en línea a diez entradas por persona y sesión.",
+      "ca": "La venda en línia tanca una hora abans de la sessió. Les condicions publicades limiten la compra en línia a deu entrades per persona i sessió."
+    },
+    "Ordinary ticket changes/refunds are refused. For online bookings, cancellation or programme change gives an invitation for another session; the terms separately allow a refund or invitation for cancelled box-office purchases, subject to their force-majeure clause.": {
+      "es": "No se permiten los cambios y devoluciones ordinarios. En las reservas en línea, una cancelación o cambio de programación da derecho a una invitación para otra sesión; para las compras canceladas de taquilla, las condiciones permiten por separado un reembolso o una invitación, con sujeción a la cláusula de fuerza mayor.",
+      "ca": "No es permeten els canvis i les devolucions ordinaris. En les reserves en línia, una cancel·lació o canvi de programació dona dret a una invitació per a una altra sessió; per a les compres cancel·lades de taquilla, les condicions permeten per separat un reemborsament o una invitació, amb subjecció a la clàusula de força major."
+    },
+    "Price depends on cinema, day and screening. The published FAQ says online tickets cost €1 less than in-person purchases; treat this as a published channel rule, with the selected-session quote controlling the actual total.": {
+      "es": "El precio depende del cine, el día y la sesión. Las preguntas frecuentes publicadas indican que las entradas en línea cuestan 1 € menos que las presenciales; es una regla publicada sobre el canal de compra, pero el precio de la sesión seleccionada determina el total real.",
+      "ca": "El preu depèn del cinema, el dia i la sessió. Les preguntes freqüents publicades indiquen que les entrades en línia costen 1 € menys que les presencials; és una regla publicada sobre el canal de compra, però el preu de la sessió seleccionada determina el total real."
+    },
+    "Published conditional supplements: iSense €2.50; IMAX €4; reclining IMAX €5; ScreenX €3; DBOX €4; Reclinable Plus €1.50; VIP €1.20. A 3D screening adds €1, excluding glasses. This list does not establish that every format exists at each venue or that all supplements combine.": {
+      "es": "Suplementos condicionales publicados: iSense 2,50 €; IMAX 4 €; IMAX reclinable 5 €; ScreenX 3 €; DBOX 4 €; Reclinable Plus 1,50 €; VIP 1,20 €. Una sesión 3D añade 1 €, sin gafas. Esta lista no confirma que todos los formatos existan en cada cine ni que todos los suplementos se acumulen.",
+      "ca": "Suplements condicionals publicats: iSense 2,50 €; IMAX 4 €; IMAX reclinable 5 €; ScreenX 3 €; DBOX 4 €; Reclinable Plus 1,50 €; VIP 1,20 €. Una sessió 3D hi afegeix 1 €, sense ulleres. Aquesta llista no confirma que tots els formats existeixin a cada cinema ni que tots els suplements s’acumulin."
+    },
+    "Published policy rejects ordinary cancellation, changes and refunds. Incidents are handled by head office, not the cinema: contacta@cinesrenoir.com or +34 91 334 21 77 during office hours.": {
+      "es": "La política publicada excluye las cancelaciones, cambios y devoluciones ordinarios. Las incidencias se gestionan desde las oficinas centrales, no desde el cine: contacta@cinesrenoir.com o +34 91 334 21 77 en horario de oficina.",
+      "ca": "La política publicada exclou les cancel·lacions, els canvis i les devolucions ordinaris. Les incidències es gestionen des de les oficines centrals, no des del cinema: contacta@cinesrenoir.com o +34 91 334 21 77 en horari d’oficina."
+    },
+    "Sala Junior includes 15 minutes of supervised play at the start and a 15-minute interval. A film’s runtime alone therefore does not establish the visit length or exact finishing time.": {
+      "es": "Sala Junior incluye 15 minutos de juego supervisado al inicio y un descanso de 15 minutos. Por ello, la duración de la película por sí sola no determina la duración de la visita ni la hora exacta de finalización.",
+      "ca": "Sala Junior inclou 15 minuts de joc supervisat a l’inici i un descans de 15 minuts. Per això, la durada de la pel·lícula per si sola no determina la durada de la visita ni l’hora exacta de finalització."
+    },
+    "Sala Junior requires minors to attend with an adult, and adults to accompany a minor. It is not an adults-only screening option.": {
+      "es": "Sala Junior exige que los menores vayan acompañados de un adulto y que los adultos acompañen a un menor. No es una opción de sesión solo para adultos.",
+      "ca": "Sala Junior exigeix que els menors vagin acompanyats d’un adult i que els adults acompanyin un menor. No és una opció de sessió només per a adults."
+    },
+    "Staff can reprint a lost ticket at the box office or resend it by email after locating the purchase.": {
+      "es": "El personal puede volver a imprimir una entrada perdida en taquilla o reenviarla por correo electrónico tras localizar la compra.",
+      "ca": "El personal pot tornar a imprimir una entrada perduda a taquilla o reenviar-la per correu electrònic després de localitzar la compra."
+    },
+    "Subscriber reservations must be collected at least 15 minutes before the screening; uncollected reservations may be released.": {
+      "es": "Las reservas de abonados deben recogerse al menos 15 minutos antes de la sesión; las que no se recojan pueden liberarse.",
+      "ca": "Les reserves d’abonats s’han de recollir almenys 15 minuts abans de la sessió; les que no es recullin es poden alliberar."
+    },
+    "The Spanish chain FAQ says outside drinks/snacks may not be consumed in the cinema. This records the published policy; local exceptions and enforceability are not established.": {
+      "es": "Las preguntas frecuentes de la cadena en español indican que no se pueden consumir bebidas ni aperitivos del exterior en el cine. Se recoge la política publicada; no se han determinado las excepciones locales ni su exigibilidad.",
+      "ca": "Les preguntes freqüents de la cadena en castellà indiquen que no es poden consumir begudes ni aperitius de l’exterior al cinema. Es recull la política publicada; no s’han determinat les excepcions locals ni l’exigibilitat."
+    },
+    "The basement cinemas use a stairlift rated to 150 kg for the person and wheelchair, with no alternative route above that limit. The theatre has a separate alternative entrance. The hall/bar and adapted toilet are at street level.": {
+      "es": "Los cines del sótano utilizan un salvaescaleras con un límite de 150 kg para la persona y la silla de ruedas, sin recorrido alternativo por encima de ese límite. El teatro tiene una entrada alternativa independiente. El vestíbulo/bar y el aseo adaptado están a nivel de calle.",
+      "ca": "Els cinemes del soterrani utilitzen un salvaescales amb un límit de 150 kg per a la persona i la cadira de rodes, sense recorregut alternatiu per sobre d’aquest límit. El teatre té una entrada alternativa independent. El vestíbul/bar i el lavabo adaptat són a peu de carrer."
+    },
+    "The usual weekly programme goes on sale on Wednesday for Friday–Thursday. Holidays and selected advance-sale films are exceptions.": {
+      "es": "La programación semanal habitual sale a la venta el miércoles para el periodo de viernes a jueves. Los festivos y determinadas películas en venta anticipada son excepciones.",
+      "ca": "La programació setmanal habitual surt a la venda el dimecres per al període de divendres a dijous. Els festius i determinades pel·lícules en venda anticipada són excepcions."
+    },
+    "There is no cloakroom. Staff may exceptionally hold bulky objects that cannot safely enter the room, without accepting responsibility.": {
+      "es": "No hay guardarropa. Excepcionalmente, el personal puede guardar objetos voluminosos que no puedan entrar con seguridad en la sala, sin asumir responsabilidad.",
+      "ca": "No hi ha guarda-roba. Excepcionalment, el personal pot guardar objectes voluminosos que no puguin entrar amb seguretat a la sala, sense assumir-ne responsabilitat."
+    },
+    "Ticket help by telephone or WhatsApp: +34 603 500 004, 16:30–23:00. Invoice requests: facturacion@cinesfilmax.com.": {
+      "es": "Ayuda con entradas por teléfono o WhatsApp: +34 603 500 004, 16:30–23:00. Solicitud de facturas: facturacion@cinesfilmax.com.",
+      "ca": "Ajuda amb entrades per telèfon o WhatsApp: +34 603 500 004, 16:30–23:00. Sol·licitud de factures: facturacion@cinesfilmax.com."
+    },
+    "Ticket/assistance enquiries: filmoteca.taquilla@gencat.cat, +34 935 671 070. For special assistance after online purchase, include the booking locator in the request to the venue.": {
+      "es": "Consultas sobre entradas y asistencia: filmoteca.taquilla@gencat.cat, +34 935 671 070. Para asistencia especial tras una compra en línea, incluye el localizador de reserva en la solicitud al espacio.",
+      "ca": "Consultes sobre entrades i assistència: filmoteca.taquilla@gencat.cat, +34 935 671 070. Per a assistència especial després d’una compra en línia, inclou el localitzador de reserva a la sol·licitud a l’espai."
+    },
+    "Tickets are required from age 3. Under-3s also need a ticket if occupying a seat. Babies may attend, but the adult must leave temporarily if the baby disturbs others.": {
+      "es": "Se necesita entrada a partir de los 3 años. Los menores de 3 años también necesitan entrada si ocupan asiento. Se permite asistir con bebés, pero el adulto debe salir temporalmente si el bebé molesta a los demás.",
+      "ca": "Cal entrada a partir dels 3 anys. Els menors de 3 anys també necessiten entrada si ocupen seient. Es permet assistir-hi amb nadons, però l’adult ha de sortir temporalment si el nadó molesta els altres."
+    },
+    "Tickets may be bought for another person; any discounted attendee must show their own eligibility. Phone-displayed tickets are accepted.": {
+      "es": "Se pueden comprar entradas para otra persona; quien utilice un descuento debe acreditar que cumple los requisitos. Se aceptan entradas mostradas en el móvil.",
+      "ca": "Es poden comprar entrades per a una altra persona; qui utilitzi un descompte ha d’acreditar que compleix els requisits. S’accepten entrades mostrades al mòbil."
+    },
+    "Under-3s enter free only when they do not occupy a seat; occupying a seat requires a ticket.": {
+      "es": "Los menores de 3 años entran gratis únicamente si no ocupan asiento; para ocupar uno necesitan entrada.",
+      "ca": "Els menors de 3 anys entren gratis únicament si no ocupen seient; per ocupar-ne un necessiten entrada."
+    },
+    "Use OCINE’s official ticket-recovery service for the cinema where the purchase was made. It offers purchase/payment identification methods; selecting the wrong cinema will not locate the booking.": {
+      "es": "Utiliza el servicio oficial de recuperación de entradas de OCINE para el cine donde se hizo la compra. Ofrece métodos de identificación de la compra y el pago; si se selecciona el cine equivocado, no se localizará la reserva.",
+      "ca": "Utilitza el servei oficial de recuperació d’entrades d’OCINE per al cinema on es va fer la compra. Ofereix mètodes d’identificació de la compra i el pagament; si se selecciona el cinema equivocat, no es localitzarà la reserva."
+    },
+    "Seated-person capacity in performing-arts residency conditions; layout changes require venue agreement; wheelchair allocation unspecified.": {
+      "es": "Aforo de personas sentadas según las condiciones de residencia de artes escénicas; los cambios de distribución requieren el acuerdo del recinto; no se especifican plazas para sillas de ruedas.",
+      "ca": "Aforament de persones assegudes segons les condicions de residència d’arts escèniques; els canvis de distribució requereixen l’acord del recinte; no s’especifiquen places per a cadires de rodes."
+    },
+    "Laser projection; replaces xenon": {
+      "es": "Proyección láser; sustituye al xenón",
+      "ca": "Projecció làser; substitueix el xenó"
+    }
+  }
+}

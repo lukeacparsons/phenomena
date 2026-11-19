@@ -1,0 +1,16 @@
+{
+  "name": "vobarna",
+  "main": "src/vobarna-worker.mjs",
+  "compatibility_date": "2026-11-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "upload_source_maps": true,
+  "workers_dev": true,
+  "assets": {
+    "directory": ".site/current/public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}

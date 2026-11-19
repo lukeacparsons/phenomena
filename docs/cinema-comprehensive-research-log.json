@@ -1,0 +1,1536 @@
+{
+  "researched_on": "2026-11-19",
+  "summary": {
+    "researched_venues": 59,
+    "current_directory_entries": 38,
+    "current_directory_with_profiles": 38,
+    "researched_expansion_candidates_not_in_current_directory": 21,
+    "new_sourced_observations": 58,
+    "venues_with_new_observations": 19,
+    "existing_chain_facts_extended": 14,
+    "additional_chain_fact_venue_links": 51,
+    "all_practical_fact_records": 111,
+    "all_price_observations": 140,
+    "room_records": 219,
+    "image_references": 163,
+    "review_observations": 163,
+    "new_source_records": 16,
+    "consolidated_source_records": 451,
+    "all_available_information_claimed": false
+  },
+  "checks_passed": 322,
+  "checks": [
+    {
+      "check": "unique facts IDs",
+      "passed": true
+    },
+    {
+      "check": "unique prices IDs",
+      "passed": true
+    },
+    {
+      "check": "unique rooms IDs",
+      "passed": true
+    },
+    {
+      "check": "unique images IDs",
+      "passed": true
+    },
+    {
+      "check": "unique reviews IDs",
+      "passed": true
+    },
+    {
+      "check": "unique venues IDs",
+      "passed": true
+    },
+    {
+      "check": "all current directory profiles present",
+      "passed": true
+    },
+    {
+      "check": "configuration matches preview",
+      "passed": true
+    },
+    {
+      "check": "all room IDs preserved",
+      "passed": true
+    },
+    {
+      "check": "capacity and screen observations unchanged",
+      "passed": true
+    },
+    {
+      "check": "images unchanged",
+      "passed": true
+    },
+    {
+      "check": "reviews unchanged",
+      "passed": true
+    },
+    {
+      "check": "all 140 price records retained",
+      "passed": true
+    },
+    {
+      "check": "new observations sourced",
+      "passed": true
+    },
+    {
+      "check": "28 audit categories for every venue",
+      "passed": true
+    },
+    {
+      "check": "phenomena room_ids references",
+      "passed": true
+    },
+    {
+      "check": "phenomena fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "phenomena price_ids references",
+      "passed": true
+    },
+    {
+      "check": "phenomena image_ids references",
+      "passed": true
+    },
+    {
+      "check": "phenomena review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-balmes room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-balmes fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-balmes price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-balmes image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-balmes review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-bosque room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-bosque fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-bosque price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-bosque image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-bosque review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-aribau room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-aribau fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-aribau price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-aribau image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-aribau review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal-mar room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal-mar fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal-mar price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal-mar image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal-mar review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-la-farga room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-la-farga fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-la-farga price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-la-farga image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-la-farga review_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-maquinista room_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-maquinista fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-maquinista price_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-maquinista image_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-maquinista review_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-splau room_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-splau fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-splau price_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-splau image_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-splau review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-arenas room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-arenas fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-arenas price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-arenas image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-arenas review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-glories room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-glories fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-glories price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-glories image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-glories review_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-sarria room_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-sarria fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-sarria price_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-sarria image_ids references",
+      "passed": true
+    },
+    {
+      "check": "mooby-sarria review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-diagonal review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-som-multiespai room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-som-multiespai fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-som-multiespai price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-som-multiespai image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-som-multiespai review_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi room_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi price_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi image_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi review_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi-park room_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi-park fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi-park price_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi-park image_ids references",
+      "passed": true
+    },
+    {
+      "check": "verdi-park review_ids references",
+      "passed": true
+    },
+    {
+      "check": "renoir-floridablanca room_ids references",
+      "passed": true
+    },
+    {
+      "check": "renoir-floridablanca fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "renoir-floridablanca price_ids references",
+      "passed": true
+    },
+    {
+      "check": "renoir-floridablanca image_ids references",
+      "passed": true
+    },
+    {
+      "check": "renoir-floridablanca review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-girona room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-girona fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-girona price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-girona image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-girona review_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-texas room_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-texas fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-texas price_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-texas image_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-texas review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-malda room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-malda fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-malda price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-malda image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-malda review_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmoteca-catalunya room_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmoteca-catalunya fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmoteca-catalunya price_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmoteca-catalunya image_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmoteca-catalunya review_ids references",
+      "passed": true
+    },
+    {
+      "check": "zumzeig room_ids references",
+      "passed": true
+    },
+    {
+      "check": "zumzeig fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "zumzeig price_ids references",
+      "passed": true
+    },
+    {
+      "check": "zumzeig image_ids references",
+      "passed": true
+    },
+    {
+      "check": "zumzeig review_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmax-gran-via room_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmax-gran-via fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmax-gran-via price_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmax-gran-via image_ids references",
+      "passed": true
+    },
+    {
+      "check": "filmax-gran-via review_ids references",
+      "passed": true
+    },
+    {
+      "check": "ateneu-barcelones room_ids references",
+      "passed": true
+    },
+    {
+      "check": "ateneu-barcelones fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "ateneu-barcelones price_ids references",
+      "passed": true
+    },
+    {
+      "check": "ateneu-barcelones image_ids references",
+      "passed": true
+    },
+    {
+      "check": "ateneu-barcelones review_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-magic room_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-magic fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-magic price_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-magic image_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-magic review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-barnasud room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-barnasud fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-barnasud price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-barnasud image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-barnasud review_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-castelldefels room_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-castelldefels fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-castelldefels price_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-castelldefels image_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-castelldefels review_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-sant-cugat room_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-sant-cugat fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-sant-cugat price_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-sant-cugat image_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-sant-cugat review_ids references",
+      "passed": true
+    },
+    {
+      "check": "sant-cugat-cinemas room_ids references",
+      "passed": true
+    },
+    {
+      "check": "sant-cugat-cinemas fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "sant-cugat-cinemas price_ids references",
+      "passed": true
+    },
+    {
+      "check": "sant-cugat-cinemas image_ids references",
+      "passed": true
+    },
+    {
+      "check": "sant-cugat-cinemas review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinebaix room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinebaix fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinebaix price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinebaix image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinebaix review_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-castellet room_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-castellet fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-castellet price_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-castellet image_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-castellet review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-montcada room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-montcada fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-montcada price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-montcada image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinemes-montcada review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-capri room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-capri fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-capri price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-capri image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-capri review_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-abrera room_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-abrera fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-abrera price_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-abrera image_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-abrera review_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-baricentro room_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-baricentro fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-baricentro price_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-baricentro image_ids references",
+      "passed": true
+    },
+    {
+      "check": "yelmo-baricentro review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-parc-valles room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-parc-valles fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-parc-valles price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-parc-valles image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinesa-parc-valles review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-catalunya room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-catalunya fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-catalunya price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-catalunya image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-catalunya review_ids references",
+      "passed": true
+    },
+    {
+      "check": "eix-macia room_ids references",
+      "passed": true
+    },
+    {
+      "check": "eix-macia fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "eix-macia price_ids references",
+      "passed": true
+    },
+    {
+      "check": "eix-macia image_ids references",
+      "passed": true
+    },
+    {
+      "check": "eix-macia review_ids references",
+      "passed": true
+    },
+    {
+      "check": "imperial room_ids references",
+      "passed": true
+    },
+    {
+      "check": "imperial fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "imperial price_ids references",
+      "passed": true
+    },
+    {
+      "check": "imperial image_ids references",
+      "passed": true
+    },
+    {
+      "check": "imperial review_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-mataro room_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-mataro fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-mataro price_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-mataro image_ids references",
+      "passed": true
+    },
+    {
+      "check": "kinepolis-mataro review_ids references",
+      "passed": true
+    },
+    {
+      "check": "foment-mataroni room_ids references",
+      "passed": true
+    },
+    {
+      "check": "foment-mataroni fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "foment-mataroni price_ids references",
+      "passed": true
+    },
+    {
+      "check": "foment-mataroni image_ids references",
+      "passed": true
+    },
+    {
+      "check": "foment-mataroni review_ids references",
+      "passed": true
+    },
+    {
+      "check": "calandria room_ids references",
+      "passed": true
+    },
+    {
+      "check": "calandria fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "calandria price_ids references",
+      "passed": true
+    },
+    {
+      "check": "calandria image_ids references",
+      "passed": true
+    },
+    {
+      "check": "calandria review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-edison room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-edison fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-edison price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-edison image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cinema-edison review_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-granollers room_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-granollers fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-granollers price_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-granollers image_ids references",
+      "passed": true
+    },
+    {
+      "check": "ocine-granollers review_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-amistat room_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-amistat fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-amistat price_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-amistat image_ids references",
+      "passed": true
+    },
+    {
+      "check": "espai-amistat review_ids references",
+      "passed": true
+    },
+    {
+      "check": "institut-francais room_ids references",
+      "passed": true
+    },
+    {
+      "check": "institut-francais fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "institut-francais price_ids references",
+      "passed": true
+    },
+    {
+      "check": "institut-francais image_ids references",
+      "passed": true
+    },
+    {
+      "check": "institut-francais review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cccb room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cccb fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cccb price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cccb image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cccb review_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-barcelona room_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-barcelona fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-barcelona price_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-barcelona image_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-barcelona review_ids references",
+      "passed": true
+    },
+    {
+      "check": "cosmocaixa room_ids references",
+      "passed": true
+    },
+    {
+      "check": "cosmocaixa fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "cosmocaixa price_ids references",
+      "passed": true
+    },
+    {
+      "check": "cosmocaixa image_ids references",
+      "passed": true
+    },
+    {
+      "check": "cosmocaixa review_ids references",
+      "passed": true
+    },
+    {
+      "check": "muec-montcada room_ids references",
+      "passed": true
+    },
+    {
+      "check": "muec-montcada fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "muec-montcada price_ids references",
+      "passed": true
+    },
+    {
+      "check": "muec-montcada image_ids references",
+      "passed": true
+    },
+    {
+      "check": "muec-montcada review_ids references",
+      "passed": true
+    },
+    {
+      "check": "biblioteca-jaume-fuster room_ids references",
+      "passed": true
+    },
+    {
+      "check": "biblioteca-jaume-fuster fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "biblioteca-jaume-fuster price_ids references",
+      "passed": true
+    },
+    {
+      "check": "biblioteca-jaume-fuster image_ids references",
+      "passed": true
+    },
+    {
+      "check": "biblioteca-jaume-fuster review_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-seat room_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-seat fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-seat price_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-seat image_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-seat review_ids references",
+      "passed": true
+    },
+    {
+      "check": "centre-cultural-albareda room_ids references",
+      "passed": true
+    },
+    {
+      "check": "centre-cultural-albareda fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "centre-cultural-albareda price_ids references",
+      "passed": true
+    },
+    {
+      "check": "centre-cultural-albareda image_ids references",
+      "passed": true
+    },
+    {
+      "check": "centre-cultural-albareda review_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-elizalde room_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-elizalde fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-elizalde price_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-elizalde image_ids references",
+      "passed": true
+    },
+    {
+      "check": "casa-elizalde review_ids references",
+      "passed": true
+    },
+    {
+      "check": "fabra-i-coats room_ids references",
+      "passed": true
+    },
+    {
+      "check": "fabra-i-coats fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "fabra-i-coats price_ids references",
+      "passed": true
+    },
+    {
+      "check": "fabra-i-coats image_ids references",
+      "passed": true
+    },
+    {
+      "check": "fabra-i-coats review_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-macaya room_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-macaya fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-macaya price_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-macaya image_ids references",
+      "passed": true
+    },
+    {
+      "check": "caixaforum-macaya review_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-carol room_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-carol fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-carol price_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-carol image_ids references",
+      "passed": true
+    },
+    {
+      "check": "can-carol review_ids references",
+      "passed": true
+    },
+    {
+      "check": "casal-trinitat-nova room_ids references",
+      "passed": true
+    },
+    {
+      "check": "casal-trinitat-nova fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "casal-trinitat-nova price_ids references",
+      "passed": true
+    },
+    {
+      "check": "casal-trinitat-nova image_ids references",
+      "passed": true
+    },
+    {
+      "check": "casal-trinitat-nova review_ids references",
+      "passed": true
+    },
+    {
+      "check": "la-bonne room_ids references",
+      "passed": true
+    },
+    {
+      "check": "la-bonne fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "la-bonne price_ids references",
+      "passed": true
+    },
+    {
+      "check": "la-bonne image_ids references",
+      "passed": true
+    },
+    {
+      "check": "la-bonne review_ids references",
+      "passed": true
+    },
+    {
+      "check": "macba room_ids references",
+      "passed": true
+    },
+    {
+      "check": "macba fact_ids references",
+      "passed": true
+    },
+    {
+      "check": "macba price_ids references",
+      "passed": true
+    },
+    {
+      "check": "macba image_ids references",
+      "passed": true
+    },
+    {
+      "check": "macba review_ids references",
+      "passed": true
+    },
+    {
+      "check": "all source references resolve",
+      "passed": true
+    },
+    {
+      "check": "preview unchanged",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes to cinema-dossiers",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes to auditoriums",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes to cinema-directory-coverage",
+      "passed": true
+    },
+    {
+      "check": "capacity coverage count retained",
+      "passed": true
+    },
+    {
+      "check": "screen pair coverage retained",
+      "passed": true
+    },
+    {
+      "check": "saved cinema-comprehensive-research parses",
+      "passed": true
+    },
+    {
+      "check": "saved cinema-dossiers parses",
+      "passed": true
+    },
+    {
+      "check": "saved auditoriums parses",
+      "passed": true
+    },
+    {
+      "check": "saved cinema-directory-coverage parses",
+      "passed": true
+    },
+    {
+      "check": "all 59 readable venue sections present",
+      "passed": true
+    }
+  ],
+  "scope": "Research documents only; no application change, new image, review export, reservation, message or deployment.",
+  "access_attempts": [
+    {
+      "id": "verdi-faq",
+      "url": "https://barcelona.cines-verdi.com/preguntas-frecuentes",
+      "resolved_url": "https://barcelona.cines-verdi.com/preguntas-frecuentes",
+      "http_status": 202
+    },
+    {
+      "id": "verdi-legal",
+      "url": "https://barcelona.cines-verdi.com/terminos-y-condiciones",
+      "resolved_url": "https://barcelona.cines-verdi.com/terminos-y-condiciones",
+      "http_status": 202
+    },
+    {
+      "id": "ocine-legal",
+      "url": "https://www.cinesocine.es/es/aviso-legal.html",
+      "resolved_url": "https://www.cinesocine.es/es/aviso-legal.html",
+      "http_status": 200,
+      "chars": 12479
+    },
+    {
+      "id": "mooby-home",
+      "url": "https://www.moobycinemas.com/",
+      "resolved_url": "https://www.moobycinemas.com/",
+      "http_status": 202
+    },
+    {
+      "id": "ocine-magic-home",
+      "url": "https://ocinemagic.es/",
+      "resolved_url": "https://ocinemagic.es/",
+      "http_status": 200,
+      "chars": 20
+    },
+    {
+      "id": "ocine-granollers-home",
+      "url": "https://ocinegranollers.es/",
+      "resolved_url": "https://ocinegranollers.es/",
+      "http_status": 200,
+      "chars": 16
+    },
+    {
+      "id": "ipce-2023-pdf",
+      "url": "https://www.cultura.gob.es/planes-nacionales/dam/jcr%3A2854acd5-f1ad-49e0-b969-d4da93f0dd5f/inventario-cines-ipce-listado-2023.pdf",
+      "resolved_url": "https://www.cultura.gob.es/planes-nacionales/dam/jcr%3A2854acd5-f1ad-49e0-b969-d4da93f0dd5f/inventario-cines-ipce-listado-2023.pdf",
+      "http_status": 429
+    },
+    {
+      "id": "cccb-access",
+      "url": "https://www.cccb.org/ca/visita/accessibilitat",
+      "resolved_url": "https://www.cccb.org/ca/visita/accessibilitat",
+      "http_status": 200,
+      "chars": 10230
+    },
+    {
+      "id": "macba-access",
+      "url": "https://www.macba.cat/es/sostenibilidad-y-consejo-social/accesibilidad-y-comunidades/accesibilidad/",
+      "resolved_url": "https://www.macba.cat/es/sostenibilidad-y-consejo-social/accesibilidad-y-comunidades/accesibilidad/",
+      "http_status": 200,
+      "chars": 6463
+    },
+    {
+      "id": "zumzeig-info",
+      "url": "https://zumzeigcine.coop/es/static/informacio/",
+      "resolved_url": "https://zumzeigcine.coop/es/static/informacio/",
+      "http_status": 200,
+      "chars": 8044
+    },
+    {
+      "id": "cinebaix-home",
+      "url": "https://www.cinebaix.cat/",
+      "resolved_url": "https://www.cinebaix.cat/",
+      "http_status": 200,
+      "chars": 18302
+    },
+    {
+      "id": "capri-home",
+      "url": "https://www.cinecapri.com/",
+      "resolved_url": "https://www.cinecapri.com/",
+      "http_status": 202
+    },
+    {
+      "id": "cinema-catalunya-home",
+      "url": "https://cinemacatalunya.cat/",
+      "resolved_url": "https://cinemacatalunya.cat/",
+      "http_status": 202
+    },
+    {
+      "id": "eix-macia-home",
+      "url": "https://www.cinemeseixmacia.com/",
+      "resolved_url": "https://www.cinemeseixmacia.com/",
+      "http_status": 200,
+      "chars": 70
+    },
+    {
+      "id": "imperial-home",
+      "url": "https://www.cinesimperial.com/",
+      "resolved_url": "https://www.cinesimperial.com/",
+      "http_status": 200,
+      "chars": 70
+    },
+    {
+      "id": "foment-mataroni-home",
+      "url": "https://fomentmataroni.cat/",
+      "resolved_url": "https://fomentmataroni.cat/",
+      "http_status": 200,
+      "chars": 1981
+    },
+    {
+      "id": "calandria-home",
+      "url": "https://www.cinemalacalandria.com/",
+      "resolved_url": "https://www.cinemalacalandria.com/",
+      "http_status": 200,
+      "chars": 3990
+    },
+    {
+      "id": "cinema-edison-home",
+      "url": "https://cinemaedison.cat/",
+      "resolved_url": "https://cinemaedison.cat/",
+      "http_status": 200,
+      "chars": 3630
+    },
+    {
+      "id": "zumzeig-access",
+      "url": "https://zumzeigcine.coop/es/mas-informacion/accesibilidad-sala/",
+      "resolved_url": "https://zumzeigcine.coop/es/mas-informacion/accesibilidad-sala/",
+      "http_status": 200,
+      "chars": 1671
+    },
+    {
+      "id": "calandria-contact",
+      "url": "https://www.cinemalacalandria.com/contactar",
+      "resolved_url": "https://www.cinemalacalandria.com/contactar",
+      "http_status": 200,
+      "chars": 3210
+    },
+    {
+      "id": "calandria-terms",
+      "url": "https://www.cinemalacalandria.com/condicions-de-venda",
+      "resolved_url": "https://www.cinemalacalandria.com/condicions-de-venda",
+      "http_status": 200,
+      "chars": 12835
+    },
+    {
+      "id": "calandria-legal",
+      "url": "https://www.cinemalacalandria.com/avis-legal",
+      "resolved_url": "https://www.cinemalacalandria.com/avis-legal",
+      "http_status": 200,
+      "chars": 9588
+    },
+    {
+      "id": "calandria-hire",
+      "url": "https://www.cinemalacalandria.com/lloguer-de-sala",
+      "resolved_url": "https://www.cinemalacalandria.com/lloguer-de-sala",
+      "http_status": 200,
+      "chars": 4403
+    },
+    {
+      "id": "foment-history",
+      "url": "https://fomentmataroni.cat/el-foment-mataroni/",
+      "resolved_url": "https://fomentmataroni.cat/el-foment-mataroni/",
+      "http_status": 200,
+      "chars": 3216
+    },
+    {
+      "id": "foment-legal",
+      "url": "https://fomentmataroni.cat/avis-legal-2/",
+      "resolved_url": "https://fomentmataroni.cat/avis-legal-2/",
+      "http_status": 200,
+      "chars": 3149
+    },
+    {
+      "id": "edison-legal",
+      "url": "https://cinemaedison.cat/avis-legal/",
+      "resolved_url": "https://cinemaedison.cat/avis-legal/",
+      "http_status": 200,
+      "chars": 6229
+    },
+    {
+      "id": "edison-opening",
+      "url": "https://www.granollers.cat/noticies/alcalde/neix-el-cinema-edison-granollers-al-centre-de-la-ciutat",
+      "resolved_url": "https://www.granollers.cat/noticies/alcalde/neix-el-cinema-edison-granollers-al-centre-de-la-ciutat",
+      "http_status": 200,
+      "chars": 7330
+    },
+    {
+      "id": "capri-canonical",
+      "url": "https://www.cinecaprielprat.com/",
+      "resolved_url": "https://www.cinecaprielprat.com/",
+      "http_status": 200,
+      "chars": 977
+    },
+    {
+      "id": "casa-seat-2022-pdf",
+      "url": "https://www.seat-cupra-mediacenter.es/content/dam/seat-media-center/allnews/news/2022/07/2022-07-04v/CASA-SEAT-centra-su-programacion-de-verano-en-el-aniversario-de-los-Juegos-Olimpicos-del-92.pdf",
+      "resolved_url": "https://www.seat-cupra-mediacenter.es/content/dam/seat-media-center/allnews/news/2022/07/2022-07-04v/CASA-SEAT-centra-su-programacion-de-verano-en-el-aniversario-de-los-Juegos-Olimpicos-del-92.pdf",
+      "http_status": 200,
+      "bytes": 868762
+    },
+    {
+      "id": "can-carol-2022-pdf",
+      "url": "https://cancarol.cat/wp-content/uploads/2022/06/Pro%CC%80rroga-del-projecte-de-gestio%CC%81-ci%CC%81vica-pel-Casal-de-barri-de-Can-Carol-al-barri-de-Vallcarca.pdf",
+      "resolved_url": "https://cancarol.cat/wp-content/uploads/2022/06/Pro%CC%80rroga-del-projecte-de-gestio%CC%81-ci%CC%81vica-pel-Casal-de-barri-de-Can-Carol-al-barri-de-Vallcarca.pdf",
+      "http_status": 200,
+      "bytes": 1270458
+    },
+    {
+      "id": "som-architect-pdf",
+      "url": "https://www.arquiserra.net/Data/CUBIC_2011.pdf",
+      "resolved_url": "https://www.arquiserra.net/Data/CUBIC_2011.pdf",
+      "http_status": 200,
+      "bytes": 4956032
+    }
+  ],
+  "limits": [
+    "Search-index-only evidence labelled. IPCE PDF returned 429 and was not retried.",
+    "National-inventory year is not a verified exact opening date.",
+    "Museum/reception aids and chain policies are not generalized to every screening room.",
+    "Som architect portfolio downloaded but not relied on for architectural claims."
+  ],
+  "changed_room_ids": [
+    "zumzeig:1",
+    "cccb:auditori"
+  ]
+}

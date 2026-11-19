@@ -1,0 +1,5 @@
+{
+  "a1_hosts": ["barcelona.cines-verdi.com", "www.cinemesgirona.cat", "www.cinemessantcugat.com", "www.cinemesmontcada.com", "www.cinemescancastellet.com"],
+  "mooby_paths": ["/aribau", "/balmes", "/bosque", "/arenas", "/glories", "/sarria"],
+  "booking_hosts": ["verdibcn.admit-one.eu", "girona.admit-one.eu", "filmax.admit-one.eu", "moobycinemas-arenas.admit-one.eu", "moobycinemas-aribau.admit-one.eu", "moobycinemas-balmes.admit-one.eu", "moobycinemas-bosque.admit-one.eu", "moobycinemas-glorias.admit-one.eu", "moobycinemas-sarria.admit-one.eu"]
+}

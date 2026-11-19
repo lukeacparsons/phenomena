@@ -1,5 +1,33 @@
 {
   "name": "phenomena",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "dev": ".venv/bin/python scripts/serve_preview.py",
+    "dev:legacy": ".venv/bin/python scripts/serve_preview.py --legacy-preview",
+    "dev:public": ".venv/bin/python scripts/serve_preview.py --public-site --port 8767",
+    "site:build": ".venv/bin/python scripts/build_public_site.py",
+    "site:check": ".venv/bin/python -m unittest discover -s scripts -p 'test_public_site.py' && node --test scripts/test_public_routing.mjs scripts/test_public_server.mjs",
+    "preview:refresh": ".venv/bin/python scripts/build_cinema_preview.py",
+    "preview:nearby": ".venv/bin/python scripts/refresh_nearby_preview.py",
+    "preview:languages": ".venv/bin/python scripts/cinema_languages.py",
+    "preview:posters": ".venv/bin/python scripts/poster_fallbacks.py",
+    "images:build": ".venv/bin/python scripts/optimize_images.py",
+    "images:test:browser": "node scripts/test_progressive_images.cjs",
+    "programme:check": "node scripts/test_browser_programme.cjs",
+    "preview:ratings": ".venv/bin/python scripts/film_ratings.py",
+    "webmcp:docs": "node scripts/export_webmcp_tools.mjs",
+    "test:webmcp:browser": "node scripts/test_webmcp_browser.cjs",
+    "test": ".venv/bin/python -m unittest discover -s scripts -p 'test_*.py' && node scripts/test_cinema_search.cjs && node scripts/test_search_dates.cjs && node --test scripts/test_webmcp.mjs scripts/test_analytics.mjs scripts/test_public_routing.mjs scripts/test_crawler_watchdog.mjs scripts/test_provider_source_reader.mjs",
+    "site:publish": ".venv/bin/python scripts/publish_vobarna.py",
+    "site:test:browser": "node scripts/test_public_browser.cjs",
+    "crawler:health": ".venv/bin/python scripts/crawler_health.py",
+    "crawler:heartbeat": ".venv/bin/python scripts/crawler_monitor.py",
+    "crawler:run": ".venv/bin/python scripts/run_crawler.py",
+    "site:serve": "node src/vobarna-server.mjs",
+    "site:publish:hetzner": ".venv/bin/python scripts/publish_hetzner.py"
+  },
+  "devDependencies": {
+    "wrangler": "^4.165.0"
+  }
 }

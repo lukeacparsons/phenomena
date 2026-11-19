@@ -1,0 +1,409 @@
+{
+  "researched_on": "2026-11-19",
+  "latest_followup": {
+    "id": "visitor-gap-followup-2026-11-19",
+    "researched_on": "2026-11-19",
+    "new_facts": 31,
+    "new_price_observations": 32,
+    "new_source_records": 13,
+    "venues_with_new_facts": 11,
+    "new_fact_ids": [
+      "visit2-castellet-route",
+      "visit2-castellet-relax",
+      "visit2-castellet-relax-conflict",
+      "visit2-castellet-under3",
+      "visit2-castellet-promotions",
+      "visit2-castellet-contact",
+      "visit2-magic-kids-play",
+      "visit2-magic-kids-birthday",
+      "visit2-magic-price-conflict",
+      "visit2-magic-companion",
+      "visit2-magic-baby",
+      "visit2-magic-mall-access",
+      "visit2-magic-parking",
+      "visit2-magic-lost",
+      "visit2-montcada-contact",
+      "visit2-montcada-arrival",
+      "visit2-montcada-price-priority",
+      "visit2-santcugat-guest",
+      "visit2-santcugat-price",
+      "visit2-santcugat-refunds",
+      "visit2-capri-contact",
+      "visit2-caixa-nursing",
+      "visit2-caixa-mobility",
+      "visit2-caixa-noise",
+      "visit2-caixa-assistance-dogs",
+      "visit2-carol-access",
+      "visit2-ifb-wheelchair",
+      "visit2-ifb-audiodescription",
+      "visit2-filmoteca-festival-captions",
+      "visit2-girona-festival-audiodescription",
+      "visit2-cccb-festival-relaxed"
+    ],
+    "new_price_ids": [
+      "visit2-price-castellet-weekday",
+      "visit2-price-castellet-wed",
+      "visit2-price-castellet-weekend",
+      "visit2-price-castellet-matinee",
+      "visit2-price-castellet-3d-weekday",
+      "visit2-price-castellet-3d-wed",
+      "visit2-price-castellet-3d-weekend",
+      "visit2-price-castellet-3d-senior",
+      "visit2-price-castellet-card",
+      "visit2-price-castellet-groups",
+      "visit2-price-castellet-senior",
+      "visit2-price-castellet-local-senior",
+      "visit2-price-castellet-traders",
+      "visit2-price-castellet-relax-tariff",
+      "visit2-price-castellet-relax-access",
+      "visit2-price-castellet-family",
+      "visit2-price-castellet-birthday-weekday",
+      "visit2-price-castellet-birthday-weekday-sweets",
+      "visit2-price-castellet-birthday-weekend",
+      "visit2-price-castellet-birthday-weekend-sweets",
+      "visit2-price-castellet-cine10",
+      "visit2-price-castellet-opera",
+      "visit2-price-castellet-opera-advance",
+      "visit2-price-magic-birthday",
+      "visit2-price-magic-es-weekday",
+      "visit2-price-magic-ca-weekday",
+      "visit2-price-magic-es-fri",
+      "visit2-price-magic-ca-fri",
+      "visit2-price-magic-es-wed",
+      "visit2-price-magic-ca-thu",
+      "visit2-price-ifb-festival",
+      "visit2-price-filmoteca-festival"
+    ],
+    "new_source_ids": [
+      "visit2-castellet-access",
+      "visit2-castellet-prices",
+      "visit2-castellet-contact",
+      "visit2-magic-kids",
+      "visit2-magic-prices",
+      "visit2-magic-mall",
+      "visit2-montcada-contact",
+      "visit2-montcada-arrival",
+      "visit2-santcugat-terms",
+      "visit2-capri-contact",
+      "visit2-carol-2025",
+      "visit2-fire-access",
+      "visit2-first-festival-access"
+    ],
+    "new_conflict_ids": [
+      "visit2-castellet-relax",
+      "visit2-magic-tariffs"
+    ],
+    "report": "cinema-visitor-questions.md",
+    "validation": "cinema-visitor-gap-log.json"
+  },
+  "combined_summary": {
+    "researched_venues": 59,
+    "current_directory_entries": 38,
+    "question_groups": 8,
+    "question_entries": 472,
+    "new_facts": 80,
+    "new_price_observations": 43,
+    "new_source_records": 36,
+    "venues_with_new_facts": 36,
+    "corrected_fact_ids": [
+      "all-texas-access"
+    ],
+    "programme_language_venue_observations": 34,
+    "all_practical_fact_records": 191,
+    "all_price_observations": 183,
+    "source_records": 487,
+    "question_entries_with_some_evidence": 267,
+    "fully_answered_question_groups_claimed": 0,
+    "latest_followup": {
+      "id": "visitor-gap-followup-2026-11-19",
+      "researched_on": "2026-11-19",
+      "new_facts": 31,
+      "new_price_observations": 32,
+      "new_source_records": 13,
+      "venues_with_new_facts": 11,
+      "report": "cinema-visitor-questions.md",
+      "validation": "cinema-visitor-gap-log.json"
+    }
+  },
+  "checks": [
+    {
+      "check": "no concurrent changes: cinema-comprehensive-research",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes: cinema-visitor-questions",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes: cinema-dossiers",
+      "passed": true
+    },
+    {
+      "check": "no concurrent changes: auditoriums",
+      "passed": true
+    },
+    {
+      "check": "38 current directory IDs match",
+      "passed": true
+    },
+    {
+      "check": "59 unique venues; eight questions each",
+      "passed": true
+    },
+    {
+      "check": "all answer claims belong to their venue",
+      "passed": true
+    },
+    {
+      "check": "all claim sources resolve",
+      "passed": true
+    },
+    {
+      "check": "new data counts and IDs unique",
+      "passed": true
+    },
+    {
+      "check": "existing facts and prices preserved",
+      "passed": true
+    },
+    {
+      "check": "existing Q&A claims preserved",
+      "passed": true
+    },
+    {
+      "check": "rooms, capacities, screens, photos, reviews unchanged",
+      "passed": true
+    },
+    {
+      "check": "all new facts mirrored in central profiles",
+      "passed": true
+    },
+    {
+      "check": "all new prices reachable from venue",
+      "passed": true
+    },
+    {
+      "check": "conflicting official prices surfaced in visitor costs",
+      "passed": true
+    },
+    {
+      "check": "festival services retain exact dates",
+      "passed": true
+    },
+    {
+      "check": "mall facilities retain shopping-centre scope",
+      "passed": true
+    },
+    {
+      "check": "KIDS has no invented sala number",
+      "passed": true
+    },
+    {
+      "check": "no hire prices in visitor-cost answers",
+      "passed": true
+    },
+    {
+      "check": "programme snapshot preserved",
+      "passed": true
+    },
+    {
+      "check": "Texas correction preserved",
+      "passed": true
+    },
+    {
+      "check": "all venue sections rendered",
+      "passed": true
+    },
+    {
+      "check": "no unsupported completeness claims",
+      "passed": true
+    },
+    {
+      "check": "all core source joins resolve",
+      "passed": true
+    }
+  ],
+  "checks_passed": 24,
+  "coverage_before": {
+    "seating": {
+      "all_venues_with_some_evidence": 30,
+      "current_directory_with_some_evidence": 21,
+      "conflicting_answers": 0
+    },
+    "total_cost": {
+      "all_venues_with_some_evidence": 42,
+      "current_directory_with_some_evidence": 31,
+      "conflicting_answers": 0
+    },
+    "family": {
+      "all_venues_with_some_evidence": 20,
+      "current_directory_with_some_evidence": 15,
+      "conflicting_answers": 0
+    },
+    "timing": {
+      "all_venues_with_some_evidence": 21,
+      "current_directory_with_some_evidence": 19,
+      "conflicting_answers": 0
+    },
+    "language": {
+      "all_venues_with_some_evidence": 35,
+      "current_directory_with_some_evidence": 35,
+      "conflicting_answers": 0
+    },
+    "food_belongings": {
+      "all_venues_with_some_evidence": 21,
+      "current_directory_with_some_evidence": 17,
+      "conflicting_answers": 0
+    },
+    "accessibility": {
+      "all_venues_with_some_evidence": 28,
+      "current_directory_with_some_evidence": 23,
+      "conflicting_answers": 0
+    },
+    "booking_help": {
+      "all_venues_with_some_evidence": 51,
+      "current_directory_with_some_evidence": 36,
+      "conflicting_answers": 1
+    }
+  },
+  "coverage_after": {
+    "seating": {
+      "all_venues_with_some_evidence": 31,
+      "current_directory_with_some_evidence": 22,
+      "conflicting_answers": 0
+    },
+    "total_cost": {
+      "all_venues_with_some_evidence": 46,
+      "current_directory_with_some_evidence": 35,
+      "conflicting_answers": 2
+    },
+    "family": {
+      "all_venues_with_some_evidence": 24,
+      "current_directory_with_some_evidence": 19,
+      "conflicting_answers": 0
+    },
+    "timing": {
+      "all_venues_with_some_evidence": 25,
+      "current_directory_with_some_evidence": 23,
+      "conflicting_answers": 0
+    },
+    "language": {
+      "all_venues_with_some_evidence": 35,
+      "current_directory_with_some_evidence": 35,
+      "conflicting_answers": 0
+    },
+    "food_belongings": {
+      "all_venues_with_some_evidence": 22,
+      "current_directory_with_some_evidence": 18,
+      "conflicting_answers": 0
+    },
+    "accessibility": {
+      "all_venues_with_some_evidence": 32,
+      "current_directory_with_some_evidence": 27,
+      "conflicting_answers": 1
+    },
+    "booking_help": {
+      "all_venues_with_some_evidence": 52,
+      "current_directory_with_some_evidence": 37,
+      "conflicting_answers": 1
+    }
+  },
+  "access_observations": [
+    {
+      "source_id": "visit2-castellet-access",
+      "url": "https://www.cinemescancastellet.com/accesibilidad",
+      "method": "public_web_extraction",
+      "note": "The page’s next-session notice is 27 June 2026, already past on the research date. Its €6 Relax tariff conflicts with the tariff page’s €6.50."
+    },
+    {
+      "source_id": "visit2-castellet-prices",
+      "url": "https://www.cinemescancastellet.com/precios",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-castellet-contact",
+      "url": "https://www.cinemescancastellet.com/contacto",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-magic-kids",
+      "url": "https://www.ocinemagic.es/es/sala-kids-es",
+      "method": "public_search_index",
+      "note": "Detailed indexed operator text was available; opening the URL returned a rewritten generic cinema summary. Facilities and prices are dated observations, not independently confirmed live offerings."
+    },
+    {
+      "source_id": "visit2-magic-prices",
+      "url": "https://www.ocinemagic.es/es/el-cine",
+      "method": "public_search_index",
+      "note": "Indexed Spanish and Catalan tables conflict. Opening the URL returned a generic summary; no definitive current tariff selected."
+    },
+    {
+      "source_id": "visit2-magic-mall",
+      "url": "https://magicbadalona.com/magic-badalona/faqs/",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-montcada-contact",
+      "url": "https://www.cinemesmontcada.com/contacte",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-montcada-arrival",
+      "url": "https://www.cinemesmontcada.com/on-som",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-santcugat-terms",
+      "url": "https://cinemessantcugat.com/terminos-y-condiciones",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-capri-contact",
+      "url": "https://www.elprat.cat/cinema-capri",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-carol-2025",
+      "url": "https://cancarol.cat/wp-content/uploads/2026/03/MemoriaActivitats2025_CBCanCarol_Comprimida.pdf",
+      "method": "pdf_text_and_page_visual_check",
+      "note": "PDF page index 32, printed page 33, visually checked. Describes 2025 facilities, not a current room-by-room access certification."
+    },
+    {
+      "source_id": "visit2-fire-access",
+      "url": "https://mostrafire.com/informacio/",
+      "method": "public_search_index",
+      "note": ""
+    },
+    {
+      "source_id": "visit2-first-festival-access",
+      "url": "https://primerfestivaldecine.com/accesibilidad",
+      "method": "public_web_extraction",
+      "note": ""
+    },
+    {
+      "source_id": "gap-caixa-info",
+      "url": "https://caixaforum.org/es/barcelona/info-centro",
+      "method": "public_search_index",
+      "note": "Additional indexed facilities extracted; previous direct HTTP 403 respected, no direct retry."
+    }
+  ],
+  "method": [
+    "Existing evidence was checked for duplicates; Aribau room access was reverified but not counted as a new finding.",
+    "Dedicated Can Castellet pages support retained claims; a richer search result for its otherwise empty FAQ was not used.",
+    "Can Carol PDF printed page 33 was visually checked against extracted text.",
+    "OCINE detailed indexed text is explicitly distinct from generic page-open content; price conflicts remain unresolved.",
+    "Public research only; no browser automation, reservations, purchases, venue messages, application edits or deployment."
+  ],
+  "limitations": [
+    "Booster seats, pushchair storage, exact wheelchair routes/allocations and cinema-specific baby facilities remain uneven.",
+    "No new room dimensions, screen measurements, capacities or photographs were established in this follow-up.",
+    "Two new price conflicts remain unresolved. Published event offers do not establish availability or recurring services."
+  ]
+}

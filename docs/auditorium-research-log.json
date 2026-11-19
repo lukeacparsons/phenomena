@@ -1,0 +1,216 @@
+{
+  "checked_on": "2026-11-19",
+  "scope": "Deeper public-source follow-up for 85 rooms at eight indexed cinemas",
+  "findings": [
+    {
+      "source_ids": [
+        "layout-yelmo-maquinista-1",
+        "layout-yelmo-maquinista-2",
+        "layout-yelmo-maquinista-3",
+        "layout-yelmo-maquinista-4",
+        "layout-yelmo-maquinista-5",
+        "layout-yelmo-maquinista-6",
+        "layout-yelmo-maquinista-7",
+        "layout-yelmo-maquinista-8",
+        "layout-yelmo-maquinista-9",
+        "layout-yelmo-maquinista-10",
+        "layout-yelmo-maquinista-11",
+        "layout-yelmo-maquinista-12"
+      ],
+      "result": "All 12 layouts; schedule and booking-summary room checks; no selected/allocated seats; all temporary previews cancelled."
+    },
+    {
+      "source_ids": [
+        "yelmo-award"
+      ],
+      "result": "Unassigned Macro XE >150 m² claim; five photos, including numbered Sala 12 entrance."
+    },
+    {
+      "source_ids": [
+        "yelmo-formats-2025"
+      ],
+      "result": "Two XE rooms corroborated; one Junior and one 4DE; overlapping format categories."
+    },
+    {
+      "source_ids": [
+        "balmes-architecture",
+        "balmes-photographer"
+      ],
+      "result": "Architectural elevation, two floor plans, section and additional photography. No reliable current room-dimension transcription."
+    },
+    {
+      "source_ids": [
+        "diagonal-events-photos"
+      ],
+      "result": "Explicit Sala 3 and iSense Sala 10 interior captions; numbered Sala 10 entrance. Listing capacities/text inconsistent; not used as current capacity authority."
+    },
+    {
+      "source_ids": [
+        "farga-venuu-1",
+        "farga-venuu-5"
+      ],
+      "result": "Event seated capacities 54 and 138, AV/accessibility features, candidate photos. Sala 5 prose has Sala 1 copy error."
+    },
+    {
+      "source_ids": [
+        "mooby-interview-2026"
+      ],
+      "result": "Chain-level digital baseline and no active 35/70 mm projection; phased laser/Atmos upgrades without room inventory."
+    },
+    {
+      "source_ids": [
+        "maps-phenomena",
+        "maps-mooby-balmes",
+        "maps-mooby-bosque",
+        "maps-mooby-aribau",
+        "maps-cinesa-diagonal-mar",
+        "maps-cinesa-la-farga",
+        "maps-yelmo-maquinista",
+        "maps-kinepolis-splau"
+      ],
+      "result": "Five saved interior references; two probable room associations (Bosque 1, Aribau 5), no newly confirmed numbered-room interiors. Three exterior previews inspected but not duplicated into the gallery.",
+      "details_file": "auditorium-maps-research.json"
+    },
+    {
+      "source_ids": [
+        "aribau-timeout",
+        "aribau-seats-2026"
+      ],
+      "result": "Source-identified Sala 5 images, including May 2026 replacement-seat views and row-marker detail."
+    },
+    {
+      "source_ids": [
+        "photo-review-avatar-2025"
+      ],
+      "result": "Explicit Balmes Sala 9 composite; additional Maquinista Atmos/XE photos. Atmos source number 13 conflicts with current 12; no confirmed Yelmo interior assigned."
+    },
+    {
+      "source_ids": [
+        "photo-review-imax-2022",
+        "diagonal"
+      ],
+      "result": "Firsthand IMAX interior and glasses/tray detail, joined to unique operator Sala 9. Review is historical, not current appearance verification."
+    },
+    {
+      "source_ids": [
+        "farga-venuu-5",
+        "diagonal-venuu-6",
+        "diagonal-venuu-10"
+      ],
+      "result": "Additional own-gallery images; two Sala 5 candidates, one Sala 6 candidate and source-corroborated iSense Sala 10. Shared marketing images excluded."
+    },
+    {
+      "source_ids": [
+        "bosque-apropa",
+        "balmes-tripadvisor"
+      ],
+      "result": "Two additional interior views with inferred Sala 1 / Sala 9 identities."
+    }
+  ],
+  "unresolved_leads": [
+    {
+      "url": "https://empresas.kinepolis.es/wp-content/uploads/2023/06/Fichas-dossier-Full-CAT.pdf",
+      "result": "404 again; original visual verification still unavailable."
+    },
+    {
+      "url": "https://empresas.kinepolis.es/wp-content/uploads/2023/06/Fichas-dossier-Full-ENG.pdf",
+      "result": "404; search-index extract only, not adopted as current data."
+    },
+    {
+      "url": "https://www.cinesabusiness.es/",
+      "result": "Event-hire and venue pages checked; no numbered-room screen dimensions found."
+    },
+    {
+      "url": "https://www.moobycinemas.com/lloguer-despais",
+      "result": "Rental inquiry page, no technical sheets found."
+    },
+    {
+      "url": "https://www.balanaenviu.com/es/alquilar-sala",
+      "result": "Rental inquiry page, no current cinema sala technical sheet found."
+    },
+    {
+      "url": "https://www.imax.com/theatre/cinesa-diagonal-mar-imax",
+      "result": "Venue listing gives no exact screen measurements or projector model."
+    },
+    {
+      "url": "https://www.eventoplus.com/en/venues-for-events/cinesa-barcelona/",
+      "result": "Aggregate/event figures without reliable current numbered-room dimensions."
+    },
+    {
+      "url": "https://www.google.com/maps/",
+      "result": "Public listing previews accessible, but full photo-gallery request returned 403 and local Chrome access was denied. Room-specific review/photo associations remain unverified."
+    },
+    {
+      "url": "https://www.salabierta.es/?p=50",
+      "reason": "Firsthand review says IMAX area is nearly 200 m², with no measured width/height; not promoted to current screen measurements."
+    }
+  ],
+  "excluded_matches": [
+    {
+      "url": "https://www.interempresas.net/Cerramientos_y_ventanas/227853-Balmes-Multicinemes-fachada-luminosa-para-un-cine-que-evoca-la-tradicion.html",
+      "reason": "Concrete pantallas and structural spans are building components, not projection-screen sizes."
+    },
+    {
+      "url": "https://www.lafargalhospitalet.com/descripcion-espacios/",
+      "reason": "La Farga civic activity centre is not Cinesa LUXE La Farga."
+    },
+    {
+      "url": "https://susanaclavero.wordpress.com/wp-content/uploads/2014/07/ficha-tecnica-teatro-del-bosque.pdf",
+      "reason": "Teatro del Bosque is not Mooby Bosque Barcelona."
+    },
+    {
+      "url": "https://venuu.com/es/es/espacios/cinesa-diagonal-mar-sala-1",
+      "reason": "Main gallery mixes room imagery and generic marketing. Lead photo shows many more seats than the listing 71; no Sala 1 assignment made."
+    },
+    {
+      "url": "https://barcelona.infoisinfo.es/ficha/cinesa-diagonal-mar-isense-imax/3669279",
+      "reason": "Image-search generated description called a grey iSense-seat photo IMAX. Visual inspection disproves that description; do not use generated image descriptions as room evidence."
+    },
+    {
+      "url": "https://www.salabierta.es/?p=2181",
+      "reason": "Maquinista Atmos room 13 label conflicts with current 12; retain candidate identity rather than create a thirteenth current room."
+    }
+  ],
+  "next_evidence_needed": [
+    "Current numbered technical sheet and floor plan per sala",
+    "Screen width/height and surface type",
+    "Projector, lens, server and audio processor models",
+    "Seat-count definitions including wheelchair, companion and closed positions",
+    "Dated room-labelled interior photos",
+    "Yelmo Sala 12 API discrepancy; individual XE dimensions; Diagonal Mar capacity conflicts; Splau table conflicts"
+  ],
+  "photo_followup": {
+    "added_image_ids": [
+      "aribau-captioned-5",
+      "aribau-seats-2026-1",
+      "aribau-seats-2026-2",
+      "aribau-seats-2026-3",
+      "balmes-captioned-9",
+      "balmes-visitor-candidate-9",
+      "diagonal-imax-review",
+      "diagonal-imax-glasses",
+      "diagonal-imax-event-candidate",
+      "farga-venuu-5-event",
+      "farga-venuu-5-screen",
+      "diagonal-venuu-candidate-6",
+      "diagonal-venuu-isense-10",
+      "yelmo-atmos-candidate-12",
+      "yelmo-macroxe-unnumbered",
+      "bosque-apropa-candidate-1"
+    ],
+    "new_confirmed_room_ids": [
+      "mooby-aribau:5",
+      "mooby-balmes:9",
+      "cinesa-diagonal-mar:9"
+    ],
+    "confirmed_interior_room_ids": [
+      "cinesa-diagonal-mar:10",
+      "cinesa-diagonal-mar:3",
+      "cinesa-diagonal-mar:9",
+      "mooby-aribau:5",
+      "mooby-balmes:9",
+      "phenomena:1"
+    ],
+    "limits": "No additional verified screen dimensions or certified capacities. Maps full-gallery access was not retried. Photo source dates are not capture dates."
+  }
+}

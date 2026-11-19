@@ -1,0 +1,150 @@
+{
+  "checked_on": "2026-11-19",
+  "update": {
+    "id": "technical-followup-2026-11-19",
+    "researched_on": "2026-11-19",
+    "new_facts": 4,
+    "new_price_observations": 0,
+    "new_source_records": 2,
+    "venues_with_new_facts": 2,
+    "room_records_amended": 4,
+    "new_fact_ids": [
+      "tech3-girona-laser",
+      "tech3-girona-atmos",
+      "tech3-albareda-capacity",
+      "tech3-albareda-stage"
+    ],
+    "new_source_ids": [
+      "tech3-girona-upgrade",
+      "tech3-albareda-residency"
+    ],
+    "coverage_corrections": [
+      {
+        "cinema_id": "mooby-aribau",
+        "topic": "wheelchair_positions",
+        "before": {
+          "status": "not_established",
+          "evidence": [],
+          "note": "Counts may be included in, or additional to, fixed seats; do not add without explicit scope."
+        },
+        "after": {
+          "status": "evidence_present",
+          "evidence": [
+            "mooby-aribau:1",
+            "mooby-aribau:2",
+            "mooby-aribau:3",
+            "mooby-aribau:4"
+          ],
+          "note": "Counts may be included in, or additional to, fixed seats; do not add without explicit scope."
+        },
+        "reason": "Count structured accessibility_observations already in the room catalogue; no new seat numbers inferred."
+      }
+    ],
+    "report": "cinema-research-next-steps.md",
+    "validation": "cinema-technical-followup-log.json"
+  },
+  "summary": {
+    "researched_venues": 59,
+    "current_directory_entries": 38,
+    "high_priority_current_venues": 12,
+    "current_venues_needing_room_inventory_verification": 10,
+    "room_records": 219,
+    "new_facts": 4,
+    "new_sources": 2,
+    "messages_sent": 0,
+    "rooms_with_source_identified_interior_photos": 34
+  },
+  "checks": [
+    {
+      "check": "no concurrent edits: cinema-comprehensive-research",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: cinema-visitor-questions",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: cinema-dossiers",
+      "passed": true
+    },
+    {
+      "check": "no concurrent edits: auditoriums",
+      "passed": true
+    },
+    {
+      "check": "all current directory IDs included",
+      "passed": true
+    },
+    {
+      "check": "59 venues and 219 room IDs retained",
+      "passed": true
+    },
+    {
+      "check": "195 unique facts, 489 sources",
+      "passed": true
+    },
+    {
+      "check": "existing facts, prices, images and reviews retained",
+      "passed": true
+    },
+    {
+      "check": "only four intended room records amended",
+      "passed": true
+    },
+    {
+      "check": "screen and auditorium dimensions untouched",
+      "passed": true
+    },
+    {
+      "check": "Atmos assigned only to Girona Sala 3",
+      "passed": true
+    },
+    {
+      "check": "Albareda stage separate from screen/room dimensions",
+      "passed": true
+    },
+    {
+      "check": "Albareda 170 not silently promoted to universal capacity",
+      "passed": true
+    },
+    {
+      "check": "Aribau counts already existed, no room mutation",
+      "passed": true
+    },
+    {
+      "check": "all new room and fact sources resolve",
+      "passed": true
+    },
+    {
+      "check": "Q&A claims belong to venues",
+      "passed": true
+    },
+    {
+      "check": "eight question groups preserved",
+      "passed": true
+    },
+    {
+      "check": "all outreach remains unsent",
+      "passed": true
+    },
+    {
+      "check": "all per-room gaps resolve to room records",
+      "passed": true
+    },
+    {
+      "check": "capacity evidence count increased by one",
+      "passed": true
+    },
+    {
+      "check": "roadmap retains all 34 source-identified interior-photo rooms using local room labels",
+      "passed": true
+    }
+  ],
+  "checks_passed": 21,
+  "limitations": [
+    "No new screen dimensions, full room L/W/H measurements or photographs established.",
+    "Albareda document supplies seated configuration and stage dimensions, not a seat map.",
+    "Girona projector models/resolutions and exact commissioning dates remain unknown.",
+    "No outreach sent; municipal project completion remains unverified."
+  ]
+}

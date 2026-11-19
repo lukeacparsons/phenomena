@@ -1,0 +1,724 @@
+{
+  "audit_date": "2026-11-19",
+  "scope": {
+    "primary": "VO Barna local preview and repository",
+    "local_url": "http://127.0.0.1:8765/cinemas.html",
+    "related_live_host": "https://phenomenarapida.com",
+    "limitations": [
+      "Public VO Barna hostname not established in this checkout; only the related Phenomena host was checked.",
+      "No authenticated Search Console, Bing Webmaster, analytics or verified crawler logs were inspected.",
+      "Browser audit blocked external asset requests; it was a functional rendering audit, not a performance benchmark."
+    ]
+  },
+  "catalogue_snapshot": {
+    "generated_at": "2026-11-19T16:33:43.211856+00:00",
+    "films": 276,
+    "screenings": 2806,
+    "cinema_directory_entries": 23,
+    "bytes": 4840474,
+    "note": "Stored rows; future-only UI counts decrease as screenings begin."
+  },
+  "research_catalogue": {
+    "cinema_dossiers": 44,
+    "auditorium_records": 202,
+    "unmapped_room_placeholders": 28,
+    "source_records_in_dossier_summary": 273
+  },
+  "http_checks": [
+    {
+      "url": "http://127.0.0.1:8765/cinemas.html",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8765/cinemas.html?film=imdb%3Att32261958",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8765/robots.txt",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:8765/sitemap.xml",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:8765/seo-audit-missing-page-20261119",
+      "status": 404
+    },
+    {
+      "url": "https://phenomenarapida.com/",
+      "status": 200
+    },
+    {
+      "url": "https://phenomenarapida.com/cinemas.html",
+      "status": 404
+    },
+    {
+      "url": "https://phenomenarapida.com/webmcp.html",
+      "status": 404
+    },
+    {
+      "url": "https://phenomenarapida.com/robots.txt",
+      "status": 404
+    },
+    {
+      "url": "https://phenomenarapida.com/sitemap.xml",
+      "status": 404
+    },
+    {
+      "url": "https://phenomenarapida.com/seo-audit-missing-page-20261119",
+      "status": 404
+    }
+  ],
+  "browser": {
+    "checked_at": "2026-11-19T16:49:09.568Z",
+    "no_javascript": {
+      "http_status": 200,
+      "url": "http://127.0.0.1:8765/cinemas.html",
+      "title": "VO Barna — What’s on",
+      "lang": "en",
+      "text": "Skip to screenings\nVO Barna\nEN\nES\nCA\nVO Barna\nAll dates\nSearch films, people, genres, cinemas, formats or dates\n\nLoading the programme…\n\nWebMCP & agents",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna"
+        }
+      ],
+      "cards": 0,
+      "links": [
+        {
+          "text": "Skip to screenings",
+          "href": "#results"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "WebMCP & agents",
+          "href": "/webmcp.html"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens."
+    },
+    "no_javascript_film": {
+      "http_status": 200,
+      "url": "http://127.0.0.1:8765/cinemas.html?film=imdb%3Att32261958",
+      "title": "VO Barna — What’s on",
+      "lang": "en",
+      "text": "Skip to screenings\nVO Barna\nEN\nES\nCA\nVO Barna\nAll dates\nSearch films, people, genres, cinemas, formats or dates\n\nLoading the programme…\n\nWebMCP & agents",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna"
+        }
+      ],
+      "cards": 0,
+      "links": [
+        {
+          "text": "Skip to screenings",
+          "href": "#results"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "WebMCP & agents",
+          "href": "/webmcp.html"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens."
+    },
+    "guide_no_javascript": {
+      "http_status": 200,
+      "url": "http://127.0.0.1:8765/webmcp.html",
+      "title": "VO Barna WebMCP guide — Cinema tools for AI agents",
+      "lang": "en",
+      "text": "Skip to the guide\nVO Barna\nWhat’s on\n\nWEBMCP GUIDE\n\nVO Barna with your AI agent\n\nFind an original-version screening around Barcelona, explore the film, and bring up its official ticket link. Your assistant can help through six tools that work alongside the page.\n\nBrowse screenings\nTool definitions (JSON)\nWhat you can do\nThe six tools\nSearch inputs\nExample workflow\nUnderstanding the data\nAccess for agents\nWhat you can do\n“Find science fiction in IMAX this weekend.”\n“Compare these films’ ratings and tell me who directed them.”\n“Show me that screening and its ticket link.”\n“Busca comedias para mañana.”\n“Mostra’m les sessions de dissabte.”\n\nSearch understands film titles, actors and other searchable credits, genres, cinemas, formats and date phrases in English, Spanish and Catalan. An agent can compare returned film facts and ratings, then apply a search or open a particular screening for you to review.\n\nResults depend on the collected programme. Examples illustrate requests you can make; they do not promise that matching screenings are available. Ticket selection and payment take place with the cinema.\n\nThe six tools\n\nThe tools are registered on the screenings page after its programme loads. Four read information. Two update the visible page and its shareable URL.\n\nget_context\nReads information\n\nDiscover the supported cinema IDs and formats, current filters, interface language, selected film or screening, programme coverage and collection timestamps. Dates are interpreted in Europe/Madrid.\n\nInput: {}. Use this to learn what is available and understand the user’s current view.\n\nsearch_screenings\nReads information\n\nFind upcoming sessions without changing the page. Returns paginated screenings with exact film_id and screening_id values, cinema and room, dates and times, forma",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna with your AI agent"
+        },
+        {
+          "tag": "H2",
+          "text": "What you can do"
+        },
+        {
+          "tag": "H2",
+          "text": "The six tools"
+        },
+        {
+          "tag": "H3",
+          "text": "get_context"
+        },
+        {
+          "tag": "H3",
+          "text": "search_screenings"
+        },
+        {
+          "tag": "H3",
+          "text": "get_film"
+        },
+        {
+          "tag": "H3",
+          "text": "get_screening"
+        },
+        {
+          "tag": "H3",
+          "text": "set_search"
+        },
+        {
+          "tag": "H3",
+          "text": "show_screening"
+        },
+        {
+          "tag": "H2",
+          "text": "Search inputs"
+        },
+        {
+          "tag": "H2",
+          "text": "From a request to a screening"
+        },
+        {
+          "tag": "H2",
+          "text": "Understanding the data"
+        },
+        {
+          "tag": "H2",
+          "text": "Access for agents and developers"
+        }
+      ],
+      "cards": 0,
+      "links": [
+        {
+          "text": "Skip to the guide",
+          "href": "#guide"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "What’s on",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "Browse screenings",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "Tool definitions (JSON)",
+          "href": "/webmcp-tools.json"
+        },
+        {
+          "text": "What you can do",
+          "href": "#possibilities"
+        },
+        {
+          "text": "The six tools",
+          "href": "#tools"
+        },
+        {
+          "text": "Search inputs",
+          "href": "#inputs"
+        },
+        {
+          "text": "Example workflow",
+          "href": "#workflow"
+        },
+        {
+          "text": "Understanding the data",
+          "href": "#data"
+        },
+        {
+          "text": "Access for agents",
+          "href": "#access"
+        },
+        {
+          "text": "screenings page",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "search inputs",
+          "href": "#inputs"
+        },
+        {
+          "text": "search inputs",
+          "href": "#inputs"
+        },
+        {
+          "text": "Villeneuve this weekend",
+          "href": "/cinemas.html?q=Villeneuve%20this%20weekend"
+        },
+        {
+          "text": "JSON tool reference",
+          "href": "/webmcp-tools.json"
+        },
+        {
+          "text": "the screenings page",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "Chrome’s WebMCP documentation",
+          "href": "https://developer.chrome.com/docs/ai/webmcp"
+        },
+        {
+          "text": "WebMCP specification",
+          "href": "https://webmachinelearning.github.io/webmcp/"
+        },
+        {
+          "text": "WebMCP directory",
+          "href": "https://webmcp.com/"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "Use VO Barna’s six WebMCP tools to find original-version cinema screenings around Barcelona, read film details and cached availability, and show official booking links. Includes inputs, examples and data limits."
+    },
+    "javascript": {
+      "url": "http://127.0.0.1:8765/cinemas.html",
+      "title": "VO Barna — What’s on",
+      "lang": "en",
+      "text": "Skip to screenings\nVO Barna\nEN\nES\nCA\nVO Barna\nAll dates\nToday\n19\nNov\nFri\n20\nNov\nSat\n21\nNov\nSun\n22\nNov\nMon\n23\nNov\nTue\n24\nNov\nWed\n25\nNov\nThu\n26\nNov\nFri\n27\nNov\nSat\n28\nNov\nSun\n29\nNov\nMon\n30\nNov\nTue\n1\nDec\nWed\n2\nDec\nThu\n3\nDec\nFri\n4\nDec\nSat\n5\nDec\nSun\n6\nDec\nMon\n7\nDec\nTue\n8\nDec\nWed\n9\nDec\nThu\n10\nDec\nFri\n11\nDec\nSat\n12\nDec\nSun\n13\nDec\nMon\n14\nDec\nTue\n15\nDec\nWed\n16\nDec\nThu\n17\nDec\nFri\n18\nDec\nSat\n19\nDec\nSun\n20\nDec\nMon\n21\nDec\nTue\n22\nDec\nWed\n23\nDec\nThu\n24\nDec\nFri\n25\nDec\nSat\n26\nDec\nSun\n27\nDec\nMon\n28\nDec\nTue\n29\nDec\nWed\n30\nDec\nThu\n31\nDec\nFri\n1\nJan 27\nSat\n2\nJan 27\nSun\n3\nJan 27\nMon\n4\nJan 27\nTue\n5\nJan 27\nWed\n6\nJan 27\nThu\n7\nJan 27\nFri\n8\nJan 27\nSat\n9\nJan 27\nMon\n11\nJan 27\nThu\n14\nJan 27\nSat\n16\nJan 27\nTue\n19\nJan 27\nThu\n21\nJan 27\nSat\n23\nJan 27\nMon\n1\nFeb 27\nWed\n3\nFeb 27\nThu\n4\nFeb 27\nThu\n11\nFeb 27\nMon\n15\nFeb 27\nTue\n16\nFeb 27\nTue\n23\nFeb 27\nThu\n11\nMar 27\nTue\n16\nMar 27\nThu\n18\nMar 27\nSat\n20\nMar 27\nSat\n3\nApr 27\nThu\n15\nApr 27\nTue\n20\nApr 27\nThu\n22\nApr 27\nSat\n24\nApr 27\nWed\n5\nMay 27\nSat\n8\nMay 27\nThu\n20\nMay 27\nTue\n25\nMay 27\nThu\n3\nJun 27\nSat\n5\nJun 27\nThu\n17\nJun 27\nSearch films, people, genres, cinemas, formats or dates\n\n276 films · 2799 screenings\n\nSacamantecas\nToday · 19 Nov\nRenoir\n17:50\nSplau\n22:15\nFri 20 Nov\nRenoir\n18:00\n22:15\nSplau\n22:30\n16 more showtimes\nSense and Sensibility\nToday · 19 Nov\nRenoir\n17:50\nVerdi Park\n18:05\nBalmes\n18:45\n21:30\nGran Sarrià\n21:10\nFri 20 Nov\nBalmes\n16:05\n17 more showtimes\nLa bola negra\nToday · 19 Nov\nBosque\n17:55\n19:15\n21:05\nFilmax\n18:00\n20:00\n21:15\nGlòries\n18:00\n18:40\n21:10\nGran Sarrià\n18:15\n18:50\n21:15\nSplau\n18:20\n19:15\n21:40\n22:30\n190 more showtimes\nThe Invite\nToday · 19 Nov\nVerdi\n17:55\nBalmes\n18:40\nGlòries\n19:50\nGran Sarrià\n20:10\nBosque\n21:15\n41 more showtimes\nArriba Tutto\nToday · 19 Nov\nVerdi Park\n18:00\nSat 21 Nov\nVerdi Park\n22:45\n3 more showtimes\nCRONOS\nToday · 19 Nov\nTexas\n18",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna"
+        },
+        {
+          "tag": "H2",
+          "text": "Sacamantecas"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Fri 20 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Sense and Sensibility"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Fri 20 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "La bola negra"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "The Invite"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Arriba Tutto"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Sat 21 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "CRONOS"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        }
+      ],
+      "cards": 276,
+      "links": [
+        {
+          "text": "Skip to screenings",
+          "href": "#results"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "WebMCP & agents",
+          "href": "/webmcp.html"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens."
+    },
+    "film_dialog": {
+      "url": "http://127.0.0.1:8765/cinemas.html?film=imdb%3Att33296229",
+      "title": "VO Barna — What’s on",
+      "lang": "en",
+      "text": "Skip to screenings\nVO Barna\nEN\nES\nCA\nVO Barna\nAll dates\nToday\n19\nNov\nFri\n20\nNov\nSat\n21\nNov\nSun\n22\nNov\nMon\n23\nNov\nTue\n24\nNov\nWed\n25\nNov\nThu\n26\nNov\nFri\n27\nNov\nSat\n28\nNov\nSun\n29\nNov\nMon\n30\nNov\nTue\n1\nDec\nWed\n2\nDec\nThu\n3\nDec\nFri\n4\nDec\nSat\n5\nDec\nSun\n6\nDec\nMon\n7\nDec\nTue\n8\nDec\nWed\n9\nDec\nThu\n10\nDec\nFri\n11\nDec\nSat\n12\nDec\nSun\n13\nDec\nMon\n14\nDec\nTue\n15\nDec\nWed\n16\nDec\nThu\n17\nDec\nFri\n18\nDec\nSat\n19\nDec\nSun\n20\nDec\nMon\n21\nDec\nTue\n22\nDec\nWed\n23\nDec\nThu\n24\nDec\nFri\n25\nDec\nSat\n26\nDec\nSun\n27\nDec\nMon\n28\nDec\nTue\n29\nDec\nWed\n30\nDec\nThu\n31\nDec\nFri\n1\nJan 27\nSat\n2\nJan 27\nSun\n3\nJan 27\nMon\n4\nJan 27\nTue\n5\nJan 27\nWed\n6\nJan 27\nThu\n7\nJan 27\nFri\n8\nJan 27\nSat\n9\nJan 27\nMon\n11\nJan 27\nThu\n14\nJan 27\nSat\n16\nJan 27\nTue\n19\nJan 27\nThu\n21\nJan 27\nSat\n23\nJan 27\nMon\n1\nFeb 27\nWed\n3\nFeb 27\nThu\n4\nFeb 27\nThu\n11\nFeb 27\nMon\n15\nFeb 27\nTue\n16\nFeb 27\nTue\n23\nFeb 27\nThu\n11\nMar 27\nTue\n16\nMar 27\nThu\n18\nMar 27\nSat\n20\nMar 27\nSat\n3\nApr 27\nThu\n15\nApr 27\nTue\n20\nApr 27\nThu\n22\nApr 27\nSat\n24\nApr 27\nWed\n5\nMay 27\nSat\n8\nMay 27\nThu\n20\nMay 27\nTue\n25\nMay 27\nThu\n3\nJun 27\nSat\n5\nJun 27\nThu\n17\nJun 27\nSearch films, people, genres, cinemas, formats or dates\n\n276 films · 2799 screenings\n\nSacamantecas\nToday · 19 Nov\nRenoir\n17:50\nSplau\n22:15\nFri 20 Nov\nRenoir\n18:00\n22:15\nSplau\n22:30\n16 more showtimes\nSense and Sensibility\nToday · 19 Nov\nRenoir\n17:50\nVerdi Park\n18:05\nBalmes\n18:45\n21:30\nGran Sarrià\n21:10\nFri 20 Nov\nBalmes\n16:05\n17 more showtimes\nLa bola negra\nToday · 19 Nov\nBosque\n17:55\n19:15\n21:05\nFilmax\n18:00\n20:00\n21:15\nGlòries\n18:00\n18:40\n21:10\nGran Sarrià\n18:15\n18:50\n21:15\nSplau\n18:20\n19:15\n21:40\n22:30\n190 more showtimes\nThe Invite\nToday · 19 Nov\nVerdi\n17:55\nBalmes\n18:40\nGlòries\n19:50\nGran Sarrià\n20:10\nBosque\n21:15\n41 more showtimes\nArriba Tutto\nToday · 19 Nov\nVerdi Park\n18:00\nSat 21 Nov\nVerdi Park\n22:45\n3 more showtimes\nCRONOS\nToday · 19 Nov\nTexas\n18",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna"
+        },
+        {
+          "tag": "H2",
+          "text": "Sacamantecas"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Fri 20 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Sense and Sensibility"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Fri 20 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "La bola negra"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "The Invite"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Arriba Tutto"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        },
+        {
+          "tag": "H3",
+          "text": "Sat 21 Nov"
+        },
+        {
+          "tag": "H2",
+          "text": "CRONOS"
+        },
+        {
+          "tag": "H3",
+          "text": "Today · 19 Nov"
+        }
+      ],
+      "cards": 276,
+      "links": [
+        {
+          "text": "Skip to screenings",
+          "href": "#results"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "WebMCP & agents",
+          "href": "/webmcp.html"
+        },
+        {
+          "text": "—\n      RT · Critics",
+          "href": "https://www.rottentomatoes.com/search?search=The%20Harvester"
+        },
+        {
+          "text": "—\n      RT · Audience",
+          "href": "https://www.rottentomatoes.com/search?search=The%20Harvester"
+        },
+        {
+          "text": "—\n      FilmAffinity",
+          "href": "https://www.filmaffinity.com/es/film676227.html"
+        },
+        {
+          "text": "6.7/10\n      IMDb",
+          "href": "https://www.imdb.com/title/tt33296229/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1096631/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/258768/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097135/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097136/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259314/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097138/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097139/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259141/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097141/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097142/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259241/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097144/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097145/"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens.",
+      "dialog_title": "Sacamantecas"
+    },
+    "film_reload": {
+      "url": "http://127.0.0.1:8765/cinemas.html?film=imdb%3Att33296229",
+      "title": "VO Barna — What’s on",
+      "dialog_title": "Sacamantecas"
+    },
+    "spanish": {
+      "url": "http://127.0.0.1:8765/cinemas.html",
+      "title": "VO Barna — What’s on",
+      "lang": "es",
+      "text": "Ir a las sesiones\nVO Barna\nEN\nES\nCA\nVO Barna\nTodas las fechas\nHoy\n19\nnov\nvie\n20\nnov\nsáb\n21\nnov\ndom\n22\nnov\nlun\n23\nnov\nmar\n24\nnov\nmié\n25\nnov\njue\n26\nnov\nvie\n27\nnov\nsáb\n28\nnov\ndom\n29\nnov\nlun\n30\nnov\nmar\n1\ndic\nmié\n2\ndic\njue\n3\ndic\nvie\n4\ndic\nsáb\n5\ndic\ndom\n6\ndic\nlun\n7\ndic\nmar\n8\ndic\nmié\n9\ndic\njue\n10\ndic\nvie\n11\ndic\nsáb\n12\ndic\ndom\n13\ndic\nlun\n14\ndic\nmar\n15\ndic\nmié\n16\ndic\njue\n17\ndic\nvie\n18\ndic\nsáb\n19\ndic\ndom\n20\ndic\nlun\n21\ndic\nmar\n22\ndic\nmié\n23\ndic\njue\n24\ndic\nvie\n25\ndic\nsáb\n26\ndic\ndom\n27\ndic\nlun\n28\ndic\nmar\n29\ndic\nmié\n30\ndic\njue\n31\ndic\nvie\n1\nene 27\nsáb\n2\nene 27\ndom\n3\nene 27\nlun\n4\nene 27\nmar\n5\nene 27\nmié\n6\nene 27\njue\n7\nene 27\nvie\n8\nene 27\nsáb\n9\nene 27\nlun\n11\nene 27\njue\n14\nene 27\nsáb\n16\nene 27\nmar\n19\nene 27\njue\n21\nene 27\nsáb\n23\nene 27\nlun\n1\nfeb 27\nmié\n3\nfeb 27\njue\n4\nfeb 27\njue\n11\nfeb 27\nlun\n15\nfeb 27\nmar\n16\nfeb 27\nmar\n23\nfeb 27\njue\n11\nmar 27\nmar\n16\nmar 27\njue\n18\nmar 27\nsáb\n20\nmar 27\nsáb\n3\nabr 27\njue\n15\nabr 27\nmar\n20\nabr 27\njue\n22\nabr 27\nsáb\n24\nabr 27\nmié\n5\nmay 27\nsáb\n8\nmay 27\njue\n20\nmay 27\nmar\n25\nmay 27\njue\n3\njun 27\nsáb\n5\njun 27\njue\n17\njun 27\nBuscar películas, personas, géneros, cines, formatos o fechas\n\n276 películas · 2799 sesiones\n\nSacamantecas\nHoy · 19 nov\nRenoir\n17:50\nSplau\n22:15\nvie, 20 nov\nRenoir\n18:00\n22:15\nSplau\n22:30\n16 sesiones más\nSense and Sensibility\nHoy · 19 nov\nRenoir\n17:50\nVerdi Park\n18:05\nBalmes\n18:45\n21:30\nGran Sarrià\n21:10\nvie, 20 nov\nBalmes\n16:05\n17 sesiones más\nLa bola negra\nHoy · 19 nov\nBosque\n17:55\n19:15\n21:05\nFilmax\n18:00\n20:00\n21:15\nGlòries\n18:00\n18:40\n21:10\nGran Sarrià\n18:15\n18:50\n21:15\nSplau\n18:20\n19:15\n21:40\n22:30\n190 sesiones más\nThe Invite\nHoy · 19 nov\nVerdi\n17:55\nBalmes\n18:40\nGlòries\n19:50\nGran Sarrià\n20:10\nBosque\n21:15\n41 sesiones más\nArriba Tutto\nHoy · 19 nov\nVerdi Park\n18:00\nsáb, 21 nov\nVerdi Park\n22:45\n3 sesiones más\nCRONOS\nHoy · 19 nov\nTexas\n18:00\nsáb",
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "VO Barna"
+        },
+        {
+          "tag": "H2",
+          "text": "Sacamantecas"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        },
+        {
+          "tag": "H3",
+          "text": "vie, 20 nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Sense and Sensibility"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        },
+        {
+          "tag": "H3",
+          "text": "vie, 20 nov"
+        },
+        {
+          "tag": "H2",
+          "text": "La bola negra"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        },
+        {
+          "tag": "H2",
+          "text": "The Invite"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        },
+        {
+          "tag": "H2",
+          "text": "Arriba Tutto"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        },
+        {
+          "tag": "H3",
+          "text": "sáb, 21 nov"
+        },
+        {
+          "tag": "H2",
+          "text": "CRONOS"
+        },
+        {
+          "tag": "H3",
+          "text": "Hoy · 19 nov"
+        }
+      ],
+      "cards": 276,
+      "links": [
+        {
+          "text": "Ir a las sesiones",
+          "href": "#results"
+        },
+        {
+          "text": "VO Barna",
+          "href": "/cinemas.html"
+        },
+        {
+          "text": "WebMCP y agentes",
+          "href": "/webmcp.html"
+        },
+        {
+          "text": "—\n      RT · Critics",
+          "href": "https://www.rottentomatoes.com/search?search=The%20Harvester"
+        },
+        {
+          "text": "—\n      RT · Audience",
+          "href": "https://www.rottentomatoes.com/search?search=The%20Harvester"
+        },
+        {
+          "text": "—\n      FilmAffinity",
+          "href": "https://www.filmaffinity.com/es/film676227.html"
+        },
+        {
+          "text": "6.7/10\n      IMDb",
+          "href": "https://www.imdb.com/title/tt33296229/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1096631/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/258768/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097135/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097136/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259314/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097138/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097139/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259141/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097141/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097142/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://kinepolis.es/direct-vista-redirect/259241/0/PFULL/0"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097144/"
+        },
+        {
+          "text": "Tickets",
+          "href": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/sacamantecas/1097145/"
+        }
+      ],
+      "canonical": null,
+      "hreflang": 0,
+      "jsonld": 0,
+      "description": "VO Barna — original-language cinema in Barcelona. Find screenings at Phenomena and the city's premium screens."
+    },
+    "missing_film": {
+      "http_status": 200,
+      "url": "http://127.0.0.1:8765/cinemas.html",
+      "notice": "Esta película o sesión ya no está en la próxima cartelera. Busca otra sesión."
+    },
+    "deep_link_test_url": "http://127.0.0.1:8765/cinemas.html?film=imdb%3Att33296229"
+  },
+  "raw_html": {
+    "local": {
+      "bytes": 3218,
+      "sha256": "a341340e3e39088d99caa7def04de3cd342f2b85300be3857402ed5a33e45408"
+    },
+    "local_film": {
+      "bytes": 3218,
+      "sha256": "a341340e3e39088d99caa7def04de3cd342f2b85300be3857402ed5a33e45408"
+    },
+    "related_live": {
+      "bytes": 34522,
+      "sha256": "f1ec4cdc9545202129ae518bb4f68a6a7e162062fb0e50ee162512254c61d69b"
+    },
+    "local_and_film_identical": true
+  }
+}

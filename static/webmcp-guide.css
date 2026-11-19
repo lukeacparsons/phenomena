@@ -1,0 +1,60 @@
+.guide-main{max-width:920px;padding:36px 28px 64px}
+.guide-back{display:inline-flex;align-items:center;min-height:44px;font-size:.875rem;text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
+.guide-intro{padding:32px 0 36px;max-width:760px}
+.guide-eyebrow{font-size:.875rem;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+.guide-main h1{font-size:clamp(2rem,5vw,3.25rem);line-height:1.12;letter-spacing:-.04em;font-weight:650;max-width:680px;margin-bottom:22px}
+.guide-lead{font-size:1.1875rem;line-height:1.7;color:var(--tx2);max-width:690px}
+.guide-actions{display:flex;align-items:center;flex-wrap:wrap;gap:18px 24px;margin-top:26px}
+.guide-main a,.guide-footer a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.guide-main a:hover,.guide-footer a:hover{color:var(--red)}
+.guide-actions .guide-primary{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;background:var(--tx);color:var(--s1);border:1px solid var(--tx);border-radius:var(--radius);text-decoration:none}
+.guide-actions .guide-primary:hover{background:var(--tx2);color:var(--s1)}
+.guide-contents{display:flex;flex-wrap:wrap;gap:0 24px;border-block:1px solid var(--border);padding:12px 0}
+.guide-contents a{display:inline-flex;align-items:center;min-height:38px;font-size:.875rem}
+.guide-section{padding-top:46px;scroll-margin-top:90px}
+.guide-section h2{font-size:1.625rem;line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}
+.guide-section p{margin:14px 0;line-height:1.75}
+.guide-section ul,.guide-section ol{padding-left:24px;margin:16px 0}
+.guide-section li{padding-left:4px;margin:9px 0;line-height:1.7}
+.guide-examples{border-left:3px solid var(--red);list-style:none;padding:8px 0 8px 20px!important}
+.guide-examples li{padding:0;color:var(--tx2)}
+.guide-tool{background:var(--s1);border:1px solid var(--border);border-radius:var(--radius);margin-top:20px;padding:22px 24px;scroll-margin-top:90px}
+.tool-heading{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 20px}
+.tool-heading h3{font-size:1.125rem;line-height:1.5;min-width:0}
+.tool-kind{font-size:.875rem;color:var(--tx2)}
+.tool-kind-action{color:var(--red)}
+.guide-tool p:last-child{margin-bottom:0}
+.guide-main code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;overflow-wrap:anywhere}
+.guide-main pre{padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius);background:var(--s2);line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;margin:18px 0;font-size:.9375rem}
+.guide-main pre code{font-size:inherit}
+.guide-main table{width:100%;border-collapse:collapse;table-layout:fixed;line-height:1.6;margin:22px 0;background:var(--s1)}
+.guide-main caption{text-align:left;color:var(--tx2);font-size:.875rem;margin-bottom:10px}
+.guide-main th,.guide-main td{padding:14px 16px;text-align:left;vertical-align:top;border:1px solid var(--border);overflow-wrap:anywhere}
+.guide-main th:first-child{width:29%}
+.guide-main thead{background:var(--s2)}
+.guide-main tbody th{font-weight:500}
+.guide-steps li{margin-bottom:16px}
+.guide-facts>div{padding:18px 0;border-bottom:1px solid var(--border)}
+.guide-facts>div:first-child{padding-top:0}
+.guide-facts dt{font-weight:650;margin-bottom:7px}
+.guide-facts dd{line-height:1.75}
+.guide-footer{max-width:920px;gap:14px 24px}
+.guide-footer nav{display:flex;flex-wrap:wrap;gap:16px}
+@media(max-width:600px){
+  .guide-main{padding:14px 18px 40px}
+  .guide-intro{padding-top:24px}
+  .guide-lead{font-size:1.0625rem}
+  .guide-tool{padding:18px 16px}
+  .guide-section{padding-top:36px}
+  .guide-section h2{font-size:1.375rem}
+  .guide-main th,.guide-main td{padding:12px 10px}
+  .guide-main th:first-child{width:37%}
+  .guide-contents{column-gap:20px}
+  .guide-footer{padding-inline:18px}
+}
+@media print{
+  .agent-guide::before,.agent-guide .header-wrap,.guide-contents,.guide-actions,.guide-footer{display:none}
+  .agent-guide{background:white;color:black}
+  .guide-main{max-width:none;padding:0}
+  .guide-tool{break-inside:avoid}
+}

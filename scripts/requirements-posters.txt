@@ -1,0 +1,2 @@
+-r requirements-cinesa.txt
+Pillow==13.0.0

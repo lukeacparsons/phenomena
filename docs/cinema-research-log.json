@@ -1,0 +1,368 @@
+{
+  "researched_on": "2026-11-19",
+  "scope": "Cinema-level expansion of existing sala/photo research; no UI changes or publishing.",
+  "outputs": [
+    "cinema-dossier.md",
+    "cinema-dossiers.json",
+    "cinema-reviews.md",
+    "cinema-reviews.json"
+  ],
+  "coverage": {
+    "cinemas": 8,
+    "rooms": 85,
+    "review_observations": 157,
+    "google_rating_snapshots": 8,
+    "matched_tripadvisor_listings": 6,
+    "image_drawing_references": 86,
+    "operator_linked_tours": 4,
+    "source_records": 76
+  },
+  "method": [
+    "Reused sanitized identity matching and previously collected anonymous public Google Maps listing snapshots.",
+    "Read operator and company legal notices, cultural-history sources, contemporary reporting, corporate filings and public review directories.",
+    "Collected visible Google-attributed mirror cards and directory cards; retained only brief original paraphrases and public metadata in deliverables.",
+    "Used public search-index Tripadvisor excerpts; direct requests to six listing pages returned HTTP 403. No alternative route was used to access blocked full review pages.",
+    "No account login, browser-profile access, review posting, outreach, API key use or paid purchase.",
+    "Full source HTML was held only in transient research scratch space. Image and room data remain in the earlier catalogues."
+  ],
+  "review_observation_counts_by_source": {
+    "guia-mooby-bosque": 25,
+    "guia-cinesa-diagonal-mar": 25,
+    "guia-cinesa-la-farga": 24,
+    "guia-phenomena": 25,
+    "guia-mooby-balmes": 25,
+    "locality-yelmo-maquinista": 9,
+    "locality-kinepolis-splau": 10,
+    "tripadvisor-phenomena": 3,
+    "tripadvisor-mooby-balmes": 3,
+    "tripadvisor-mooby-aribau": 2,
+    "tripadvisor-cinesa-diagonal-mar": 1,
+    "tripadvisor-cinesa-la-farga": 3,
+    "tripadvisor-kinepolis-splau": 2
+  },
+  "exclusions": [
+    {
+      "source_id": "guia-cinesa-la-farga",
+      "source_position": 8,
+      "reason": "Shopping-centre retail mix, not a cinema experience."
+    },
+    {
+      "source_id": "locality-yelmo-maquinista",
+      "source_position": 7,
+      "reason": "Unrelated property-rental review; excluded as apparent feed contamination."
+    },
+    {
+      "reason": "LocalityBiz category score 4.3 / 2423 belongs to Sapakara Fun Parcs, not Cines Kinepolis."
+    },
+    {
+      "reason": "Metrópoli Yelmo refurbishment article labels a Junior room picture as Artea; not used as a La Maquinista photograph."
+    },
+    {
+      "reason": "Wanderlog AI/editorial summary excluded from individual-review records."
+    },
+    {
+      "reason": "Mall-wide Tripadvisor reviews not substituted for missing cinema-specific Bosque and La Maquinista listings."
+    }
+  ],
+  "access_limits": [
+    "Prior native Chrome app access was denied; no Chrome/DevTools workaround used.",
+    "Previously blocked Maps full-photo gallery was not retried.",
+    "Later 403 responses from operator sites were not retried to bypass access controls; prior public research and indexed evidence are labelled.",
+    "Two test-api.pantori.es URLs had certificate hostname errors. SSL verification was not disabled; normal public Guía pages were used instead."
+  ],
+  "important_corrections": [
+    "Cinema operators and shopping-centre landlords are different entities.",
+    "La Farga centre acquisition announced 10 April 2025; old Temprano ownership descriptions are historical.",
+    "Splau co-ownership transaction completed 13 May 2026, later than the initial expected closing.",
+    "Splau cinema acquisition completed 28 February 2019 with control effective 1 March; announcement date is not completion.",
+    "Splau mall opening May 2010 is separate from cinema opening December 2010.",
+    "Bosque theatre opened 1905; films began 1906; rebuilt cinema 1965; multiplex reopened 1998.",
+    "No current sala identity inferred from historical Diagonal Mar rooms 14–18 or former La Maquinista operator descriptions."
+  ],
+  "remaining_gaps": [
+    "Full current review exports require access not available in this pass; platform links remain the refresh path.",
+    "Property/lease title and beneficial owners for the independent and Mooby venues.",
+    "Current accessibility provision, parking terms and performance prices for every venue.",
+    "Missing per-room screen and room dimensions and unassigned interior photos.",
+    "Do not use generic chain photos, mall-wide reviews or obsolete sala numbers as current venue-specific evidence."
+  ],
+  "fetch_attempts": [
+    {
+      "id": "google-mirror-farga",
+      "url": "https://guiademicroempresas.es/cine/barcelona/cinesa-la-farga-3d/",
+      "resolved_url": "https://guiademicroempresas.es/cine/barcelona/cinesa-la-farga-3d/",
+      "status": 200,
+      "chars": 8378,
+      "ld_blocks": 1
+    },
+    {
+      "id": "google-mirror-phenomena-canonical",
+      "url": "https://guiademicroempresas.es/cine/barcelona/phenomena-experience/",
+      "resolved_url": "https://guiademicroempresas.es/cine/barcelona/phenomena-experience/",
+      "status": 200,
+      "chars": 11387,
+      "ld_blocks": 1
+    },
+    {
+      "id": "locality-splau-category",
+      "url": "https://localitybiz.es/catalu%C3%B1a/empresa-de-entretenimiento-en-cornell%C3%A0-de-llobregat",
+      "resolved_url": "https://localitybiz.es/catalu%C3%B1a/empresa-de-entretenimiento-en-cornell%C3%A0-de-llobregat",
+      "status": 200,
+      "chars": 7210,
+      "ld_blocks": 2
+    },
+    {
+      "id": "phenomena-legal",
+      "url": "https://phenomena-experience.com/index?pag=aviso-legal",
+      "resolved_url": "https://phenomena-experience.com/index?pag=aviso-legal",
+      "status": 200,
+      "chars": 12831,
+      "ld_blocks": 0
+    },
+    {
+      "id": "phenomena-contact",
+      "url": "https://phenomena-experience.com/index?pag=contacto",
+      "resolved_url": "https://phenomena-experience.com/index?pag=contacto",
+      "status": 200,
+      "chars": 4624,
+      "ld_blocks": 0
+    },
+    {
+      "id": "phenomena-terms",
+      "url": "https://phenomena-experience.com/index?pag=terminos-de-compra",
+      "resolved_url": "https://phenomena-experience.com/index?pag=terminos-de-compra",
+      "status": 200,
+      "chars": 8259,
+      "ld_blocks": 0
+    },
+    {
+      "id": "mooby-legal",
+      "url": "https://www.moobycinemas.com/termes-i-condicions",
+      "resolved_url": "https://www.moobycinemas.com/termes-i-condicions",
+      "status": 403
+    },
+    {
+      "id": "farga-mall",
+      "url": "https://centrolafarga.com/cines/",
+      "resolved_url": "https://centrolafarga.com/cines/",
+      "status": 200,
+      "chars": 1352,
+      "ld_blocks": 1
+    },
+    {
+      "id": "farga-owner",
+      "url": "https://www.lopezrealinversiones21.com/inversiones-y-promociones-gl-2023-s-l-adquiere-el-centro-comercial-la-farga-barcelona/",
+      "resolved_url": "https://www.lopezrealinversiones21.com/inversiones-y-promociones-gl-2023-s-l-adquiere-el-centro-comercial-la-farga-barcelona/",
+      "status": 200,
+      "chars": 4033,
+      "ld_blocks": 1
+    },
+    {
+      "id": "google-mirror-balmes-canonical",
+      "url": "https://guiademicroempresas.es/cine/barcelona/balmes-multicines-vo/",
+      "resolved_url": "https://guiademicroempresas.es/cine/barcelona/balmes-multicines-vo/",
+      "status": 200,
+      "chars": 9968,
+      "ld_blocks": 1
+    },
+    {
+      "id": "reviews-splau",
+      "url": "https://localitybiz.es/23684670/cines-kinepolis-cornell%C3%A0-de-llobregat",
+      "resolved_url": "https://localitybiz.es/23684670/cines-kinepolis-cornell%C3%A0-de-llobregat",
+      "status": 200,
+      "chars": 6744,
+      "ld_blocks": 2
+    },
+    {
+      "id": "phenomena-official",
+      "url": "https://www.phenomena-experience.com/",
+      "resolved_url": "https://phenomena-experience.com/",
+      "status": 200,
+      "chars": 5270,
+      "ld_blocks": 0
+    },
+    {
+      "id": "mooby-about",
+      "url": "https://www.moobycinemas.com/qui-som",
+      "resolved_url": "https://www.moobycinemas.com/qui-som",
+      "status": 403
+    },
+    {
+      "id": "mooby-balmes",
+      "url": "https://www.moobycinemas.com/sobre-balmes",
+      "resolved_url": "https://www.moobycinemas.com/sobre-balmes",
+      "status": 403
+    },
+    {
+      "id": "mooby-bosque",
+      "url": "https://www.moobycinemas.com/sobre-bosque",
+      "resolved_url": "https://www.moobycinemas.com/sobre-bosque",
+      "status": 403
+    },
+    {
+      "id": "mooby-aribau",
+      "url": "https://www.moobycinemas.com/sobre-aribau",
+      "resolved_url": "https://www.moobycinemas.com/sobre-aribau",
+      "status": 403
+    },
+    {
+      "id": "cinesa-diagonal",
+      "url": "https://www.cinesa.es/cines/diagonal-mar/",
+      "resolved_url": "https://www.cinesa.es/cines/diagonal-mar/",
+      "status": 403
+    },
+    {
+      "id": "cinesa-farga",
+      "url": "https://www.cinesa.es/cines/la-farga/",
+      "resolved_url": "https://www.cinesa.es/cines/la-farga/",
+      "status": 403
+    },
+    {
+      "id": "yelmo-venue",
+      "url": "https://yelmocines.es/cartelera/barcelona/westfield-la-maquinista",
+      "resolved_url": "https://cineyelmo.com/es?cinema=westfield-la-maquinista-barcelona",
+      "status": 200,
+      "chars": 17,
+      "ld_blocks": 0
+    },
+    {
+      "id": "kinepolis-venue",
+      "url": "https://kinepolis.es/cines/kinepolis-barcelona-splau/info/",
+      "resolved_url": "https://kinepolis.es/cines/kinepolis-barcelona-splau/info/",
+      "status": 403
+    },
+    {
+      "id": "google-mirror-phenomena",
+      "url": "https://test-api.pantori.es/cine/barcelona/phenomena-experience/",
+      "error": "TLS certificate hostname mismatch; verification kept enabled."
+    },
+    {
+      "id": "google-mirror-balmes",
+      "url": "https://test-api.pantori.es/cine/barcelona/balmes-multicines-vo/",
+      "error": "TLS certificate hostname mismatch; verification kept enabled."
+    },
+    {
+      "id": "google-mirror-bosque",
+      "url": "https://guiademicroempresas.es/cine/barcelona/bosque-multicines/",
+      "resolved_url": "https://guiademicroempresas.es/cine/barcelona/bosque-multicines/",
+      "status": 200,
+      "chars": 11250,
+      "ld_blocks": 1
+    },
+    {
+      "id": "google-mirror-aribau",
+      "url": "https://wanderlog.com/place/details/3879899/aribau-multicines",
+      "resolved_url": "https://wanderlog.com/place/details/3879899/aribau-multicines",
+      "status": 200,
+      "chars": 9261,
+      "ld_blocks": 0
+    },
+    {
+      "id": "google-mirror-diagonal",
+      "url": "https://guiademicroempresas.es/cine/barcelona/cinesa-diagonal-3d/",
+      "resolved_url": "https://guiademicroempresas.es/cine/barcelona/cinesa-diagonal-3d/",
+      "status": 200,
+      "chars": 12002,
+      "ld_blocks": 1
+    },
+    {
+      "id": "reviews-yelmo",
+      "url": "https://localitybiz.es/23684502/cine-yelmo-westfield-la-maquinista-barcelona",
+      "resolved_url": "https://localitybiz.es/23684502/cine-yelmo-westfield-la-maquinista-barcelona",
+      "status": 200,
+      "chars": 9777,
+      "ld_blocks": 2
+    },
+    {
+      "id": "balmes-tripadvisor",
+      "url": "https://www.tripadvisor.com/Attraction_Review-g187497-d6226775-Reviews-Balmes_Multicines-Barcelona_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.com/Attraction_Review-g187497-d6226775-Reviews-Balmes_Multicines-Barcelona_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "phenomena-tripadvisor",
+      "url": "https://www.tripadvisor.com/Attraction_Review-g187497-d7758052-Reviews-Phenomena-Barcelona_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.com/Attraction_Review-g187497-d7758052-Reviews-Phenomena-Barcelona_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "aribau-tripadvisor",
+      "url": "https://www.tripadvisor.es/Attraction_Review-g187497-d15594347-Reviews-Aribau_Multicines-Barcelona_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.es/Attraction_Review-g187497-d15594347-Reviews-Aribau_Multicines-Barcelona_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "diagonal-tripadvisor",
+      "url": "https://www.tripadvisor.com/Attraction_Review-g187497-d19804849-Reviews-Cinesa_Diagonal_Mar-Barcelona_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.com/Attraction_Review-g187497-d19804849-Reviews-Cinesa_Diagonal_Mar-Barcelona_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "farga-tripadvisor",
+      "url": "https://www.tripadvisor.com/Attraction_Review-g665810-d24047317-Reviews-Cinesa_Luxe_La_Farga-L_Hospitalet_de_Llobregat_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.com/Attraction_Review-g665810-d24047317-Reviews-Cinesa_Luxe_La_Farga-L_Hospitalet_de_Llobregat_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "splau-tripadvisor",
+      "url": "https://www.tripadvisor.es/Attraction_Review-g911482-d9821082-Reviews-Kinepolis_Cinemas-Cornella_de_Llobregat_Catalonia.html",
+      "resolved_url": "https://www.tripadvisor.es/Attraction_Review-g911482-d9821082-Reviews-Kinepolis_Cinemas-Cornella_de_Llobregat_Catalonia.html",
+      "status": 403
+    },
+    {
+      "id": "kinepolis-acquisition",
+      "url": "https://corporate.kinepolis.com/en/press-releases/kinepolis-reaches-agreement-acquire-spanish-cinema-group-el-punt",
+      "resolved_url": "https://corporate.kinepolis.com/en/press-releases/kinepolis-reaches-agreement-acquire-spanish-cinema-group-el-punt",
+      "status": 403
+    },
+    {
+      "id": "bosque-history",
+      "url": "https://academiadelcinema.cat/ca/cine-bosque-barcelona",
+      "resolved_url": "https://academiadelcinema.cat/ca/cine-bosque-barcelona",
+      "status": 200,
+      "chars": 5107,
+      "ld_blocks": 1
+    },
+    {
+      "id": "westfield-yelmo",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/ocio/cine-yelmo/79034",
+      "resolved_url": "https://www.westfield.com/es/spain/lamaquinista/ocio/cine-yelmo/79034",
+      "status": 200,
+      "chars": 963,
+      "ld_blocks": 1
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "checked_on": "2026-11-19",
+    "checks": [
+      "Eight cinema IDs agree across dossiers, Maps, rooms and reviews.",
+      "157 distinct retained source observations; all review source references resolve.",
+      "All profile claim source IDs resolve; all retained star ratings within 1–5 or null.",
+      "Calendar review dates valid and no later than snapshot date.",
+      "85 rooms, 85 capacity observations, 29 screen measurements, 56 layouts reconcile.",
+      "86 image refs, 42 interior refs, six identified interior rooms and four tours reconcile.",
+      "All per-cinema room/image/review joins reconcile.",
+      "Google review counts remain null when not returned.",
+      "Local report links exist; no full review body fields in deliverables."
+    ],
+    "application_tests": "Not run: research data and documentation only; application code unchanged."
+  },
+  "practical_information_followup": {
+    "researched_on": "2026-11-19",
+    "log": "cinema-practical-research-log.json",
+    "catalogue": "cinema-practical-info.json",
+    "report": "cinema-practical-info.md",
+    "coverage": {
+      "cinemas": 8,
+      "fact_records": 53,
+      "price_records": 33,
+      "google_attribute_observations": 27,
+      "source_records": 44,
+      "current_exact_screen_dimensions": 29,
+      "current_source_identified_interior_rooms": 6,
+      "new_room_photos": 0,
+      "new_exact_screen_dimensions": 0
+    }
+  }
+}

@@ -1,0 +1,582 @@
+{
+  "checked_at": "2026-11-19T16:56:06.116283+00:00",
+  "result": "passed",
+  "checks": [
+    {
+      "check": "unique profiles IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unique rooms IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unique images IDs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "59 researched venues",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "219 room records",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "163 image/drawing references",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "gap source joins resolve",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "dossier source joins resolve",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "auditoriums source joins resolve",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "new image source joins resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all rooms belong to known profiles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all image venue IDs resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all confirmed photo rooms resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "new room image joins resolve",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "new photo sala links reciprocal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unrelated profiles preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unrelated room records preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all prior image records preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "prior source metadata preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Diagonal placeholder mapped without extra room",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no new invented placeholders",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "numbered cultural room has event caveat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "individual CineBaix sala seats stay unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "CineBaix 1237 scoped to dated complex total",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "IFB conflict retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Elizalde screen-height conflict retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Jaume display identified as LED",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "MACBA separate auditoria capacities",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Can Carol seated not standing capacity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "CaixaForum 336 not assigned as sala seats",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "9 unconflicted primary capacity records",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "13 new rooms with capacity evidence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "6 new screen/display pairs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "9 new floor areas",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no room lengths fabricated from stages/throw",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "15 labelled Maps search links",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "secondary screening qualification preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "20 accepted photos",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-auditori-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-auditori-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-auditori-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-hall-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-hall-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-hall-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-teatre-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-cccb-teatre-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-elizalde-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-ifb-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-filmax-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-malda-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-macba-meier-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-macba-meier-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-macba-convent-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-macba-convent-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-carol-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-carol-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-carol-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "image integrity gap-jaume-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "new photos are distinct from prior cached files",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "new photo hashes unique",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "unverified Diagonal photo excluded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "published photo dates retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all cultural options have profiles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row phenomena",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-balmes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-bosque",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-aribau",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinesa-diagonal-mar",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinesa-la-farga",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row yelmo-maquinista",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row kinepolis-splau",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-arenas",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-glories",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row mooby-sarria",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinesa-diagonal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinesa-som-multiespai",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row verdi",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row verdi-park",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinemes-girona",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row renoir-floridablanca",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row zumzeig",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row filmoteca-catalunya",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row espai-texas",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row cinema-malda",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row filmax-gran-via",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage row ateneu-barcelones",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "22 active-directory venues with photos",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all current configured cinemas covered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage directory matches config",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "generated preview still matches config",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "summary capacity count recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "summary source totals",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "summary update records agree",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "review counts unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "local report/image links resolve",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "summary": {
+    "new_venue_profiles": 15,
+    "amended_existing_venue_profiles": 4,
+    "new_room_records": 17,
+    "amended_existing_room_records": 2,
+    "new_rooms_with_capacity_observations": 13,
+    "new_rooms_with_unconflicted_primary_capacity": 9,
+    "new_rooms_with_capacity_ranges_only": 1,
+    "new_screen_or_display_dimension_records": 6,
+    "new_projection_screen_dimension_records": 5,
+    "new_projection_screen_pairs_without_reported_conflict": 4,
+    "new_led_display_dimension_records": 1,
+    "new_screen_size_conflicts": 1,
+    "new_floor_area_records": 9,
+    "dated_floor_area_records": 1,
+    "downloaded_photos": 20,
+    "venues_with_added_photos": 8,
+    "named_rooms_with_added_interior_photos": 9,
+    "new_maps_search_links": 15,
+    "new_verified_google_place_ids": 0,
+    "new_source_records": 62,
+    "linked_prior_source_records": 18,
+    "hire_price_records": 4,
+    "unresolved_conflicts": 4,
+    "new_review_observations": 0
+  },
+  "totals": {
+    "profiles": 59,
+    "room_records": 219,
+    "capacity_evidence_records": 175,
+    "image_references": 163,
+    "active_directory": 23,
+    "active_directory_venues_with_photos": 22
+  },
+  "access_failures": [
+    {
+      "url": "https://labonne.org/serveis/espais-polivalents/",
+      "http_status": 202
+    },
+    {
+      "url": "https://caixaforum.org/es/barcelona/info-centro",
+      "http_status": 403
+    },
+    {
+      "url": "https://palaumacaya.fundacionlacaixa.org/es/info-centro",
+      "http_status": 403
+    },
+    {
+      "url": "https://palaumacaya.fundacionlacaixa.org/es/p/movilidad-de-elite-y-desigualdad",
+      "http_status": 403
+    },
+    {
+      "url": "https://labonne.org/xiquibonne-torna-el-cicle-de-cinema-familiar-a-la-bonne/",
+      "http_status": 202
+    },
+    {
+      "url": "https://cosmocaixa.org/documents/278698/301636/Guies%2BAccessibles_CosmoCaixa%2BDIS_CAT.pdf/408b802e-67fd-0a31-7f30-61ac588f9283?t=1696516498641",
+      "http_status": 403
+    },
+    {
+      "url": "https://palaumacaya.fundacionlacaixa.org/documents/d/macaya/guia-accessible_macaya_ca-pdf",
+      "http_status": 403
+    },
+    {
+      "url": "https://labonne.org/wp-content/uploads/2021/07/MEMORIA_2019.pdf",
+      "http_status": 202
+    },
+    {
+      "url": "https://www.institutfrancais.es/barcelona/el-institut/quienes-somos/",
+      "http_status": 202
+    },
+    {
+      "url": "https://www.institutfrancais.es/barcelona/el-institut/informaciones-practicas/",
+      "http_status": 202
+    },
+    {
+      "url": "https://www.cccb.org/ca/lloguer-espais/teatre-cccb",
+      "http_status": 404
+    },
+    {
+      "url": "https://cosmocaixa.org/es/info-centro",
+      "http_status": 403
+    }
+  ],
+  "method": {
+    "visual_review": "All 20 accepted photographs visually checked. PDF icons and mini-locator diagrams excluded.",
+    "technical_pdf_visual_checks": [
+      "CCCB Auditori p1",
+      "CCCB Hall p1",
+      "CCCB Sala Teatre p2",
+      "MACBA hire dossier p9 and p17",
+      "MACBA Meier technical sheet p2",
+      "Jaume Fuster hire dossier p1",
+      "Can Carol hire catalogue p4",
+      "Casa Elizalde rider p1"
+    ],
+    "access": "Public search index and ordinary public HTTP only; 403/202 restrictions not bypassed.",
+    "screening_qualification": "Jaume Fuster and Albareda remain secondary-evidence screening leads. Other venue-level programmes are documented; room assignment may still be unknown.",
+    "scope": "Research only. Active directory configuration unchanged."
+  },
+  "scope": "Research data, reports and ignored image cache only; no application deployment, reservation, review export or venue contact."
+}

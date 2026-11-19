@@ -1,0 +1,781 @@
+{
+  "release": "/private/tmp/vobarna-seo-review/releases/build-i9cutswl",
+  "built_at": "2026-11-19T19:49:32.581901+00:00",
+  "programme_generated_at": "2026-11-19T19:34:00.392034+00:00",
+  "pages": 1217,
+  "indexable": 1195,
+  "issues": {},
+  "missing_assets": [],
+  "broken_internal_links": [],
+  "broken_internal_fragments": [],
+  "alternate_errors": [],
+  "unreachable_indexable": [],
+  "duplicate_titles": {
+    "Ateneu Barcelonès | VO Barna": [
+      "/en/cinemas/ateneu-barcelones/",
+      "/es/cines/ateneu-barcelones/",
+      "/ca/cinemes/ateneu-barcelones/"
+    ],
+    "Biblioteca Jaume Fuster | VO Barna": [
+      "/en/cinemas/biblioteca-jaume-fuster/",
+      "/es/cines/biblioteca-jaume-fuster/",
+      "/ca/cinemes/biblioteca-jaume-fuster/"
+    ],
+    "CaixaForum Barcelona | VO Barna": [
+      "/en/cinemas/caixaforum-barcelona/",
+      "/es/cines/caixaforum-barcelona/",
+      "/ca/cinemes/caixaforum-barcelona/"
+    ],
+    "CaixaForum Macaya | VO Barna": [
+      "/en/cinemas/caixaforum-macaya/",
+      "/es/cines/caixaforum-macaya/",
+      "/ca/cinemes/caixaforum-macaya/"
+    ],
+    "La Calàndria | VO Barna": [
+      "/en/cinemas/la-calandria/",
+      "/es/cines/la-calandria/",
+      "/ca/cinemes/la-calandria/"
+    ],
+    "Casal de Barri Can Carol | VO Barna": [
+      "/en/cinemas/casal-de-barri-can-carol/",
+      "/es/cines/casal-de-barri-can-carol/",
+      "/ca/cinemes/casal-de-barri-can-carol/"
+    ],
+    "Cinemes Can Castellet | VO Barna": [
+      "/en/cinemas/cinemes-can-castellet/",
+      "/es/cines/cinemes-can-castellet/",
+      "/ca/cinemes/cinemes-can-castellet/"
+    ],
+    "La Casa Elizalde | VO Barna": [
+      "/en/cinemas/la-casa-elizalde/",
+      "/es/cines/la-casa-elizalde/",
+      "/ca/cinemes/la-casa-elizalde/"
+    ],
+    "CASA SEAT | VO Barna": [
+      "/en/cinemas/casa-seat/",
+      "/es/cines/casa-seat/",
+      "/ca/cinemes/casa-seat/"
+    ],
+    "Casal de Barri de Trinitat Nova | VO Barna": [
+      "/en/cinemas/casal-de-barri-de-trinitat-nova/",
+      "/es/cines/casal-de-barri-de-trinitat-nova/",
+      "/ca/cinemes/casal-de-barri-de-trinitat-nova/"
+    ],
+    "CCCB | VO Barna": [
+      "/en/cinemas/cccb/",
+      "/es/cines/cccb/",
+      "/ca/cinemes/cccb/"
+    ],
+    "Centre Cultural Albareda | VO Barna": [
+      "/en/cinemas/centre-cultural-albareda/",
+      "/es/cines/centre-cultural-albareda/",
+      "/ca/cinemes/centre-cultural-albareda/"
+    ],
+    "CineBaix | VO Barna": [
+      "/en/cinemas/cinebaix/",
+      "/es/cines/cinebaix/",
+      "/ca/cinemes/cinebaix/"
+    ],
+    "Cinema Capri | VO Barna": [
+      "/en/cinemas/cinema-capri/",
+      "/es/cines/cinema-capri/",
+      "/ca/cinemes/cinema-capri/"
+    ],
+    "Cinema Catalunya | VO Barna": [
+      "/en/cinemas/cinema-catalunya/",
+      "/es/cines/cinema-catalunya/",
+      "/ca/cinemes/cinema-catalunya/"
+    ],
+    "Cinema Edison | VO Barna": [
+      "/en/cinemas/cinema-edison/",
+      "/es/cines/cinema-edison/",
+      "/ca/cinemes/cinema-edison/"
+    ],
+    "Cinema Maldà | VO Barna": [
+      "/en/cinemas/cinema-malda/",
+      "/es/cines/cinema-malda/",
+      "/ca/cinemes/cinema-malda/"
+    ],
+    "Cinemes Girona | VO Barna": [
+      "/en/cinemas/cinemes-girona/",
+      "/es/cines/cinemes-girona/",
+      "/ca/cinemes/cinemes-girona/"
+    ],
+    "Cinemes Montcada | VO Barna": [
+      "/en/cinemas/cinemes-montcada/",
+      "/es/cines/cinemes-montcada/",
+      "/ca/cinemes/cinemes-montcada/"
+    ],
+    "Cinesa LUXE Barnasud | VO Barna": [
+      "/en/cinemas/cinesa-luxe-barnasud/",
+      "/es/cines/cinesa-luxe-barnasud/",
+      "/ca/cinemes/cinesa-luxe-barnasud/"
+    ],
+    "Cinesa Diagonal | VO Barna": [
+      "/en/cinemas/cinesa-diagonal/",
+      "/es/cines/cinesa-diagonal/",
+      "/ca/cinemes/cinesa-diagonal/"
+    ],
+    "Cinesa Diagonal Mar | VO Barna": [
+      "/en/cinemas/cinesa-diagonal-mar/",
+      "/es/cines/cinesa-diagonal-mar/",
+      "/ca/cinemes/cinesa-diagonal-mar/"
+    ],
+    "Cinesa LUXE La Farga | VO Barna": [
+      "/en/cinemas/cinesa-luxe-la-farga/",
+      "/es/cines/cinesa-luxe-la-farga/",
+      "/ca/cinemes/cinesa-luxe-la-farga/"
+    ],
+    "Cinesa Parc Vallès | VO Barna": [
+      "/en/cinemas/cinesa-parc-valles/",
+      "/es/cines/cinesa-parc-valles/",
+      "/ca/cinemes/cinesa-parc-valles/"
+    ],
+    "Cinesa SOM Multiespai | VO Barna": [
+      "/en/cinemas/cinesa-som-multiespai/",
+      "/es/cines/cinesa-som-multiespai/",
+      "/ca/cinemes/cinesa-som-multiespai/"
+    ],
+    "CosmoCaixa Barcelona | VO Barna": [
+      "/en/cinemas/cosmocaixa-barcelona/",
+      "/es/cines/cosmocaixa-barcelona/",
+      "/ca/cinemes/cosmocaixa-barcelona/"
+    ],
+    "Multicines Eix Macià | VO Barna": [
+      "/en/cinemas/multicines-eix-macia/",
+      "/es/cines/multicines-eix-macia/",
+      "/ca/cinemes/multicines-eix-macia/"
+    ],
+    "Espai l’Amistat | VO Barna": [
+      "/en/cinemas/espai-lamistat/",
+      "/es/cines/espai-lamistat/",
+      "/ca/cinemes/espai-lamistat/"
+    ],
+    "Espai Texas | VO Barna": [
+      "/en/cinemas/espai-texas/",
+      "/es/cines/espai-texas/",
+      "/ca/cinemes/espai-texas/"
+    ],
+    "Fabra i Coats – Fàbrica de Creació | VO Barna": [
+      "/en/cinemas/fabra-i-coats-fabrica-de-creacio/",
+      "/es/cines/fabra-i-coats-fabrica-de-creacio/",
+      "/ca/cinemes/fabra-i-coats-fabrica-de-creacio/"
+    ],
+    "Filmax Gran Via | VO Barna": [
+      "/en/cinemas/filmax-gran-via/",
+      "/es/cines/filmax-gran-via/",
+      "/ca/cinemes/filmax-gran-via/"
+    ],
+    "Filmoteca de Catalunya | VO Barna": [
+      "/en/cinemas/filmoteca-de-catalunya/",
+      "/es/cines/filmoteca-de-catalunya/",
+      "/ca/cinemes/filmoteca-de-catalunya/"
+    ],
+    "Foment Mataroní | VO Barna": [
+      "/en/cinemas/foment-mataroni/",
+      "/es/cines/foment-mataroni/",
+      "/ca/cinemes/foment-mataroni/"
+    ],
+    "Cines Imperial | VO Barna": [
+      "/en/cinemas/cines-imperial/",
+      "/es/cines/cines-imperial/",
+      "/ca/cinemes/cines-imperial/"
+    ],
+    "Institut Français de Barcelona | VO Barna": [
+      "/en/cinemas/institut-francais-de-barcelona/",
+      "/es/cines/institut-francais-de-barcelona/",
+      "/ca/cinemes/institut-francais-de-barcelona/"
+    ],
+    "Kinépolis Mataró Parc | VO Barna": [
+      "/en/cinemas/kinepolis-mataro-parc/",
+      "/es/cines/kinepolis-mataro-parc/",
+      "/ca/cinemes/kinepolis-mataro-parc/"
+    ],
+    "Kinépolis Barcelona Splau | VO Barna": [
+      "/en/cinemas/kinepolis-barcelona-splau/",
+      "/es/cines/kinepolis-barcelona-splau/",
+      "/ca/cinemes/kinepolis-barcelona-splau/"
+    ],
+    "La Bonne | VO Barna": [
+      "/en/cinemas/la-bonne/",
+      "/es/cines/la-bonne/",
+      "/ca/cinemes/la-bonne/"
+    ],
+    "MACBA | VO Barna": [
+      "/en/cinemas/macba/",
+      "/es/cines/macba/",
+      "/ca/cinemes/macba/"
+    ],
+    "Mooby Arenas de Barcelona | VO Barna": [
+      "/en/cinemas/mooby-arenas-de-barcelona/",
+      "/es/cines/mooby-arenas-de-barcelona/",
+      "/ca/cinemes/mooby-arenas-de-barcelona/"
+    ],
+    "Mooby Aribau | VO Barna": [
+      "/en/cinemas/mooby-aribau/",
+      "/es/cines/mooby-aribau/",
+      "/ca/cinemes/mooby-aribau/"
+    ],
+    "Mooby Balmes | VO Barna": [
+      "/en/cinemas/mooby-balmes/",
+      "/es/cines/mooby-balmes/",
+      "/ca/cinemes/mooby-balmes/"
+    ],
+    "Mooby Bosque | VO Barna": [
+      "/en/cinemas/mooby-bosque/",
+      "/es/cines/mooby-bosque/",
+      "/ca/cinemes/mooby-bosque/"
+    ],
+    "Mooby Glòries | VO Barna": [
+      "/en/cinemas/mooby-glories/",
+      "/es/cines/mooby-glories/",
+      "/ca/cinemes/mooby-glories/"
+    ],
+    "Mooby Gran Sarrià Club | VO Barna": [
+      "/en/cinemas/mooby-gran-sarria-club/",
+      "/es/cines/mooby-gran-sarria-club/",
+      "/ca/cinemes/mooby-gran-sarria-club/"
+    ],
+    "Museu Etnològic i de Cultures del Món – Montcada | VO Barna": [
+      "/en/cinemas/museu-etnologic-i-de-cultures-del-mon-montcada/",
+      "/es/cines/museu-etnologic-i-de-cultures-del-mon-montcada/",
+      "/ca/cinemes/museu-etnologic-i-de-cultures-del-mon-montcada/"
+    ],
+    "OCINE Granollers | VO Barna": [
+      "/en/cinemas/ocine-granollers/",
+      "/es/cines/ocine-granollers/",
+      "/ca/cinemes/ocine-granollers/"
+    ],
+    "OCINE Màgic Badalona | VO Barna": [
+      "/en/cinemas/ocine-magic-badalona/",
+      "/es/cines/ocine-magic-badalona/",
+      "/ca/cinemes/ocine-magic-badalona/"
+    ],
+    "Phenomena Experience | VO Barna": [
+      "/en/cinemas/phenomena-experience/",
+      "/es/cines/phenomena-experience/",
+      "/ca/cinemes/phenomena-experience/"
+    ],
+    "Renoir Floridablanca | VO Barna": [
+      "/en/cinemas/renoir-floridablanca/",
+      "/es/cines/renoir-floridablanca/",
+      "/ca/cinemes/renoir-floridablanca/"
+    ],
+    "Sant Cugat Cinemas | VO Barna": [
+      "/en/cinemas/sant-cugat-cinemas/",
+      "/es/cines/sant-cugat-cinemas/",
+      "/ca/cinemes/sant-cugat-cinemas/"
+    ],
+    "Cinemes Verdi | VO Barna": [
+      "/en/cinemas/cinemes-verdi/",
+      "/es/cines/cinemes-verdi/",
+      "/ca/cinemes/cinemes-verdi/"
+    ],
+    "Cinemes Verdi Park | VO Barna": [
+      "/en/cinemas/cinemes-verdi-park/",
+      "/es/cines/cinemes-verdi-park/",
+      "/ca/cinemes/cinemes-verdi-park/"
+    ],
+    "Yelmo Abrera | VO Barna": [
+      "/en/cinemas/yelmo-abrera/",
+      "/es/cines/yelmo-abrera/",
+      "/ca/cinemes/yelmo-abrera/"
+    ],
+    "Yelmo Baricentro | VO Barna": [
+      "/en/cinemas/yelmo-baricentro/",
+      "/es/cines/yelmo-baricentro/",
+      "/ca/cinemes/yelmo-baricentro/"
+    ],
+    "Yelmo Premium Castelldefels | VO Barna": [
+      "/en/cinemas/yelmo-premium-castelldefels/",
+      "/es/cines/yelmo-premium-castelldefels/",
+      "/ca/cinemes/yelmo-premium-castelldefels/"
+    ],
+    "Yelmo Premium La Maquinista | VO Barna": [
+      "/en/cinemas/yelmo-premium-la-maquinista/",
+      "/es/cines/yelmo-premium-la-maquinista/",
+      "/ca/cinemes/yelmo-premium-la-maquinista/"
+    ],
+    "Yelmo Premium Sant Cugat | VO Barna": [
+      "/en/cinemas/yelmo-premium-sant-cugat/",
+      "/es/cines/yelmo-premium-sant-cugat/",
+      "/ca/cinemes/yelmo-premium-sant-cugat/"
+    ],
+    "Zumzeig Cinecooperativa | VO Barna": [
+      "/en/cinemas/zumzeig-cinecooperativa/",
+      "/es/cines/zumzeig-cinecooperativa/",
+      "/ca/cinemes/zumzeig-cinecooperativa/"
+    ]
+  },
+  "schema_type_counts": {
+    "WebPage": 1216,
+    "Person": 1216,
+    "WebSite": 3,
+    "CreativeWork": 438,
+    "ScreeningEvent": 9249,
+    "BreadcrumbList": 1155,
+    "Movie": 540,
+    "Place": 54,
+    "MovieTheater": 123
+  },
+  "sitemap": {
+    "urls": 1195,
+    "duplicates": 0,
+    "missing": [],
+    "extra": [],
+    "lastmod_mismatch": [],
+    "wrong_origin": []
+  },
+  "page_samples": {
+    "/en/": {
+      "title": "Original-language cinema in Barcelona | VO Barna",
+      "description": [
+        "Find original-language screenings in Barcelona and nearby cinemas. Compare dates, venues, audio, subtitles and formats, then book with the cinema."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "en",
+      "h1": [
+        "Original-language cinema in Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/es/": {
+      "title": "Cine en versión original en Barcelona | VO Barna",
+      "description": [
+        "Encuentra sesiones en versión original en Barcelona y cines cercanos. Compara fechas, cines, audio, subtítulos y formatos, y compra las entradas en el cine."
+      ],
+      "canonical": [
+        "https://vobarna.com/es/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "es",
+      "h1": [
+        "Cine en versión original en Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/ca/": {
+      "title": "Cinema en versió original a Barcelona | VO Barna",
+      "description": [
+        "Troba sessions en versió original a Barcelona i cinemes propers. Compara dates, cinemes, àudio, subtítols i formats, i compra les entrades al cinema."
+      ],
+      "canonical": [
+        "https://vobarna.com/ca/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/",
+        "es": "https://vobarna.com/es/",
+        "ca": "https://vobarna.com/ca/",
+        "x-default": "https://vobarna.com/en/"
+      },
+      "lang": "ca",
+      "h1": [
+        "Cinema en versió original a Barcelona"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 59,
+      "graph_types": []
+    },
+    "/webmcp/": {
+      "title": "VO Barna WebMCP guide — Cinema tools for AI agents",
+      "description": [
+        "Use VO Barna’s six WebMCP tools to find original-version cinema screenings around Barcelona, read film details and cached availability, and show official booking links. Includes inputs, examples and data limits."
+      ],
+      "canonical": [
+        "https://vobarna.com/webmcp/"
+      ],
+      "alternates": {},
+      "lang": "en",
+      "h1": [
+        "VO Barna with your AI agent"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "anchor_count": 25,
+      "graph_types": []
+    },
+    "/en/films/rocky-1976/": {
+      "title": "Rocky (1976) screenings in Barcelona | VO Barna",
+      "description": [
+        "Screenings of Rocky (1976) in Barcelona and nearby cinemas, with dates, original audio, subtitles and official booking links."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/films/rocky-1976/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/films/rocky-1976/",
+        "es": "https://vobarna.com/es/peliculas/rocky-1976/",
+        "ca": "https://vobarna.com/ca/pellicules/rocky-1976/",
+        "x-default": "https://vobarna.com/en/films/rocky-1976/"
+      },
+      "lang": "en",
+      "h1": [
+        "Rocky (1976)"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 37,
+      "graph_types": []
+    },
+    "/en/cinemas/mooby-balmes/": {
+      "title": "Mooby Balmes | VO Barna",
+      "description": [
+        "Find screenings, address, auditorium information and official links for Mooby Balmes."
+      ],
+      "canonical": [
+        "https://vobarna.com/en/cinemas/mooby-balmes/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/cinemas/mooby-balmes/",
+        "es": "https://vobarna.com/es/cines/mooby-balmes/",
+        "ca": "https://vobarna.com/ca/cinemes/mooby-balmes/",
+        "x-default": "https://vobarna.com/en/cinemas/mooby-balmes/"
+      },
+      "lang": "en",
+      "h1": [
+        "Mooby Balmes"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 1339,
+      "graph_types": []
+    },
+    "/en/guides/vose-vosc-original-version/": {
+      "title": "VOSE, VOSC and original-version cinema | VO Barna",
+      "description": [
+        "Original version describes the soundtrack used for a screening. VOSE has original audio with Spanish subtitles; VOSC has original audio with Catalan subtitles. VO can mean original audio without subtitles. A French film "
+      ],
+      "canonical": [
+        "https://vobarna.com/en/guides/vose-vosc-original-version/"
+      ],
+      "alternates": {
+        "en": "https://vobarna.com/en/guides/vose-vosc-original-version/",
+        "es": "https://vobarna.com/es/guias/vose-vosc-version-original/",
+        "ca": "https://vobarna.com/ca/guies/vose-vosc-versio-original/",
+        "x-default": "https://vobarna.com/en/guides/vose-vosc-original-version/"
+      },
+      "lang": "en",
+      "h1": [
+        "VOSE, VOSC and original-version cinema"
+      ],
+      "robots": [
+        "index,follow"
+      ],
+      "anchor_count": 12,
+      "graph_types": []
+    }
+  },
+  "same_locale_duplicate_title_groups": 0,
+  "public_http": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "REVALIDATED"
+    },
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "content_type": "application/xml; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "EXPIRED"
+    },
+    {
+      "path": "/en/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "HIT"
+    },
+    {
+      "path": "/en/cinemas/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/?q=English",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "robots": "noindex, follow",
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/?utm_source=verification",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/does-not-exist-739187/",
+      "status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "robots": "noindex",
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/programme.json",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "robots": "noindex",
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/analytics.js",
+      "status": 200,
+      "content_type": "text/javascript; charset=utf-8",
+      "robots": null,
+      "location": null,
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/conoce-a-los-barbaros-vose-d9f6768f/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/en/films/conoce-a-los-barbaros-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/es/peliculas/conoce-a-los-barbaros-vose-d9f6768f/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/es/peliculas/conoce-a-los-barbaros-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/ca/pellicules/conoce-a-los-barbaros-vose-d9f6768f/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/ca/pellicules/conoce-a-los-barbaros-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/omaha-vose-72d1e82e/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/en/films/omaha-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/es/peliculas/omaha-vose-72d1e82e/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/es/peliculas/omaha-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/ca/pellicules/omaha-vose-72d1e82e/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/ca/pellicules/omaha-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/bad-apples-vose-759cd9db/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/en/films/bad-apples-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/es/peliculas/bad-apples-vose-759cd9db/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/es/peliculas/bad-apples-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/ca/pellicules/bad-apples-vose-759cd9db/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/ca/pellicules/bad-apples-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/vivir-la-tierra-vose-b687e73b/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/en/films/vivir-la-tierra-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/es/peliculas/vivir-la-tierra-vose-b687e73b/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/es/peliculas/vivir-la-tierra-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/ca/pellicules/vivir-la-tierra-vose-b687e73b/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/ca/pellicules/vivir-la-tierra-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/en/films/dos-fiscales-vose-0b378f16/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/en/films/dos-fiscales-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/es/peliculas/dos-fiscales-vose-0b378f16/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/es/peliculas/dos-fiscales-vose/",
+      "cdn_cache": "MISS"
+    },
+    {
+      "path": "/ca/pellicules/dos-fiscales-vose-0b378f16/",
+      "status": 308,
+      "content_type": "text/plain; charset=utf-8",
+      "robots": null,
+      "location": "/ca/pellicules/dos-fiscales-vose/",
+      "cdn_cache": "MISS"
+    }
+  ],
+  "analytics": {
+    "config": {
+      "cookieless": "always",
+      "profiles": "never",
+      "replay": true,
+      "cookies": "",
+      "localKeys": [],
+      "sessionKeys": []
+    },
+    "responses": [
+      {
+        "host": "us-assets.i.posthog.com",
+        "path": "/static/array.js",
+        "status": 200
+      },
+      {
+        "host": "us-assets.i.posthog.com",
+        "path": "/array/phc_AUvZfww2dcEvkZ5CBuUdZxRBDCCfqxWXpVquA8eDbf27/config",
+        "status": 200
+      },
+      {
+        "host": "us-assets.i.posthog.com",
+        "path": "/static/1.453.0/web-vitals-with-attribution.js",
+        "status": 200
+      },
+      {
+        "host": "us.i.posthog.com",
+        "path": "/e/",
+        "status": 200
+      }
+    ],
+    "errors": [],
+    "ingestion_status": 200,
+    "project_id": 751818,
+    "test_note": "Synthetic SDK check explicitly marked is_test=true; WebDriver detection was overridden only in that isolated test browser. Production analytics retains PostHog bot filtering."
+  },
+  "lighthouse": {
+    "home": {
+      "url": "http://127.0.0.1:8792/en/",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failed_audits": []
+    },
+    "directory": {
+      "url": "http://127.0.0.1:8792/en/cinemas/",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 0.99
+      },
+      "failed_audits": [
+        "cumulative-layout-shift"
+      ]
+    },
+    "selected_dialog": {
+      "url": "http://127.0.0.1:8792/en/films/dune-1984/#screening-0ac46c3301fec1fc",
+      "scores": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "agentic-browsing": 1
+      },
+      "failed_audits": []
+    }
+  },
+  "tests": {
+    "python": 290,
+    "node": 38,
+    "search_and_dates": "passed",
+    "public_browser": "passed"
+  },
+  "publication": {
+    "digest": "b4fa8e2543b19aefa8cba6e77c655e5e8323199c6dce9c1c97a237b76d93de89",
+    "local_release": "build-d41ekjtp",
+    "release": "release-20261119T200512-b4fa8e2543b1",
+    "published_at": "2026-11-19T20:07:23.305204+00:00",
+    "analytics_source_sha256": "f7b4709175972a21def359be6fd0a82ffa0924827bc13fe1c2b11e9a053b3ceb",
+    "cdn_analytics_matches_source": true
+  }
+}

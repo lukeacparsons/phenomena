@@ -1,0 +1,940 @@
+{
+  "schema_version": 1,
+  "researched_on": "2026-11-19",
+  "scope": "13 missing Barcelona city cinemas, Filmax Gran Via in L’Hospitalet and Ateneu Barcelonès. Sample probes; not a deployed collector or full availability census.",
+  "summary": {
+    "venues": 15,
+    "venues_with_sampled_counts_or_seat_states": 12,
+    "count_unverified_or_offline": 3,
+    "filmoteca_programme_groups": 21,
+    "filmoteca_sessions": 136,
+    "zumzeig_discovered_events": 27,
+    "ateneu_classified_events": 12,
+    "ateneu_upcoming_classified_events": 0
+  },
+  "venues": [
+    {
+      "cinema_id": "mooby-arenas",
+      "name": "Mooby Arenas de Barcelona",
+      "provider_family": "mooby_admit_one",
+      "schedule_status": "verified_existing_feed",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.moobycinemas.com/aribau",
+          "purpose": "Programme embedded in window.shops"
+        },
+        {
+          "method": "GET",
+          "url": "{shop.shop_url with performance_code, language=esp, theatre=shop.id}",
+          "purpose": "Seat map in GlobalColumnData"
+        }
+      ],
+      "implementation_notes": [
+        "Shop IDs 24/BAL-ARENAS, 25/BAL-GLORIAS, 26/BAL-SARRIA. Existing parser currently includes only three other shops.",
+        "Reuse existing seat rules and verify GlobalPerfID. O is available, X unavailable, P accessibility; keep special flags separate.",
+        "data.available=false in programme is not sold-out evidence."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "mooby-glories",
+      "name": "Mooby Glòries",
+      "provider_family": "mooby_admit_one",
+      "schedule_status": "verified_existing_feed",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.moobycinemas.com/aribau",
+          "purpose": "Programme embedded in window.shops"
+        },
+        {
+          "method": "GET",
+          "url": "{shop.shop_url with performance_code, language=esp, theatre=shop.id}",
+          "purpose": "Seat map in GlobalColumnData"
+        }
+      ],
+      "implementation_notes": [
+        "Shop IDs 24/BAL-ARENAS, 25/BAL-GLORIAS, 26/BAL-SARRIA. Existing parser currently includes only three other shops.",
+        "Reuse existing seat rules and verify GlobalPerfID. O is available, X unavailable, P accessibility; keep special flags separate.",
+        "data.available=false in programme is not sold-out evidence."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "mooby-sarria",
+      "name": "Mooby Gran Sarrià Club",
+      "provider_family": "mooby_admit_one",
+      "schedule_status": "verified_existing_feed",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.moobycinemas.com/aribau",
+          "purpose": "Programme embedded in window.shops"
+        },
+        {
+          "method": "GET",
+          "url": "{shop.shop_url with performance_code, language=esp, theatre=shop.id}",
+          "purpose": "Seat map in GlobalColumnData"
+        }
+      ],
+      "implementation_notes": [
+        "Shop IDs 24/BAL-ARENAS, 25/BAL-GLORIAS, 26/BAL-SARRIA. Existing parser currently includes only three other shops.",
+        "Reuse existing seat rules and verify GlobalPerfID. O is available, X unavailable, P accessibility; keep special flags separate.",
+        "data.available=false in programme is not sold-out evidence."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "cinesa-diagonal",
+      "name": "Cinesa Diagonal",
+      "provider_family": "cinesa_vista",
+      "schedule_status": "verified_existing_api",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.cinesa.es/api/omnia/v1/initialData",
+          "purpose": "Anonymous API bootstrap"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/film-screening-dates?siteIds={site_id}",
+          "purpose": "Published dates",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/by-business-date/{YYYY-MM-DD}?siteIds={site_id}",
+          "purpose": "Session data and isSoldOut",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/{site-session}/seat-layout?siteIds={site_id}",
+          "purpose": "Seat types and layout",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/{site-session}/seat-availability?siteIds={site_id}",
+          "purpose": "Available seats and isSoldOut",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        }
+      ],
+      "implementation_notes": [
+        "Site IDs 012 and 017.",
+        "Add explicit venue lookup in both availability functions; current fallback maps every non-La-Farga cinema to Diagonal Mar. Probes passed an explicitly configured client.",
+        "Maintain separate Normal, Wheelchair, Companion counts. Do not automatically mark the entire venue as premium."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "cinesa-som-multiespai",
+      "name": "Cinesa SOM Multiespai",
+      "provider_family": "cinesa_vista",
+      "schedule_status": "verified_existing_api",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.cinesa.es/api/omnia/v1/initialData",
+          "purpose": "Anonymous API bootstrap"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/film-screening-dates?siteIds={site_id}",
+          "purpose": "Published dates",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/by-business-date/{YYYY-MM-DD}?siteIds={site_id}",
+          "purpose": "Session data and isSoldOut",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/{site-session}/seat-layout?siteIds={site_id}",
+          "purpose": "Seat types and layout",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        },
+        {
+          "method": "GET",
+          "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/showtimes/{site-session}/seat-availability?siteIds={site_id}",
+          "purpose": "Available seats and isSoldOut",
+          "authentication": "Fresh public website anonymous bearer token, memory only"
+        }
+      ],
+      "implementation_notes": [
+        "Site IDs 012 and 017.",
+        "Add explicit venue lookup in both availability functions; current fallback maps every non-La-Farga cinema to Diagonal Mar. Probes passed an explicitly configured client.",
+        "Maintain separate Normal, Wheelchair, Companion counts. Do not automatically mark the entire venue as premium."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "verdi",
+      "name": "Cinemes Verdi",
+      "provider_family": "a1_admit_one",
+      "schedule_status": "verified_programme_with_booking_room_join",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://barcelona.cines-verdi.com/api/get-theaters",
+          "purpose": "Theatre 46 / VERDIBCN and booking template"
+        },
+        {
+          "method": "GET",
+          "url": "https://barcelona.cines-verdi.com/api/get-events",
+          "purpose": "Programme; result[].performances[].code/time"
+        },
+        {
+          "method": "GET",
+          "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode={code}&language=esp",
+          "purpose": "Room identity and seat map"
+        }
+      ],
+      "implementation_notes": [
+        "Programme does not expose room; enrich each performance from its booking page and cache that identity.",
+        "Sampled Sala 1 / Sala 4 identify Verdi; Sala A V.Park identifies Verdi Park. Official rooms page describes numeric main rooms and A-D Park rooms. Unknown labels remain unresolved.",
+        "Use code rather than internal performance id. data.available=false is not sold out; one such session has 104 available seats."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "verdi-park",
+      "name": "Cinemes Verdi Park",
+      "provider_family": "a1_admit_one",
+      "schedule_status": "verified_programme_with_booking_room_join",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://barcelona.cines-verdi.com/api/get-theaters",
+          "purpose": "Theatre 46 / VERDIBCN and booking template"
+        },
+        {
+          "method": "GET",
+          "url": "https://barcelona.cines-verdi.com/api/get-events",
+          "purpose": "Programme; result[].performances[].code/time"
+        },
+        {
+          "method": "GET",
+          "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode={code}&language=esp",
+          "purpose": "Room identity and seat map"
+        }
+      ],
+      "implementation_notes": [
+        "Programme does not expose room; enrich each performance from its booking page and cache that identity.",
+        "Sampled Sala 1 / Sala 4 identify Verdi; Sala A V.Park identifies Verdi Park. Official rooms page describes numeric main rooms and A-D Park rooms. Unknown labels remain unresolved.",
+        "Use code rather than internal performance id. data.available=false is not sold out; one such session has 104 available seats."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "cinemes-girona",
+      "name": "Cinemes Girona",
+      "provider_family": "a1_admit_one",
+      "schedule_status": "verified_programme_with_booking_room_join",
+      "availability_status": "unverified_count",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.cinemesgirona.cat/api/get-theaters",
+          "purpose": "Theatre 31 / GIRONA"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.cinemesgirona.cat/api/get-events",
+          "purpose": "Programme"
+        },
+        {
+          "method": "GET",
+          "url": "https://girona.admit-one.eu/?p=tickets&perfCode={code}&language=esp",
+          "purpose": "Ticket-type page and room identity"
+        }
+      ],
+      "implementation_notes": [
+        "Sample 41266 names SALA 02 and presents ticket quantities 0-10; no seat map or remaining count found before ticket selection.",
+        "The maximum ten tickets per order is not availability. Do not infer sold out from data.available=false.",
+        "Validate apparent IMDb IDs before film identity joins."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "renoir-floridablanca",
+      "name": "Renoir Floridablanca",
+      "provider_family": "renoir_pillalas",
+      "schedule_status": "verified_dated_html",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.cinesrenoir.com/cine/renoir-floridablanca/cartelera/?fecha={YYYY-MM-DD}",
+          "purpose": "Advertised dates, rooms, versions, session links"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/{film-slug}/{session-id}/",
+          "purpose": "Seat buttons with data-seat-id and data-state"
+        }
+      ],
+      "implementation_notes": [
+        "Follow the advertised date selector. Deduplicate repeated responsive session anchors by booking URL.",
+        "Observed data-state values: normal, vendida, minusvalido. Browser and direct HTML agree.",
+        "Validate session ID, room and date; keep accessibility seats separate."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "zumzeig",
+      "name": "Zumzeig Cinecooperativa",
+      "provider_family": "codetickets",
+      "schedule_status": "verified_bulk_discovery_and_session_api",
+      "availability_status": "verified_reported_count_and_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://api.codetickets.com/api/entidad/zumzeigcooperativa",
+          "purpose": "Discover public entity and channel"
+        },
+        {
+          "method": "GET",
+          "url": "https://api.codetickets.com/api/evento/349/1602/eventos?lang=ca_ES",
+          "purpose": "Event discovery; nested availability values are placeholders"
+        },
+        {
+          "method": "GET",
+          "url": "https://api.codetickets.com/api/evento/349/1602/{event_id}/sesiones?lang=ca_ES",
+          "purpose": "Actual session timestamps and disponibles"
+        },
+        {
+          "method": "POST",
+          "url": "https://api.codetickets.com/api/evento/349/1602/{event_id}/{session_id}?lang=ca_ES",
+          "purpose": "Read session detail",
+          "json_body": {
+            "userId": ""
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://api.codetickets.com/api/evento/349/1602/{event_id}/{session_id}/zonasprecios?lang=ca_ES",
+          "purpose": "Read price/seat areas",
+          "json_body": {
+            "userId": ""
+          }
+        },
+        {
+          "method": "POST",
+          "url": "https://api.codetickets.com/api/evento/349/1602/{event_id}/{session_id}/zonas/{zone_id}/butacas?lang=ca_ES",
+          "purpose": "Read seat states",
+          "json_body": {
+            "userId": ""
+          }
+        }
+      ],
+      "implementation_notes": [
+        "Discovery returned 27 events and 52 nested session summaries. Rose detail returned nine sessions, more than the cinema film page showed.",
+        "Critical: event-list session 105076 has disponibles=0, while the per-event sessions/detail endpoint and rendered UI report 63. Never use event-list placeholders as availability.",
+        "Respect urlComprar for external festival ticket channels; three overrides were observed.",
+        "63 reported places = 57 normal + 6 mobility-area places in the sample. Do not present 63 as ordinary seats.",
+        "The numeric estado values other than sampled free=0 need full mapping before a seat-map adapter; use explicit reported count for initial integration."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "filmoteca-catalunya",
+      "name": "Filmoteca de Catalunya",
+      "provider_family": "euromus",
+      "schedule_status": "verified_bulk_booking_api_and_agenda",
+      "availability_status": "verified_reported_count",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.filmoteca.cat/web/ca/view-agenda-setmanal",
+          "purpose": "Public agenda and film-page discovery"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.filmoteca.cat/web/ca/film/{slug}",
+          "purpose": "Language/version, current and archived dates, booking IDs"
+        },
+        {
+          "method": "POST",
+          "url": "https://euromus.cultura.gencat.cat/filmoteca/ActionServletJson",
+          "purpose": "Read programmes and per-session remaining places",
+          "form_body": {
+            "elem": "activitatsNou",
+            "codiMuseu": "FILMOTECA",
+            "property": "FILMOTECA",
+            "codiActiv": "",
+            "codiCombi": "",
+            "codiCicle": "",
+            "grupActiv": "",
+            "dataVisita": "",
+            "lang": "1"
+          }
+        }
+      ],
+      "implementation_notes": [
+        "Unfiltered read returned 21 programme groups and 136 distinct sessions, 68 in each room, 19 November-31 December 2026.",
+        "Use cicle[].hihaPlaces per session. Top-level hihaPlaces is an aggregate; capacidad=10 is not a remaining-seat count.",
+        "Identity includes activity codi, codiCicle, date/time and codiRecinte. Both Chomón and Laya can have codiSala=1.",
+        "Booking data covers published online sale inventory; retain official agenda entries missing from the booking feed. Join explicit website version labels; do not guess codiIdioma mapping.",
+        "Reported place totals are not yet separated into ordinary and accessibility seats."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "espai-texas",
+      "name": "Espai Texas",
+      "provider_family": "wordpress_koobin",
+      "schedule_status": "verified_cinema_calendar_and_booking_metadata",
+      "availability_status": "verified_seat_map_requires_state_overlay",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://espaitexas.cat/cartellera-cinema/",
+          "purpose": "Film events in day_YYYY-MM-DD wrappers"
+        },
+        {
+          "method": "GET",
+          "url": "{official Koobin session URL}",
+          "purpose": "Event ID/date/room and fresh anonymous map parameters"
+        },
+        {
+          "method": "POST",
+          "url": "https://espaitexas.koobin.cat/widget/",
+          "purpose": "Read seat layout and occupancy overlay",
+          "form_body": {
+            "action": "aforo_evento",
+            "trans_id": "{fresh value from same anonymous session}",
+            "pid": "{fresh value from booking page}"
+          }
+        }
+      ],
+      "implementation_notes": [
+        "Parse calendar day wrapper and displayed time; some URL slugs end in 0000 despite non-midnight screenings.",
+        "Read-only map response has html, css and js. HTML alone initially marks all sample seats available; apply recognized occupancy updates and fail on unknown syntax.",
+        "Sample Blue Heron: CINE SALA 1, 157 selectable seats. The Human Scale: same 157-seat layout, 112 unavailable updates, leaving 45.",
+        "Preserve VOSC separately from VOSE, and keep film/theatre event types distinct.",
+        "Direct anonymous HTTP replay worked; isolated headless Chrome received a Koobin WAF-403. Record failures as unknown and retry later, not zero."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "cinema-malda",
+      "name": "Cinema Maldà",
+      "provider_family": "wordpress_editorial",
+      "schedule_status": "verified_weekly_text",
+      "availability_status": "box_office_only",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.cinemamalda.com/cartelera-dia-a-dia/",
+          "purpose": "Weekly heading, day names, times and versions"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.cinemamalda.com/",
+          "purpose": "Upcoming special dates and box-office-only policy"
+        }
+      ],
+      "implementation_notes": [
+        "No public online remaining-ticket source found; operator explicitly says sales only at the box office.",
+        "Derive year/month from the printed programme week, not server date alone. Undated coming-soon cards are not sessions.",
+        "A sample differs VOSCAT vs VOSCAST between homepage/day page: retain a source conflict, not a guessed subtitle language. Minimum audience five is not seats remaining."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "filmax-gran-via",
+      "name": "Filmax Gran Via",
+      "provider_family": "a1_admit_one",
+      "schedule_status": "verified_jsonld_and_accessible_html",
+      "availability_status": "verified_seat_map",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://cinesfilmax.com/wai",
+          "purpose": "Accessible film index"
+        },
+        {
+          "method": "GET",
+          "url": "https://cinesfilmax.com/{film-slug}",
+          "purpose": "JSON-LD @graph ScreeningEvent entries with ISO dates and booking links"
+        },
+        {
+          "method": "GET",
+          "url": "https://cinesfilmax.com/wai/{film-slug}",
+          "purpose": "Readable session list for cross-check"
+        },
+        {
+          "method": "GET",
+          "url": "https://filmax.admit-one.eu/?p=tickets&perfCode={code}",
+          "purpose": "Admit One seat map and room"
+        }
+      ],
+      "implementation_notes": [
+        "Eight JSON-LD ScreeningEvents exactly matched eight unique ticket links in the sampled film page. Full multi-film extraction still needed.",
+        "Sample 222679, Sala 12, returned 108 ordinary available seats. Reuse Admit One seat parser; no public JSON endpoint was assumed.",
+        "Generic schema.org/InStock in programme metadata is not a seat count or independently validated sold-out status.",
+        "L’Hospitalet venue; keep outside Barcelona municipality totals."
+      ],
+      "integrated": false
+    },
+    {
+      "cinema_id": "ateneu-barcelones",
+      "name": "Ateneu Barcelonès",
+      "provider_family": "wordpress_ajax",
+      "schedule_status": "verified_filter_archive_only",
+      "availability_status": "event_specific_unverified",
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://ateneubcn.cat/programacio/",
+          "purpose": "Fresh PT_Ajax nonce and filter definitions"
+        },
+        {
+          "method": "POST",
+          "url": "https://ateneubcn.cat/wp-admin/admin-ajax.php",
+          "purpose": "Read film-screening events",
+          "form_body": {
+            "action": "get_activities_filter",
+            "nonce": "{fresh public page nonce}",
+            "filters": "tipus-1174"
+          }
+        }
+      ],
+      "implementation_notes": [
+        "Returned 12 classified screenings, all past; latest 21 November 2025. No upcoming screening confirmed.",
+        "Fields include start datetime, room, event URL and members-only flag. Cinema section filter is seccio-9529; film-screening type is tipus-1174.",
+        "Do not treat streamed discussions or archive video as upcoming cinema. Check each event for admission/reservation instructions; no count API established."
+      ],
+      "integrated": false
+    }
+  ],
+  "availability_samples": [
+    {
+      "cinema_id": "mooby-arenas",
+      "session_id": "194493",
+      "starts_at": "2026-11-20T16:40:00+01:00",
+      "room": "08",
+      "ordinary_available": 191,
+      "source_url": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=194493&language=esp&theatre=24",
+      "checked_at": "2026-11-19T15:42:22.657303+00:00",
+      "seat_status_counts": {
+        "O": 191,
+        "X": 9,
+        "P": 2
+      }
+    },
+    {
+      "cinema_id": "mooby-glories",
+      "session_id": "122064",
+      "starts_at": "2026-11-20T17:50:00+01:00",
+      "room": "08",
+      "ordinary_available": 95,
+      "source_url": "https://moobycinemas-glorias.admit-one.eu/?p=tickets&perfCode=122064&language=esp&theatre=25",
+      "checked_at": "2026-11-19T15:42:23.563383+00:00",
+      "seat_status_counts": {
+        "X": 165,
+        "O": 95,
+        "P": 2
+      }
+    },
+    {
+      "cinema_id": "mooby-sarria",
+      "session_id": "118423",
+      "starts_at": "2026-11-20T18:05:00+01:00",
+      "room": "04",
+      "ordinary_available": 18,
+      "source_url": "https://moobycinemas-sarria.admit-one.eu/?p=tickets&perfCode=118423&language=esp&theatre=26",
+      "checked_at": "2026-11-19T15:42:24.320490+00:00",
+      "seat_status_counts": {
+        "P": 1,
+        "O": 18,
+        "X": 52
+      }
+    },
+    {
+      "cinema_id": "cinesa-diagonal",
+      "session_id": "012-57495",
+      "starts_at": "2026-11-20T16:00:00+01:00",
+      "room": "8",
+      "source_url": "https://www.cinesa.es/compra/butacas/?showtimeId=012-57495",
+      "kind": "ordinary",
+      "checked_at": "2026-11-19T15:42:24.321040+00:00",
+      "available": 132,
+      "wheelchair": 2,
+      "companion": 1,
+      "is_sold_out": false
+    },
+    {
+      "cinema_id": "cinesa-som-multiespai",
+      "session_id": "017-62718",
+      "starts_at": "2026-11-20T15:40:00+01:00",
+      "room": "5",
+      "source_url": "https://www.cinesa.es/compra/butacas/?showtimeId=017-62718",
+      "kind": "ordinary",
+      "checked_at": "2026-11-19T15:42:24.823733+00:00",
+      "available": 370,
+      "wheelchair": 4,
+      "companion": 2,
+      "is_sold_out": false
+    },
+    {
+      "cinema_id": "verdi",
+      "session_id": "222554",
+      "starts_at": "2026-11-20T16:00:00+01:00",
+      "room": "Sala 1",
+      "ordinary_available": 302,
+      "source_url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222554&language=esp",
+      "checked_at": "2026-11-19T15:46:11.106226+00:00",
+      "seat_status_counts": {
+        "O": 302,
+        "X": 13
+      }
+    },
+    {
+      "cinema_id": "verdi-park",
+      "session_id": "222820",
+      "starts_at": "2026-11-20T11:30:00+01:00",
+      "room": "Sala A V.Park",
+      "ordinary_available": 104,
+      "source_url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222820&language=esp",
+      "checked_at": "2026-11-19T15:42:25.925814+00:00",
+      "seat_status_counts": {
+        "O": 104
+      }
+    },
+    {
+      "cinema_id": "filmax-gran-via",
+      "session_id": "222679",
+      "starts_at": "2026-11-21T17:00:00+01:00",
+      "room": "SALA 12",
+      "ordinary_available": 108,
+      "source_url": "https://filmax.admit-one.eu/?p=tickets&perfCode=222679",
+      "checked_at": "2026-11-19T15:44:03.715033+00:00",
+      "seat_status_counts": {
+        "O": 108
+      }
+    },
+    {
+      "cinema_id": "renoir-floridablanca",
+      "session_id": "1097178",
+      "starts_at": "2026-11-20T16:00:00+01:00",
+      "room": "03",
+      "ordinary_available": 107,
+      "accessibility_layout_places": 2,
+      "unavailable": 3,
+      "source_url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/el-director/1097178/",
+      "checked_at": "2026-11-19T15:42:24.219777+00:00",
+      "verification": "Direct HTML states matched rendered browser; no XHR required."
+    },
+    {
+      "cinema_id": "zumzeig",
+      "session_id": "105076",
+      "event_id": "38184",
+      "starts_at": "2026-11-20T21:15:00.000+01:00",
+      "reported_available": 63,
+      "ordinary_available": 57,
+      "mobility_area_available": 6,
+      "source_url": "https://api.codetickets.com/api/evento/349/1602/38184/sesiones?lang=ca_ES",
+      "checked_at": "2026-11-19T15:44:01.353821+00:00",
+      "discovery_placeholder_available": 0
+    },
+    {
+      "cinema_id": "filmoteca-catalunya",
+      "activity_id": "1025",
+      "cycle_session_id": "10",
+      "starts_at": "2026-11-20T20:00:00+01:00",
+      "room": "Chomón",
+      "recinte_id": "1",
+      "sala_id": "1",
+      "reported_available": 318,
+      "source_url": "https://euromus.cultura.gencat.cat/filmoteca/ActionServletJson",
+      "checked_at": "2026-11-19T15:46:56.750062+00:00"
+    },
+    {
+      "cinema_id": "filmoteca-catalunya",
+      "activity_id": "959",
+      "cycle_session_id": "102",
+      "starts_at": "2026-11-29T17:00:00+01:00",
+      "room": "Laya",
+      "recinte_id": "2",
+      "sala_id": "1",
+      "reported_available": 173,
+      "source_url": "https://euromus.cultura.gencat.cat/filmoteca/ActionServletJson",
+      "checked_at": "2026-11-19T15:46:56.750062+00:00"
+    },
+    {
+      "cinema_id": "espai-texas",
+      "session_id": "8734",
+      "title": "Blue Heron",
+      "starts_at": "2026-11-20T16:00:00+01:00",
+      "room": "CINE: SALA 1",
+      "layout_seats": 157,
+      "occupied_overlay": 0,
+      "selectable_after_overlay": 157,
+      "source_url": "https://espaitexas.koobin.cat/widget/",
+      "checked_at": "2026-11-19T15:44:46.245210+00:00",
+      "scope": "Count after the observed occupancy overlay, not raw HTML; production parser still needs other state branches."
+    },
+    {
+      "cinema_id": "espai-texas",
+      "session_id": "8324",
+      "title": "The Human Scale",
+      "starts_at": "2026-11-23T19:00:00+01:00",
+      "room": "CINE: SALA 1",
+      "layout_seats": 157,
+      "occupied_overlay": 112,
+      "selectable_after_overlay": 45,
+      "source_url": "https://espaitexas.koobin.cat/widget/",
+      "checked_at": "2026-11-19T15:44:02.731677+00:00",
+      "scope": "Count after the observed occupancy overlay, not raw HTML; production parser still needs other state branches."
+    }
+  ],
+  "captures": [
+    {
+      "url": "https://ateneubcn.cat/wp-content/themes/ateneubcn/assets/dist/js/programacio.bundle.js",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.872913+00:00",
+      "sha256": "16b65bf573f0bbd3bf1a0c2a7f0c594370c803c1b223417ae73e8afefc663119"
+    },
+    {
+      "url": "https://ateneubcn.cat/programacio/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:41:20.969581+00:00",
+      "sha256": "97c152365754e8a8c9a75bf107808f87bd9cb9306a7d5b0cdce69bc605584b45"
+    },
+    {
+      "url": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=194493&language=esp&theatre=24",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:22.649297+00:00",
+      "sha256": "6efe66bfe53ce937bb8ee952a039572e4f20e463203add17c9b67a18d73089d0"
+    },
+    {
+      "url": "https://moobycinemas-glorias.admit-one.eu/?p=tickets&perfCode=122064&language=esp&theatre=25",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:23.555415+00:00",
+      "sha256": "821c589c4f6178319ff49a33b0e05c8b31316d0025f7ae84604d87de7caf7d2f"
+    },
+    {
+      "url": "https://moobycinemas-sarria.admit-one.eu/?p=tickets&perfCode=118423&language=esp&theatre=26",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.318608+00:00",
+      "sha256": "461ec1b14ca741f06d8c06d9df4720d720891cf1115585e64656dc3781edb32d"
+    },
+    {
+      "url": "https://filmax.admit-one.eu/?p=tickets&perfCode=222679",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:03.715033+00:00",
+      "sha256": "0795dd0d46182435827925cb74359a8760072ea7ec54237f395dbcec3161900d"
+    },
+    {
+      "url": "https://cinesfilmax.com/el-director",
+      "status": 200,
+      "checked_at": "2026-11-19T15:43:15.451891+00:00",
+      "sha256": "0706d64c7e07370f139cc48836ab63177b1d62b5ea63c854dbfbc4c77a54eee1"
+    },
+    {
+      "url": "https://cinesfilmax.com/site/esm/main.js?v=0.0.11",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.715112+00:00",
+      "sha256": "003dc640cbcefb1c4d691d4a34f6da539c57283b92dc97e68f3ebd26e61235f8"
+    },
+    {
+      "url": "https://cinesfilmax.com/wai/el-director",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:03.906311+00:00",
+      "sha256": "4985fd333d52283dcb68f17c91dac383030afdf68d7c04e938d7f0231c14e998"
+    },
+    {
+      "url": "https://cinesfilmax.com/wai",
+      "status": 200,
+      "checked_at": "2026-11-19T15:43:15.636814+00:00",
+      "sha256": "7caaf53dcac9ef037a8dc69ac6e3641cc4a9cfe1d42aee0e9d97b565e67e5a67"
+    },
+    {
+      "url": "https://cinesfilmax.com/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:41:18.139712+00:00",
+      "sha256": "59a225143856fc92e81b56b576677b4de99239b72d68abdbf2a00dc7a97e7757"
+    },
+    {
+      "url": "https://euromus.cultura.gencat.cat/filmoteca/venda/index.jsp?lang=1&nom_cache=FILMOTECA&property=FILMOTECA&codiActiv=1025&codiCicle=10",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:03.100743+00:00",
+      "sha256": "41c5b3bf3151a8bdb0a94cbb4b746bc88a944852696b71c0b87d2b42ac53b182"
+    },
+    {
+      "url": "https://www.filmoteca.cat/web/ca/film/deutschland-im-jahre-null-germania-anno-zero",
+      "status": 200,
+      "checked_at": "2026-11-19T15:43:15.813885+00:00",
+      "sha256": "fdc8add98de67836e887239d660d7ebd3c40ba4f19aa02f587d761eb58a391ea"
+    },
+    {
+      "url": "https://www.filmoteca.cat/web/ca/view-agenda-setmanal",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.534396+00:00",
+      "sha256": "9172c203f3dcba00311721cfe319262090d915eb24ab64e967419b821777a4d7"
+    },
+    {
+      "url": "https://www.filmoteca.cat/web/ca/agenda-setmanal",
+      "status": 404,
+      "checked_at": "2026-11-19T15:41:19.542079+00:00",
+      "sha256": "0fefaa3d1340953ee4ef482d9c627044f272fe28459ddb06593cd1baea28ef1f"
+    },
+    {
+      "url": "https://girona.admit-one.eu/?p=tickets&perfCode=41266&language=esp",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:26.406266+00:00",
+      "sha256": "20a789560d4129735c9b1bf2487a6c9457eab9f85f973876f3c145c401457166"
+    },
+    {
+      "url": "https://www.cinemamalda.com/cartelera-dia-a-dia/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:46:57.711970+00:00",
+      "sha256": "5a1122a893eb91708f7c0350f2a8a2241029b5fc46c18e78f002c11cb55f464e"
+    },
+    {
+      "url": "https://www.cinemamalda.com/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:46:12.327359+00:00",
+      "sha256": "118bba2e55760cbae83510c9613a662f2678647438307a7a0dd8d92c833c7dc3"
+    },
+    {
+      "url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/el-director/1097178/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.219777+00:00",
+      "sha256": "f5ed51e70383ff86b0504117b3fd4c40c2b354a973258c79e683f35555289e2a"
+    },
+    {
+      "url": "https://www.cinesrenoir.com/cine/renoir-floridablanca/cartelera/?fecha=2026-11-20",
+      "status": 200,
+      "checked_at": "2026-11-19T15:41:18.375007+00:00",
+      "sha256": "18a95602df842c0243b4720cdcbf2f3671565eb5bbbd9496f095f17fa59f4ebb"
+    },
+    {
+      "url": "https://espaitexas.koobin.cat/ca/the-human-scale-vose-20261123-1900",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:23.362956+00:00",
+      "sha256": "42e3a2b2607934bb438e818272d081e8388ff445d8b3933c6810157bb4dc427a"
+    },
+    {
+      "url": "https://espaitexas.cat/cartellera-cinema/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:41:17.917417+00:00",
+      "sha256": "397a55caf2cb25761f25d1dfb8d64e29abf01c9a1832fcc38a2e345af7643533"
+    },
+    {
+      "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222820&language=esp",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:25.925814+00:00",
+      "sha256": "7286b96d1014b28daa0a0e7f4f048f50c02767629dbf255043d5fb91e5eddd5d"
+    },
+    {
+      "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222576&language=esp",
+      "status": 200,
+      "checked_at": "2026-11-19T15:45:48.792746+00:00",
+      "sha256": "737001f8f6e1847327e2f341606eb8ea3f5c9ec7252cbd2cc3352d886601d27a"
+    },
+    {
+      "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222567&language=esp",
+      "status": 200,
+      "checked_at": "2026-11-19T15:46:09.855137+00:00",
+      "sha256": "45eef25d61ff6fbc3b1cdfaeca7027de2a0a3b4638f9ab9a4de37a28a2de1217"
+    },
+    {
+      "url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222554&language=esp",
+      "status": 200,
+      "checked_at": "2026-11-19T15:46:11.106226+00:00",
+      "sha256": "1ce946ca6038dcd813f460a5bbcfafcc02aec525191edbe21e71d05d015752b5"
+    },
+    {
+      "url": "https://www.codetickets.com/portal/zumzeigcooperativa/online/38184/105076",
+      "status": 200,
+      "checked_at": "2026-11-19T15:42:24.294832+00:00",
+      "sha256": "e9e381627f9012f8c0d842b4b46aa2c6ff1b6eeb347b7ee50ba54b69e44f03df"
+    },
+    {
+      "url": "https://zumzeigcine.coop/cinema/films/rose/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:41:19.076290+00:00",
+      "sha256": "3b0b399b6b7dc37549a1b72226598628b34d1e5be58129f234d25e4326de2aa2"
+    },
+    {
+      "url": "https://api.codetickets.com/api/evento/349/1602/eventos?lang=ca_ES",
+      "status": 200,
+      "checked_at": "2026-11-19T15:47:37.896420+00:00",
+      "sha256": "c6d175d4b4cdacc488ffeaa8a8633b65b80c682eb62b37730ff041de70f02929",
+      "sample": "code-events"
+    },
+    {
+      "url": "https://api.codetickets.com/api/evento/349/1602/38184/sesiones?lang=ca_ES",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:01.722057+00:00",
+      "sha256": "74482d74873c43d011eb56bf21fd4d957f9a2cf285632c278d27eec2a46ed945",
+      "sample": "code-sessions"
+    },
+    {
+      "url": "https://api.codetickets.com/api/evento/349/1602/38184/105076?lang=ca_ES",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:01.353821+00:00",
+      "sha256": "2cc7ed788a490f3da1e90d250b6fe56828d5995ea19e5ddcc683552822f8eec0",
+      "sample": "code-session"
+    },
+    {
+      "url": "https://api.codetickets.com/api/evento/349/1602/38184/105076/zonas/546/butacas?lang=ca_ES",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:02.159455+00:00",
+      "sha256": "3c5eba1a6865c9f5b37c2b82ead3f82dae13535e15a5e5b7d3b630a231102d81",
+      "sample": "code-seats"
+    },
+    {
+      "url": "https://espaitexas.koobin.cat/widget/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:02.731677+00:00",
+      "sha256": "54d8f2372854430bc177555512bba2ccf687e833346053eb466be3558f200ec0",
+      "sample": "texas-map"
+    },
+    {
+      "url": "https://espaitexas.koobin.cat/widget/",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:46.245210+00:00",
+      "sha256": "441cf58ef0c862a5fa279545bcf64ff6de0c153d58be4c19b0f9dd91adc2c0b1",
+      "sample": "texas-regular-map"
+    },
+    {
+      "url": "https://euromus.cultura.gencat.cat/filmoteca/ActionServletJson",
+      "status": 200,
+      "checked_at": "2026-11-19T15:46:56.750062+00:00",
+      "sha256": "cd1aea4d0ddf593c8b1e0fea084d7b2935dd051558cb47a1d79134fb0e3443af",
+      "sample": "filmoteca-all"
+    },
+    {
+      "url": "https://ateneubcn.cat/wp-admin/admin-ajax.php",
+      "status": 200,
+      "checked_at": "2026-11-19T15:44:45.789604+00:00",
+      "sha256": "99f16e75b1565a590c5e39195838c289b9174fae8f275f00905c706df4634baa",
+      "sample": "ateneu-film-filter"
+    }
+  ],
+  "limits": [
+    "Seat/ticket observations are dated snapshots and may have changed. Probes include all language versions.",
+    "No tickets or seats selected, no checkout submitted, no holds requested. Anonymous page initialization can create an empty browsing basket.",
+    "Read-only POST requests used only observed programme or layout actions. No personal account or stored user credentials used.",
+    "Request examples omit ephemeral tokens and anonymous session identifiers.",
+    "No source found is not proof that no source exists; Girona and Ateneu remain unresolved for counts."
+  ],
+  "related_files": [
+    "barcelona-cinema-inventory.json",
+    "barcelona-cinema-source-audit.json"
+  ]
+}

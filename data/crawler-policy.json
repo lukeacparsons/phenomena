@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "cinemas": [
+    {
+      "id": "phenomena",
+      "name": "Phenomena Experience",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-balmes",
+      "name": "Mooby Balmes",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-bosque",
+      "name": "Mooby Bosque",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-aribau",
+      "name": "Mooby Aribau",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinesa-diagonal-mar",
+      "name": "Cinesa Diagonal Mar",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinesa-la-farga",
+      "name": "Cinesa LUXE La Farga",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "yelmo-maquinista",
+      "name": "Yelmo Premium La Maquinista",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "kinepolis-splau",
+      "name": "Kinépolis Barcelona Splau",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-arenas",
+      "name": "Mooby Arenas",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-glories",
+      "name": "Mooby Glòries",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "mooby-sarria",
+      "name": "Mooby Gran Sarrià Club",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinesa-diagonal",
+      "name": "Cinesa Diagonal",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinesa-som-multiespai",
+      "name": "Cinesa SOM Multiespai",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "verdi",
+      "name": "Cinemes Verdi",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "verdi-park",
+      "name": "Cinemes Verdi Park",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinemes-girona",
+      "name": "Cinemes Girona",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "renoir-floridablanca",
+      "name": "Renoir Floridablanca",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "zumzeig",
+      "name": "Zumzeig Cinecooperativa",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "filmoteca-catalunya",
+      "name": "Filmoteca de Catalunya",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "espai-texas",
+      "name": "Espai Texas",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinema-malda",
+      "name": "Cinema Maldà",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "filmax-gran-via",
+      "name": "Cines Filmax Gran Via",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "ateneu-barcelones",
+      "name": "Ateneu Barcelonès",
+      "kind": "programme_monitor",
+      "stale_hours": 72,
+      "critical_hours": 168
+    },
+    {
+      "id": "cinebaix",
+      "name": "CineBaix",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinema-capri",
+      "name": "Cinema Capri",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "sant-cugat-cinemas",
+      "name": "Sant Cugat Cinemas",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinemes-montcada",
+      "name": "Cinemes Montcada",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "can-castellet",
+      "name": "Cinemes Can Castellet",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "cinesa-barnasud",
+      "name": "Cinesa LUXE Barnasud",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "yelmo-castelldefels",
+      "name": "Yelmo Premium Castelldefels",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "yelmo-sant-cugat",
+      "name": "Yelmo Premium Sant Cugat",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "ocine-magic",
+      "name": "OCINE Màgic Badalona",
+      "kind": "cinema",
+      "stale_hours": 6,
+      "critical_hours": 24
+    },
+    {
+      "id": "institut-francais",
+      "name": "Institut Français de Barcelona",
+      "kind": "cultural",
+      "stale_hours": 24,
+      "critical_hours": 72
+    },
+    {
+      "id": "cccb",
+      "name": "CCCB / Xcèntric",
+      "kind": "programme_monitor",
+      "stale_hours": 72,
+      "critical_hours": 168
+    },
+    {
+      "id": "caixaforum-barcelona",
+      "name": "CaixaForum Barcelona",
+      "kind": "cultural",
+      "stale_hours": 24,
+      "critical_hours": 72
+    },
+    {
+      "id": "casa-elizalde",
+      "name": "La Casa Elizalde",
+      "kind": "cultural",
+      "stale_hours": 24,
+      "critical_hours": 72
+    },
+    {
+      "id": "centre-cultural-albareda",
+      "name": "Centre Cultural Albareda",
+      "kind": "programme_monitor",
+      "stale_hours": 72,
+      "critical_hours": 168
+    },
+    {
+      "id": "can-carol",
+      "name": "Casal de Barri Can Carol",
+      "kind": "programme_monitor",
+      "stale_hours": 72,
+      "critical_hours": 168
+    }
+  ]
+}

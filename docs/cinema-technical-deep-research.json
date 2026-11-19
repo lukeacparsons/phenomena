@@ -1,0 +1,2291 @@
+{
+  "schema_version": 1,
+  "researched_on": "2026-11-19",
+  "update": {
+    "id": "technical-deep-2026-11-19",
+    "researched_on": "2026-11-19",
+    "new_facts": 10,
+    "new_price_observations": 0,
+    "new_source_records": 7,
+    "venues_with_new_facts": 3,
+    "new_room_identities": 6,
+    "net_new_room_records": 5,
+    "retired_anonymous_inventory_placeholders": 1,
+    "new_individual_capacity_observations": 4,
+    "ambiguous_group_capacity_observations": 2,
+    "new_unique_image_references": 19,
+    "new_source_identified_interior_rooms": 0,
+    "gallery_image_occurrences_checked": 35,
+    "cross_venue_reused_photographs": 2,
+    "new_fact_ids": [
+      "deep4-barnasud-room-labels",
+      "deep4-som-5-seats",
+      "deep4-som-6-seats",
+      "deep4-som-8-seats",
+      "deep4-barnasud-5-seats",
+      "deep4-barnasud-12-group-capacity",
+      "deep4-barnasud-67-group-capacity",
+      "deep4-capri-digital-conversion",
+      "deep4-barnasud-hire-technology",
+      "deep4-som-hire-technology"
+    ],
+    "new_source_ids": [
+      "deep4-barnasud-5",
+      "deep4-barnasud-67",
+      "deep4-barnasud-12",
+      "deep4-som-5",
+      "deep4-som-6",
+      "deep4-som-8",
+      "deep4-capri-2022"
+    ],
+    "report": "cinema-technical-deep-research.md",
+    "validation": "cinema-technical-deep-log.json"
+  },
+  "summary": {
+    "room_records": 224,
+    "room_records_with_any_capacity_evidence": 180,
+    "unmapped_placeholders": 26,
+    "image_references": 182,
+    "interior_image_references": 104,
+    "source_identified_interior_rooms": 34,
+    "screen_display_pairs_unchanged": 58,
+    "full_room_dimension_sets_unchanged": 0,
+    "interior_and_seating_detail_or_historical_references": 112
+  },
+  "sources": {
+    "deep4-barnasud-5": {
+      "title": "Cinesa LUXE Barnasud — Venuu Sala 5",
+      "url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-barnasud-5.html",
+      "sha256": "a98cc2ad470558b3d44e6e8fa70525a9a64c4a744c1673e3b740509a2799853c",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-barnasud-67": {
+      "title": "Cinesa LUXE Barnasud — Venuu Salas 6/7",
+      "url": "https://venuu.com/es/es/espacios/cinesa-barnasud-salas-6-7",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-barnasud-67.html",
+      "sha256": "b9ae830517274a5bfc60374225daf2a9c82458a47ac6bcf27ed8d162c1773571",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-barnasud-12": {
+      "title": "Cinesa LUXE Barnasud — Venuu Salas 1/2",
+      "url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-barnasud-12.html",
+      "sha256": "1b929aee39b3413bed5ed5848cccb1194150f7e930cb63c38f91436b1aa065ec",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-som-5": {
+      "title": "Cinesa SOM Multiespai — Venuu Sala 5",
+      "url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-som-5.html",
+      "sha256": "d09b0733ea37953db57009b60d7d29726feda83f40d7bcfacb7fee5f0da30a8e",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-som-6": {
+      "title": "Cinesa SOM Multiespai — Venuu Sala 6",
+      "url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-som-6.html",
+      "sha256": "a8869ca6b9fa0988b33a4355b03afe93ae661588ffdb5afb21fd9d373f352ba2",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-som-8": {
+      "title": "Cinesa SOM Multiespai — Venuu Sala 8",
+      "url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "kind": "event_marketplace",
+      "method": "public_html_and_own_VenueProfileGallery",
+      "checked_on": "2026-11-19",
+      "http_status": 200,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-som-8.html",
+      "sha256": "bf0f7adb75e2c7bccf2532067ea652bdc2c5c12ec21413f256f27626d991655f",
+      "note": "Public event-hire listing, not independently operator-confirmed or a certified current capacity. Gallery photos recur across room listings; no room identity inferred from page placement."
+    },
+    "deep4-capri-2022": {
+      "title": "Ajuntament del Prat — Viure+, May 2022, Cinema Capri history",
+      "url": "https://www.elprat.cat/sites/default/files/documentos_descargables/viure_maig_2022.pdf",
+      "kind": "municipal_publication",
+      "method": "pdf_text_and_visual_page_check",
+      "checked_on": "2026-11-19",
+      "publication_date": "2022-05",
+      "page": 10,
+      "local_path": "static/preview-data/auditoriums/sources/deep4-capri-2022.pdf",
+      "sha256": "a7cde33bd3bc59a1538ef8b896220992a2cc0593e3212a65411ad3fb9bab4a65",
+      "note": "Printed page 10 visually checked. Historical digital conversion does not establish the current projector model or continued 35 mm capability."
+    }
+  },
+  "facts": [
+    {
+      "id": "deep4-barnasud-room-labels",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "category": "room_identity",
+      "value": "Venuu explicitly names Barnasud Salas 1, 2, 5, 6 and 7 in three event listings. These are five source-named rooms within the previously reported seven-room complex; rooms 3 and 4 have not been independently identified.",
+      "source_ids": [
+        "deep4-barnasud-12",
+        "deep4-barnasud-5",
+        "deep4-barnasud-67"
+      ],
+      "status": "event_marketplace_room_identity",
+      "scope": "five_source_named_rooms",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-barnasud:1",
+        "cinesa-barnasud:2",
+        "cinesa-barnasud:5",
+        "cinesa-barnasud:6",
+        "cinesa-barnasud:7"
+      ]
+    },
+    {
+      "id": "deep4-som-5-seats",
+      "cinema_ids": [
+        "cinesa-som-multiespai"
+      ],
+      "category": "capacity",
+      "value": "Venuu lists 387 seated people for SOM Multiespai Sala 5. This is a published event-listing figure, not independently confirmed current installed seating or certified capacity.",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "status": "event_marketplace_seated_count_currentness_unverified",
+      "scope": "individual_sala_seated_event_listing",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-som-multiespai:5"
+      ],
+      "seated_people": 387
+    },
+    {
+      "id": "deep4-som-6-seats",
+      "cinema_ids": [
+        "cinesa-som-multiespai"
+      ],
+      "category": "capacity",
+      "value": "Venuu lists 162 seated people for SOM Multiespai Sala 6. This is a published event-listing figure, not independently confirmed current installed seating or certified capacity.",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "status": "event_marketplace_seated_count_currentness_unverified",
+      "scope": "individual_sala_seated_event_listing",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-som-multiespai:6"
+      ],
+      "seated_people": 162
+    },
+    {
+      "id": "deep4-som-8-seats",
+      "cinema_ids": [
+        "cinesa-som-multiespai"
+      ],
+      "category": "capacity",
+      "value": "Venuu lists 222 seated people for SOM Multiespai Sala 8. This is a published event-listing figure, not independently confirmed current installed seating or certified capacity. The same page gives 223 standing/event maximum; 223 is not the seated count.",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "status": "event_marketplace_seated_count_currentness_unverified",
+      "scope": "individual_sala_seated_event_listing",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-som-multiespai:8"
+      ],
+      "seated_people": 222
+    },
+    {
+      "id": "deep4-barnasud-5-seats",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "category": "capacity",
+      "value": "Venuu lists 134 seated people for Barnasud Sala 5. This is a published event-listing figure, not independently confirmed current installed seating or certified capacity.",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "status": "event_marketplace_seated_count_currentness_unverified",
+      "scope": "individual_sala_seated_event_listing",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-barnasud:5"
+      ],
+      "seated_people": 134
+    },
+    {
+      "id": "deep4-barnasud-12-group-capacity",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "category": "capacity_group_listing",
+      "value": "The Barnasud Salas 1/2 grouped listing gives 60 seated people. It does not unambiguously say whether that is per sala or for the grouped offer; no individual room capacity or complex total is inferred.",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "status": "ambiguous_group_capacity",
+      "scope": "group_listing_per_room_semantics_unresolved",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-barnasud:1",
+        "cinesa-barnasud:2"
+      ],
+      "listed_seated_people": 60,
+      "allocate_to_individual_rooms": false
+    },
+    {
+      "id": "deep4-barnasud-67-group-capacity",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "category": "capacity_group_listing",
+      "value": "The Barnasud Salas 6/7 grouped listing gives 88 seated people. It does not unambiguously say whether that is per sala or for the grouped offer; no individual room capacity or complex total is inferred.",
+      "source_ids": [
+        "deep4-barnasud-67"
+      ],
+      "status": "ambiguous_group_capacity",
+      "scope": "group_listing_per_room_semantics_unresolved",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinesa-barnasud:6",
+        "cinesa-barnasud:7"
+      ],
+      "listed_seated_people": 88,
+      "allocate_to_individual_rooms": false
+    },
+    {
+      "id": "deep4-capri-digital-conversion",
+      "cinema_ids": [
+        "cinema-capri"
+      ],
+      "category": "projection_history",
+      "value": "The municipal May 2022 magazine dates Cinema Capri’s digital projection launch to 9 February 2013, with Lincoln as the first digital screening. It describes replacement of analogue 35 mm projection; it does not identify the present projector or establish current 35 mm screening capability.",
+      "source_ids": [
+        "deep4-capri-2022"
+      ],
+      "status": "municipal_historical_account",
+      "scope": "historical_conversion_reported_2022",
+      "observed_on": "2026-11-19",
+      "question_ids": [
+        "seating"
+      ],
+      "room_ids": [
+        "cinema-capri:main"
+      ],
+      "event_date": "2013-02-09"
+    },
+    {
+      "id": "deep4-barnasud-hire-technology",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "category": "hire_education",
+      "value": "Event listings advertise digital projection, professional surround sound, microphones, catering/coffee breaks and technical support. This is private-event marketing: projector/audio models, sala allocation, package inclusions and availability are not established.",
+      "source_ids": [
+        "deep4-barnasud-12",
+        "deep4-barnasud-67"
+      ],
+      "status": "event_marketplace_advertisement",
+      "scope": "venue_event_hire_advertisement",
+      "observed_on": "2026-11-19",
+      "question_ids": []
+    },
+    {
+      "id": "deep4-som-hire-technology",
+      "cinema_ids": [
+        "cinesa-som-multiespai"
+      ],
+      "category": "hire_education",
+      "value": "Event listings advertise digital projection, professional surround sound, microphones, catering/coffee breaks and technical support. This is private-event marketing: projector/audio models, sala allocation, package inclusions and availability are not established.",
+      "source_ids": [
+        "deep4-som-5",
+        "deep4-som-6",
+        "deep4-som-8"
+      ],
+      "status": "event_marketplace_advertisement",
+      "scope": "venue_event_hire_advertisement",
+      "observed_on": "2026-11-19",
+      "question_ids": []
+    }
+  ],
+  "new_images": [
+    {
+      "id": "deep4-barnasud-5-1",
+      "source": "deep4-barnasud-5",
+      "url": "https://files.venuu.se/attachments/000/331/582/2d8566dd8d81ca2e6e5549c262674dcc2cb008e0.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 960,
+      "height": 1280,
+      "sha256": "cf8c1d7aa97e19de63a3a4dc17043b6fcf6c77ccd698f7c40c9280122f36e78e",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-5-1.jpg",
+      "bytes": 144532,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "kind": "auditorium",
+      "caption": "Recliner auditorium looking toward the screen. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-5-1",
+          "image_url": "https://files.venuu.se/attachments/000/331/582/2d8566dd8d81ca2e6e5549c262674dcc2cb008e0.jpg",
+          "source_ids": [
+            "deep4-barnasud-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "cf8c1d7aa97e19de63a3a4dc17043b6fcf6c77ccd698f7c40c9280122f36e78e",
+          "gallery_position": 1,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-5-2",
+      "source": "deep4-barnasud-5",
+      "url": "https://files.venuu.se/attachments/000/331/580/d50b3caef5f882d5d5c21dd4131582e45849b2e8.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 598,
+      "sha256": "e366246465a889bbc03736f4ee8d41faab888eda852e7e743c9eac2e62d9262e",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-5-2.jpg",
+      "bytes": 101958,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-5",
+        "deep4-barnasud-67"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "kind": "foyer",
+      "caption": "Cinesa LUXE foyer/entrance area. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "6",
+        "7"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-5-2",
+          "image_url": "https://files.venuu.se/attachments/000/331/580/d50b3caef5f882d5d5c21dd4131582e45849b2e8.jpg",
+          "source_ids": [
+            "deep4-barnasud-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "e366246465a889bbc03736f4ee8d41faab888eda852e7e743c9eac2e62d9262e",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-barnasud-5-2",
+          "image_url": "https://files.venuu.se/attachments/000/331/584/a36853ac5eb323847820d401f84497f0a8abde78.jpg",
+          "source_ids": [
+            "deep4-barnasud-67"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-salas-6-7",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "6",
+            "7"
+          ],
+          "sha256": "e366246465a889bbc03736f4ee8d41faab888eda852e7e743c9eac2e62d9262e",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-5-3",
+      "source": "deep4-barnasud-5",
+      "url": "https://files.venuu.se/attachments/000/362/058/9564d876d32142fd87b1849f45be0d1ed6dde360.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "f5cdcb802214883170c11d4eb1791b902162d2e481c637775ced4a9fb4875956",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-5-3.jpg",
+      "bytes": 121279,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "kind": "auditorium",
+      "caption": "Recliner auditorium looking toward the rear. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-5-3",
+          "image_url": "https://files.venuu.se/attachments/000/362/058/9564d876d32142fd87b1849f45be0d1ed6dde360.jpg",
+          "source_ids": [
+            "deep4-barnasud-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "f5cdcb802214883170c11d4eb1791b902162d2e481c637775ced4a9fb4875956",
+          "gallery_position": 3,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-1",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/331/581/8e3902a7e8a3b02289417d46bd88817cd5004a59.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 598,
+      "sha256": "ad3114215c91b24e4140941e3ef55bc4336c9e424017a729e691cf21fb961d3d",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-1.jpg",
+      "bytes": 65097,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "auditorium",
+      "caption": "Auditorium interior from the upper rows. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-1",
+          "image_url": "https://files.venuu.se/attachments/000/331/581/8e3902a7e8a3b02289417d46bd88817cd5004a59.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "ad3114215c91b24e4140941e3ef55bc4336c9e424017a729e691cf21fb961d3d",
+          "gallery_position": 1,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-2",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/330/015/bc420348476c252a083316103137c709cb37e861.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 960,
+      "height": 1280,
+      "sha256": "80e3f3e097f4825d05abd754cd5a236a5c7cf2c9cd8221a594beb888b7514257",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-2.jpg",
+      "bytes": 167987,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "entrance",
+      "caption": "Cinesa LUXE mall-facing entrance. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-2",
+          "image_url": "https://files.venuu.se/attachments/000/330/015/bc420348476c252a083316103137c709cb37e861.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "80e3f3e097f4825d05abd754cd5a236a5c7cf2c9cd8221a594beb888b7514257",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-3",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/362/060/8512a17b63a643594dca14251a3c5f182050f2a6.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 854,
+      "sha256": "960b8f4637ac9dca31192728b692e73d04085ea2442d567f87986d024df601ff",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-3.jpg",
+      "bytes": 104101,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "auditorium",
+      "caption": "Auditorium looking toward the screen. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-3",
+          "image_url": "https://files.venuu.se/attachments/000/362/060/8512a17b63a643594dca14251a3c5f182050f2a6.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "960b8f4637ac9dca31192728b692e73d04085ea2442d567f87986d024df601ff",
+          "gallery_position": 3,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-5-1",
+      "source": "deep4-som-5",
+      "url": "https://files.venuu.se/attachments/000/332/634/957dfac940c481c0f1f41ecba0b8a50e21f7f6e0.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "ae6fa8e0ab5397affd22bf308d756ae28f9b6d26c99b387cf406bef69ad5f9fa",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-5-1.jpg",
+      "bytes": 132589,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-5",
+        "deep4-som-8",
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "auditorium",
+      "caption": "Grey seats with a red middle seating section. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "8",
+        "6"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-5-1",
+          "image_url": "https://files.venuu.se/attachments/000/332/634/957dfac940c481c0f1f41ecba0b8a50e21f7f6e0.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "ae6fa8e0ab5397affd22bf308d756ae28f9b6d26c99b387cf406bef69ad5f9fa",
+          "gallery_position": 1,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-1",
+          "image_url": "https://files.venuu.se/attachments/000/395/812/60b19a64bf46ede0b1c67cb2e6ca38829c47a294.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "cbd4a52a13fe30fdcffbb4c7acf32124798cdf152d720adb1dfa4b645524cf6a",
+          "gallery_position": 3,
+          "checked_on": "2026-11-19",
+          "match_basis": "visually_same_photograph_recompressed"
+        },
+        {
+          "image_id": "deep4-som-5-1",
+          "image_url": "https://files.venuu.se/attachments/000/395/798/c03b5ee006ea0de644acce1d791ac1d8c44ca24d.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "cbd4a52a13fe30fdcffbb4c7acf32124798cdf152d720adb1dfa4b645524cf6a",
+          "gallery_position": 6,
+          "checked_on": "2026-11-19",
+          "match_basis": "visually_same_photograph_recompressed"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-5-2",
+      "source": "deep4-som-5",
+      "url": "https://files.venuu.se/attachments/000/332/635/ee035c9117f0b0b046b32cc6aa01b3b74a211af2.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "ab4e128d21849e0c97a8aa48402c242fe5ac6d006b9e7a5fbf7a3a91f8c8c01b",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-5-2.jpg",
+      "bytes": 219017,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "foyer",
+      "caption": "Cinema foyer with film displays; capture date unknown. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-5-2",
+          "image_url": "https://files.venuu.se/attachments/000/332/635/ee035c9117f0b0b046b32cc6aa01b3b74a211af2.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "ab4e128d21849e0c97a8aa48402c242fe5ac6d006b9e7a5fbf7a3a91f8c8c01b",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-5-3",
+      "source": "deep4-som-5",
+      "url": "https://files.venuu.se/attachments/000/395/815/23c724615383a576a0be1423feac131cc1dec584.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-5-3.jpg",
+      "bytes": 163177,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-5",
+        "deep4-som-8",
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "auditorium",
+      "caption": "Auditorium seen from the side aisle. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "8",
+        "6"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-5-3",
+          "image_url": "https://files.venuu.se/attachments/000/395/815/23c724615383a576a0be1423feac131cc1dec584.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+          "gallery_position": 3,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-3",
+          "image_url": "https://files.venuu.se/attachments/000/395/810/44241db8650f177630ef59af71f3acadb697c4de.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-3",
+          "image_url": "https://files.venuu.se/attachments/000/395/797/e34b6d94b8c6db31eb9088cab17f2cf455ee5d13.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+          "gallery_position": 4,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-6-1",
+      "source": "deep4-som-6",
+      "url": "https://files.venuu.se/attachments/000/331/146/561c87bccf5fd5e7e5b2286fa43d8e6d74e1b2f4.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "f445313bc2d4a7b89bbf52d6ab9e9167d82d892c9b802063c71775d04fb00a59",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-6-1.jpg",
+      "bytes": 123703,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-6",
+        "deep4-som-5",
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "kind": "auditorium",
+      "caption": "Auditorium with illuminated aisle steps, looking toward the screen. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "6",
+      "candidate_rooms": [
+        "6",
+        "5",
+        "8"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-6-1",
+          "image_url": "https://files.venuu.se/attachments/000/331/146/561c87bccf5fd5e7e5b2286fa43d8e6d74e1b2f4.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "f445313bc2d4a7b89bbf52d6ab9e9167d82d892c9b802063c71775d04fb00a59",
+          "gallery_position": 1,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-6-1",
+          "image_url": "https://files.venuu.se/attachments/000/395/816/36741a8301f56ce1bbd4fa3017acc879413bc05e.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "850760e8e0abc3568e822b61bad3d02800104dd8d0afa0911bab872ce6f8ccc6",
+          "gallery_position": 4,
+          "checked_on": "2026-11-19",
+          "match_basis": "visually_same_photograph_recompressed"
+        },
+        {
+          "image_id": "deep4-som-6-1",
+          "image_url": "https://files.venuu.se/attachments/000/395/811/c8d74d585438f1a2f95276077d8bd817d1958f3c.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "850760e8e0abc3568e822b61bad3d02800104dd8d0afa0911bab872ce6f8ccc6",
+          "gallery_position": 5,
+          "checked_on": "2026-11-19",
+          "match_basis": "visually_same_photograph_recompressed"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-6-2",
+      "source": "deep4-som-6",
+      "url": "https://files.venuu.se/attachments/000/331/147/6dde1825d92166f2390d49f4d3debdbedd9bafa6.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 960,
+      "height": 1280,
+      "sha256": "4e110b075387906e747ea6c5c21df3f7a77d4b84bf2b080e843fa0505a78cfa0",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-6-2.jpg",
+      "bytes": 234218,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "kind": "foyer",
+      "caption": "Foyer below escalators. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "6",
+      "candidate_rooms": [
+        "6"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-6-2",
+          "image_url": "https://files.venuu.se/attachments/000/331/147/6dde1825d92166f2390d49f4d3debdbedd9bafa6.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "4e110b075387906e747ea6c5c21df3f7a77d4b84bf2b080e843fa0505a78cfa0",
+          "gallery_position": 2,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-6-3",
+      "source": "deep4-som-6",
+      "url": "https://files.venuu.se/attachments/000/331/148/328a30c7f0000e46a484835895ee173789904c46.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 960,
+      "sha256": "86c463c63387094fed5580b4dc3ac85237aed5f9a42ce62f65a2d1af87d9ddbe",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-6-3.jpg",
+      "bytes": 184142,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "kind": "foyer",
+      "caption": "Upper foyer and escalators. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "6",
+      "candidate_rooms": [
+        "6"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-6-3",
+          "image_url": "https://files.venuu.se/attachments/000/331/148/328a30c7f0000e46a484835895ee173789904c46.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "86c463c63387094fed5580b4dc3ac85237aed5f9a42ce62f65a2d1af87d9ddbe",
+          "gallery_position": 3,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-8-1",
+      "source": "deep4-som-8",
+      "url": "https://files.venuu.se/attachments/000/330/592/c7d0b755d94f40d54840936a066141c9663d0289.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 946,
+      "sha256": "da8a88ed5003ce2a392ecee57f7fff2b771c393dd49fce0a8530a16fa89c2472",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-8-1.jpg",
+      "bytes": 83641,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "kind": "auditorium_event",
+      "caption": "Event in an auditorium; screen illuminated. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "8",
+      "candidate_rooms": [
+        "8"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-8-1",
+          "image_url": "https://files.venuu.se/attachments/000/330/592/c7d0b755d94f40d54840936a066141c9663d0289.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "da8a88ed5003ce2a392ecee57f7fff2b771c393dd49fce0a8530a16fa89c2472",
+          "gallery_position": 1,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-5-4",
+      "source": "deep4-barnasud-5",
+      "url": "https://files.venuu.se/attachments/000/362/057/28e838dc97913bff96d6aa57c1102ccc0e661ec7.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 807,
+      "sha256": "f3dd4e13107fafc2d3f8d1221206425b85c2fa4830aac2b104c39c4f2e399fd5",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-5-4.jpg",
+      "bytes": 89404,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-5",
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "kind": "auditorium_event",
+      "caption": "Costumed event in a recliner auditorium. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-5-4",
+          "image_url": "https://files.venuu.se/attachments/000/362/057/28e838dc97913bff96d6aa57c1102ccc0e661ec7.jpg",
+          "source_ids": [
+            "deep4-barnasud-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "f3dd4e13107fafc2d3f8d1221206425b85c2fa4830aac2b104c39c4f2e399fd5",
+          "gallery_position": 4,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-barnasud-5-4",
+          "image_url": "https://files.venuu.se/attachments/000/362/061/5776c4c35340c68001021facae5e3433d839db7f.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "f3dd4e13107fafc2d3f8d1221206425b85c2fa4830aac2b104c39c4f2e399fd5",
+          "gallery_position": 6,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-4",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/362/059/a2cefff4e4e5583d1c87600dcbcba97025ebe296.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "4ce3acd1ecfca44c2468c73b93d8265aca5223127416f8f2a5146af9007ffd33",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-4.jpg",
+      "bytes": 97850,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "seating_detail",
+      "caption": "Recliner rows and cup-holder tables. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-4",
+          "image_url": "https://files.venuu.se/attachments/000/362/059/a2cefff4e4e5583d1c87600dcbcba97025ebe296.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "4ce3acd1ecfca44c2468c73b93d8265aca5223127416f8f2a5146af9007ffd33",
+          "gallery_position": 4,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-5",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/362/062/c5d8a0dcd4714e0266d1d7653df58f2666053602.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "d257b8229e16901973cb150aa3b59bb7f97b77dd70eee87fa600503f625ee58d",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-5.jpg",
+      "bytes": 114222,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "concessions",
+      "caption": "Popcorn and drinks prepared for an event. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-5",
+          "image_url": "https://files.venuu.se/attachments/000/362/062/c5d8a0dcd4714e0266d1d7653df58f2666053602.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "d257b8229e16901973cb150aa3b59bb7f97b77dd70eee87fa600503f625ee58d",
+          "gallery_position": 5,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-barnasud-12-7",
+      "source": "deep4-barnasud-12",
+      "url": "https://files.venuu.se/attachments/000/362/063/07161ad956846eb4731d612d56486fdf7065ab5e.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 850,
+      "sha256": "edab6d98a8865a9515e332c7ebaa9bdaf15a566e5f3b6447941830d1d193a393",
+      "local_path": "static/preview-data/auditoriums/images/deep4-barnasud-12-7.jpg",
+      "bytes": 129306,
+      "cinema_id": "cinesa-barnasud",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "kind": "auditorium_event",
+      "caption": "Event presentation in a recliner auditorium. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": null,
+      "candidate_rooms": [
+        "1",
+        "2"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-barnasud-12-7",
+          "image_url": "https://files.venuu.se/attachments/000/362/063/07161ad956846eb4731d612d56486fdf7065ab5e.jpg",
+          "source_ids": [
+            "deep4-barnasud-12"
+          ],
+          "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+          "listed_cinema_id": "cinesa-barnasud",
+          "listed_rooms": [
+            "1",
+            "2"
+          ],
+          "sha256": "edab6d98a8865a9515e332c7ebaa9bdaf15a566e5f3b6447941830d1d193a393",
+          "gallery_position": 7,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-5-5",
+      "source": "deep4-som-5",
+      "url": "https://files.venuu.se/attachments/000/395/818/7c3853da58e92e2baaf186a8569f77ea2d2648a6.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-5-5.jpg",
+      "bytes": 110008,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-5",
+        "deep4-som-6",
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "foyer",
+      "caption": "Upper-level foyer with Sala 14 doorway signage visible. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "6",
+        "8"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "visible_room_signage": [
+        "14"
+      ],
+      "signage_scope": "Foyer doorway only, not a Sala 14 interior or dated current configuration.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-5-5",
+          "image_url": "https://files.venuu.se/attachments/000/395/818/7c3853da58e92e2baaf186a8569f77ea2d2648a6.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+          "gallery_position": 5,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-5",
+          "image_url": "https://files.venuu.se/attachments/000/395/799/72a3b59c5512eb167bddfb520f2289dbbf201f1d.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+          "gallery_position": 7,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-5",
+          "image_url": "https://files.venuu.se/attachments/000/395/813/76b96da7d751316575c39f2f77383c6151ec39d4.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+          "gallery_position": 6,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    },
+    {
+      "id": "deep4-som-5-6",
+      "source": "deep4-som-5",
+      "url": "https://files.venuu.se/attachments/000/395/819/f6c279b3c3bb3b833f0523f5680930d89ff2488f.jpg",
+      "alt": "",
+      "status": "ok",
+      "width": 1280,
+      "height": 853,
+      "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+      "local_path": "static/preview-data/auditoriums/images/deep4-som-5-6.jpg",
+      "bytes": 206647,
+      "cinema_id": "cinesa-som-multiespai",
+      "source_ids": [
+        "deep4-som-5",
+        "deep4-som-6",
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "kind": "foyer",
+      "caption": "Escalators, foyer levels and directional room signage. Venue/room association is provisional; listing context is not an independent identification.",
+      "confirmed_room": null,
+      "candidate_room": "5",
+      "candidate_rooms": [
+        "5",
+        "6",
+        "8"
+      ],
+      "room_association_basis": "Shown in the listing’s own VenueProfileGallery, not the similar-venues widget. No independently labelled sala interior; gallery photographs repeat across room listings.",
+      "capture_date": null,
+      "checked_on": "2026-11-19",
+      "current_appearance_verified": false,
+      "reuse_rights": "Not established; research reference, not permission to republish.",
+      "listing_occurrences": [
+        {
+          "image_id": "deep4-som-5-6",
+          "image_url": "https://files.venuu.se/attachments/000/395/819/f6c279b3c3bb3b833f0523f5680930d89ff2488f.jpg",
+          "source_ids": [
+            "deep4-som-5"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "5"
+          ],
+          "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+          "gallery_position": 6,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-6",
+          "image_url": "https://files.venuu.se/attachments/000/395/800/1daac0b98607baefa6a505575a6b19c5c3963704.jpg",
+          "source_ids": [
+            "deep4-som-6"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "6"
+          ],
+          "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+          "gallery_position": 5,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        },
+        {
+          "image_id": "deep4-som-5-6",
+          "image_url": "https://files.venuu.se/attachments/000/395/814/fe11f30aa7aeb1440964cd5b244cbc762366cd6b.jpg",
+          "source_ids": [
+            "deep4-som-8"
+          ],
+          "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+          "listed_cinema_id": "cinesa-som-multiespai",
+          "listed_rooms": [
+            "8"
+          ],
+          "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+          "gallery_position": 4,
+          "checked_on": "2026-11-19",
+          "match_basis": "sha256_identical"
+        }
+      ]
+    }
+  ],
+  "gallery_occurrences": [
+    {
+      "image_id": "deep4-barnasud-5-1",
+      "image_url": "https://files.venuu.se/attachments/000/331/582/2d8566dd8d81ca2e6e5549c262674dcc2cb008e0.jpg",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "cf8c1d7aa97e19de63a3a4dc17043b6fcf6c77ccd698f7c40c9280122f36e78e",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-5-2",
+      "image_url": "https://files.venuu.se/attachments/000/331/580/d50b3caef5f882d5d5c21dd4131582e45849b2e8.jpg",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "e366246465a889bbc03736f4ee8d41faab888eda852e7e743c9eac2e62d9262e",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-5-3",
+      "image_url": "https://files.venuu.se/attachments/000/362/058/9564d876d32142fd87b1849f45be0d1ed6dde360.jpg",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "f5cdcb802214883170c11d4eb1791b902162d2e481c637775ced4a9fb4875956",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "farga-venuu-1",
+      "image_url": "https://files.venuu.se/attachments/000/331/583/ff767d6e864b02718ccb3c189d184d68ff15abe7.jpg",
+      "source_ids": [
+        "deep4-barnasud-67"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-salas-6-7",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "6",
+        "7"
+      ],
+      "sha256": "d54e67bed4090bffd5dd0128790860f780bfa3dd028516f4440a1f8575dba98a",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-5-2",
+      "image_url": "https://files.venuu.se/attachments/000/331/584/a36853ac5eb323847820d401f84497f0a8abde78.jpg",
+      "source_ids": [
+        "deep4-barnasud-67"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-salas-6-7",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "6",
+        "7"
+      ],
+      "sha256": "e366246465a889bbc03736f4ee8d41faab888eda852e7e743c9eac2e62d9262e",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "farga-venuu-5-screen",
+      "image_url": "https://files.venuu.se/attachments/000/394/970/4711bd43a7971c1b69f34d4635d7b78f1448b780.jpg",
+      "source_ids": [
+        "deep4-barnasud-67"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-salas-6-7",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "6",
+        "7"
+      ],
+      "sha256": "d888b9e5c0824f2078c234e8a60a6a9b287099d0bf2cdb058768d0b98378da93",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-1",
+      "image_url": "https://files.venuu.se/attachments/000/331/581/8e3902a7e8a3b02289417d46bd88817cd5004a59.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "ad3114215c91b24e4140941e3ef55bc4336c9e424017a729e691cf21fb961d3d",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-2",
+      "image_url": "https://files.venuu.se/attachments/000/330/015/bc420348476c252a083316103137c709cb37e861.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "80e3f3e097f4825d05abd754cd5a236a5c7cf2c9cd8221a594beb888b7514257",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-3",
+      "image_url": "https://files.venuu.se/attachments/000/362/060/8512a17b63a643594dca14251a3c5f182050f2a6.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "960b8f4637ac9dca31192728b692e73d04085ea2442d567f87986d024df601ff",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-1",
+      "image_url": "https://files.venuu.se/attachments/000/332/634/957dfac940c481c0f1f41ecba0b8a50e21f7f6e0.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "ae6fa8e0ab5397affd22bf308d756ae28f9b6d26c99b387cf406bef69ad5f9fa",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-2",
+      "image_url": "https://files.venuu.se/attachments/000/332/635/ee035c9117f0b0b046b32cc6aa01b3b74a211af2.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "ab4e128d21849e0c97a8aa48402c242fe5ac6d006b9e7a5fbf7a3a91f8c8c01b",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-3",
+      "image_url": "https://files.venuu.se/attachments/000/395/815/23c724615383a576a0be1423feac131cc1dec584.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-6-1",
+      "image_url": "https://files.venuu.se/attachments/000/331/146/561c87bccf5fd5e7e5b2286fa43d8e6d74e1b2f4.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "f445313bc2d4a7b89bbf52d6ab9e9167d82d892c9b802063c71775d04fb00a59",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-6-2",
+      "image_url": "https://files.venuu.se/attachments/000/331/147/6dde1825d92166f2390d49f4d3debdbedd9bafa6.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "4e110b075387906e747ea6c5c21df3f7a77d4b84bf2b080e843fa0505a78cfa0",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-6-3",
+      "image_url": "https://files.venuu.se/attachments/000/331/148/328a30c7f0000e46a484835895ee173789904c46.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "86c463c63387094fed5580b4dc3ac85237aed5f9a42ce62f65a2d1af87d9ddbe",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-8-1",
+      "image_url": "https://files.venuu.se/attachments/000/330/592/c7d0b755d94f40d54840936a066141c9663d0289.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "da8a88ed5003ce2a392ecee57f7fff2b771c393dd49fce0a8530a16fa89c2472",
+      "gallery_position": 1,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-3",
+      "image_url": "https://files.venuu.se/attachments/000/395/810/44241db8650f177630ef59af71f3acadb697c4de.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+      "gallery_position": 2,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-1",
+      "image_url": "https://files.venuu.se/attachments/000/395/812/60b19a64bf46ede0b1c67cb2e6ca38829c47a294.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "cbd4a52a13fe30fdcffbb4c7acf32124798cdf152d720adb1dfa4b645524cf6a",
+      "gallery_position": 3,
+      "checked_on": "2026-11-19",
+      "match_basis": "visually_same_photograph_recompressed"
+    },
+    {
+      "image_id": "deep4-barnasud-5-4",
+      "image_url": "https://files.venuu.se/attachments/000/362/057/28e838dc97913bff96d6aa57c1102ccc0e661ec7.jpg",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "f3dd4e13107fafc2d3f8d1221206425b85c2fa4830aac2b104c39c4f2e399fd5",
+      "gallery_position": 4,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "farga-venuu-5-screen",
+      "image_url": "https://files.venuu.se/attachments/000/394/968/162a47f33b5d2805cf5048c1034aa6635f20383e.jpg",
+      "source_ids": [
+        "deep4-barnasud-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-barnasud-sala-5",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "d888b9e5c0824f2078c234e8a60a6a9b287099d0bf2cdb058768d0b98378da93",
+      "gallery_position": 5,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-4",
+      "image_url": "https://files.venuu.se/attachments/000/362/059/a2cefff4e4e5583d1c87600dcbcba97025ebe296.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "4ce3acd1ecfca44c2468c73b93d8265aca5223127416f8f2a5146af9007ffd33",
+      "gallery_position": 4,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-5",
+      "image_url": "https://files.venuu.se/attachments/000/362/062/c5d8a0dcd4714e0266d1d7653df58f2666053602.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "d257b8229e16901973cb150aa3b59bb7f97b77dd70eee87fa600503f625ee58d",
+      "gallery_position": 5,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-5-4",
+      "image_url": "https://files.venuu.se/attachments/000/362/061/5776c4c35340c68001021facae5e3433d839db7f.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "f3dd4e13107fafc2d3f8d1221206425b85c2fa4830aac2b104c39c4f2e399fd5",
+      "gallery_position": 6,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-barnasud-12-7",
+      "image_url": "https://files.venuu.se/attachments/000/362/063/07161ad956846eb4731d612d56486fdf7065ab5e.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "edab6d98a8865a9515e332c7ebaa9bdaf15a566e5f3b6447941830d1d193a393",
+      "gallery_position": 7,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "farga-venuu-5-screen",
+      "image_url": "https://files.venuu.se/attachments/000/394/969/21ad9ada2108d14967d1b0f0f691b722569db97c.jpg",
+      "source_ids": [
+        "deep4-barnasud-12"
+      ],
+      "source_page_url": "https://venuu.com/es/en/venues/cinesa-barnasud-salas-1-2",
+      "listed_cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "sha256": "d888b9e5c0824f2078c234e8a60a6a9b287099d0bf2cdb058768d0b98378da93",
+      "gallery_position": 8,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-6-1",
+      "image_url": "https://files.venuu.se/attachments/000/395/816/36741a8301f56ce1bbd4fa3017acc879413bc05e.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "850760e8e0abc3568e822b61bad3d02800104dd8d0afa0911bab872ce6f8ccc6",
+      "gallery_position": 4,
+      "checked_on": "2026-11-19",
+      "match_basis": "visually_same_photograph_recompressed"
+    },
+    {
+      "image_id": "deep4-som-5-5",
+      "image_url": "https://files.venuu.se/attachments/000/395/818/7c3853da58e92e2baaf186a8569f77ea2d2648a6.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+      "gallery_position": 5,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-6",
+      "image_url": "https://files.venuu.se/attachments/000/395/819/f6c279b3c3bb3b833f0523f5680930d89ff2488f.jpg",
+      "source_ids": [
+        "deep4-som-5"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-5",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+      "gallery_position": 6,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-3",
+      "image_url": "https://files.venuu.se/attachments/000/395/797/e34b6d94b8c6db31eb9088cab17f2cf455ee5d13.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "e5c662440c87c40561a351e6f0ad4936ad25ce92ace814fb5e740a9f6b77326b",
+      "gallery_position": 4,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-6",
+      "image_url": "https://files.venuu.se/attachments/000/395/800/1daac0b98607baefa6a505575a6b19c5c3963704.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+      "gallery_position": 5,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-1",
+      "image_url": "https://files.venuu.se/attachments/000/395/798/c03b5ee006ea0de644acce1d791ac1d8c44ca24d.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "cbd4a52a13fe30fdcffbb4c7acf32124798cdf152d720adb1dfa4b645524cf6a",
+      "gallery_position": 6,
+      "checked_on": "2026-11-19",
+      "match_basis": "visually_same_photograph_recompressed"
+    },
+    {
+      "image_id": "deep4-som-5-5",
+      "image_url": "https://files.venuu.se/attachments/000/395/799/72a3b59c5512eb167bddfb520f2289dbbf201f1d.jpg",
+      "source_ids": [
+        "deep4-som-6"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-6",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+      "gallery_position": 7,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-5-6",
+      "image_url": "https://files.venuu.se/attachments/000/395/814/fe11f30aa7aeb1440964cd5b244cbc762366cd6b.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "df4bc4fe72d318bb5694b236a99e5388f594dab956f31e0c048806bc907ac168",
+      "gallery_position": 4,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    },
+    {
+      "image_id": "deep4-som-6-1",
+      "image_url": "https://files.venuu.se/attachments/000/395/811/c8d74d585438f1a2f95276077d8bd817d1958f3c.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "850760e8e0abc3568e822b61bad3d02800104dd8d0afa0911bab872ce6f8ccc6",
+      "gallery_position": 5,
+      "checked_on": "2026-11-19",
+      "match_basis": "visually_same_photograph_recompressed"
+    },
+    {
+      "image_id": "deep4-som-5-5",
+      "image_url": "https://files.venuu.se/attachments/000/395/813/76b96da7d751316575c39f2f77383c6151ec39d4.jpg",
+      "source_ids": [
+        "deep4-som-8"
+      ],
+      "source_page_url": "https://venuu.com/es/es/espacios/cinesa-som-multiespai-sala-8",
+      "listed_cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "sha256": "b177f974400923f646c724edd030c778b4e77351421e3d06278d4225dac19462",
+      "gallery_position": 6,
+      "checked_on": "2026-11-19",
+      "match_basis": "sha256_identical"
+    }
+  ],
+  "marketplace_observations": [
+    {
+      "source_id": "deep4-barnasud-5",
+      "cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "5"
+      ],
+      "gallery_images": 5,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.00743,
+          "latitude": 41.2957
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-barnasud-5.html"
+    },
+    {
+      "source_id": "deep4-barnasud-67",
+      "cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "6",
+        "7"
+      ],
+      "gallery_images": 3,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.00743,
+          "latitude": 41.2957
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-barnasud-67.html"
+    },
+    {
+      "source_id": "deep4-barnasud-12",
+      "cinema_id": "cinesa-barnasud",
+      "listed_rooms": [
+        "1",
+        "2"
+      ],
+      "gallery_images": 8,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.00743,
+          "latitude": 41.2957
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-barnasud-12.html"
+    },
+    {
+      "source_id": "deep4-som-5",
+      "cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "5"
+      ],
+      "gallery_images": 6,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.18096,
+          "latitude": 41.4352
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-som-5.html"
+    },
+    {
+      "source_id": "deep4-som-6",
+      "cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "6"
+      ],
+      "gallery_images": 7,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.18096,
+          "latitude": 41.4352
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-som-6.html"
+    },
+    {
+      "source_id": "deep4-som-8",
+      "cinema_id": "cinesa-som-multiespai",
+      "listed_rooms": [
+        "8"
+      ],
+      "gallery_images": 6,
+      "map_pin_observation": {
+        "coordinates": {
+          "longitude": 2.18096,
+          "latitude": 41.4352
+        },
+        "status": "marketplace_pin_not_google_place_verification"
+      },
+      "video_links": [
+        {
+          "url": "https://youtu.be/pL7fge1zi9c?si=pF-Cfwdy6rI3fs3V"
+        }
+      ],
+      "video_scope": "Same marketing video linked by all six pages; not viewed or independently assigned to a venue/sala.",
+      "virtual_tour_links": [],
+      "event_policy_scope": "Private hire only; outside food/alcohol and 07:00–00:00 event availability must not be generalized to regular screenings.",
+      "price_scope": "Listing tariff widgets and narrative starting prices are inconsistent; no universal hire/ticket price inferred.",
+      "source_cache": "static/preview-data/auditoriums/sources/deep4-som-8.html"
+    }
+  ],
+  "room_inventory_resolution": {
+    "retired_placeholder_id": "cinesa-som-multiespai:unmapped-01",
+    "new_identified_room_id": "cinesa-som-multiespai:8",
+    "checked_on": "2026-11-19",
+    "source_ids": [
+      "deep4-som-8"
+    ],
+    "reason": "Replace one anonymous inventory-accounting slot after identifying Sala 8. The former slot was not a real numbered sala or a physical-location identity. Published complex count remains 12 and seven anonymous placeholders remain.",
+    "retired_record": {
+      "id": "cinesa-som-multiespai:unmapped-01",
+      "cinema_id": "cinesa-som-multiespai",
+      "room": "unmapped-01",
+      "name": "Unmapped sala (inventory placeholder 1)",
+      "index_observation": {
+        "present": null,
+        "status": "not_checked_against_live_index",
+        "source_ids": [
+          "exp-inventory"
+        ]
+      },
+      "screen": null,
+      "physical_room_dimensions": {
+        "length_m": null,
+        "width_m": null,
+        "height_m": null,
+        "area_m2": null,
+        "status": "not_found"
+      },
+      "projection": [],
+      "sound": [],
+      "seating": [],
+      "capacity": {
+        "published": [],
+        "mapped_layout": null
+      },
+      "features": [],
+      "historical": null,
+      "image_ids": [],
+      "candidate_image_ids": [],
+      "notes": [
+        "Placeholder accounts for a published room total; it is not an actual sala number."
+      ],
+      "room_identity_status": "not_mapped"
+    }
+  },
+  "conflicts": [
+    {
+      "id": "deep4-barnasud-group-capacity",
+      "cinema_ids": [
+        "cinesa-barnasud"
+      ],
+      "source_ids": [
+        "deep4-barnasud-12",
+        "deep4-barnasud-67"
+      ],
+      "description": "Grouped Sala 1/2 and 6/7 listings publish 60 and 88 seated people without unambiguous per-sala semantics. Values are excluded from individual room-capacity fields and from a complex total.",
+      "origin_catalogue": "cinema-technical-deep-research.json"
+    },
+    {
+      "id": "deep4-cross-venue-photos",
+      "cinema_ids": [
+        "cinesa-la-farga",
+        "cinesa-barnasud"
+      ],
+      "source_ids": [
+        "farga-venuu-1",
+        "farga-venuu-5",
+        "deep4-barnasud-5",
+        "deep4-barnasud-12",
+        "deep4-barnasud-67"
+      ],
+      "image_ids": [
+        "farga-venuu-1",
+        "farga-venuu-5-screen"
+      ],
+      "description": "Two previously unconfirmed La Farga photographs also occur byte-for-byte in Barnasud galleries. Retain provenance and candidate links; do not count either as a verified room or venue photograph.",
+      "origin_catalogue": "cinema-technical-deep-research.json"
+    }
+  ],
+  "validation": "cinema-technical-deep-log.json",
+  "limitations": [
+    "Four individual counts come from event marketplaces; current operator confirmation is outstanding.",
+    "No newly established screen measurements, room L/W/H, projector models or source-identified sala interiors.",
+    "Gallery images have unknown capture dates and reuse rights; all new interior-room associations are provisional.",
+    "No email, enquiry form, booking, seat selection, purchase, app change or deployment made."
+  ]
+}

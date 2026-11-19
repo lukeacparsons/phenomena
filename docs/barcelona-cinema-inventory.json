@@ -1,0 +1,2022 @@
+{
+  "schema_version": 1,
+  "researched_on": "2026-11-19",
+  "scope": {
+    "primary": "Barcelona municipality: permanent public cinemas",
+    "secondary": "Nearby cinemas, regional leads, cultural and civic screenings, seasonal programmes",
+    "counting_rule": "20 city venues / 19 directory groups if the two Aribau entrances share one entry. Verdi and Verdi Park remain separate because their entrances are separate. Existing six city directory IDs cover seven of these venues.",
+    "completeness": "Cross-checked current operator pages and programmes with exhibitor and cinema directories. Working inventory, not a statutory census; supplemental cultural/regional lists are discovery lists and are not claimed exhaustive."
+  },
+  "summary": {
+    "city_permanent_venues": 20,
+    "city_existing_directory_entries": 6,
+    "city_venues_already_covered": 7,
+    "city_missing_venues": 13,
+    "nearby_candidates": 12,
+    "nearby_missing_candidates": 10,
+    "regional_leads": 12,
+    "cultural_venues_and_leads": 16,
+    "civic_programme_locations": 23,
+    "seasonal_programmes": 3,
+    "closed_venues": 8
+  },
+  "sources": {
+    "baseline": {
+      "title": "Current directory configuration",
+      "url": "../scripts/build_cinema_preview.py",
+      "kind": "repository",
+      "checked_on": "2026-11-19"
+    },
+    "dossiers": {
+      "title": "Existing venue and entrance research",
+      "url": "cinema-dossiers.json",
+      "kind": "repository",
+      "checked_on": "2026-11-19"
+    },
+    "rooms": {
+      "title": "Existing auditorium research",
+      "url": "auditoriums.json",
+      "kind": "repository",
+      "checked_on": "2026-11-19"
+    },
+    "pahissa": {
+      "title": "Cross-check: cinema directory by municipality",
+      "url": "https://jaumepahissa.cat/cartellera",
+      "kind": "discovery_directory",
+      "checked_on": "2026-11-19"
+    },
+    "english-cinema": {
+      "title": "User-supplied English Cinema Barcelona directory",
+      "url": "https://englishcinemabarcelona.com/cinemas",
+      "kind": "discovery_directory",
+      "checked_on": "2026-11-19",
+      "note": "Matched every cinema card; English-only, seven-day showtime totals are not a measure of venue activity or our all-language VOSE coverage."
+    },
+    "gremi": {
+      "title": "Cinema exhibitors association directory",
+      "url": "https://gremicines.com/cinemes/",
+      "kind": "trade_association",
+      "checked_on": "2026-11-19"
+    },
+    "mooby": {
+      "title": "Mooby public programme: embedded window.shops",
+      "url": "https://www.moobycinemas.com/aribau",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "mooby-arenas": {
+      "title": "Mooby venue description: arenas",
+      "url": "https://www.moobycinemas.com/sobre-arenas",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "mooby-glories": {
+      "title": "Mooby venue description: glories",
+      "url": "https://www.moobycinemas.com/sobre-glories",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "mooby-sarria": {
+      "title": "Mooby venue description: sarria",
+      "url": "https://www.moobycinemas.com/sobre-sarria",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "cinesa-sites": {
+      "title": "Cinesa public venue metadata",
+      "url": "https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/sites",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "Read-only request with the website anonymous token; token is not retained."
+    },
+    "cinesa-bootstrap": {
+      "title": "Cinesa active and closed cinema routes",
+      "url": "https://www.cinesa.es/api/omnia/v1/initialData",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "Read with the existing Chrome-compatible client; plain curl returned 403."
+    },
+    "som": {
+      "title": "SOM shopping centre: Cinesa",
+      "url": "https://sommultiespai.com/ocio/cinesa/",
+      "kind": "venue_host",
+      "checked_on": "2026-11-19"
+    },
+    "diagonal-city": {
+      "title": "Cinesa Diagonal municipal address and district",
+      "url": "https://guia.barcelona.cat/ca/detall/cinesa-diagonal-c-ludic-diagonal_99180125327.html",
+      "kind": "municipal",
+      "checked_on": "2026-11-19"
+    },
+    "verdi": {
+      "title": "Verdi official programme",
+      "url": "https://barcelona.cines-verdi.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "verdi-api": {
+      "title": "Verdi public programme endpoint",
+      "url": "https://barcelona.cines-verdi.com/api/get-events",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "verdi-theaters": {
+      "title": "Verdi public theatre identity",
+      "url": "https://barcelona.cines-verdi.com/api/get-theaters",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "verdi-rooms": {
+      "title": "Verdi auditorium specifications",
+      "url": "https://barcelona.cines-verdi.com/sales",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "verdi-address": {
+      "title": "Verdi and Verdi Park independent entrances",
+      "url": "https://barcelona.cines-verdi.com/on-som",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "verdi-expansion": {
+      "title": "Verdi expansion announcement",
+      "url": "https://elpais.com/espana/catalunya/2025-11-21/el-cine-que-vencio-al-supermercado-el-verdi-de-barcelona-crece-con-dos-nuevas-salas.html",
+      "kind": "news",
+      "checked_on": "2026-11-19",
+      "note": "Announced two additional rooms for 2026; not proof of opening. Official room page still describes 5 + 4."
+    },
+    "girona": {
+      "title": "Cinemes Girona current programme and address",
+      "url": "https://www.cinemesgirona.cat/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "girona-api": {
+      "title": "Girona public programme endpoint",
+      "url": "https://www.cinemesgirona.cat/api/get-events",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "girona-theaters": {
+      "title": "Girona public theatre identity",
+      "url": "https://www.cinemesgirona.cat/api/get-theaters",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "renoir": {
+      "title": "Renoir Floridablanca programme, address and rooms",
+      "url": "https://www.cinesrenoir.com/cine/renoir-floridablanca/cartelera/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "texas": {
+      "title": "Espai Texas cinema-only programme",
+      "url": "https://espaitexas.cat/cartellera-cinema/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "texas-about": {
+      "title": "Espai Texas reopening and two cinema rooms",
+      "url": "https://espaitexas.cat/qui-som/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "texas-address": {
+      "title": "Espai Texas practical information",
+      "url": "https://espaitexas.cat/informacio-practica/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "malda": {
+      "title": "Cinema Maldà weekly programme and box-office-only notice",
+      "url": "https://www.cinemamalda.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "zumzeig": {
+      "title": "Zumzeig weekly programme and address",
+      "url": "https://zumzeigcine.coop/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "zumzeig-sample": {
+      "title": "Zumzeig: Rose session dates and VOSE label",
+      "url": "https://zumzeigcine.coop/cinema/films/rose/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "filmoteca": {
+      "title": "Filmoteca current programme",
+      "url": "https://www.filmoteca.cat/web/ca",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "filmoteca-user-link": {
+      "title": "User-supplied Filmoteca homepage",
+      "url": "https://filmoteca.cat/web/ca",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "filmoteca-rooms": {
+      "title": "Filmoteca Raval screening rooms",
+      "url": "https://www.filmoteca.cat/web/ca/article/seu-del-raval",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "filmoteca-sample": {
+      "title": "Filmoteca: Paisà language, room and historical sessions",
+      "url": "https://www.filmoteca.cat/web/ca/film/paisa-0",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "filmax": {
+      "title": "Filmax Gran Via official site",
+      "url": "https://cinesfilmax.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "cinebaix": {
+      "title": "CineBaix dated programme with rooms and versions",
+      "url": "https://www.cinebaix.cat/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "capri": {
+      "title": "Cinema Capri current programme",
+      "url": "https://www.cinecaprielprat.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "santcugat": {
+      "title": "Sant Cugat Cinemas current programme",
+      "url": "https://www.cinemessantcugat.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "castellet": {
+      "title": "Can Castellet current programme",
+      "url": "https://www.cinemescancastellet.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "montcada": {
+      "title": "Cinemes Montcada official location",
+      "url": "https://www.cinemesmontcada.com/",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "Venue website resolves; rendered programme was empty in this read. Do not infer closure."
+    },
+    "ifb": {
+      "title": "Institut Français city venue record and current festivals",
+      "url": "https://guia.barcelona.cat/detall/institut-francais-de-barcelone_92086003767.html",
+      "kind": "municipal",
+      "checked_on": "2026-11-19"
+    },
+    "ateneu-cinema": {
+      "title": "Ateneu Barcelonès cinema section and address",
+      "url": "https://ateneubcn.cat/seccions/cinema/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "ateneu-agenda": {
+      "title": "Ateneu current agenda and screening/access filters",
+      "url": "https://ateneubcn.cat/programacio/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "ateneu-screening": {
+      "title": "Ateneu documented public film screening (archive)",
+      "url": "https://ateneubcn.cat/activitats/pasolini-50-anys-de-llegat-cinematografic/",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "21 November 2025, not 2026; free for members and non-members. Historical evidence only."
+    },
+    "ohlala": {
+      "title": "Ohlalà 2026 official screening grid",
+      "url": "https://www.ohlalafilmfestival.com/es/parrilla/",
+      "kind": "festival",
+      "checked_on": "2026-11-19"
+    },
+    "alternativa": {
+      "title": "L’Alternativa 2026 official venues",
+      "url": "https://alternativa.cccb.org/2026/ca/festival/informacio/seus",
+      "kind": "festival",
+      "checked_on": "2026-11-19"
+    },
+    "caixaforum": {
+      "title": "CaixaForum Barcelona activity programme",
+      "url": "https://caixaforum.org/ca/barcelona/activitats",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "caixaforum-city": {
+      "title": "CaixaForum current film cycles",
+      "url": "https://agenda500.barcelona.cat/es/detall/caixaforum-barcelona_99322140211.html",
+      "kind": "municipal",
+      "checked_on": "2026-11-19"
+    },
+    "pantalla": {
+      "title": "Pantalla BDC 17th edition: current participating centres",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/projecte/pantalla-bdc-17a-edicio",
+      "kind": "municipal",
+      "checked_on": "2026-11-19",
+      "note": "Direct HTML read succeeded. Page links 22 centres; Sala La Pau is additionally named in the dated programme. Header says 27 October; prose says 23 October."
+    },
+    "pantalla-city": {
+      "title": "Pantalla Barcelona municipal programme announcement",
+      "url": "https://guia.barcelona.cat/en/detall/17a-edicio-del-cicle-de-projeccions-pantalla_99400715485.html",
+      "kind": "municipal",
+      "checked_on": "2026-11-19"
+    },
+    "pantalla-calendar": {
+      "title": "Pantalla dated screening calendar",
+      "url": "https://beteve.cat/agenda/pantalla-barcelona-cinema-centres-civics/",
+      "kind": "public_broadcaster",
+      "checked_on": "2026-11-19"
+    },
+    "film-fest-venues": {
+      "title": "BCN Film Fest 2026 venue list",
+      "url": "https://www.bcnfilmfest.com/sites/default/files/festival-pdfs/horaris-bcn-film-fest-2026_final_0.pdf",
+      "kind": "festival",
+      "checked_on": "2026-11-19",
+      "note": "Venue list indexed by web search; no claim that every host event was a film screening."
+    },
+    "film-agenda": {
+      "title": "Additional civic and cultural screening leads",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "kind": "discovery_directory",
+      "checked_on": "2026-11-19",
+      "note": "Discovery only: individual operator screening checks remain outstanding for supplemental leads."
+    },
+    "labonne": {
+      "title": "La Bonne activities",
+      "url": "https://labonne.org/",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "Film-related cultural programme found; dated public screenings require further verification."
+    },
+    "cosmocaixa": {
+      "title": "CosmoCaixa SUNCINE 2026 screening",
+      "url": "https://cosmocaixa.org/ca/p/suncine",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "muec": {
+      "title": "MuEC Montcada November 2026 film cycle",
+      "url": "https://guia.barcelona.cat/ca/detall/_99400765522.html",
+      "kind": "municipal",
+      "checked_on": "2026-11-19"
+    },
+    "macba-lead": {
+      "title": "MACBA public programme: cinema collaborations",
+      "url": "https://www.macba.cat/uploads/premsa/dossier-cat-trenta-macba.pdf",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "note": "Older press dossier indexed by search; current screening dates still need verification."
+    },
+    "montjuic": {
+      "title": "Sala Montjuïc 2026 season",
+      "url": "https://www.salamontjuic.org/?lg=2",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "lliure": {
+      "title": "Cinema Lliure Catalan locations",
+      "url": "https://cinemalliure.com/localitats-catalunya/",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "gandules": {
+      "title": "CCCB Gandules 2026 season",
+      "url": "https://www.cccb.org/en/w/seasons/gandules-2026",
+      "kind": "operator",
+      "checked_on": "2026-11-19"
+    },
+    "boliche-closure": {
+      "title": "Boliche permanent closure report",
+      "url": "https://www.lavanguardia.com/cultura/20241023/10045919/cine-boliche-cierra-definitivamente.html",
+      "kind": "news",
+      "checked_on": "2026-11-19"
+    },
+    "comedia-closure": {
+      "title": "Comèdia closure and Icaria history",
+      "url": "https://beteve.cat/cultura/cinema-comedia-barcelona-tancara-diumenge-14-gener/",
+      "kind": "public_broadcaster",
+      "checked_on": "2026-11-19"
+    },
+    "melies-closure": {
+      "title": "Méliès closure",
+      "url": "https://beteve.cat/artic/tanquen-melies-cinemes/",
+      "kind": "public_broadcaster",
+      "checked_on": "2026-11-19"
+    },
+    "palau-closure": {
+      "title": "Palau Balañà closure",
+      "url": "https://www.latorredebarcelona.com/actualitat/tanca-palau-balana/",
+      "kind": "news",
+      "checked_on": "2026-11-19"
+    },
+    "aribau-club-closure": {
+      "title": "Aribau Club closure",
+      "url": "https://www.timeout.cat/barcelona/ca/noticies/tanca-laribau-club-sense-dir-adeu-073018",
+      "kind": "news",
+      "checked_on": "2026-11-19"
+    },
+    "renoir-corts-closure": {
+      "title": "Renoir Les Corts closure",
+      "url": "https://www.europapress.es/catalunya/noticia-cierran-cines-renoir-les-corts-barcelona-20120621141227.html",
+      "kind": "news",
+      "checked_on": "2026-11-19"
+    },
+    "imax-closure": {
+      "title": "Former IMAX site and Liceu Mar project",
+      "url": "https://elpais.com/espana/catalunya/2025-07-15/el-liceu-comienza-el-desembarco-en-el-puerto-de-barcelona-con-el-concurso-arquitectonico-de-la-nueva-sede.html",
+      "kind": "news",
+      "checked_on": "2026-11-19"
+    }
+  },
+  "reference_directory_comparison": {
+    "source_id": "english-cinema",
+    "entries_checked": 20,
+    "unmatched": 0,
+    "already_integrated": 6,
+    "missing_from_live_directory": 14,
+    "matches": [
+      {
+        "source_name": "Mooby Balmes",
+        "source_url": "https://englishcinemabarcelona.com/cinema/mooby-balmes",
+        "inventory_ids": [
+          "mooby-balmes"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Arenas de Barcelona Multicines",
+        "source_url": "https://englishcinemabarcelona.com/cinema/arenas-de-barcelona-multicines",
+        "inventory_ids": [
+          "mooby-arenas"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Mooby Glòries",
+        "source_url": "https://englishcinemabarcelona.com/cinema/mooby-glories",
+        "inventory_ids": [
+          "mooby-glories"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinemes Verdi",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinemes-verdi",
+        "inventory_ids": [
+          "verdi"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Mooby Gran Sarrià",
+        "source_url": "https://englishcinemabarcelona.com/cinema/mooby-gran-sarri",
+        "inventory_ids": [
+          "mooby-sarria"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Phenomena",
+        "source_url": "https://englishcinemabarcelona.com/cinema/phenomena",
+        "inventory_ids": [
+          "phenomena"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Mooby Aribau",
+        "source_url": "https://englishcinemabarcelona.com/cinema/mooby-aribau",
+        "inventory_ids": [
+          "mooby-aribau-multicines",
+          "mooby-aribau-cinema"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Renoir Floridablanca",
+        "source_url": "https://englishcinemabarcelona.com/cinema/renoir-floridablanca",
+        "inventory_ids": [
+          "renoir-floridablanca"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Mooby Bosque",
+        "source_url": "https://englishcinemabarcelona.com/cinema/mooby-bosque",
+        "inventory_ids": [
+          "mooby-bosque"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Verdi Park",
+        "source_url": "https://englishcinemabarcelona.com/cinema/verdi-park",
+        "inventory_ids": [
+          "verdi-park"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinesa Diagonal Mar",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinesa-diagonal-mar",
+        "inventory_ids": [
+          "cinesa-diagonal-mar"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Yelmo Westfield La Maquinista",
+        "source_url": "https://englishcinemabarcelona.com/cinema/yelmo-westfield-la-maquinista",
+        "inventory_ids": [
+          "yelmo-maquinista"
+        ],
+        "status": "already_integrated"
+      },
+      {
+        "source_name": "Cines Filmax Gran Vía",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cines-filmax-gran-via",
+        "inventory_ids": [
+          "filmax-gran-via"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinemes Girona",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinemes-girona",
+        "inventory_ids": [
+          "cinemes-girona"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinesa Diagonal",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinesa-diagonal",
+        "inventory_ids": [
+          "cinesa-diagonal"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinesa SOM Multiespai",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinesa-som-multiespai",
+        "inventory_ids": [
+          "cinesa-som-multiespai"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Filmoteca de Catalunya",
+        "source_url": "https://englishcinemabarcelona.com/cinema/filmoteca-de-catalunya",
+        "inventory_ids": [
+          "filmoteca-catalunya"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Zumzeig Cinema",
+        "source_url": "https://englishcinemabarcelona.com/cinema/zumzeig-cinema",
+        "inventory_ids": [
+          "zumzeig"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Espai Texas",
+        "source_url": "https://englishcinemabarcelona.com/cinema/espai-texas",
+        "inventory_ids": [
+          "espai-texas"
+        ],
+        "status": "missing_from_live_directory"
+      },
+      {
+        "source_name": "Cinema Maldà",
+        "source_url": "https://englishcinemabarcelona.com/cinema/cinema-mald",
+        "inventory_ids": [
+          "cinema-malda"
+        ],
+        "status": "missing_from_live_directory"
+      }
+    ],
+    "note": "Nineteen Barcelona-city directory groups plus Filmax Gran Via in L’Hospitalet. Aribau combines two entrances. La Farga and Splau are already in our live directory but absent from this page."
+  },
+  "city_cinemas": [
+    {
+      "id": "phenomena",
+      "name": "Phenomena Experience",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Sant Antoni Maria Claret, 168",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "phenomena",
+      "priority": "existing",
+      "reported_screens": 1,
+      "source_ids": [
+        "dossiers",
+        "rooms"
+      ],
+      "programme": {
+        "provider_family": "phenomena",
+        "url": "https://phenomena-experience.com",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mooby-aribau-multicines",
+      "name": "Mooby Aribau Multicines",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Aribau, 8–10",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "mooby-aribau",
+      "priority": "existing",
+      "reported_screens": 4,
+      "source_ids": [
+        "dossiers",
+        "rooms",
+        "mooby"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/aribau",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": [],
+      "source_room_codes": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "mooby-aribau-cinema",
+      "name": "Mooby Aribau Cinema",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Aribau, 5",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "mooby-aribau",
+      "priority": "existing",
+      "reported_screens": 1,
+      "source_ids": [
+        "dossiers",
+        "rooms",
+        "mooby"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/aribau",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": [],
+      "source_room_codes": [
+        "05"
+      ]
+    },
+    {
+      "id": "mooby-balmes",
+      "name": "Mooby Balmes",
+      "municipality": "Barcelona",
+      "district": "Sarrià-Sant Gervasi",
+      "address": "Balmes, 422–424",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "mooby-balmes",
+      "priority": "existing",
+      "reported_screens": 12,
+      "source_ids": [
+        "mooby",
+        "rooms"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/balmes",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mooby-bosque",
+      "name": "Mooby Bosque",
+      "municipality": "Barcelona",
+      "district": "Gràcia",
+      "address": "Rambla de Prat, 16",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "mooby-bosque",
+      "priority": "existing",
+      "reported_screens": 9,
+      "source_ids": [
+        "mooby",
+        "rooms"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/bosque",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": []
+    },
+    {
+      "id": "cinesa-diagonal-mar",
+      "name": "Cinesa Diagonal Mar",
+      "municipality": "Barcelona",
+      "district": "Sant Martí",
+      "address": "Avinguda Diagonal, 3",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "cinesa-diagonal-mar",
+      "priority": "existing",
+      "reported_screens": 11,
+      "source_ids": [
+        "cinesa-sites",
+        "rooms"
+      ],
+      "programme": {
+        "provider_family": "cinesa",
+        "url": "https://www.cinesa.es/Cines/diagonal-mar/",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": []
+    },
+    {
+      "id": "yelmo-maquinista",
+      "name": "Yelmo Premium La Maquinista",
+      "municipality": "Barcelona",
+      "district": "Sant Andreu",
+      "address": "Potosí, 2; Westfield La Maquinista",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": "yelmo-maquinista",
+      "priority": "existing",
+      "reported_screens": 12,
+      "source_ids": [
+        "dossiers",
+        "rooms",
+        "cinesa-bootstrap"
+      ],
+      "programme": {
+        "provider_family": "yelmo",
+        "url": "https://yelmocines.es/cartelera/barcelona/westfield-la-maquinista",
+        "verification": "already_integrated",
+        "integration_note": "Covered by the current all-room VOSE collector."
+      },
+      "aliases": [
+        "Cinesa La Maquinista (former operator)"
+      ]
+    },
+    {
+      "id": "mooby-arenas",
+      "name": "Mooby Arenas de Barcelona",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Gran Via de les Corts Catalanes, 385",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P1",
+      "reported_screens": 12,
+      "source_ids": [
+        "mooby",
+        "mooby-arenas"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/arenas",
+        "verification": "structured_verified",
+        "integration_note": "BAL-ARENAS / theatre 24; existing embedded data includes rooms and sessions."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mooby-glories",
+      "name": "Mooby Glòries",
+      "municipality": "Barcelona",
+      "district": "Sant Martí",
+      "address": "Avinguda Diagonal, 208; Westfield Glòries",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P1",
+      "reported_screens": 8,
+      "source_ids": [
+        "mooby",
+        "mooby-glories"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/glories",
+        "verification": "structured_verified",
+        "integration_note": "BAL-GLORIAS / theatre 25; preserve the provider spelling GLORIAS."
+      },
+      "aliases": []
+    },
+    {
+      "id": "mooby-sarria",
+      "name": "Mooby Gran Sarrià Club",
+      "municipality": "Barcelona",
+      "district": "Sarrià-Sant Gervasi",
+      "address": "Ronda del General Mitre, 38–44",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P1",
+      "reported_screens": 8,
+      "source_ids": [
+        "mooby",
+        "mooby-sarria"
+      ],
+      "programme": {
+        "provider_family": "mooby",
+        "url": "https://www.moobycinemas.com/sarria",
+        "verification": "structured_verified",
+        "integration_note": "BAL-SARRIA / theatre 26; eight premium rooms. Comfort branding alone does not establish screen size or Atmos."
+      },
+      "aliases": [
+        "Gran Sarrià Multicines",
+        "Mooby Gran Sarrià"
+      ]
+    },
+    {
+      "id": "cinesa-diagonal",
+      "name": "Cinesa Diagonal",
+      "municipality": "Barcelona",
+      "district": "Sarrià-Sant Gervasi",
+      "address": "Santa Fe de Nou Mèxic, s/n",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P1",
+      "reported_screens": 11,
+      "source_ids": [
+        "cinesa-sites",
+        "gremi",
+        "diagonal-city"
+      ],
+      "programme": {
+        "provider_family": "cinesa",
+        "url": "https://www.cinesa.es/cines/diagonal/",
+        "verification": "structured_sample_verified",
+        "integration_note": "Vista site 012; one-day sample verified using the existing client. Diagonal is distinct from Diagonal Mar."
+      },
+      "aliases": [],
+      "address_alternative": "Municipal directory gives Santa Fe de Nou Mèxic, 18; provider uses s/n."
+    },
+    {
+      "id": "cinesa-som-multiespai",
+      "name": "Cinesa SOM Multiespai",
+      "municipality": "Barcelona",
+      "district": "Nou Barris",
+      "address": "Passeig d’Andreu Nin, s/n; SOM Multiespai",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P1",
+      "reported_screens": 12,
+      "source_ids": [
+        "cinesa-sites",
+        "som"
+      ],
+      "programme": {
+        "provider_family": "cinesa",
+        "url": "https://www.cinesa.es/cines/som-multiespai/",
+        "verification": "structured_sample_verified",
+        "integration_note": "Vista site 017; one-day sample verified. Historical Heron City name is an alias."
+      },
+      "aliases": [
+        "Cinesa Heron City",
+        "Heron City Barcelona"
+      ]
+    },
+    {
+      "id": "verdi",
+      "name": "Cinemes Verdi",
+      "municipality": "Barcelona",
+      "district": "Gràcia",
+      "address": "Verdi, 32",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": 5,
+      "source_ids": [
+        "verdi",
+        "verdi-api",
+        "verdi-address",
+        "verdi-rooms",
+        "verdi-expansion"
+      ],
+      "programme": {
+        "provider_family": "a1-verdi",
+        "url": "https://barcelona.cines-verdi.com/cartellera",
+        "verification": "structured_verified_room_mapping_pending",
+        "integration_note": "Theatre 46 / VERDIBCN includes both Verdi sites. Public performances omit the auditorium; map entrances from further booking evidence before assigning sessions."
+      },
+      "aliases": [],
+      "screen_count_caveat": "Official room page lists 5 + 4. Two more rooms were announced for 2026; commissioning and revised numbering not verified."
+    },
+    {
+      "id": "verdi-park",
+      "name": "Cinemes Verdi Park",
+      "municipality": "Barcelona",
+      "district": "Gràcia",
+      "address": "Torrijos, 49",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": 4,
+      "source_ids": [
+        "verdi",
+        "verdi-api",
+        "verdi-address",
+        "verdi-rooms",
+        "verdi-expansion"
+      ],
+      "programme": {
+        "provider_family": "a1-verdi",
+        "url": "https://barcelona.cines-verdi.com/cartellera",
+        "verification": "structured_verified_room_mapping_pending",
+        "integration_note": "Same endpoint as Verdi; separate entrance, no internal connection. Do not duplicate all sessions into both sites."
+      },
+      "aliases": [],
+      "screen_count_caveat": "Official room page lists 5 + 4. Two more rooms were announced for 2026; commissioning and revised numbering not verified."
+    },
+    {
+      "id": "renoir-floridablanca",
+      "name": "Renoir Floridablanca",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Floridablanca, 135",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": 7,
+      "source_ids": [
+        "renoir"
+      ],
+      "programme": {
+        "provider_family": "renoir",
+        "url": "https://www.cinesrenoir.com/cine/renoir-floridablanca/cartelera/",
+        "verification": "html_sessions_verified",
+        "integration_note": "Date selector exposes published days; HTML provides room, time, version and Pillalas ticket links. Deduplicate repeated responsive markup."
+      },
+      "aliases": []
+    },
+    {
+      "id": "cinemes-girona",
+      "name": "Cinemes Girona",
+      "municipality": "Barcelona",
+      "district": "Eixample",
+      "address": "Girona, 175",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": 3,
+      "source_ids": [
+        "girona",
+        "girona-api",
+        "gremi"
+      ],
+      "programme": {
+        "provider_family": "a1-girona",
+        "url": "https://www.cinemesgirona.cat/cartellera",
+        "verification": "structured_verified_room_mapping_pending",
+        "integration_note": "Theatre 31 / GIRONA. Variant-level VOSE, VOSC and original-language labels. No rooms in sampled public performance objects."
+      },
+      "aliases": []
+    },
+    {
+      "id": "espai-texas",
+      "name": "Espai Texas",
+      "municipality": "Barcelona",
+      "district": "Gràcia",
+      "address": "Bailèn, 205",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P3",
+      "reported_screens": 2,
+      "source_ids": [
+        "texas",
+        "texas-address",
+        "texas-about"
+      ],
+      "programme": {
+        "provider_family": "texas-koobin",
+        "url": "https://espaitexas.cat/cartellera-cinema/",
+        "verification": "html_programme_verified",
+        "integration_note": "Cinema-only page and Koobin links; homepage mixes theatre and films. Catalan-first venue: never turn VOSC into VOSE."
+      },
+      "aliases": [
+        "Cinemes Texas",
+        "Lauren Gràcia (historical)"
+      ]
+    },
+    {
+      "id": "cinema-malda",
+      "name": "Cinema Maldà",
+      "municipality": "Barcelona",
+      "district": "Ciutat Vella",
+      "address": "Pi, 5",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P3",
+      "reported_screens": 1,
+      "source_ids": [
+        "malda",
+        "gremi"
+      ],
+      "programme": {
+        "provider_family": "malda",
+        "url": "https://www.cinemamalda.com/",
+        "verification": "html_programme_verified",
+        "integration_note": "Weekly text includes language labels and dates; official notice says tickets only at the box office. No fabricated booking URL or seat count."
+      },
+      "aliases": []
+    },
+    {
+      "id": "filmoteca-catalunya",
+      "name": "Filmoteca de Catalunya",
+      "municipality": "Barcelona",
+      "district": "Ciutat Vella",
+      "address": "Plaça de Salvador Seguí, 1",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": 2,
+      "source_ids": [
+        "filmoteca",
+        "filmoteca-rooms",
+        "film-fest-venues",
+        "filmoteca-user-link"
+      ],
+      "programme": {
+        "provider_family": "filmoteca",
+        "url": "https://www.filmoteca.cat/web/ca",
+        "verification": "html_programme_verified",
+        "integration_note": "Agenda and film pages expose room, version and dates; isolate current sessions from historical cycle appearances, and preserve multi-film programmes."
+      },
+      "aliases": []
+    },
+    {
+      "id": "zumzeig",
+      "name": "Zumzeig Cinecooperativa",
+      "municipality": "Barcelona",
+      "district": "Sants-Montjuïc",
+      "address": "Béjar, 53",
+      "category": "permanent_cinema",
+      "status": "active",
+      "existing_directory_id": null,
+      "priority": "P2",
+      "reported_screens": null,
+      "source_ids": [
+        "zumzeig",
+        "zumzeig-sample"
+      ],
+      "programme": {
+        "provider_family": "zumzeig-codetickets",
+        "url": "https://zumzeigcine.coop/",
+        "verification": "html_sessions_verified",
+        "integration_note": "Weekly agenda plus film detail and Codetickets links. Rose sample confirms three dates and VOSE. Repeated agenda widgets need deduplication."
+      },
+      "aliases": [],
+      "screen_count_caveat": "Single named cinema programme verified; full facility count not independently checked in this pass."
+    }
+  ],
+  "nearby_cinemas": [
+    {
+      "id": "cinesa-la-farga",
+      "name": "Cinesa LUXE La Farga",
+      "municipality": "L’Hospitalet de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://www.cinesa.es/cines/la-farga/",
+      "source_ids": [
+        "baseline",
+        "cinesa-sites"
+      ],
+      "existing_directory_id": "cinesa-la-farga",
+      "verification": "already_integrated",
+      "integration_note": "Already integrated."
+    },
+    {
+      "id": "kinepolis-splau",
+      "name": "Kinépolis Barcelona Splau",
+      "municipality": "Cornellà de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://kinepolis.es/",
+      "source_ids": [
+        "baseline",
+        "dossiers"
+      ],
+      "existing_directory_id": "kinepolis-splau",
+      "verification": "already_integrated",
+      "integration_note": "Already integrated; Full / Full HD is a historical name, not a second cinema."
+    },
+    {
+      "id": "filmax-gran-via",
+      "name": "Filmax Gran Via",
+      "municipality": "L’Hospitalet de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://cinesfilmax.com/",
+      "source_ids": [
+        "filmax"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Inspect public programme; 4DX and ScreenX advertised. Website uses A1/Admit One, but collector compatibility is unverified."
+    },
+    {
+      "id": "ocine-magic",
+      "name": "OCINE Màgic Badalona",
+      "municipality": "Badalona",
+      "category": "nearby_cinema",
+      "url": "https://www.ocinemagic.es/",
+      "source_ids": [
+        "gremi"
+      ],
+      "existing_directory_id": null,
+      "verification": "directory_lead",
+      "integration_note": "Trade-directory confirmed; direct site timed out. Programme and VOSE still need verification."
+    },
+    {
+      "id": "cinesa-barnasud",
+      "name": "Cinesa LUXE Barnasud",
+      "municipality": "Gavà",
+      "category": "nearby_cinema",
+      "url": "https://www.cinesa.es/cines/barnasud/",
+      "source_ids": [
+        "cinesa-sites",
+        "gremi"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Public site ID 040 verified; reuse Cinesa family after a venue-specific programme probe."
+    },
+    {
+      "id": "yelmo-castelldefels",
+      "name": "Yelmo Premium Castelldefels",
+      "municipality": "Castelldefels",
+      "category": "nearby_cinema",
+      "url": "https://www.yelmocines.es/cartelera/barcelona/premium-castelldefels",
+      "source_ids": [
+        "gremi"
+      ],
+      "existing_directory_id": null,
+      "verification": "directory_lead",
+      "integration_note": "Anec Blau cinema; public page returned 403 in web reader. Need cinema ID and same-variant language checks."
+    },
+    {
+      "id": "yelmo-sant-cugat",
+      "name": "Yelmo Premium Sant Cugat",
+      "municipality": "Sant Cugat del Vallès",
+      "category": "nearby_cinema",
+      "url": "https://www.yelmocines.es/cartelera/barcelona/premium-sant-cugat",
+      "source_ids": [
+        "gremi"
+      ],
+      "existing_directory_id": null,
+      "verification": "directory_lead",
+      "integration_note": "Distinct from the municipal Sant Cugat Cinemas. Programme ID not tested."
+    },
+    {
+      "id": "sant-cugat-cinemas",
+      "name": "Sant Cugat Cinemas",
+      "municipality": "Sant Cugat del Vallès",
+      "category": "nearby_cinema",
+      "url": "https://www.cinemessantcugat.com/",
+      "source_ids": [
+        "santcugat"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Current programme verified; A1 site family is a promising reuse path, not yet an adapter."
+    },
+    {
+      "id": "cinebaix",
+      "name": "CineBaix",
+      "municipality": "Sant Feliu de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://www.cinebaix.cat/",
+      "source_ids": [
+        "cinebaix"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "HTML has explicit dates, rooms and VOSE/VOE/VOC/DOE/DOC. Strong independent-cinema candidate."
+    },
+    {
+      "id": "can-castellet",
+      "name": "Cinemes Can Castellet",
+      "municipality": "Sant Boi de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://www.cinemescancastellet.com/",
+      "source_ids": [
+        "castellet"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Current programme and A1 provider branding verified; session extraction pending."
+    },
+    {
+      "id": "cinemes-montcada",
+      "name": "Cinemes Montcada",
+      "municipality": "Montcada i Reixac",
+      "category": "nearby_cinema",
+      "url": "https://www.cinemesmontcada.com/",
+      "source_ids": [
+        "montcada",
+        "pahissa"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Official location verified, current sessions unresolved. Empty rendered programme is not closure evidence."
+    },
+    {
+      "id": "cinema-capri",
+      "name": "Cinema Capri",
+      "municipality": "El Prat de Llobregat",
+      "category": "nearby_cinema",
+      "url": "https://www.cinecaprielprat.com/",
+      "source_ids": [
+        "capri"
+      ],
+      "existing_directory_id": null,
+      "verification": "official_site_checked",
+      "integration_note": "Official forthcoming programme and municipal cineclub verified; mixed images/text need further schedule extraction."
+    }
+  ],
+  "regional_leads": [
+    {
+      "id": "yelmo-abrera",
+      "name": "Yelmo Abrera",
+      "municipality": "Abrera",
+      "url": "https://yelmocines.es/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "yelmo-baricentro",
+      "name": "Yelmo Baricentro",
+      "municipality": "Barberà del Vallès",
+      "url": "https://yelmocines.es/cartelera/barcelona/baricentro",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "cinesa-parc-valles",
+      "name": "Cinesa Parc Vallès",
+      "municipality": "Terrassa",
+      "url": "https://www.cinesa.es/cines/parc-valles/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa",
+        "cinesa-sites"
+      ],
+      "note": "Public Vista site 031 verified; schedule not tested here."
+    },
+    {
+      "id": "cinema-catalunya",
+      "name": "Cinema Catalunya",
+      "municipality": "Terrassa",
+      "url": "https://cinemacatalunya.cat/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "eix-macia",
+      "name": "Multicines Eix Macià",
+      "municipality": "Sabadell",
+      "url": "https://www.cinemeseixmacia.com/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "imperial",
+      "name": "Cines Imperial",
+      "municipality": "Sabadell",
+      "url": "https://www.cinesimperial.com/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "kinepolis-mataro",
+      "name": "Kinépolis Mataró Parc",
+      "municipality": "Mataró",
+      "url": "https://kinepolis.es/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "foment-mataroni",
+      "name": "Foment Mataroní",
+      "municipality": "Mataró",
+      "url": "https://www.matarofoment.org/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "calandria",
+      "name": "La Calàndria",
+      "municipality": "El Masnou",
+      "url": "https://www.cinemalacalandria.com/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "cinema-edison",
+      "name": "Cinema Edison",
+      "municipality": "Granollers",
+      "url": "https://cinemaedison.cat/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "ocine-granollers",
+      "name": "OCINE Granollers",
+      "municipality": "Granollers",
+      "url": "https://ocinegranollers.es/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "pahissa"
+      ]
+    },
+    {
+      "id": "espai-amistat",
+      "name": "Espai l’Amistat",
+      "municipality": "Premià de Mar",
+      "url": "https://espailamistat.cat/",
+      "category": "regional_lead",
+      "verification": "discovery_only",
+      "source_ids": [
+        "gremi"
+      ]
+    }
+  ],
+  "cultural_venues": [
+    {
+      "id": "institut-francais",
+      "name": "Institut Français de Barcelona",
+      "address": "Moià, 8",
+      "url": "https://www.institutfrancais.es/barcelona/",
+      "source_ids": [
+        "ifb",
+        "ohlala"
+      ],
+      "verification": "dated_programme_verified",
+      "note": "Permanent screening room with recurring/festival cinema. Add as a cultural screening venue; preserve subtitles per event.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "cccb",
+      "name": "CCCB",
+      "address": "Montalegre, 5",
+      "url": "https://alternativa.cccb.org/2026/ca/",
+      "source_ids": [
+        "alternativa"
+      ],
+      "verification": "dated_programme_verified",
+      "note": "L’Alternativa screenings; auditorium/theatre/hall are rooms in the venue. Festival organisers are not new cinemas.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "caixaforum-barcelona",
+      "name": "CaixaForum Barcelona",
+      "address": "Francesc Ferrer i Guàrdia, 6–8",
+      "url": "https://caixaforum.org/ca/barcelona/activitats",
+      "source_ids": [
+        "caixaforum",
+        "caixaforum-city",
+        "film-fest-venues"
+      ],
+      "verification": "dated_programme_verified",
+      "note": "Cineclub, family programmes and festivals; session-specific language and admission.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "cosmocaixa",
+      "name": "CosmoCaixa Barcelona",
+      "url": "https://cosmocaixa.org/ca/p/suncine",
+      "source_ids": [
+        "cosmocaixa"
+      ],
+      "verification": "recent_screening_verified",
+      "note": "TRASH screening on 14 November 2026; now past. Museum admission and event reservation are distinct.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "muec-montcada",
+      "name": "Museu Etnològic i de Cultures del Món – Montcada",
+      "address": "Montcada, 12",
+      "url": "https://guia.barcelona.cat/ca/detall/_99400765522.html",
+      "source_ids": [
+        "muec"
+      ],
+      "verification": "recent_screening_verified",
+      "note": "Three November 2026 screenings, latest 17 November; now past. Treat as a cultural host, not a daily cinema.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "ateneu-barcelones",
+      "name": "Ateneu Barcelonès",
+      "url": "https://ateneubcn.cat/programacio/",
+      "source_ids": [
+        "ateneu-cinema",
+        "ateneu-agenda",
+        "ateneu-screening",
+        "film-fest-venues"
+      ],
+      "verification": "recurring_cinema_programme_verified_next_screening_pending",
+      "note": "Official cinema section describes recurring cycles; a public film screening at Auditori Oriol Bohigas is documented. That sample is 21 November 2025, not 2026. No upcoming screening confirmed in this pass. Preserve per-event non-member access and reservation requirements. Distinct from Ateneu Fort Pienc and Ateneu Cinema in Igualada.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue",
+      "address": "Canuda, 6"
+    },
+    {
+      "id": "biblioteca-jaume-fuster",
+      "name": "Biblioteca Jaume Fuster",
+      "url": "https://www.bcnfilmfest.com/",
+      "source_ids": [
+        "film-fest-venues"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "casa-seat",
+      "name": "CASA SEAT",
+      "url": "https://www.bcnfilmfest.com/",
+      "source_ids": [
+        "film-fest-venues"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "centre-cultural-albareda",
+      "name": "Centre Cultural Albareda",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "casa-elizalde",
+      "name": "La Casa Elizalde",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "fabra-i-coats",
+      "name": "Fabra i Coats – Fàbrica de Creació",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "caixaforum-macaya",
+      "name": "CaixaForum Macaya",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "can-carol",
+      "name": "Casal de Barri Can Carol",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "casal-trinitat-nova",
+      "name": "Casal de Barri de Trinitat Nova",
+      "url": "https://www.filmagenda.es/en/barcelona/cines",
+      "source_ids": [
+        "film-agenda"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "la-bonne",
+      "name": "La Bonne",
+      "url": "https://labonne.org/",
+      "source_ids": [
+        "labonne"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Confirm a dated public film screening and actual room before adding; film-related talks or workshops alone do not qualify.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    },
+    {
+      "id": "macba",
+      "name": "MACBA",
+      "url": "https://www.macba.cat/",
+      "source_ids": [
+        "macba-lead"
+      ],
+      "verification": "lead_needs_screening_check",
+      "note": "Cinema collaborations documented in an older operator dossier; confirm current dated public screenings.",
+      "municipality": "Barcelona",
+      "category": "cultural_screening_venue"
+    }
+  ],
+  "civic_venues": [
+    {
+      "id": "pantalla-centre-civic-ateneu-fort-pienc",
+      "name": "Centre Cívic Ateneu Fort Pienc",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-ateneu-fort-pienc",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-del-besos-i-el-maresme",
+      "name": "Centre Cívic del Besòs i el Maresme",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-del-besos-i-el-maresme",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-can-baste",
+      "name": "Centre Cívic Can Basté",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-can-baste",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-casa-del-rellotge",
+      "name": "Centre Cívic La Marina - Casa del Rellotge",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-casa-del-rellotge",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-casa-groga",
+      "name": "Centre Cívic Casa Groga",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-casa-groga",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-villa-urania",
+      "name": "Centre Cívic Vil·la Urània",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-villa-urania",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-cotxeres-borrell",
+      "name": "Centre Cívic Cotxeres Borrell",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-cotxeres-borrell",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-cotxeres-de-sants",
+      "name": "Centre Cívic Cotxeres de Sants",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-cotxeres-de-sants",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-bon-pastor",
+      "name": "Centre Cívic Bon Pastor",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-bon-pastor",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-joan-oliver-pere-quart",
+      "name": "Centre Cívic Joan Oliver - Pere Quart",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-joan-oliver-pere-quart",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-la-sagrera-la-barraca",
+      "name": "Centre Cívic La Sagrera - La Barraca",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-la-sagrera-la-barraca",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-la-sedeta",
+      "name": "Centre Cívic La Sedeta",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-la-sedeta",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-matas-i-ramis",
+      "name": "Centre Cívic Matas i Ramis",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-matas-i-ramis",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-pati-llimona",
+      "name": "Centre Cívic Pati Llimona",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-pati-llimona",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-josep-maria-trias-i-peitx",
+      "name": "Centre Cívic Josep Maria Trias i Peitx",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-josep-maria-trias-i-peitx",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-teixonera",
+      "name": "Centre Cívic Teixonera",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-teixonera",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-urgell",
+      "name": "Centre Cívic Urgell",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-urgell",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-villa-florida",
+      "name": "Centre Cívic Vil·la Florida",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-villa-florida",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-baro-de-viver",
+      "name": "Centre Cívic Baró de Viver",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-baro-de-viver",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-zona-nord",
+      "name": "Centre Cívic Zona Nord",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-zona-nord",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-centre-civic-can-clariana-cultural",
+      "name": "Centre Cívic Can Clariana Cultural",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/centre-civic-can-clariana-cultural",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-auditori-sant-marti",
+      "name": "Auditori Sant Martí",
+      "url": "https://ajuntament.barcelona.cat/centrescivics/ca/centre-civic/auditori-sant-marti",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "current_programme_participant",
+      "source_ids": [
+        "pantalla"
+      ],
+      "note": "Use the dated session location; the host centre and screening room can differ."
+    },
+    {
+      "id": "pantalla-sala-la-pau",
+      "name": "Sala La Pau",
+      "municipality": "Barcelona",
+      "category": "civic_screening_venue",
+      "verification": "dated_programme_participant",
+      "source_ids": [
+        "pantalla-calendar"
+      ],
+      "url": "https://beteve.cat/agenda/pantalla-barcelona-cinema-centres-civics/",
+      "note": "Named in the 19 November calendar; absent from the 22 linked-centre cards on the municipal landing page."
+    }
+  ],
+  "seasonal_programmes": [
+    {
+      "id": "sala-montjuic",
+      "name": "Sala Montjuïc",
+      "location": "Castell de Montjuïc, Fossat de Santa Eulàlia",
+      "url": "https://www.salamontjuic.org/",
+      "source_ids": [
+        "montjuic"
+      ],
+      "season": "2026-07-10/2026-08-05",
+      "municipality": "Barcelona",
+      "category": "seasonal_screening_programme",
+      "status": "seasonal_not_current_daily_cinema"
+    },
+    {
+      "id": "cinema-lliure-barcelona",
+      "name": "Cinema Lliure a la Platja – Barcelona",
+      "location": "Platja de Sant Sebastià",
+      "url": "https://cinemalliure.com/",
+      "source_ids": [
+        "lliure"
+      ],
+      "season": "summer; next dates unverified",
+      "municipality": "Barcelona",
+      "category": "seasonal_screening_programme",
+      "status": "seasonal_not_current_daily_cinema"
+    },
+    {
+      "id": "gandules",
+      "name": "Gandules / CCCB outdoor cinema",
+      "location": "CCCB, Pati de les Dones",
+      "url": "https://www.cccb.org/en/w/seasons/gandules-2026",
+      "source_ids": [
+        "gandules"
+      ],
+      "season": "2026-07-28/2026-08-13",
+      "parent_venue_id": "cccb",
+      "municipality": "Barcelona",
+      "category": "seasonal_screening_programme",
+      "status": "seasonal_not_current_daily_cinema"
+    }
+  ],
+  "closed_venues": [
+    {
+      "id": "boliche",
+      "name": "Cinemes Boliche",
+      "status": "closed_reported",
+      "closure_period": "2024",
+      "source_ids": [
+        "boliche-closure"
+      ],
+      "note": "Closed; stale VO guides still list it."
+    },
+    {
+      "id": "comedia",
+      "name": "Yelmo Comèdia",
+      "status": "closed_reported",
+      "closure_period": "2024-01-14",
+      "source_ids": [
+        "comedia-closure"
+      ],
+      "note": "Closed; no current cinema listing."
+    },
+    {
+      "id": "icaria",
+      "name": "Yelmo Icaria",
+      "status": "closed_reported",
+      "closure_period": "2023-07",
+      "source_ids": [
+        "comedia-closure"
+      ],
+      "note": "Closed; not an additional active Yelmo location."
+    },
+    {
+      "id": "melies",
+      "name": "Méliès Cinemes",
+      "status": "closed_reported",
+      "closure_period": "2020",
+      "source_ids": [
+        "melies-closure"
+      ],
+      "note": "Closed in the pandemic period; do not mistake old schedules for a reopening."
+    },
+    {
+      "id": "palau-balana",
+      "name": "Palau / Palacio Balañà",
+      "status": "closed_reported",
+      "closure_period": "2020-02-28",
+      "source_ids": [
+        "palau-closure"
+      ],
+      "note": "Closed; not the current Bosque or Aribau."
+    },
+    {
+      "id": "aribau-club",
+      "name": "Aribau Club",
+      "status": "closed_reported",
+      "closure_period": "2018",
+      "source_ids": [
+        "aribau-club-closure"
+      ],
+      "note": "Closed; distinct from active Aribau Multicines and Aribau Cinema."
+    },
+    {
+      "id": "renoir-les-corts",
+      "name": "Renoir Les Corts",
+      "status": "closed_reported",
+      "closure_period": "2012",
+      "source_ids": [
+        "renoir-corts-closure"
+      ],
+      "note": "Closed; Floridablanca remains the active Barcelona Renoir."
+    },
+    {
+      "id": "imax-port-vell",
+      "name": "IMAX Port Vell",
+      "status": "closed_reported",
+      "closure_period": "2014",
+      "source_ids": [
+        "imax-closure"
+      ],
+      "note": "Closed; the active Diagonal Mar IMAX is a different site."
+    }
+  ],
+  "integration_rules": [
+    "Venue membership is independent of the current VOSE-only session filter; do not hide a cinema because it has no matching session today.",
+    "Keep original audio, Spanish subtitles, Catalan subtitles, English subtitles, dubbed and unknown distinct; preserve source labels and filter each session variant.",
+    "Use venue + provider + session identity; preserve Aribau room-to-entrance mapping and resolve Verdi room-to-site mapping.",
+    "Do not interpret future film announcements as scheduled sessions or source status flags as seat availability.",
+    "Keep current sessions separate from archive pages, past festivals and historical programme cycles.",
+    "Do not promote programme endpoints to live support until normalized sessions, identity, timezone, deduplication, links and source failure handling are verified.",
+    "Seasonal events, museums, festivals and civic programmes need their own category, location and admission mode; never count an organiser as a new cinema."
+  ]
+}

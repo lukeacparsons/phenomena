@@ -1,0 +1,131 @@
+{
+  "researched_on": "2026-11-19",
+  "scope": "15 priority additions: 13 permanent Barcelona cinemas, Filmax Gran Via in L’Hospitalet and Ateneu Barcelonès cultural auditorium. Discovery-only regional/civic candidates are outside this pass.",
+  "summary": {
+    "cinemas": 15,
+    "rooms": 89,
+    "rooms_with_capacity_observations": 54,
+    "rooms_with_screen_dimensions": 11,
+    "rooms_with_floor_area": 3,
+    "photo_references": 38,
+    "downloaded_photos": 38,
+    "venues_with_downloaded_photos": 12,
+    "rooms_with_identified_interior_photos": 15,
+    "constructed_maps_links": 15,
+    "tripadvisor_listing_links": 11,
+    "public_review_samples": 6,
+    "price_records": 79,
+    "source_records": 100,
+    "rooms_with_published_capacity": 25,
+    "rooms_with_booking_layout_counts": 29,
+    "mapped_room_identities": 61,
+    "unmapped_room_placeholders": 28
+  },
+  "validation": [
+    {
+      "check": "15 profile IDs, 89 entries; no duplicate identifiers",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Original cinema-dossiers.json records unchanged",
+      "passed": true,
+      "detail": "8 baseline records compared"
+    },
+    {
+      "check": "Original auditoriums.json records unchanged",
+      "passed": true,
+      "detail": "85 baseline records compared"
+    },
+    {
+      "check": "Original auditorium-images.json records unchanged",
+      "passed": true,
+      "detail": "86 baseline records compared"
+    },
+    {
+      "check": "Every expansion source reference resolves",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "89 room joins match their profile",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No duplicate profiles/rooms/images in merged catalogues",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "38 local photos match checksums and room joins",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "15 Maps searches distinguished from Place-ID verification",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "SOM room 14 retained; unidentified rooms explicitly unmapped",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "54 capacity observations split into 25 published and 29 mapped",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "All 28 new Mooby rooms have public seat-plan counts",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Girona fixed seats and four wheelchair spaces kept separate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Filmoteca official conflict retained",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Six new review observations linked to shared catalogue",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Prices have currency values, conditions and source references",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No private ID/token/seat-selection fields added",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Reports and gallery generated",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "limitations": [
+    "Cinesa main pages returned 403; no alternate browser/transport workaround used.",
+    "Google ratings, original Google reviews and Maps photo galleries were not collected for additions.",
+    "28 room placeholders are not actual sala labels.",
+    "Capacity observations include booking-position counts and unresolved official discrepancies."
+  ],
+  "evidence_files": [
+    "cinema-expansion-research.json",
+    "cinema-expansion-research.md",
+    "cinema-expansion-photos.md",
+    "cinema-dossiers.json",
+    "auditoriums.json",
+    "auditorium-images.json",
+    "cinema-reviews.json"
+  ]
+}

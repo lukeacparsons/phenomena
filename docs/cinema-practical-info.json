@@ -1,0 +1,2381 @@
+{
+  "schema_version": 1,
+  "researched_on": "2026-11-19",
+  "scope": "Practical expansion for the eight indexed cinemas; shared facts and tariffs are deduplicated and linked by cinema ID.",
+  "conventions": [
+    "A price is an observed published amount, not a live quote. Fees and supplements are separate kinds; null/unresolved never means free.",
+    "Source dates, event dates, observation dates and source scope are distinct.",
+    "Maps attributes are listing claims, not accessibility certification. A shopping-centre feature is not automatically a cinema feature.",
+    "No room measurements, photo identities or current policies are inferred from old reviews.",
+    "The platform legal company, cinema operator, leaseholder and property owner are separate roles."
+  ],
+  "summary": {
+    "cinemas": 8,
+    "fact_records": 53,
+    "price_records": 33,
+    "google_attribute_observations": 27,
+    "source_records": 44,
+    "current_exact_screen_dimensions": 29,
+    "current_source_identified_interior_rooms": 6,
+    "new_room_photos": 0,
+    "new_exact_screen_dimensions": 0
+  },
+  "sources": {
+    "pr-mooby-prices": {
+      "title": "Mooby published prices",
+      "url": "https://www.moobycinemas.com/prices",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index",
+      "note": "Direct fetch returned HTTP 403. English tariff heading omits Sunday for the EUR 10 rate; Sunday is left session-specific. Gran Sarrià and Arenas/Glòries-only offers are not applied to the indexed cinemas."
+    },
+    "pr-mooby-faq": {
+      "title": "Mooby customer service and booking FAQ",
+      "url": "https://www.moobycinemas.com/atencio-al-client",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-aribau-access": {
+      "title": "IN-EDIT practical information for Aribau",
+      "url": "https://es.in-edit.org/informacion-practica-in-edit/",
+      "kind": "festival_organizer",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200",
+      "note": "Physical access details are venue-specific; festival sales and box-office arrangements are not general Mooby policy. The page’s Rodalies R2-at-Catalunya claim is excluded."
+    },
+    "room-bosque-apropa": {
+      "title": "Apropa Cultura: Mooby Bosque interior",
+      "url": "https://www.apropacultura.org/es/equipamiento/mooby-bosque",
+      "kind": "venue_cultural_directory",
+      "checked_on": "2026-11-19",
+      "note": "Venue caption only. Filename includes sala1; distinctive architecture corroborates the Sala 1 candidate, without an explicit numbered caption.",
+      "accessed_on": "2026-11-19",
+      "evidence_location": "auditoriums.json#/sources/bosque-apropa",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "pr-bosque-energy": {
+      "title": "Mooby Bosque thermal installation project report",
+      "url": "https://www.moobycinemas.com/assets/Informe-projectes-mes-100-kw-bosque.pdf",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_pdf_download_and_render",
+      "note": "Project documentation, not proof of commissioning. No individual identity numbers from the appended waste certificate are retained."
+    },
+    "pr-bosque-grant": {
+      "title": "Mooby Bosque renewable heating grant notice",
+      "url": "https://www.moobycinemas.com/assets/renovables-bosque.pdf",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_pdf_index"
+    },
+    "pr-fgc-putxet": {
+      "title": "FGC El Putxet station",
+      "url": "https://www.fgc.cat/xarxa-fgc/l-barcelona-valles/el-putxet/",
+      "kind": "transport_operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-tmb-metro": {
+      "title": "TMB metro station and line information",
+      "url": "https://www.tmb.cat/en/barcelona-transport/convenience-services-metro-stations",
+      "kind": "transport_operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-phenomena-legacy-transport": {
+      "title": "Phenomena legacy website transport information",
+      "url": "https://mail.phenomena-experience.com/",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index",
+      "note": "Legacy page retained for L5 Sant Pau / Dos de Maig only. Old cash-only and renovation notices are not adopted as current policy."
+    },
+    "pr-phenomena-club": {
+      "title": "Club Phenomena conditions",
+      "url": "https://phenomena-experience.com/index?pag=condiciones-club",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200"
+    },
+    "pr-phenomena-session-price": {
+      "title": "Phenomena Dune Part Three programme price",
+      "url": "https://phenomena-experience.com/index?evento=2988&lst_sel=24f8a7346eb71ff71d7ee29d&pag=ficha",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index",
+      "note": "EUR 14 refers only to listed December 2026 performances, not a general cinema tariff."
+    },
+    "pr-diagonal-services": {
+      "title": "Diagonal Mar parking and services",
+      "url": "https://www.diagonalmarcentre.es/servicios/",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index",
+      "note": "Direct fetch returned HTTP 403. Per-minute tariff has a euros/cents ambiguity; it is not normalized."
+    },
+    "pr-diagonal-accessible-parking": {
+      "title": "Diagonal Mar accessible parking inventory",
+      "url": "https://www.diagonalmarcentre.es/en/servicios/",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index"
+    },
+    "pr-diagonal-hours": {
+      "title": "Diagonal Mar published opening hours",
+      "url": "https://www.diagonalmarcentre.es/horarios/",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index"
+    },
+    "pr-diagonal-transport": {
+      "title": "Diagonal Mar terrace and directions",
+      "url": "https://www.diagonalmarcentre.es/la-terrassa-del-mar/",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index",
+      "note": "Direct fetch returned HTTP 403; indexed metro directions retained."
+    },
+    "pr-farga-practical": {
+      "title": "La Farga access, transport and parking tariff",
+      "url": "https://centrolafarga.com/informacion-y-contacto/",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200"
+    },
+    "pr-maquinista-parking": {
+      "title": "Westfield La Maquinista parking",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/parking",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200"
+    },
+    "pr-maquinista-services": {
+      "title": "Westfield La Maquinista services",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/nuestros-servicios",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200"
+    },
+    "pr-maquinista-access": {
+      "title": "Westfield La Maquinista access",
+      "url": "https://www.westfield.com/es/spain/lamaquinista/acceso",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200_embedded_page_content",
+      "note": "Transit text recovered from the public page’s serialized content. Older commuter-rail naming and bus routes are not treated as live service information."
+    },
+    "pr-yelmo-legal-2026": {
+      "title": "Cine Yelmo legal and purchase conditions September 2026",
+      "url": "https://pimcore-content.cinepolis.com/assets/Espa%C3%B1a/PDF/Aviso_Legal_Cine_Yelmo_act%20sep%202026.pdf",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_pdf_download_and_render",
+      "note": "PDF creation metadata: 2026-09-24. Declared platform company does not establish a local lease or property title."
+    },
+    "pr-splau-parking": {
+      "title": "Westfield Splau free parking",
+      "url": "https://www.westfield.com/es/spain/splau/servicios-club/free-parking",
+      "kind": "shopping_centre",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_http_200"
+    },
+    "room-splau-es": {
+      "title": "Kinépolis Splau room information (Spanish)",
+      "url": "https://kinepolis.es/cines/kinepolis-barcelona-splau/info/",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "extraction": "Live room table: 28 rows. Numeric screen dimensions have no explicit width/height labels.",
+      "accessed_on": "2026-11-19",
+      "evidence_location": "auditoriums.json#/sources/splau-es",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "pr-splau-expansion": {
+      "title": "Full HD ten-screen expansion inaugurated",
+      "url": "https://www.lavanguardia.com/local/baix-llobregat/20130710/54377412745/cines-full-hd-cornella-multisalas.html?facet=amp",
+      "kind": "contemporary_news",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text",
+      "note": "Europa Press report published 10 July 2013; the account says the additional ten rooms had opened, rather than merely announcing a plan."
+    },
+    "pr-cinesa-refunds": {
+      "title": "Cinesa changing or cancelling tickets",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/9110970066589--Puedo-cambiar-o-cancelar-mi-entrada-de-cine",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-cinesa-seat-change": {
+      "title": "Cinesa changing selected seats",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/17125526586525--Puedo-cambiar-los-asientos-elegidos",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-cinesa-wheelchair": {
+      "title": "Cinesa customers with reduced mobility",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/7536279675421-Clientes-con-movilidad-reducida",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-cinesa-assistance": {
+      "title": "Cinesa special assistance",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/7536308854429-Asistencia-especial",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-cinesa-unlimited": {
+      "title": "Cinesa Unlimited subscription tiers",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/9490327230493--Hay-varios-tipos-de-suscripci%C3%B3n",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text",
+      "note": "FAQ updated 10 March 2026."
+    },
+    "pr-cinesa-unlimited-extras": {
+      "title": "Cinesa Unlimited supplements",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/9490649387933--Y-qu%C3%A9-hay-de-los-recargos-o-extras-est%C3%A1n-incluidos",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text",
+      "note": "FAQ updated 11 June 2026. Subscriber extras are not ordinary ticket supplements."
+    },
+    "pr-cinesa-unlimited-minimum": {
+      "title": "Cinesa Unlimited minimum term",
+      "url": "https://ayuda.cinesa.es/hc/es/articles/9490810498973--Debo-suscribirme-por-un-per%C3%ADodo-m%C3%ADnimo",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_web_text"
+    },
+    "pr-kinepolis-online-refund": {
+      "title": "Kinépolis online ticket refund FAQ",
+      "url": "https://kinepolis.es/faq-page/tarifas-y-compra-general/puedo-devolver-mis-entradas-compradas-online/",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index"
+    },
+    "pr-kinepolis-wrong-cinema": {
+      "title": "Kinépolis tickets purchased for the wrong cinema FAQ",
+      "url": "https://kinepolis.es/faq-page/tarifas-y-compra-general/he-comprado-por-error-entradas-para-otro-cine-kinepolis-que-puedo/",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index"
+    },
+    "pr-kinepolis-purchase-conditions": {
+      "title": "Kinépolis purchase conditions",
+      "url": "https://kinepolis.es/condiciones-de-compra/",
+      "kind": "operator",
+      "accessed_on": "2026-11-19",
+      "access_method": "public_search_index"
+    },
+    "phenomena-terms": {
+      "title": "Phenomena — purchase conditions",
+      "url": "https://phenomena-experience.com/index?pag=terminos-de-compra",
+      "kind": "operator_policy",
+      "accessed_on": "2026-11-19",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "room-balmes": {
+      "title": "Mooby: about Balmes",
+      "url": "https://www.moobycinemas.com/sobre-balmes",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "accessed_on": "2026-11-19",
+      "evidence_location": "auditoriums.json#/sources/balmes",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "room-bosque": {
+      "title": "Mooby: about Bosque",
+      "url": "https://www.moobycinemas.com/sobre-bosque",
+      "kind": "operator",
+      "checked_on": "2026-11-19",
+      "accessed_on": "2026-11-19",
+      "evidence_location": "auditoriums.json#/sources/bosque",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-phenomena": {
+      "title": "Google Maps — Phenomena Experience",
+      "url": "https://www.google.com/maps/search/?api=1&query=Phenomena%20Experience%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJJ0AB4M-ipBIRM07KK-oSTPY",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-mooby-balmes": {
+      "title": "Google Maps — Mooby Balmes Versión Original",
+      "url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Balmes%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJl2Qulw6YpBIRXqM8cEs0VC4",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-mooby-bosque": {
+      "title": "Google Maps — MOOBY Bosque",
+      "url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Bosque%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJg_RkeaKipBIRL2cu-hiaY3o",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-mooby-aribau": {
+      "title": "Google Maps — MOOBY Aribau - Aribau Cinema",
+      "url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Aribau%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJ74nVg4yipBIRxNcmb8HE_Ng",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-cinesa-diagonal-mar": {
+      "title": "Google Maps — CINESA DIAGONAL MAR · ISENSE · IMAX",
+      "url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20Diagonal%20Mar%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJQ5WONVejpBIRBHgaGg2ts6E",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-cinesa-la-farga": {
+      "title": "Google Maps — CINESA LUXE LA FARGA",
+      "url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20LUXE%20La%20Farga%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJv56Avx-ZpBIR9Sn83R7ry0I",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-yelmo-maquinista": {
+      "title": "Google Maps — Cine Yelmo Westfield La Maquinista",
+      "url": "https://www.google.com/maps/search/?api=1&query=Yelmo%20Premium%20La%20Maquinista%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJvzQ5Neq8pBIRfUoQLf4vaD4",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    },
+    "google-kinepolis-splau": {
+      "title": "Google Maps — KINEPOLIS CINEMAS",
+      "url": "https://www.google.com/maps/search/?api=1&query=Kin%C3%A9polis%20Barcelona%20Splau%20Barcelona",
+      "kind": "maps_platform",
+      "accessed_on": "2026-11-19",
+      "place_id": "ChIJn13KLEyZpBIRDBdVtKH83bo",
+      "access": "previously_collected_public_listing_data",
+      "warning": "Rating exposed; review count and individual reviews were not returned. No private browser profile used.",
+      "access_method": "reused_public_research_snapshot_2026-11-19"
+    }
+  },
+  "cinemas": [
+    {
+      "id": "phenomena",
+      "name": "Phenomena Experience",
+      "address": "Phenomena Experience, Carrer de Sant Antoni Maria Claret, 168, Eixample, 08025 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Phenomena%20Experience%20Barcelona&query_place_id=ChIJJ0AB4M-ipBIRM07KK-oSTPY",
+      "google_place_id": "ChIJJ0AB4M-ipBIRM07KK-oSTPY",
+      "fact_ids": [
+        "phenomena-membership",
+        "phenomena-transit",
+        "phenomena-seating",
+        "phenomena-food",
+        "phenomena-fee",
+        "phenomena-refunds",
+        "phenomena-discounts"
+      ],
+      "price_ids": [
+        "phenomena-december-example",
+        "phenomena-club-commission"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "phenomena",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-phenomena"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "phenomena",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-phenomena"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "phenomena",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": false,
+          "original_label": "No hay aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-phenomena"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 5,
+        "interior_image_count": 1,
+        "source_identified_interior_rooms": [
+          "1"
+        ],
+        "tour_ids": []
+      },
+      "unresolved": [
+        "General tariff and ticket booking fee; membership base fee/expiry for the current offer.",
+        "Current measured step-free route, wheelchair-position count and hearing/audio-description facilities.",
+        "Parking agreement or validation; legacy cash-only notice not accepted as current.",
+        "Screen/room geometry and the existing 419/420 capacity conflict."
+      ]
+    },
+    {
+      "id": "mooby-balmes",
+      "name": "Mooby Balmes",
+      "address": "Mooby Balmes Versión Original, Carrer de Balmes, 422, 424, Sarrià-Sant Gervasi, 08022 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Balmes%20Barcelona&query_place_id=ChIJl2Qulw6YpBIRXqM8cEs0VC4",
+      "google_place_id": "ChIJl2Qulw6YpBIRXqM8cEs0VC4",
+      "fact_ids": [
+        "mooby-wheelchair",
+        "mooby-booking",
+        "mooby-opening",
+        "mooby-support",
+        "mooby-hire",
+        "balmes-parking",
+        "balmes-transit",
+        "balmes-scooters"
+      ],
+      "price_ids": [
+        "mooby-weekday",
+        "mooby-weekend",
+        "mooby-wednesday",
+        "mooby-senior",
+        "mooby-cine-senior",
+        "mooby-child",
+        "mooby-premiere",
+        "balmes-morning",
+        "mooby-3d",
+        "mooby-atmos"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "mooby-balmes",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-mooby-balmes"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "mooby-balmes",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-mooby-balmes"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 22,
+        "interior_image_count": 5,
+        "source_identified_interior_rooms": [
+          "9"
+        ],
+        "tour_ids": [
+          "balmes-tour-1"
+        ]
+      },
+      "unresolved": [
+        "Parking tariff/validation, ticket booking fee, Sunday general tariff and concessions menu.",
+        "Per-room wheelchair routes, counts, hearing loops and audio description.",
+        "Missing screen dimensions, room dimensions and confirmed interior-photo room numbers."
+      ]
+    },
+    {
+      "id": "mooby-bosque",
+      "name": "Mooby Bosque",
+      "address": "MOOBY Bosque, Rambla de Prat, 16, Gràcia, 08012 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Bosque%20Barcelona&query_place_id=ChIJg_RkeaKipBIRL2cu-hiaY3o",
+      "google_place_id": "ChIJg_RkeaKipBIRL2cu-hiaY3o",
+      "fact_ids": [
+        "mooby-wheelchair",
+        "mooby-booking",
+        "mooby-opening",
+        "mooby-support",
+        "mooby-hire",
+        "bosque-parking",
+        "bosque-transit",
+        "bosque-access",
+        "bosque-local-company",
+        "bosque-hvac",
+        "bosque-plaque"
+      ],
+      "price_ids": [
+        "mooby-weekday",
+        "mooby-weekend",
+        "mooby-wednesday",
+        "mooby-senior",
+        "mooby-cine-senior",
+        "mooby-child",
+        "mooby-premiere",
+        "bosque-vose",
+        "mooby-3d",
+        "mooby-atmos"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "mooby-bosque",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-mooby-bosque"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "mooby-bosque",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": true,
+          "original_label": "Tiene aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-mooby-bosque"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "mooby-bosque",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-mooby-bosque"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "mooby-bosque",
+          "attribute": "has_wheelchair_accessible_seating",
+          "reported_value": true,
+          "original_label": "Tiene asientos accesibles con silla de ruedas",
+          "source_ids": [
+            "google-mooby-bosque"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 6,
+        "interior_image_count": 4,
+        "source_identified_interior_rooms": [],
+        "tour_ids": [
+          "bosque-tour-2"
+        ]
+      },
+      "unresolved": [
+        "Parking tariff/validation, ticket booking fee, Sunday general tariff and concessions menu.",
+        "Per-room wheelchair counts and hearing/audio-description systems; final HVAC commissioning.",
+        "Building title/lease, missing screen dimensions and confirmed interior-photo room numbers."
+      ]
+    },
+    {
+      "id": "mooby-aribau",
+      "name": "Mooby Aribau",
+      "address": "MOOBY Aribau - Aribau Cinema, Carrer d'Aribau, 8, 10, Eixample, 08011 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Aribau%20Barcelona&query_place_id=ChIJ74nVg4yipBIRxNcmb8HE_Ng",
+      "google_place_id": "ChIJ74nVg4yipBIRxNcmb8HE_Ng",
+      "fact_ids": [
+        "mooby-wheelchair",
+        "mooby-booking",
+        "mooby-opening",
+        "mooby-support",
+        "mooby-hire",
+        "aribau-transit",
+        "aribau-access-1-4",
+        "aribau-access-5"
+      ],
+      "price_ids": [
+        "mooby-weekday",
+        "mooby-weekend",
+        "mooby-wednesday",
+        "mooby-senior",
+        "mooby-cine-senior",
+        "mooby-child",
+        "mooby-premiere",
+        "mooby-3d",
+        "mooby-atmos"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "mooby-aribau",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-mooby-aribau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "mooby-aribau",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-mooby-aribau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 11,
+        "interior_image_count": 8,
+        "source_identified_interior_rooms": [
+          "5"
+        ],
+        "tour_ids": [
+          "aribau-tour-3",
+          "aribau-tour-4"
+        ]
+      },
+      "unresolved": [
+        "Parking agreement, ticket booking fee, Sunday general tariff and concessions menu.",
+        "Sala 5 wheelchair count, lift platform dimensions and hearing/audio-description systems.",
+        "Missing screen/room dimensions and identified interior photos beyond Sala 5."
+      ]
+    },
+    {
+      "id": "cinesa-diagonal-mar",
+      "name": "Cinesa Diagonal Mar",
+      "address": "CINESA DIAGONAL MAR · ISENSE · IMAX, Av. Diagonal, 3, Sant Martí, 08019 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20Diagonal%20Mar%20Barcelona&query_place_id=ChIJQ5WONVejpBIRBHgaGg2ts6E",
+      "google_place_id": "ChIJQ5WONVejpBIRBHgaGg2ts6E",
+      "fact_ids": [
+        "cinesa-membership",
+        "cinesa-refund",
+        "cinesa-seats",
+        "cinesa-access",
+        "diagonal-transit",
+        "diagonal-parking",
+        "diagonal-parking-capacity",
+        "diagonal-parking-hours"
+      ],
+      "price_ids": [
+        "cinesa-standard-monthly",
+        "cinesa-standard-annual",
+        "cinesa-luxe-monthly",
+        "cinesa-luxe-annual",
+        "cinesa-unlimited-3d",
+        "diagonal-unlimited-imax",
+        "diagonal-unlimited-isense",
+        "diagonal-parking-cap"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "cinesa-diagonal-mar",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-cinesa-diagonal-mar"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-diagonal-mar",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": true,
+          "original_label": "Tiene aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-diagonal-mar"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-diagonal-mar",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-diagonal-mar"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-diagonal-mar",
+          "attribute": "has_wheelchair_accessible_seating",
+          "reported_value": true,
+          "original_label": "Tiene asientos accesibles con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-diagonal-mar"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 11,
+        "interior_image_count": 7,
+        "source_identified_interior_rooms": [
+          "10",
+          "3",
+          "9"
+        ],
+        "tour_ids": []
+      },
+      "unresolved": [
+        "Current per-performance ordinary ticket prices/booking fees and non-subscriber format supplements.",
+        "Ambiguous parking per-minute unit; complete step-free room routes and hearing systems.",
+        "Missing exact screen/room dimensions, projector models and unresolved capacity discrepancies."
+      ]
+    },
+    {
+      "id": "cinesa-la-farga",
+      "name": "Cinesa LUXE La Farga",
+      "address": "CINESA LUXE LA FARGA, La Farga, Av. de Josep Tarradellas i Joan, 145, 08901 L'Hospitalet de Llobregat, Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20LUXE%20La%20Farga%20Barcelona&query_place_id=ChIJv56Avx-ZpBIR9Sn83R7ry0I",
+      "google_place_id": "ChIJv56Avx-ZpBIR9Sn83R7ry0I",
+      "fact_ids": [
+        "cinesa-membership",
+        "cinesa-refund",
+        "cinesa-seats",
+        "cinesa-access",
+        "farga-transit",
+        "farga-parking",
+        "farga-parking-hours",
+        "farga-parking-contact"
+      ],
+      "price_ids": [
+        "cinesa-standard-monthly",
+        "cinesa-standard-annual",
+        "cinesa-luxe-monthly",
+        "cinesa-luxe-annual",
+        "cinesa-unlimited-3d",
+        "farga-unlimited-standard-upgrade",
+        "farga-parking-minute",
+        "farga-parking-cap"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "cinesa-la-farga",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-cinesa-la-farga"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-la-farga",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": true,
+          "original_label": "Tiene aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-la-farga"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-la-farga",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-la-farga"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "cinesa-la-farga",
+          "attribute": "has_wheelchair_accessible_seating",
+          "reported_value": true,
+          "original_label": "Tiene asientos accesibles con silla de ruedas",
+          "source_ids": [
+            "google-cinesa-la-farga"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 11,
+        "interior_image_count": 5,
+        "source_identified_interior_rooms": [],
+        "tour_ids": []
+      },
+      "unresolved": [
+        "Current ordinary ticket prices/booking fees and non-subscriber supplements.",
+        "Parking validation procedure, complete accessible room routes and hearing systems.",
+        "Missing screen/room dimensions, projector models and verified interior-photo room identities."
+      ]
+    },
+    {
+      "id": "yelmo-maquinista",
+      "name": "Yelmo Premium La Maquinista",
+      "address": "Cine Yelmo Westfield La Maquinista, Westfield La Maquinista, Carrer de Potosí, 2, Sant Andreu, 08030 Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Yelmo%20Premium%20La%20Maquinista%20Barcelona&query_place_id=ChIJvzQ5Neq8pBIRfUoQLf4vaD4",
+      "google_place_id": "ChIJvzQ5Neq8pBIRfUoQLf4vaD4",
+      "fact_ids": [
+        "yelmo-legal-company",
+        "yelmo-discounts",
+        "yelmo-junior",
+        "yelmo-purchase",
+        "yelmo-loyalty",
+        "maquinista-transit",
+        "maquinista-parking",
+        "maquinista-parking-hours",
+        "maquinista-mall-access"
+      ],
+      "price_ids": [
+        "maquinista-parking-hour",
+        "maquinista-parking-cap"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "yelmo-maquinista",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-yelmo-maquinista"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "yelmo-maquinista",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": true,
+          "original_label": "Tiene aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-yelmo-maquinista"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "yelmo-maquinista",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-yelmo-maquinista"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "yelmo-maquinista",
+          "attribute": "has_wheelchair_accessible_seating",
+          "reported_value": true,
+          "original_label": "Tiene asientos accesibles con silla de ruedas",
+          "source_ids": [
+            "google-yelmo-maquinista"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 12,
+        "interior_image_count": 8,
+        "source_identified_interior_rooms": [],
+        "tour_ids": []
+      },
+      "unresolved": [
+        "Current Premium/XE/Junior prices, booking fee and current membership tariff.",
+        "Venue leaseholder/co-owner detail and original opening-day discrepancy.",
+        "Non-member parking hour 3–4 wording, room-level accessible routes and current hearing/audio-description facilities.",
+        "Missing screen/room dimensions and confirmed interior-photo room identities."
+      ]
+    },
+    {
+      "id": "kinepolis-splau",
+      "name": "Kinépolis Barcelona Splau",
+      "address": "KINEPOLIS CINEMAS, Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Kin%C3%A9polis%20Barcelona%20Splau%20Barcelona&query_place_id=ChIJn13KLEyZpBIRDBdVtKH83bo",
+      "google_place_id": "ChIJn13KLEyZpBIRDBdVtKH83bo",
+      "fact_ids": [
+        "splau-discounts",
+        "splau-hours",
+        "splau-contact",
+        "splau-transit",
+        "splau-parking",
+        "splau-room-access",
+        "splau-refund-conflict",
+        "splau-expansion"
+      ],
+      "price_ids": [
+        "splau-general-online",
+        "splau-general-box",
+        "splau-reduced-online",
+        "splau-reduced-box",
+        "splau-friends",
+        "splau-3d",
+        "splau-glasses"
+      ],
+      "google_attribute_observations": [
+        {
+          "cinema_id": "kinepolis-splau",
+          "attribute": "has_wheelchair_accessible_entrance",
+          "reported_value": true,
+          "original_label": "Tiene acceso para sillas de ruedas",
+          "source_ids": [
+            "google-kinepolis-splau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "kinepolis-splau",
+          "attribute": "has_wheelchair_accessible_parking",
+          "reported_value": true,
+          "original_label": "Tiene aparcamiento accesible con silla de ruedas",
+          "source_ids": [
+            "google-kinepolis-splau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "kinepolis-splau",
+          "attribute": "has_wheelchair_accessible_restroom",
+          "reported_value": true,
+          "original_label": "Dispone de aseo accesible con silla de ruedas",
+          "source_ids": [
+            "google-kinepolis-splau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        },
+        {
+          "cinema_id": "kinepolis-splau",
+          "attribute": "has_wheelchair_accessible_seating",
+          "reported_value": false,
+          "original_label": "No hay asientos adaptados para discapacitados",
+          "source_ids": [
+            "google-kinepolis-splau"
+          ],
+          "observed_on": "2026-11-19",
+          "status": "google_listing_reported_not_independently_audited"
+        }
+      ],
+      "photo_coverage": {
+        "image_reference_count": 8,
+        "interior_image_count": 4,
+        "source_identified_interior_rooms": [],
+        "tour_ids": []
+      },
+      "unresolved": [
+        "Current local legal operating entity, VIP/recliner supplements and ticket booking fee.",
+        "Refund-rule conflict and current hearing/audio-description availability per sala/session.",
+        "Room dimensions and existing capacity-table conflicts; source-confirmed interior-photo room identities."
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "mooby-wheelchair",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "category": "accessibility",
+      "value": "Mooby says its cinemas support reduced-mobility access and asks wheelchair users to purchase at the cinema box office.",
+      "source_ids": [
+        "pr-mooby-faq"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Operator-wide policy; room routes require venue-specific evidence."
+    },
+    {
+      "id": "mooby-booking",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "category": "booking",
+      "value": "Mobile tickets are accepted. Published policy allows no ticket changes or refunds.",
+      "source_ids": [
+        "pr-mooby-faq"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-opening",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "category": "hours",
+      "value": "Cinemas open 15 minutes before the first screening.",
+      "source_ids": [
+        "pr-mooby-faq"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-support",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "category": "contact",
+      "value": "info@moobycinemas.com; booking-process support chat Monday–Friday 15:00–20:00, Saturday/Sunday 12:00–20:00.",
+      "source_ids": [
+        "pr-mooby-faq"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-hire",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "category": "private_hire",
+      "value": "Private screenings and event hire are offered through the operator’s venue-hire enquiry form.",
+      "source_ids": [
+        "pr-mooby-faq"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-membership",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "membership",
+      "value": "Club Phenomena is for people over 16. The personal virtual card permits one discounted ticket per member per eligible session; ID may be checked. Fee and expiry vary by enrolment offer.",
+      "source_ids": [
+        "pr-phenomena-club"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-transit",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "transport",
+      "value": "L5 Sant Pau / Dos de Maig is the metro stop listed by the operator’s legacy website.",
+      "source_ids": [
+        "pr-phenomena-legacy-transport"
+      ],
+      "status": "legacy_operator_direction",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-seating",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "booking",
+      "value": "Unnumbered seating. A group using one QR must enter together; late admission may be refused.",
+      "source_ids": [
+        "phenomena-terms"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-food",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "admission",
+      "value": "Published terms prohibit outside food/drink, bicycles, scooters and bulky objects.",
+      "source_ids": [
+        "phenomena-terms"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Operator’s stated conditions; no assessment of enforceability."
+    },
+    {
+      "id": "phenomena-fee",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "booking",
+      "value": "Online and app purchases carry an additional non-refundable service charge; its amount is not stated in the terms. Official channels also include the box office and cinema kiosks.",
+      "source_ids": [
+        "phenomena-terms"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-refunds",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "booking",
+      "value": "Published terms reject ordinary changes/refunds. If the cinema cancels for technical or force-majeure reasons, it allows a refund request within 14 days.",
+      "source_ids": [
+        "phenomena-terms"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-discounts",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "category": "pricing_conditions",
+      "value": "The purchase terms mention under-12 and over-65 discounts and Club tickets, with official photo ID required. Discount amounts are not specified.",
+      "source_ids": [
+        "phenomena-terms"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "balmes-parking",
+      "cinema_ids": [
+        "mooby-balmes"
+      ],
+      "category": "parking",
+      "value": "Parking is available in the same building; tariff and cinema validation were not verified.",
+      "source_ids": [
+        "room-balmes"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "balmes-transit",
+      "cinema_ids": [
+        "mooby-balmes"
+      ],
+      "category": "transport",
+      "value": "Nearby FGC El Putxet is on L7. FGC lists lifts and accessibility facilities at that station.",
+      "source_ids": [
+        "pr-fgc-putxet"
+      ],
+      "status": "station_verified_nearby_location_inference",
+      "observed_on": "2026-11-19",
+      "scope": "Station facilities do not establish a step-free route all the way to an auditorium."
+    },
+    {
+      "id": "balmes-scooters",
+      "cinema_ids": [
+        "mooby-balmes"
+      ],
+      "category": "admission",
+      "value": "Electric scooters and unicycles are prohibited in the cinema.",
+      "source_ids": [
+        "room-balmes"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "bosque-parking",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "parking",
+      "value": "The operator lists parking within the cinema complex; tariff and validation remain unverified.",
+      "source_ids": [
+        "room-bosque"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "bosque-transit",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "transport",
+      "value": "Nearby Fontana is on metro L3.",
+      "source_ids": [
+        "pr-tmb-metro"
+      ],
+      "status": "station_verified_nearby_location_inference",
+      "observed_on": "2026-11-19",
+      "scope": "Walking time and a step-free journey have not been measured."
+    },
+    {
+      "id": "bosque-access",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "accessibility",
+      "value": "Apropa Cultura lists an accessible entrance, adapted lifts, accessible toilets and parking, wheelchair spaces, guide-dog access and easy-read information.",
+      "source_ids": [
+        "room-bosque-apropa"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Venue listing; no per-room wheelchair inventory or hearing-system specification."
+    },
+    {
+      "id": "bosque-local-company",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "company",
+      "value": "Cine Bosque, S.L. (NIF B08335549) is named as applicant for the thermal-energy project at Rambla de Prat 16.",
+      "source_ids": [
+        "pr-bosque-energy"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Documented venue-associated company, not proof of property ownership or the current lease."
+    },
+    {
+      "id": "bosque-hvac",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "equipment",
+      "value": "Published aerothermal project: 725.6 kW; report lists Midea MV8i-560WV2RN1E(PRO), MV8i-450WV2RN1E(PRO) and CIAT VECTIOS IPJ 0240CTR, 0180CTR and 0160CTR equipment.",
+      "source_ids": [
+        "pr-bosque-energy",
+        "pr-bosque-grant"
+      ],
+      "status": "project_specification",
+      "observed_on": "2026-11-19",
+      "scope": "Heating/cooling project, not projection equipment. Commissioning and final installed configuration are not established."
+    },
+    {
+      "id": "bosque-plaque",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "category": "history",
+      "value": "The Catalan Film Academy marked Bosque as an operating centenary cinema with a plaque on 27 October 2020.",
+      "source_ids": [
+        "room-bosque"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "aribau-transit",
+      "cinema_ids": [
+        "mooby-aribau"
+      ],
+      "category": "transport",
+      "value": "IN-EDIT lists Universitat (L1/L2) and Catalunya (L1/L3); buses 52, 54, H12, V13, 59, 63, 67 and 68 at Gran Via/Balmes or Plaça Universitat.",
+      "source_ids": [
+        "pr-aribau-access"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Organizer’s directions, not a live timetable."
+    },
+    {
+      "id": "aribau-access-1-4",
+      "cinema_ids": [
+        "mooby-aribau"
+      ],
+      "category": "accessibility",
+      "value": "Rooms 1–4 have lift access, street-level accessible toilets and two wheelchair positions per room, according to IN-EDIT.",
+      "source_ids": [
+        "pr-aribau-access"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "room_ids": [
+        "mooby-aribau:1",
+        "mooby-aribau:2",
+        "mooby-aribau:3",
+        "mooby-aribau:4"
+      ],
+      "wheelchair_positions_per_room": 2
+    },
+    {
+      "id": "aribau-access-5",
+      "cinema_ids": [
+        "mooby-aribau"
+      ],
+      "category": "accessibility",
+      "value": "Sala 5 uses a platform stairlift with a 300 kg limit. Wheelchair positions are in the aisle; accessible toilets are in rooms 1–4 opposite Sala 5.",
+      "source_ids": [
+        "pr-aribau-access"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "room_ids": [
+        "mooby-aribau:5"
+      ],
+      "platform_lift_limit_kg": 300
+    },
+    {
+      "id": "cinesa-membership",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "category": "membership",
+      "value": "Unlimited has a three-month minimum. VIP seats are included where available; annual subscriptions do not receive a refund on cancellation.",
+      "source_ids": [
+        "pr-cinesa-unlimited-minimum",
+        "pr-cinesa-unlimited"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Formats and 3D glasses may add charges."
+    },
+    {
+      "id": "cinesa-refund",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "category": "booking",
+      "value": "Published policy rejects ordinary changes/cancellations, with exceptions for cinema-caused technical failure or cancellation.",
+      "source_ids": [
+        "pr-cinesa-refunds"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-seats",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "category": "booking",
+      "value": "Registered myCinesa users can change selected seats in the app; this is separate from changing or cancelling a screening.",
+      "source_ids": [
+        "pr-cinesa-seat-change"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-access",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "category": "accessibility",
+      "value": "Wheelchair positions are marked in online booking maps. Staff can assist with in-person booking and special assistance.",
+      "source_ids": [
+        "pr-cinesa-wheelchair",
+        "pr-cinesa-assistance"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Chain policy; detailed accessible routes and hearing equipment remain separate questions."
+    },
+    {
+      "id": "diagonal-transit",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "category": "transport",
+      "value": "The shopping centre lists El Maresme | Fòrum on L4.",
+      "source_ids": [
+        "pr-diagonal-transport"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "diagonal-parking",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "category": "parking",
+      "value": "Three free parking hours per day, plus one extra hour with the centre app or a cinema ticket presented at the manual cashier on P1 before payment.",
+      "source_ids": [
+        "pr-diagonal-services"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "free_hours": 3,
+      "conditional_extra_free_hours": 1
+    },
+    {
+      "id": "diagonal-parking-capacity",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "category": "parking",
+      "value": "The centre lists 5,000 parking spaces across five underground levels; 54 are designated accessible spaces.",
+      "source_ids": [
+        "pr-diagonal-services",
+        "pr-diagonal-accessible-parking"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "parking_spaces": 5000,
+      "accessible_parking_spaces": 54
+    },
+    {
+      "id": "diagonal-parking-hours",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "category": "hours",
+      "value": "Winter parking: Monday–Thursday 08:30–01:00; Friday/Saturday/holiday eves 08:30–03:00; Sunday and closed shopping holidays 11:00–01:00.",
+      "source_ids": [
+        "pr-diagonal-hours",
+        "pr-diagonal-services"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Winter schedule, 1 October–31 May; shopping and cinema opening hours differ."
+    },
+    {
+      "id": "farga-transit",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "category": "transport",
+      "value": "Centre entrances: Calle de Barcelona 2 and Avenida Josep Tarradellas s/n. Published public transport: Rambla Just Oliveras metro, Hospitalet de Llobregat commuter rail, Sant Josep FGC, buses L12/LH2.",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "farga-parking",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "category": "parking",
+      "value": "Three hours of free parking are advertised while watching a film at Cinesa. The page does not explain the validation procedure.",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "conditional_free_hours": 3
+    },
+    {
+      "id": "farga-parking-hours",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "category": "hours",
+      "value": "Parking opens Monday–Thursday/Sunday 06:00–01:00 and Friday/Saturday/holiday eves 06:00–03:30.",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "farga-parking-contact",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "category": "contact",
+      "value": "Parking enquiries: parking@centrolafarga.com; centre management: +34 933 380 737.",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Shopping centre, not cinema box office."
+    },
+    {
+      "id": "yelmo-legal-company",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "company",
+      "value": "Yelmo’s September 2026 notice names YELMO FILMS, S.L.U., NIF B82721473, as the website/app company.",
+      "source_ids": [
+        "pr-yelmo-legal-2026"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Chain platform legal entity; current venue leaseholder and building title are not established."
+    },
+    {
+      "id": "yelmo-discounts",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "pricing_conditions",
+      "value": "Yelmo’s terms describe possible Senior (over 60), youth/student (13–30), child (3–13) and disability discounts. Disability eligibility is 33% or more and may include one companion. Categories and amounts are not guaranteed for every cinema/session.",
+      "source_ids": [
+        "pr-yelmo-legal-2026"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-junior",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "admission",
+      "value": "Under-3s may enter without a ticket if they occupy no seat, except Sala Junior, where everyone needs a ticket.",
+      "source_ids": [
+        "pr-yelmo-legal-2026"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-purchase",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "booking",
+      "value": "Seat selection is part of purchase; the published conditions allow no changes or refunds after confirmation. Prices include VAT and may vary by date, time and format.",
+      "source_ids": [
+        "pr-yelmo-legal-2026"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "yelmo-loyalty",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "membership",
+      "value": "The terms mention MovieYELMO, with at most two tickets per web transaction and film/promotion exclusions. No current membership tariff was established.",
+      "source_ids": [
+        "pr-yelmo-legal-2026"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "maquinista-transit",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "transport",
+      "value": "The centre lists L1 Sant Andreu/Torras i Bages and L9/L10 Bon Pastor. Underground parking entrances are on Potosí and São Paulo; exterior parking is reached from República Dominicana.",
+      "source_ids": [
+        "pr-maquinista-access"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "The L9/L10 directions refer to the northern branches; no walking time is asserted."
+    },
+    {
+      "id": "maquinista-parking",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "parking",
+      "value": "4,800 spaces across two underground levels and an exterior car park; 2.2 m height limit. First three hours free; Westfield Club adds one hour. A Carrefour purchase over EUR 20 can alternatively add one hour; benefits cannot be combined.",
+      "source_ids": [
+        "pr-maquinista-parking"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "parking_spaces": 4800,
+      "free_hours": 3,
+      "conditional_extra_free_hours": 1,
+      "height_limit_m": 2.2
+    },
+    {
+      "id": "maquinista-parking-hours",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "hours",
+      "value": "Parking: Monday–Thursday/Sunday 08:30–01:30; Friday/Saturday 08:30–03:30.",
+      "source_ids": [
+        "pr-maquinista-parking"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "maquinista-mall-access",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "category": "accessibility",
+      "value": "The centre lists accessible circulation/parking and wheelchair rental, plus electric charging and bicycle/motorcycle parking.",
+      "source_ids": [
+        "pr-maquinista-services",
+        "pr-maquinista-parking"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Shopping-centre facilities; not a room-by-room cinema accessibility audit."
+    },
+    {
+      "id": "splau-discounts",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "pricing_conditions",
+      "value": "Reduced tickets: children through age 12 and disabled customers every day; age 65+, youth/student card holders Monday–Thursday excluding holidays/eves. Proof required. Under-3s enter free without occupying a seat; VIP/recliner discounts excluded on weekends/holidays.",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-hours",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "hours",
+      "value": "Operator lists daily cinema hours 10:45–01:00 and box-office hours 10:30–23:00.",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-contact",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "contact",
+      "value": "info.espana@kinepolis.com is the operator’s published customer contact.",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-transit",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "transport",
+      "value": "Operator lists Cornellà Riera FGC, Cornellà Centre metro L5, and T1/T2 tram at Cornellà Centre or Les Aigües.",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Operator directions; older bus-route numbers were not propagated."
+    },
+    {
+      "id": "splau-parking",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "parking",
+      "value": "The centre advertises 2,800 free underground spaces over two levels, with PMR, family and larger/smaller bays. Eight EV charging points are paid; entrances are on Carrer Progrés and Carretera del Mig.",
+      "source_ids": [
+        "pr-splau-parking"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "parking_spaces": 2800,
+      "ev_charging_points": 8
+    },
+    {
+      "id": "splau-room-access",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "accessibility",
+      "value": "The operator’s current Spanish room table marks all 28 salas as accessible and lists wheelchair positions for each room. These positions are recorded separately from fixed seats in the room catalogue.",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "status": "published",
+      "observed_on": "2026-11-19",
+      "scope": "Operator claim, not an independent route or hearing-equipment audit."
+    },
+    {
+      "id": "splau-refund-conflict",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "booking",
+      "value": "Published rules conflict: the online-refund FAQ gives a request deadline 30 minutes after the start; the wrong-cinema FAQ says 30 minutes before; general conditions describe fixed-session tickets as non-refundable. Confirm the applicable case with customer support.",
+      "source_ids": [
+        "pr-kinepolis-online-refund",
+        "pr-kinepolis-wrong-cinema",
+        "pr-kinepolis-purchase-conditions"
+      ],
+      "status": "conflicting_published_rules",
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-expansion",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "category": "history",
+      "value": "A 10 July 2013 report records the inauguration of ten additional rooms, expanding Full HD at Splau from 18 to 28; reported investment EUR 4 million.",
+      "source_ids": [
+        "pr-splau-expansion"
+      ],
+      "status": "contemporary_report",
+      "observed_on": "2026-11-19",
+      "event_date": "2013-07-10",
+      "date_precision": "report_date_inauguration_recorded"
+    }
+  ],
+  "prices": [
+    {
+      "id": "mooby-weekday",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "General weekday",
+      "amount": 9,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Monday–Thursday, excluding public holidays; Wednesday and premiere exceptions below.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-weekend",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "General Friday/Saturday/holiday",
+      "amount": 10,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Friday, Saturday and public holidays. Sunday is not explicit in the retrieved English heading; use the session price.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-wednesday",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Wednesday",
+      "amount": 6.5,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Published Wednesday offer; final session price and event exceptions apply.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-senior",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Age 65+ discount",
+      "amount": 8,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Monday and Thursday; age evidence may be required.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-cine-senior",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Cine Sénior",
+      "amount": 2,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Tuesday, age 65+; subject to the continuing programme and eligible session.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-child",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Under 13",
+      "amount": 8,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Published everyday child rate.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-premiere",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Weekday premiere",
+      "amount": 10,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Published weekday release tariff.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "bosque-vose",
+      "cinema_ids": [
+        "mooby-bosque"
+      ],
+      "label": "Original version with Spanish subtitles",
+      "amount": 6.5,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Every day, eligible VOSE films.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "balmes-morning",
+      "cinema_ids": [
+        "mooby-balmes"
+      ],
+      "label": "Sunday morning",
+      "amount": 8,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Sunday morning screenings.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-3d",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "3D supplement",
+      "amount": 2,
+      "currency": "EUR",
+      "kind": "supplement",
+      "condition": "Applicable 3D screenings.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-atmos",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "label": "Dolby Atmos supplement",
+      "amount": 1,
+      "currency": "EUR",
+      "kind": "supplement",
+      "condition": "Applicable Dolby Atmos screenings.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "phenomena-december-example",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "label": "Dune Part Three listed session",
+      "amount": 14,
+      "currency": "EUR",
+      "kind": "session_example",
+      "condition": "Listed performances from 18–24 December 2026; example only, not a general admission price.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-phenomena-session-price"
+      ],
+      "observed_on": "2026-11-19",
+      "session_date_range": [
+        "2026-12-18",
+        "2026-12-24"
+      ]
+    },
+    {
+      "id": "phenomena-club-commission",
+      "cinema_ids": [
+        "phenomena"
+      ],
+      "label": "Club enrolment commission",
+      "amount": 1,
+      "currency": "EUR",
+      "kind": "membership_fee_component",
+      "condition": "Added to the announced membership fee; this is not a cinema-ticket booking fee.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-phenomena-club"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-standard-monthly",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "label": "Unlimited Standard monthly",
+      "amount": 17.9,
+      "currency": "EUR",
+      "kind": "membership",
+      "condition": "Standard cinemas; minimum commitment below.",
+      "channel": "Cinesa Unlimited subscription",
+      "source_ids": [
+        "pr-cinesa-unlimited"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-standard-annual",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "label": "Unlimited Standard annual",
+      "amount": 179,
+      "currency": "EUR",
+      "kind": "membership",
+      "condition": "Annual plan for standard cinemas.",
+      "channel": "Cinesa Unlimited subscription",
+      "source_ids": [
+        "pr-cinesa-unlimited"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-luxe-monthly",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "label": "Unlimited LUXE monthly",
+      "amount": 20.9,
+      "currency": "EUR",
+      "kind": "membership",
+      "condition": "Includes LUXE and standard cinemas; minimum commitment below.",
+      "channel": "Cinesa Unlimited subscription",
+      "source_ids": [
+        "pr-cinesa-unlimited"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-luxe-annual",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "label": "Unlimited LUXE annual",
+      "amount": 209,
+      "currency": "EUR",
+      "kind": "membership",
+      "condition": "Annual plan for LUXE and standard cinemas.",
+      "channel": "Cinesa Unlimited subscription",
+      "source_ids": [
+        "pr-cinesa-unlimited"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "cinesa-unlimited-3d",
+      "cinema_ids": [
+        "cinesa-diagonal-mar",
+        "cinesa-la-farga"
+      ],
+      "label": "Unlimited 3D extra",
+      "amount": 1,
+      "currency": "EUR",
+      "kind": "subscriber_supplement",
+      "condition": "Subscriber supplement; 3D glasses separately charged.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-cinesa-unlimited-extras"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "diagonal-unlimited-imax",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "label": "Unlimited IMAX extra",
+      "amount": 4,
+      "currency": "EUR",
+      "kind": "subscriber_supplement",
+      "condition": "Subscriber IMAX rate. Recliner-IMAX chain rate is not assigned to this venue.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-cinesa-unlimited-extras"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "diagonal-unlimited-isense",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "label": "Unlimited iSense extra",
+      "amount": 2.5,
+      "currency": "EUR",
+      "kind": "subscriber_supplement",
+      "condition": "Subscriber iSense rate.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-cinesa-unlimited-extras"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "farga-unlimited-standard-upgrade",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "label": "Standard subscriber LUXE visit",
+      "amount": 2,
+      "currency": "EUR",
+      "kind": "subscriber_supplement",
+      "condition": "Extra when a Standard Unlimited member attends a LUXE cinema.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-cinesa-unlimited-extras"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "diagonal-parking-cap",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "label": "Parking daily maximum",
+      "amount": 30,
+      "currency": "EUR",
+      "kind": "parking",
+      "condition": "Published daily cap; per-minute amount is unresolved because the source says 0.05 cents/minute.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-diagonal-services"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "farga-parking-minute",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "label": "Parking per minute",
+      "amount": 0.055,
+      "currency": "EUR",
+      "kind": "parking",
+      "condition": "Outside the applicable free allowance; VAT included.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "farga-parking-cap",
+      "cinema_ids": [
+        "cinesa-la-farga"
+      ],
+      "label": "Parking daily maximum",
+      "amount": 30,
+      "currency": "EUR",
+      "kind": "parking",
+      "condition": "Published daily cap; VAT included.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-farga-practical"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "maquinista-parking-hour",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "label": "Parking hourly rate",
+      "amount": 3.25,
+      "currency": "EUR",
+      "kind": "parking",
+      "condition": "Published paid-parking rate after applicable free allowance; tariff panel explicitly labels the 4–24 hour band, so non-member hour 3–4 should be checked.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-maquinista-parking"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "maquinista-parking-cap",
+      "cinema_ids": [
+        "yelmo-maquinista"
+      ],
+      "label": "Parking daily maximum",
+      "amount": 20,
+      "currency": "EUR",
+      "kind": "parking",
+      "condition": "Published daily cap.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "pr-maquinista-parking"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-general-online",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "General admission",
+      "amount": 9.9,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Standard published tariff; special formats/events may differ.",
+      "channel": "Online or automatic kiosk",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-general-box",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "General admission",
+      "amount": 10.1,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Standard published tariff; special formats/events may differ.",
+      "channel": "Staffed box office",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-reduced-online",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "Reduced admission",
+      "amount": 7.9,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Eligibility below.",
+      "channel": "Online or automatic kiosk",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-reduced-box",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "Reduced admission",
+      "amount": 8.6,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Eligibility below.",
+      "channel": "Staffed box office",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-friends",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "Grupo de Amigos loyalty code",
+      "amount": 7,
+      "currency": "EUR",
+      "kind": "admission",
+      "condition": "Monday–Thursday excluding public holidays and their eves.",
+      "channel": "Online, kiosk or staffed box office",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-3d",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "3D supplement",
+      "amount": 1,
+      "currency": "EUR",
+      "kind": "supplement",
+      "condition": "Applicable 3D films.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    },
+    {
+      "id": "splau-glasses",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "label": "3D glasses rental",
+      "amount": 1.5,
+      "currency": "EUR",
+      "kind": "supplement",
+      "condition": "Additional to the 3D supplement.",
+      "channel": "Published tariff; checkout controls the final price",
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "observed_on": "2026-11-19"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "splau-accessible-seating",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "room-splau-es",
+        "google-kinepolis-splau"
+      ],
+      "description": "Google listing says no accessible seating, but the operator lists wheelchair positions in all 28 rooms. Neither statement is silently discarded; use the room table for published counts and confirm the required route."
+    },
+    {
+      "id": "splau-refunds",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "pr-kinepolis-online-refund",
+        "pr-kinepolis-wrong-cinema",
+        "pr-kinepolis-purchase-conditions"
+      ],
+      "description": "Different Kinépolis FAQs give before/after-start refund deadlines; general terms are more restrictive. Scenarios and source statements are kept separate."
+    },
+    {
+      "id": "diagonal-parking-unit",
+      "cinema_ids": [
+        "cinesa-diagonal-mar"
+      ],
+      "source_ids": [
+        "pr-diagonal-services",
+        "pr-diagonal-accessible-parking"
+      ],
+      "description": "Both language versions say 0.05 cents per minute. This may be a unit error; no EUR-per-minute number is inferred."
+    },
+    {
+      "id": "splau-friends-price",
+      "cinema_ids": [
+        "kinepolis-splau"
+      ],
+      "source_ids": [
+        "room-splau-es"
+      ],
+      "description": "Fresh same-day operator HTML says EUR 7; an older indexed excerpt says EUR 6.90. The captured HTML is used, dated 2026-11-19."
+    },
+    {
+      "id": "mooby-sunday-heading",
+      "cinema_ids": [
+        "mooby-balmes",
+        "mooby-bosque",
+        "mooby-aribau"
+      ],
+      "source_ids": [
+        "pr-mooby-prices"
+      ],
+      "description": "The EUR 10 English heading names Friday, Saturday and holidays, but not Sunday. The separate EUR 13 Sunday-inclusive heading applies to Gran Sarrià only and is not borrowed."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "coolify_api": "https://coolify.luke.ac/api/v1",
+  "server_uuid": "of4fec7d9pc7vccw3h8hvimb",
+  "server_ip": "178.105.17.34",
+  "service_uuid": "jaksjk5shvd3mpkgyhsxomqn",
+  "server_key_uuid": "bx4lz9bflzf1zk1j3cv2c999",
+  "public_origin": "https://vobarna.com",
+  "cdn_origin": "https://origin.vobarna.com",
+  "bunny_pull_zone_id": 7049405,
+  "bunny_dns_zone_id": 1082969
+}

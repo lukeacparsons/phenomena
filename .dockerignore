@@ -1,0 +1,13 @@
+.git
+.site
+.venv
+.wrangler
+.deploy-secrets
+.crawler-secrets
+.env*
+.dev.vars
+node_modules
+output
+static/preview-data
+**/__pycache__
+**/.DS_Store

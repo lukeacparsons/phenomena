@@ -1,0 +1,318 @@
+{
+  "checked_on": "2026-11-19",
+  "method": "Anonymous public Maps place/search data and photo previews. Optional cookies rejected through the normal consent form. No Google sign-in, no local Chrome profile access, no review posting.",
+  "browser_access": "Native Chrome app access was denied. No browser access was obtained.",
+  "gallery_access": "Initial anonymous photo-gallery request returned no image records; subsequent correctly encoded request returned HTTP 403. No further gallery requests attempted.",
+  "full_gallery_collected": false,
+  "confirmed_new_numbered_interiors": 0,
+  "venues": [
+    {
+      "cinema_id": "phenomena",
+      "place_name": "Phenomena Experience",
+      "address": "Phenomena Experience, Carrer de Sant Antoni Maria Claret, 168, Eixample, 08025 Barcelona",
+      "place_id": "ChIJJ0AB4M-ipBIRM07KK-oSTPY",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Phenomena%20Experience%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/Phenomena+Experience,+Carrer+de+Sant+Antoni+Maria+Claret,+168,+Eixample,+08025+Barcelona/@41.4090888,2.1718111,2992a,13.1y/data=!4m2!3m1!1s0x12a4a2cfe0014027:0xf64c12ea2bca4e33",
+      "source_ids": [
+        "maps-phenomena"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgIDm4K3GOg",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfr_bGa65lnp1nSaMlOq673GXY9iqLBnCEfuHsV1s1c7cvDgxC3x_MkMrsPIaJOr7yELn9pNBG8NdiQGLab2M2JFerrrUhkCa4CDQLc_1G0DL-PKVJ-nxpChm07uQfIkR-VAC7b=w408-h548-k-no",
+          "provider_date_raw": [
+            2022,
+            1,
+            15,
+            20
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            408,
+            548
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "mooby-balmes",
+      "place_name": "Mooby Balmes Versión Original",
+      "address": "Mooby Balmes Versión Original, Carrer de Balmes, 422, 424, Sarrià-Sant Gervasi, 08022 Barcelona",
+      "place_id": "ChIJl2Qulw6YpBIRXqM8cEs0VC4",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Balmes%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/Mooby+Balmes+Versi%C3%B3n+Original,+Carrer+de+Balmes,+422,+424,+Sarri%C3%A0-Sant+Gervasi,+08022+Barcelona/@41.4072222,2.1386111,2992a,13.1y/data=!4m2!3m1!1s0x12a4980e972e6497:0x2e54344b703ca35e",
+      "source_ids": [
+        "maps-mooby-balmes"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIABIhD1CjKk-_vt-vF1YDJqu3Hh",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfYG3EQ_OrV_RcP8lQAnB3WALDWlSXnolLfXTrl9M1w1GNY1JLgvwNafDQsv1fpY3rGh-kymMycP6AT5d0pqfYVZXdDZKkHYcXMMYaJiqQ9a0KOC6T-dOfpKEHKQdNHmftLI3gy80gt1Jf3=w408-h272-k-no",
+          "provider_date_raw": [
+            2026,
+            2,
+            18,
+            23
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            407,
+            272
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "mooby-bosque",
+      "place_name": "MOOBY Bosque",
+      "address": "MOOBY Bosque, Rambla de Prat, 16, Gràcia, 08012 Barcelona",
+      "place_id": "ChIJg_RkeaKipBIRL2cu-hiaY3o",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Bosque%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/MOOBY+Bosque,+Rambla+de+Prat,+16,+Gr%C3%A0cia,+08012+Barcelona/@41.4014918,2.1518736,2993a,13.1y/data=!4m2!3m1!1s0x12a4a2a27964f483:0x7a639a18fa2e672f",
+      "source_ids": [
+        "maps-mooby-bosque"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgIC8iPyxrgE",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdgg3E7Jj4lZCSCHK4EkRUwc3ThQEF1IGXe5tDvJ5fFFN1E-VPIC3_-yXgf4adfssfLXzJdJjRBHCbZSCMDT0kuZZ1A-JyBM9qLMr-_sw57_2hjDBDlcOSryenGrxcEEcAF68VNNA=w408-h270-k-no",
+          "provider_date_raw": [
+            2014,
+            10,
+            13,
+            13
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            407,
+            270
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "mooby-aribau",
+      "place_name": "MOOBY Aribau - Aribau Cinema",
+      "address": "MOOBY Aribau - Aribau Cinema, Carrer d'Aribau, 8, 10, Eixample, 08011 Barcelona",
+      "place_id": "ChIJ74nVg4yipBIRxNcmb8HE_Ng",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Aribau%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/MOOBY+Aribau+-+Aribau+Cinema,+Carrer+d'Aribau,+8,+10,+Eixample,+08011+Barcelona/@41.386125,2.162593,2993a,13.1y/data=!4m2!3m1!1s0x12a4a28c83d589ef:0xd8fcc4c16f26d7c4",
+      "source_ids": [
+        "maps-mooby-aribau"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgICEh5ielgE",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLfi6n6W9z7QfOqUqFdPuVpNL-7NyxXEZE9LpnXB4Lz3u2oibtl97sthH0LN9xVUAlkdoGCrnA2y2P4arpovehKo8ri211d5wffKhdM3uqTfmSH0f5oOAEamZRe6NARf_P4bQjcUDA=w408-h272-k-no",
+          "provider_date_raw": [
+            2018,
+            8,
+            4,
+            12
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            408,
+            272
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "cinesa-diagonal-mar",
+      "place_name": "CINESA DIAGONAL MAR · ISENSE · IMAX",
+      "address": "CINESA DIAGONAL MAR · ISENSE · IMAX, Av. Diagonal, 3, Sant Martí, 08019 Barcelona",
+      "place_id": "ChIJQ5WONVejpBIRBHgaGg2ts6E",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20Diagonal%20Mar%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/CINESA+DIAGONAL+MAR+%C2%B7+ISENSE+%C2%B7+IMAX,+Av.+Diagonal,+3,+Sant+Mart%C3%AD,+08019+Barcelona/@41.41027,2.2165149,2992a,13.1y/data=!4m2!3m1!1s0x12a4a357358e9543:0xa1b3ad0d1a1a7804",
+      "source_ids": [
+        "maps-cinesa-diagonal-mar"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgID49cSIKQ",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLe2_a6Wbz8EHdXv4RoSiVULCxZ_zZqee6ISG6VYSKBPZ8CzDsEiw9hjdevhZ50-Dd-AcYOTuVxtKBMQs_pI1WAnGAo2NTzXCQYjIGdHaHE9-rnhoNyZbqaJsjand8YUZl7-KJk=w408-h271-k-no",
+          "provider_date_raw": [
+            2019,
+            5,
+            23,
+            9
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            406,
+            271
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "cinesa-la-farga",
+      "place_name": "CINESA LUXE LA FARGA",
+      "address": "CINESA LUXE LA FARGA, La Farga, Av. de Josep Tarradellas i Joan, 145, 08901 L'Hospitalet de Llobregat, Barcelona",
+      "place_id": "ChIJv56Avx-ZpBIR9Sn83R7ry0I",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20LUXE%20La%20Farga%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/CINESA+LUXE+LA+FARGA,+La+Farga,+Av.+de+Josep+Tarradellas+i+Joan,+145,+08901+L'Hospitalet+de+Llobregat,+Barcelona/@41.3631793,2.1047766,2995a,13.1y/data=!4m2!3m1!1s0x12a4991fbf809ebf:0x42cbeb1eddfc29f5",
+      "source_ids": [
+        "maps-cinesa-la-farga"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgICa2926pAE",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLdZa95Wr-0uQOjZ4xCoGURGAgDBqFIkKxJg8fEAidUDJT53Lr4up4mqFo-U3oL5ghfZEAsrklDUw4fi-8q9C3qBbjTrAtj6bwfB17eI0AhIgbFiDGFchTwq_0SVNQz2lJOK9Grk=w408-h306-k-no",
+          "provider_date_raw": [
+            2015,
+            3,
+            26,
+            10
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            408,
+            306
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "yelmo-maquinista",
+      "place_name": "Cine Yelmo Westfield La Maquinista",
+      "address": "Cine Yelmo Westfield La Maquinista, Westfield La Maquinista, Carrer de Potosí, 2, Sant Andreu, 08030 Barcelona",
+      "place_id": "ChIJvzQ5Neq8pBIRfUoQLf4vaD4",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Yelmo%20Premium%20La%20Maquinista%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/Cine+Yelmo+Westfield+La+Maquinista,+Westfield+La+Maquinista,+Carrer+de+Potos%C3%AD,+2,+Sant+Andreu,+08030+Barcelona/@41.4395825,2.1983539,2991a,13.1y/data=!4m2!3m1!1s0x12a4bcea353934bf:0x3e682ffe2d104a7d",
+      "source_ids": [
+        "maps-yelmo-maquinista"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgID49Ya8sAE",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLeotALrUqqJkrEKHrn9LbDQFXAcTPaItvmA45nTaupop74AhTZRtzS5khQFShjw3eSh-wp1vHA46uA4EP8Qj0fjyu1Hi22SPUntss41x2Hs78dmYWW8NxLCgPV3GqFCT8_bI2w-jg=w408-h271-k-no",
+          "provider_date_raw": [
+            2019,
+            5,
+            23,
+            9
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            406,
+            271
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    },
+    {
+      "cinema_id": "kinepolis-splau",
+      "place_name": "KINEPOLIS CINEMAS",
+      "address": "KINEPOLIS CINEMAS, Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
+      "place_id": "ChIJn13KLEyZpBIRDBdVtKH83bo",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Kin%C3%A9polis%20Barcelona%20Splau%20Barcelona",
+      "resolved_place_url": "https://www.google.com/maps/preview/place/KINEPOLIS+CINEMAS,+Av.+del+Baix+Llobregat,+s%2Fn,+08940+Cornell%C3%A0+de+Llobregat,+Barcelona/@41.3474409,2.0788224,2995a,13.1y/data=!4m2!3m1!1s0x12a4994c2cca5d9f:0xbaddfca1b455170c",
+      "source_ids": [
+        "maps-kinepolis-splau"
+      ],
+      "preview_photos": [
+        {
+          "provider_photo_id": "CIHM0ogKEICAgICU8pjLLA",
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLcBLWj25V0cRbd1Sh1A63SotjqloSVd5UtqMmKOKNTQ59w-WTy8DhH2v2-gsgJ7lKIY5bgNHIszcTI8d8gHGYjW5Fy06YkzmfsuKBjHR7kRhNKr14W9lIXHzJWEQJxO6TSZSOwj=w408-h306-k-no",
+          "provider_date_raw": [
+            2019,
+            7,
+            6,
+            23
+          ],
+          "capture_date": null,
+          "date_interpretation": "Unlabelled provider date; may be upload/publication rather than capture.",
+          "http_status": 200,
+          "pixels": [
+            408,
+            306
+          ]
+        }
+      ],
+      "full_review_gallery_inspected": false
+    }
+  ],
+  "tour_checks": [
+    {
+      "tour_id": "balmes-tour-1",
+      "source_url": "https://www.google.es/maps/place/Balmes+Multicines+V.O.+12+sales+3D/@41.4072618,2.1386817,3a,75y,72h,90t/data=!3m8!1e1!3m6!1sLselwkl5-9QAAAQfDQMDvw!2e0!3e2!6s%2F%2Fgeo3.ggpht.com%2Fcbk%3Fpanoid%3DLselwkl5-9QAAAQfDQMDvw%26output%3Dthumbnail%26cb_client%3Dsearch.TACTILE.gps%26thumb%3D2%26w%3D129%26h%3D106%26yaw%3D72.596535%26pitch%3D0!7i13312!8i6656!4m2!3m1!1s0x12a4980e972e6497:0x2e54344b703ca35e!6m1!1e1",
+      "interactive_tour_visited": false,
+      "legacy_thumbnail_http_status": 403,
+      "note": "Full interactive tour not navigated. Public page was reachable, but no auditorium panorama was inspected. Embedded legacy thumbnail request returned HTTP 403; no alternate request for that panorama was attempted."
+    },
+    {
+      "tour_id": "bosque-tour-2",
+      "source_url": "https://www.google.es/maps/place/Bosque+Multicines+9+sales+3D/@41.4015013,2.1518899,3a,75y,252h,90t/data=!3m8!1e1!3m6!1solZwF4k1Y0oAAAQuq1MDtg!2e0!3e2!6s%2F%2Fgeo0.ggpht.com%2Fcbk%3Fpanoid%3DolZwF4k1Y0oAAAQuq1MDtg%26output%3Dthumbnail%26cb_client%3Dsearch.TACTILE.gps%26thumb%3D2%26w%3D129%26h%3D106%26yaw%3D252.3204%26pitch%3D0!7i13312!8i6656!4m2!3m1!1s0x12a4a2a27964f483:0x7a639a18fa2e672f!6m1!1e1",
+      "interactive_tour_visited": false,
+      "legacy_thumbnail_http_status": 403,
+      "note": "Full interactive tour not navigated. Public page was reachable, but no auditorium panorama was inspected. Embedded legacy thumbnail request returned HTTP 403; no alternate request for that panorama was attempted."
+    },
+    {
+      "tour_id": "aribau-tour-3",
+      "source_url": "https://www.google.es/maps/@41.3860978,2.1625803,3a,75y,48.09h,90.18t/data=!3m7!1e1!3m5!1sjJ08AIFYxbkAAAQvOj2NKA!2e0!3e2!7i13312!8i6656?hl=es",
+      "interactive_tour_visited": false,
+      "legacy_thumbnail_http_status": null,
+      "note": "Full interactive tour not navigated. Public page was reachable, but no auditorium panorama was inspected."
+    },
+    {
+      "tour_id": "aribau-tour-4",
+      "source_url": "https://www.google.es/maps/place/Aribau+Multicines+5+sales+-+Sala+5/@41.3861049,2.162574,3a,75y,50h,90t/data=!3m8!1e1!3m6!1sNuTwKiPusuUAAAQukBUVhg!2e0!3e2!6s%2F%2Fgeo1.ggpht.com%2Fcbk%3Fpanoid%3DNuTwKiPusuUAAAQukBUVhg%26output%3Dthumbnail%26cb_client%3Dsearch.TACTILE.gps%26thumb%3D2%26w%3D129%26h%3D106%26yaw%3D50.781208%26pitch%3D0!7i13312!8i6656!4m2!3m1!1s0x12a4a28b7e2ef005:0xbb184e1ef64c0765!6m1!1e1",
+      "interactive_tour_visited": false,
+      "legacy_thumbnail_http_status": 403,
+      "note": "Full interactive tour not navigated. Public page was reachable, but no auditorium panorama was inspected. Embedded legacy thumbnail request returned HTTP 403; no alternate request for that panorama was attempted."
+    }
+  ],
+  "cross_checks": [
+    {
+      "source_ids": [
+        "farga-venuu-1",
+        "farga-venuu-5"
+      ],
+      "result": "Apparent cross-listing reuse came from VenueProfileOtherSpacesInSameLocation recommendation cards in the HTML. Main galleries were distinct. Original candidate room labels retained; not promoted to confirmed."
+    },
+    {
+      "source_ids": [
+        "maps-yelmo-maquinista"
+      ],
+      "result": "Maps venue names can change while old photographs remain. This 2019-dated preview is retained as historical only, with no current sala assignment."
+    },
+    {
+      "source_ids": [
+        "maps-mooby-aribau",
+        "aribau"
+      ],
+      "result": "New 1600px Maps file visually duplicates the existing 1024px aribau-2 view. Counts describe references, not necessarily unique photographic compositions."
+    }
+  ],
+  "added_image_ids": [
+    "maps-mooby-balmes-1",
+    "maps-mooby-bosque-1",
+    "maps-mooby-aribau-1",
+    "maps-cinesa-diagonal-mar-1",
+    "maps-yelmo-maquinista-1"
+  ],
+  "result": "Five saved interior references; two probable room associations (Bosque 1, Aribau 5), no newly confirmed numbered-room interiors. Three exterior previews inspected but not duplicated into the gallery."
+}
