@@ -30,6 +30,7 @@ from language_names import without_language_placeholder
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
+from complete_programme import render_complete_programme
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
@@ -210,6 +211,8 @@ class Publication:
         if not interactive or venue:
             script += '<script type="module" src="/site-page.js"></script>'
         cinema_scope = f' data-cinema-id="{text(cinema_id)}"' if cinema_id else ''
+        # This small disclosure style must not add a render-blocking request.
+        programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if path == f'/{lang}/' else ''
         html = f'''<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
@@ -220,7 +223,7 @@ class Publication:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="/theme.js"></script>
-<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css"><script type="application/ld+json">{ld}</script>{script}</head>
+<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}</head>
 <body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}"{cinema_scope} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt=""></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
 <main id="main">{navigation}{breadcrumb}{body}</main>
@@ -491,6 +494,7 @@ class Publication:
         for lang in LOCALES:
             t = COPY[lang]
             body = f'<h1 class="sr-only">{t["home"]}</h1>' + self.programme_listing(lang)
+            body += render_complete_programme(self.browser_programme, lang, self.now, language_name=language_name)
             footer_extra = f'<p class="site-intro">{t["intro"]}</p><p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
             self.page(f'/{lang}/', lang, t['home'] + ' | VO Barna', t['intro'], body, alternatives={l: f'/{l}/' for l in LOCALES}, interactive=True,
                       footer_extra=footer_extra,

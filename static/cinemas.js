@@ -490,7 +490,17 @@ document.addEventListener('click',event=>{
   const showtime=event.target.closest('.card-showtime');
   if(showtime&&Date.parse(showtime.querySelector('time')?.dateTime)<Date.now()){event.preventDefault();markStartedShowtimes();return;}
   const anchor=event.target.closest('a');
-  if(anchor&&(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||!anchor.hasAttribute('data-open')))return;
+  if(anchor&&(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey))return;
+  if(anchor?.hasAttribute('data-programme-session')){
+    // The compact HTML already has the canonical screening URL. Reuse its hash
+    // instead of repeating provider/session identifiers thousands of times.
+    const filmId=anchor.closest('[data-programme-film]')?.dataset.programmeFilm;
+    const film=data?.films.find(film=>film.id===filmId);
+    const session=film?.sessions.find(session=>session.anchor===new URL(anchor.href).hash);
+    if(session&&openFilm(film.id,session.id))event.preventDefault();
+    return;
+  }
+  if(anchor&&!anchor.hasAttribute('data-open'))return;
   const card=event.target.closest('[data-open]');
   if(card){if(openFilm(card.dataset.open,card.dataset.session)&&anchor)event.preventDefault();return;}
   const button=event.target.closest('button');

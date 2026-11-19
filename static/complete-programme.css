@@ -1,0 +1,11 @@
+/* The complete text is delivered in HTML; only this quiet summary is visible. */
+.complete-programme{margin:32px 0 0;border-top:1px solid var(--border);padding-top:12px;font-size:.875rem}
+.complete-programme>summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;color:var(--tx2)}
+.complete-programme>summary:focus-visible{outline:2px solid var(--tx);outline-offset:4px}
+.complete-programme-content{padding:12px 0;overflow-wrap:anywhere}
+.complete-programme-content h2{font-size:1.125rem}
+.complete-programme-content article{padding:20px 0;border-top:1px solid var(--border);content-visibility:auto;contain-intrinsic-size:auto 180px}
+.complete-programme-content h3{font-size:1rem;margin:0 0 12px}
+.complete-programme-content ul{padding-left:20px;margin:0}
+.complete-programme-content li{margin:0 0 12px;line-height:1.7}
+.complete-programme .programme-times a{display:inline-block;white-space:nowrap;padding:3px 2px;font-variant-numeric:tabular-nums}

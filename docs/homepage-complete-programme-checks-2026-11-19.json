@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-19",
+  "viewport": "390x844, DPR 2",
+  "cpu_slowdown": 4,
+  "network": "Fast 4G",
+  "method": "Two cold reloads of each variant with identical local programme and assets. Before variant removes only the complete disclosure and its inline style. PerformanceObserver measurements; lab results, not field guarantees.",
+  "measurements": [
+    {
+      "variant": "before",
+      "url": "http://127.0.0.1:8796/before/en/",
+      "lcp": 1908,
+      "cls": 0,
+      "fcp": 576,
+      "dcl": 2084.2999997138977,
+      "documentBytes": 29801,
+      "posterRequests": 22,
+      "completeClosed": false,
+      "gridCards": 32
+    },
+    {
+      "variant": "after",
+      "url": "http://127.0.0.1:8796/en/",
+      "lcp": 1936,
+      "cls": 0,
+      "fcp": 608,
+      "dcl": 2115.4000000953674,
+      "documentBytes": 124012,
+      "posterRequests": 22,
+      "completeClosed": true,
+      "gridCards": 32
+    },
+    {
+      "variant": "before",
+      "url": "http://127.0.0.1:8796/before/en/",
+      "lcp": 1824,
+      "cls": 0,
+      "fcp": 572,
+      "dcl": 1998,
+      "documentBytes": 29801,
+      "posterRequests": 22,
+      "completeClosed": false,
+      "gridCards": 32
+    },
+    {
+      "variant": "after",
+      "url": "http://127.0.0.1:8796/en/",
+      "lcp": 1884,
+      "cls": 0,
+      "fcp": 608,
+      "dcl": 2058.8999996185303,
+      "documentBytes": 124012,
+      "posterRequests": 22,
+      "completeClosed": true,
+      "gridCards": 32
+    }
+  ],
+  "static_coverage": {
+    "locales": [
+      "en",
+      "es",
+      "ca"
+    ],
+    "films": 296,
+    "screenings": 2990,
+    "unique_screening_links_match_programme": true,
+    "closed_by_default": true,
+    "additional_images": 0,
+    "additional_asset_requests": 0
+  },
+  "tests": {
+    "new_python": 3,
+    "publication_python": 22,
+    "routing_and_server_node": 11,
+    "browser_modes": [
+      "JavaScript disabled",
+      "interactive with search and exact selected session",
+      "catalogue request blocked"
+    ]
+  }
+}
