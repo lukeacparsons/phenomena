@@ -1,0 +1,32 @@
+services:
+  cinema-vpn:
+    image: qmcgaw/gluetun:v3.41.1@sha256:1a5bf4b4820a879cdf8d93d7ef0d2d963af56670c9ebff8981860b6804ebc8ab
+    restart: unless-stopped
+    cap_add: [NET_ADMIN]
+    devices: [/dev/net/tun:/dev/net/tun]
+    env_file:
+      - path: /srv/vobarna/cinema-vpn/.env
+        format: raw
+    environment:
+      VPN_SERVICE_PROVIDER: mullvad
+      VPN_TYPE: wireguard
+      SERVER_COUNTRIES: Spain
+      SERVER_HOSTNAMES: es-bcn-wg-001
+      HTTPPROXY: 'on'
+      HTTPPROXY_STEALTH: 'on'
+      HTTPPROXY_LOG: 'off'
+    volumes:
+      - /srv/vobarna/cinema-vpn/state:/gluetun
+    networks:
+      coolify:
+        aliases: [vobarna-cinema-vpn]
+    mem_limit: 128m
+    cpus: 0.25
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: '2'
+networks:
+  coolify:
+    external: true

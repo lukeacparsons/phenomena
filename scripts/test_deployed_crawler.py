@@ -78,6 +78,32 @@ class DeployedCrawlerTests(unittest.TestCase):
             self.assertEqual(relay.config['token'],'runtime-only')
             self.assertEqual(relay.config['url'],'https://vobarna-source-reader.luke-391.workers.dev/programme')
 
+    def test_cinesa_proxy_is_provider_scoped_and_does_not_fall_back(self):
+        from cinesa_showtimes import ChromeTransport, SourceError
+        from curl_cffi.requests import RequestsError
+        proxy='http://vobarna-cinema-vpn:8888'
+        with patch.dict(os.environ,{'VOBARNA_CINESA_PROXY':proxy}), patch('curl_cffi.requests.Session') as session:
+            transport=ChromeTransport()
+            session.assert_called_once_with(impersonate='chrome',trust_env=False)
+            url='https://vwc.cinesa.es/WSVistaWebClient/ocapi/v1/film-screening-dates?siteIds=032'
+            transport.get(url,{'Authorization':'Bearer anonymous-token'})
+            self.assertEqual(session.return_value.get.call_args.kwargs['proxy'],proxy)
+            self.assertFalse(session.return_value.get.call_args.kwargs['allow_redirects'])
+            for bad in ['http://www.cinesa.es/api','https://evil.example/api','https://user@www.cinesa.es/api']:
+                with self.assertRaises(SourceError):transport.get(bad,{})
+            session.return_value.get.reset_mock()
+            session.return_value.get.side_effect=RequestsError('proxy credentials must not leak')
+            with self.assertRaisesRegex(SourceError,'^Cinesa network request failed$'):transport.get(url,{})
+            self.assertEqual(session.return_value.get.call_count,1)
+            transport.close();session.return_value.close.assert_called_once()
+
+    def test_unconfigured_cinesa_transport_remains_direct(self):
+        from cinesa_showtimes import ChromeTransport
+        with patch.dict(os.environ,{},clear=True), patch('curl_cffi.requests.Session') as session:
+            transport=ChromeTransport()
+            transport.get('https://www.cinesa.es/api/omnia/v1/initialData',{})
+            self.assertIsNone(session.return_value.get.call_args.kwargs['proxy'])
+
     def test_rolling_containers_have_only_one_collector_writer(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);(root/'static/preview-data').mkdir(parents=True)

@@ -1,5 +1,6 @@
 """Source isolation: one unavailable operator cannot stop other catalogues."""
 from datetime import timezone
+import json
 import re
 from cinesa_showtimes import CinesaClient, ChromeTransport, collect as collect_cinesa
 from catalogue_sources import (A1, MADRID, collect_a1, collect_renoir, collect_filmoteca,
@@ -49,7 +50,10 @@ def collect_sources(http,run,*,nearby_only=False):
         nonlocal yelmo_payload
         if yelmo_payload is None:
             response=http.session.post('https://yelmocines.es/now-playing.aspx/GetNowPlaying',json={'cityKey':'barcelona'},timeout=30)
-            response.raise_for_status();yelmo_payload=response.json()
+            if response.status_code in (403,429):
+                yelmo_payload=json.loads(http._relay_get('https://yelmocines.es/now-playing.aspx/GetNowPlaying'))
+            else:
+                response.raise_for_status();yelmo_payload=response.json()
         rows,warnings=yelmo_sessions(yelmo_payload,premium_only=False,original_only=True,venue=venue)
         if warnings:raise ValueError('Unverified Yelmo date boundary')
         return basic('yelmo',rows)

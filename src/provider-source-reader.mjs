@@ -2,11 +2,13 @@ import policy from '../data/provider-source-policy.json' with {type:'json'};
 
 const MAX_BODY=16*1024*1024;
 const encoder=new TextEncoder();
+const YELMO_PROGRAMME='https://yelmocines.es/now-playing.aspx/GetNowPlaying';
 
 export function allowedSource(value){
   let url;try{url=new URL(value);}catch{return false;}
   if(url.protocol!=='https:'||url.username||url.password||url.port||url.hash)return false;
   const host=url.hostname,path=url.pathname;
+  if(url.href===YELMO_PROGRAMME)return true;
   if(policy.booking_hosts.includes(host)){
     if(/^\/seats\/\d+\/$/.test(path))return !url.search;
     if(path!=='/'||url.searchParams.get('p')!=='tickets'||!/^\d+$/.test(url.searchParams.get('perfCode')||''))return false;
@@ -55,7 +57,13 @@ export async function readProgramme(request,env,fetcher=fetch){
   try{
     for(let redirect=0;redirect<3;redirect++){
       // No inbound headers, authorization, cookies or request bodies go upstream.
-      const response=await fetcher(target,{method:'GET',redirect:'manual',signal:AbortSignal.timeout(25000),headers:{Accept:'application/json,text/html;q=0.9'}});
+      const options={method:'GET',redirect:'manual',signal:AbortSignal.timeout(25000),headers:{Accept:'application/json,text/html;q=0.9'}};
+      if(target===YELMO_PROGRAMME){
+        // Fixed public programme read: callers cannot supply arbitrary POST data.
+        options.method='POST';options.headers['Content-Type']='application/json';
+        options.body=JSON.stringify({cityKey:'barcelona'});
+      }
+      const response=await fetcher(target,options);
       if([301,302,303,307,308].includes(response.status)){
         const next=new URL(response.headers.get('Location')||'',target);
         await response.body?.cancel();

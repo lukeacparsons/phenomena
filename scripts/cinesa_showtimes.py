@@ -16,7 +16,7 @@ import re
 import sys
 import tempfile
 import time
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit
 from zoneinfo import ZoneInfo
 from original_audio import original_audio as qualify_original
 
@@ -57,12 +57,24 @@ class ChromeTransport:
     def __init__(self):
         from curl_cffi import requests
         self.requests = requests
-        self.session = requests.Session(impersonate="chrome")
+        # Scope the tunnel to this provider. Never configure process-wide proxies:
+        # other cinemas, health delivery and publication keep their normal route.
+        self.proxy = os.environ.get('VOBARNA_CINESA_PROXY') or None
+        if self.proxy:
+            parsed = urlsplit(self.proxy)
+            if parsed.scheme != 'http' or not parsed.hostname or parsed.username or parsed.password or parsed.path not in ('', '/') or parsed.query or parsed.fragment:
+                raise SourceError('Invalid Cinesa proxy configuration')
+        self.session = requests.Session(impersonate="chrome", trust_env=False)
 
     def get(self, url, headers):
+        parsed = urlsplit(url)
+        if parsed.scheme != 'https' or parsed.hostname not in ('www.cinesa.es', 'vwc.cinesa.es') or parsed.username or parsed.password or parsed.port not in (None, 443):
+            raise SourceError('Cinesa request origin not allowed')
         try:
             # Do not forward the bearer token to a redirect destination.
-            return self.session.get(url, headers=headers, timeout=30, allow_redirects=False)
+            # A configured tunnel must succeed: never retry its failures directly.
+            return self.session.get(url, headers=headers, timeout=30,
+                                    allow_redirects=False, proxy=self.proxy)
         except self.requests.RequestsError:
             raise SourceError("Cinesa network request failed") from None
 

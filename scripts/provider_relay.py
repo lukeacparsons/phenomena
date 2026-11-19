@@ -7,7 +7,8 @@ from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[1]
 CONFIG=ROOT/'.crawler-secrets/provider-relay.json'
 POLICY=json.loads((ROOT/'data/provider-source-policy.json').read_text())
-HOSTS=set(POLICY['a1_hosts']+POLICY['booking_hosts']+['www.moobycinemas.com','cinesfilmax.com','www.institutfrancais.es'])
+HOSTS=set(POLICY['a1_hosts']+POLICY['booking_hosts']+['www.moobycinemas.com','cinesfilmax.com','www.institutfrancais.es',
+    'yelmocines.es'])
 
 
 class ProviderRelayError(ValueError):

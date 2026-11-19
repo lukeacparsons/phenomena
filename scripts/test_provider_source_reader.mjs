@@ -47,3 +47,13 @@ test('body reads are bounded and cancel oversized streams',async()=>{
   const stream=new ReadableStream({pull(c){c.enqueue(new Uint8Array(16));},cancel(){cancelled=true;}});
   await assert.rejects(readBounded(stream,10));assert(cancelled);
 });
+
+test('Yelmo programme uses only the fixed Barcelona read body',async()=>{
+  const url='https://yelmocines.es/now-playing.aspx/GetNowPlaying';
+  const result=await readProgramme(request(url),env,async(target,options)=>{
+    assert.equal(target,url);assert.equal(options.method,'POST');assert.equal(options.headers.Authorization,undefined);
+    assert.deepEqual(JSON.parse(options.body),{cityKey:'barcelona'});return Response.json({d:{Cinemas:[]}});
+  });
+  assert.equal(result.status,200);
+  for(const bad of [url+'?cityKey=madrid','https://yelmocines.es/checkout'])assert.equal(allowedSource(bad),false);
+});

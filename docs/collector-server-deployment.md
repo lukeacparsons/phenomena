@@ -13,7 +13,17 @@ These directories belong to UID/GID 1000 and survive container replacement. The 
 
 The collector uses the same scheduling and adapters as the tested local service: programmes hourly, seats every 15 minutes, metadata daily, publication every five minutes, health every five minutes. `scripts/run_crawler.py` supervises its threads. A file lock admits only one writer across rolling deployments. A new container reports standby while the previous one owns the lock, then starts collection after the old process exits. Docker's health check requires a live process and a recent runtime receipt. Provider failures remain visible through the independent freshness monitor.
 
-The website's `/incoming` directory should mount `/srv/vobarna/collector-publication` after a successful server collection has been verified. It reads data and images and renders them with its own deployed Git templates. Internal `catalogue.json`, price observations, credentials and crawler caches are not served publicly. The former `/srv/vobarna/publication` input remains available for rollback.
+After a successful server collection has been verified, add `/srv/vobarna/collector-publication` as the website's `/collector-input` mount and set its runtime `VOBARNA_INPUT_ROOT=/collector-input`. Retain the existing `/incoming` mount of `/srv/vobarna/publication` for rollback. The website reads data and images and renders them with its own deployed Git templates. Internal `catalogue.json`, price observations, credentials and crawler caches are not served publicly.
+
+## Provider routes
+
+Yelmo rejects Hetzner requests. Its adapter first tries the operator directly, then uses the existing authenticated Cloudflare reader after HTTP 403/429. The reader allows only the fixed public Barcelona programme POST, with its body constructed by the Worker; callers cannot supply arbitrary methods or bodies.
+
+Cinesa rejects both Hetzner and Cloudflare requests. Coolify service `vobarna-cinema-vpn` (`pxve1z9pcmdmquoscmhmo0j2`) runs the pinned Gluetun image from `deploy/vobarna/compose.vpn.yaml`, following surf-cam-wall's private HTTP CONNECT pattern. There are no published ports. Its Docker alias is `vobarna-cinema-vpn`; only the collector receives `VOBARNA_CINESA_PROXY=http://vobarna-cinema-vpn:8888`. That setting covers Cinesa programmes and seat reads, with TLS verification, rejected redirects and no direct fallback on tunnel failure. Other providers and monitoring retain their normal routes. Unconfigured local development continues to use direct Cinesa requests.
+
+WireGuard credentials are held only in `/srv/vobarna/cinema-vpn/.env` (0600, parent directory 0700), outside Git and the collector image. They use the existing dedicated Mullvad device on a separate pinned Barcelona relay, `es-bcn-wg-001`; the camera tunnels retain their Australian and Frankfurt relays. Do not assign this same device/relay pair to another simultaneous tunnel. The Gluetun firewall remains enabled. Mullvad must have active account time; failed tunnels retain cached listings and eventually trigger the existing stale-cinema alerts. Inspect VPN container health and verify the exit using Mullvad's public connection-check endpoint before accepting a Cinesa crawl.
+
+At initial deployment on 19 November, the Mullvad account reported expiry at 07:19 Europe/Madrid and the existing camera tunnels were also unhealthy. Full feed cutover remains pending renewal and a fresh successful server crawl; the Mac feed remains active until that verification.
 
 ## Secrets and independent alerts
 
