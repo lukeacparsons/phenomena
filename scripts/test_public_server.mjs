@@ -26,6 +26,9 @@ test('production origin preserves routing, cache isolation and atomic releases',
   response=await get('/en/',{headers:{'If-None-Match':etag}});assert.equal(response.status,304);
   response=await get('/en/',{method:'HEAD'});assert.equal(response.status,200);assert.equal(await response.text(),'');
   response=await get('/en/?q=dune');assert.equal(response.headers.get('x-robots-tag'),'noindex, follow');
+  response=await get('/en/showtimes/today/');
+  assert.equal(response.status,302);assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.match(response.headers.get('location'),/^\/en\/\?date=\d{4}-\d{2}-\d{2}$/);
   response=await get('/en/?utm_source=check');assert.equal(response.headers.get('x-robots-tag'),null);
   for(const [path,target] of [['/','/en/'],['/EN/index.html','/en/'],['/cinemas.html?film=old','/en/films/dune-1984/'],['/en/?screening=s1','/en/films/dune-1984/#screening-s1']]){
     response=await get(path);assert.equal(response.status,308);assert.equal(response.headers.get('location'),target);

@@ -1,18 +1,49 @@
-"""Reviewed discovery routes and conservative session-specific selections."""
+"""Reviewed routes, copy and conservative selections for discovery pages.
+
+Language selection uses the session's audio/subtitle fields, independently.
+Film nationality, titles, VO labels and unverified film metadata cannot qualify
+an English-audio result. Preserve the source labels in the displayed facts.
+"""
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+
 from language_names import parse_languages, without_language_placeholder
+from discovery_guides import COPY as GUIDE_COPY
+
 MADRID = ZoneInfo('Europe/Madrid')
+TODAY_PATHS = {'en': '/en/showtimes/today/', 'es': '/es/cartelera/hoy/', 'ca': '/ca/cartellera/avui/'}
 PATHS = {
-    'today': {'en': '/en/showtimes/today/', 'es': '/es/cartelera/hoy/', 'ca': '/ca/cartellera/avui/'},
     'english': {'en': '/en/showtimes/english-language/', 'es': '/es/cartelera/peliculas-en-ingles/', 'ca': '/ca/cartellera/pellicules-en-angles/'},
     'subtitles': {'en': '/en/guides/english-subtitles-barcelona/', 'es': '/es/guias/cine-subtitulos-ingles-barcelona/', 'ca': '/ca/guies/cinema-subtitols-angles-barcelona/'},
+    'weekend': {'en': '/en/showtimes/this-weekend/', 'es': '/es/cartelera/este-fin-de-semana/', 'ca': '/ca/cartellera/aquest-cap-de-setmana/'},
+    'imax': {'en': '/en/guides/imax-original-version-barcelona/', 'es': '/es/guias/imax-version-original-barcelona/', 'ca': '/ca/guies/imax-versio-original-barcelona/'},
+    'film': {'en': '/en/guides/35mm-70mm-barcelona/', 'es': '/es/guias/cine-35mm-70mm-barcelona/', 'ca': '/ca/guies/cinema-35mm-70mm-barcelona/'},
 }
+
+
+def weekend_dates(now):
+    """Friday–Sunday containing today, or the next Friday–Sunday on Mon–Thu."""
+    today = now.astimezone(MADRID).date()
+    friday = today + timedelta(days=4 - today.weekday())
+    return tuple(friday + timedelta(days=i) for i in range(3))
+
+
 def select_sessions(programme, kind, now):
+    """Select from the validated original-audio programme, never venue equipment.
+
+    One result set owns counts, visible facts and action destinations. Format
+    tags must belong to the same session; film titles and room research do not
+    qualify a result. Dual film-format sessions get one explicitly mixed group.
+    """
+    if kind not in (*PATHS, 'today'):
+        raise ValueError(f'Unknown discovery kind: {kind}')
     today = now.astimezone(MADRID).date()
     end = today + timedelta(days=7)
-    groups = {'daytime': [], 'tonight': []} if kind == 'today' else (
-        {'english': [], 'multilingual': []} if kind == 'english' else {'subtitles': []})
+    weekend = dict(zip(weekend_dates(now), ('friday', 'saturday', 'sunday')))
+    keys = {'today': ('daytime', 'tonight'), 'english': ('english', 'multilingual'),
+            'subtitles': ('subtitles',), 'weekend': ('friday', 'saturday', 'sunday'),
+            'imax': ('imax',), 'film': ('35mm', '70mm', 'mixed-film')}[kind]
+    groups = {key: [] for key in keys}
     for film in programme['films']:
         for session in film['sessions']:
             starts = datetime.fromisoformat(session['starts_at']).astimezone(MADRID)
@@ -21,6 +52,19 @@ def select_sessions(programme, kind, now):
             if kind == 'today':
                 if starts.date() == today:
                     groups['tonight' if starts.hour >= 18 else 'daytime'].append((film, session))
+            elif kind == 'weekend':
+                if starts.date() in weekend:
+                    groups[weekend[starts.date()]].append((film, session))
+            elif kind in ('imax', 'film'):
+                formats = {str(value).strip().casefold() for value in session.get('formats') or []}
+                if kind == 'imax':
+                    if 'imax' in formats:
+                        groups['imax'].append((film, session))
+                else:
+                    matched = formats & {'35mm', '70mm'}
+                    if matched:
+                        group = 'mixed-film' if len(matched) == 2 else next(iter(matched))
+                        groups[group].append((film, session))
             else:
                 field = 'language' if kind == 'english' else 'subtitles'
                 evidence = parse_languages(without_language_placeholder(session.get(field)))
@@ -134,3 +178,6 @@ COPY = {
         'booking_answer': 'Prem Selecciona sessió per obrir la pel·lícula amb aquella sessió seleccionada i després Entrades per continuar al web del cinema. La font i la data de consulta indiquen què va publicar l’operador. Si la sessió ha caducat, la pàgina de la pel·lícula indica que ja no està disponible.',
     },
 }
+
+for _lang, _copy in GUIDE_COPY.items():
+    COPY[_lang].update(_copy)

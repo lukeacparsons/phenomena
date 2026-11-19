@@ -27,7 +27,8 @@ from site_identity import LOCALES, SECTIONS, new_registry, path_for, resolve, up
 from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images
 from browser_programme import browser_programme
 from language_names import without_language_placeholder
-from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions
+from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
+from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
@@ -162,7 +163,7 @@ class Publication:
             source = sources.get(sid, {})
             if safe_url(source.get('url')):
                 label = source.get('title') or source['url']
-                checked = source.get('accessed_on') or source.get('checked_at') or source.get('fetched_at')
+                checked = source.get('accessed_on') or source.get('checked_on') or source.get('checked_at') or source.get('fetched_at')
                 found.append(link(source['url'], label) + (f' <small>({text(checked)})</small>' if checked else ''))
         return '<span class="citations">' + ' · '.join(found) + '</span>' if found else ''
 
@@ -189,7 +190,9 @@ class Publication:
         nav = ''.join(link(f'/{lang}/{SECTIONS[lang][key]}/', t[key]) for key in ('films', 'cinemas', 'guides'))
         navigation = f'<nav class="site-nav" aria-label="{t['main_navigation']}">{nav}</nav>'
         footer = f'<p>{text(t["independent"])}</p><p>{link(f"/{lang}/{SECTIONS[lang]['about']}/", t["about"])} · {link("/webmcp/", t["agent_guide"])}</p>'
-        discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul>' + ''.join(
+        today = self.now.astimezone(MADRID).date().isoformat()
+        today_link = link(f'/{lang}/?date={today}', DISCOVERY_COPY[lang]['today_link'], ' data-today-link')
+        discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li>' + ''.join(
             '<li>' + link(paths[lang], DISCOVERY_COPY[lang][kind]) + '</li>' for kind, paths in DISCOVERY_PATHS.items()) + '</ul></nav>'
         if interactive or venue:
             footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{navigation}{footer_extra}{discovery_links}{footer}</details>'
@@ -198,7 +201,7 @@ class Publication:
             footer += f'<details class="site-information"><summary>{text(DISCOVERY_COPY[lang]["footer"])}</summary>{discovery_links}</details>'
         switch = ''.join(link(alternatives[l], l.upper(), f' hreflang="{l}" lang="{l}"' + (' aria-current="page"' if l == lang else '')) for l in LOCALES if l in alternatives)
         # The image loader can execute without waiting for the search module graph.
-        script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script>'
+        script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script><script type="module" src="/today-links.js"></script>'
         if interactive:
             script += ''.join(f'<link rel="modulepreload" href="/{name}.js">' for name in
                               ('programme-data', 'programme-cache', 'listing-view', 'cinema-copy', 'cinema-search', 'search-dates', 'cinema-service', 'webmcp'))
@@ -525,6 +528,8 @@ class Publication:
                     body += self.version_explanation(lang)
                 self.page(paths[lang], lang, t[prefix+'_title'] + ' | VO Barna', t[prefix+'_body'][:220], body, alternatives=paths)
                 links.append('<li>' + link(paths[lang], t[prefix+'_title']) + '</li>')
+            links.extend('<li>' + link(paths[lang], DISCOVERY_COPY[lang][key]) + '</li>'
+                         for key, paths in DISCOVERY_PATHS.items() if key in ('subtitles', 'imax', 'film'))
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
             self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['intro'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
@@ -542,27 +547,43 @@ class Publication:
 
     def discovery_pages(self):
         today = self.now.astimezone(MADRID).date()
+        weekend = weekend_dates(self.now)
+        dates = dict(zip(('friday', 'saturday', 'sunday'), weekend))
+        values = dict(date=today.isoformat(), end=(today + timedelta(days=6)).isoformat(),
+                      friday=weekend[0].isoformat(), sunday=weekend[-1].isoformat())
         for kind, paths in DISCOVERY_PATHS.items():
             groups = select_sessions(self.data, kind, self.now)
             pairs = [pair for values in groups.values() for pair in values]
             for lang in LOCALES:
                 d = DISCOVERY_COPY[lang]
-                intro = d[kind + '_intro'].format(date=today.isoformat(), end=(today + timedelta(days=6)).isoformat())
-                dated_title = d[kind] + (' · ' + today.isoformat() if kind == 'today' else '')
+                intro = d[kind + '_intro'].format(**values)
+                description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
+                dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
                 body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
                 body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])} · {text(d["built"])}: {stamp(self.now.isoformat())}</p>'
+                if kind in ('weekend', 'film', 'imax'):
+                    jumps = [(group, d.get(group + '_group', d.get(group))) for group, selected in groups.items()
+                             if selected or kind == 'weekend' or group in ('35mm', '70mm')]
+                    jumps.append(('guide-information', d['guide_information']))
+                    body += f'<nav class="discovery-sections" aria-label="{text(d["on_this_page"])}"><ul>' + ''.join(
+                        '<li>' + link(paths[lang] + '#' + anchor, label) + '</li>' for anchor, label in jumps) + '</ul></nav>'
                 count = d['count'].format(films=len({f['id'] for f, _ in pairs}), sessions=len(pairs))
                 body += f'<div class="discovery" data-discovery-kind="{kind}" data-discovery-date="{today}" data-count-template="{text(d["count"])}">'
                 body += f'<p class="discovery-stale" role="status" hidden>{text(d["stale"].format(date=today))} <button type="button" class="discovery-reload">{text(d["reload"])}</button></p>'
-                body += f'<div class="discovery-results"><p class="discovery-count" role="status" aria-atomic="true">{text(count)}</p><p class="discovery-empty"{" hidden" if pairs else ""}>{text(d["none"])}</p>'
+                body += f'<div class="discovery-results"><p class="discovery-count" role="status" aria-atomic="true">{text(count)}</p><p class="discovery-empty"{" hidden" if pairs else ""}>{text(d.get(kind + "_none", d["none"]))}</p>'
                 for group, selected in groups.items():
-                    if not selected:
+                    keep_empty = kind == 'weekend' or group in ('35mm', '70mm')
+                    if not selected and not keep_empty:
                         continue
                     heading = d.get(group + '_group', d.get(group))
+                    if kind == 'weekend':
+                        heading += f' · {dates[group]}'
                     body += f'<section class="discovery-group" id="{group}"><h2>{text(heading)}</h2>'
-                    if group == 'multilingual':
-                        body += f'<p class="editorial">{text(d["multilingual_note"])}</p>'
-                    if kind == 'english':
+                    if keep_empty:
+                        body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d["day_none" if kind == "weekend" else "format_none"])}</p>'
+                    if group + '_note' in d:
+                        body += f'<p class="editorial">{text(d[group + "_note"])}</p>'
+                    if kind in ('english', 'weekend', 'imax'):
                         # Group by film so a long programme is navigable and each
                         # title is one recommendation, with its exact sessions inside.
                         films = {}
@@ -571,21 +592,47 @@ class Publication:
                         for film_pairs in films.values():
                             film = film_pairs[0][0]
                             body += f'<article class="discovery-film"><h3>{link(self.entity_path("films", film["id"], lang), film["title"])}</h3><details><summary>{text(d["show_sessions"])} <span class="discovery-film-count">({len(film_pairs)})</span></summary>{self.session_table(film_pairs, lang, discovery=True)}</details></article>'
-                    else:
+                    elif selected:
                         body += self.session_table(selected, lang, include_film=True, discovery=True)
                     body += '</section>'
                 body += '</div></div><script type="module" src="/discovery-page.js"></script>'
                 if kind == 'subtitles':
                     body += self.version_explanation(lang)
                     body += f'<section class="editorial"><h2>{text(d["subtitle_question"])}</h2><p>{text(d["subtitle_answer"])}</p></section>'
-                body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d["method"])}</p></section>'
+                if kind in DISCOVERY_SECTIONS:
+                    body += '<div id="guide-information">' + self.discovery_explanation(kind, lang) + '</div>'
+                body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
                 graph = [{'@type': 'ItemList', '@id': self.origin + paths[lang] + '#screenings',
                           'numberOfItems': len(pairs), 'itemListElement': [
                               {'@type': 'ListItem', 'position': i + 1, 'url': self.origin + self.entity_path('films', film['id'], lang) + '#screening-' + hashlib.sha256(s['id'].encode()).hexdigest()[:16],
                                'name': film['title'] + ' · ' + s['date'] + ' ' + s['time'] + ' · ' + self.cinemas[s['cinema_id']]['name']}
                               for i, (film, s) in enumerate(pairs)]}]
-                self.page(paths[lang], lang, dated_title + ' | VO Barna', intro, body,
+                self.page(paths[lang], lang, dated_title + ' | VO Barna', description, body,
                           alternatives=paths, graph=graph, crumbs=[(d[kind], paths[lang])])
+
+    def discovery_explanation(self, kind, lang):
+        d = DISCOVERY_COPY[lang]
+        sources = self.research['rooms'].get('sources', {})
+        if isinstance(sources, list):
+            sources = {s['id']: s for s in sources}
+        sources = {**sources, **DISCOVERY_SOURCES}
+        rooms = {r['id'] for r in self.research['rooms'].get('rooms', [])}
+        sections = []
+        for key, ids, venue in DISCOVERY_SECTIONS.get(kind, []):
+            # A venue claim is published only with its reviewed supporting record.
+            if venue and (venue[0] not in self.cinemas or f'{venue[0]}:{venue[1]}' not in rooms):
+                continue
+            if any(not safe_url(sources.get(sid, {}).get('url')) for sid in ids):
+                continue
+            body = f'<section class="editorial"><h2>{text(d[key + "_title"])}</h2><p>{text(d[key + "_body"])}</p>'
+            if ids:
+                body += '<p class="source-note">' + self.citations(ids, sources, lang) + '</p>'
+            if venue:
+                cid, room = venue
+                body += '<p>' + link(self.entity_path('cinemas', cid, lang) + '#sala-' + room,
+                                    self.cinemas[cid]['name'] + ' · ' + COPY[lang]['room'] + ' ' + room) + '</p>'
+            sections.append(body + '</section>')
+        return ''.join(sections)
 
     def room_comparison(self, lang):
         t = COPY[lang]
@@ -664,7 +711,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js',
                          'site-header.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
-                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'cinema-copy.js', 'film-dialog.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg',
+                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
             guide = (ROOT / 'static/webmcp.html').read_text().replace('/cinemas.html', '/en/')
@@ -742,7 +789,10 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 
 ## Pages
 - [Current programme]({origin}/en/): films and dated screenings; filters are interactive.
-- [Today and tonight]({origin}{DISCOVERY_PATHS['today']['en']}): remaining sessions today in Europe/Madrid; tonight is 18:00 to midnight.
+- [Today’s programme]({origin}/en/?date={now.astimezone(MADRID).date()}): the main programme with today’s Europe/Madrid date selected; a filtered view, not a separate article.
+- [This weekend]({origin}{DISCOVERY_PATHS['weekend']['en']}): the explicit Friday–Sunday range, grouped by day; already-started sessions are excluded.
+- [Original-version IMAX]({origin}{DISCOVERY_PATHS['imax']['en']}): same-session original audio and IMAX format, with sourced room guidance.
+- [35mm and 70mm]({origin}{DISCOVERY_PATHS['film']['en']}): separate film-format lists based on explicit session tags, with print and edition caveats.
 - [Films in English]({origin}{DISCOVERY_PATHS['english']['en']}): session-confirmed English audio over the next seven calendar days; multilingual films are separate.
 - [English subtitles and VOSI]({origin}{DISCOVERY_PATHS['subtitles']['en']}): subtitle labels explained, with upcoming confirmed English-subtitled sessions.
 - [Film information]({origin}/en/films/): film facts, original audio, subtitles and official booking links.

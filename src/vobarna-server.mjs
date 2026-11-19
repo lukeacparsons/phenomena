@@ -55,7 +55,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
           routes={...routes,screenings:JSON.parse(await readFile(resolve(current.root,'route-data/screenings',shard+'.json'),'utf8'))};
         }
         const decision=resolvePublicURL(url.href,routes);
-        if(decision.status===308)return reply(308,'',{'Location':decision.location,'Cache-Control':'public, max-age=60'});
+        if(decision.status===302||decision.status===308)return reply(decision.status,'',{'Location':decision.location,'Cache-Control':decision.status===302?'no-store':'public, max-age=60'});
         if(decision.status===404){status=404;path='/404.html';}
         else {path=decision.path+'index.html';if(decision.noindex)res.setHeader('X-Robots-Tag','noindex, follow');}
       } else if(path.endsWith('.html')) {status=404;path='/404.html';}

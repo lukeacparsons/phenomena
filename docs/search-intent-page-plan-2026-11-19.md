@@ -2,7 +2,24 @@
 
 Research date: 19 November 2026. Scope: VO Barna at the intended `vobarna.com` origin, including Barcelona and the nearby municipalities actually covered by the catalogue. This is a content and product plan, not a deployment or a traffic forecast.
 
-## Implementation update — 19 November 2026
+## Second content batch — 19 November 2026
+
+The next three concepts are implemented in EN/ES/CA. The user's correction to P01 is authoritative: **Today is the existing homepage with its date filter selected**, for example `/en/?date=2026-11-19`. It is no longer a standalone discovery document. The former EN/ES/CA Today paths return a non-cacheable temporary redirect to the current Europe/Madrid date. Those paths are removed from the sitemap; filtered programme URLs retain the homepage canonical and the existing noindex policy.
+
+| Plan item | English destination | Implemented content |
+| --- | --- | --- |
+| P01 revised | `/en/?date=YYYY-MM-DD` | The normal film grid with the date selected; footer links use the build date and refresh to the current Madrid date in the browser. |
+| P02 | `/en/showtimes/this-weekend/` | Explicit Friday–Sunday dates, daily sections and expandable film/session lists. Saturday and Sunday keep the current weekend; Monday rolls to the next Friday. Started sessions are excluded. Partial publication and empty days are explained. |
+| P05 | `/en/guides/imax-original-version-barcelona/` | Explicit same-session IMAX tags within the original-audio catalogue, language distinctions, sourced Sala 9 versus iSense Sala 10 guidance, separate nearby Terrassa venue evidence, and official booking actions. |
+| P06 | `/en/guides/35mm-70mm-barcelona/` | Separate 35mm and 70mm lists, a separate group for sessions tagged with both, sourced Phenomena guidance, edition/print caveats and the distinction from IMAX. |
+
+Each new page has a concise introduction, navigation to its sections, source and collection times, exact-session film actions, operator ticket links, translated metadata, reciprocal locale alternates, ItemList/breadcrumb data and sitemap/`llms.txt` links. Both format guides retain useful editorial content and explicit empty states between programmes. The cinema guide index now includes the English-subtitle, IMAX and film-projection guides. Homepage discovery links remain in its closed footer disclosure.
+
+Selection deliberately uses the validated original-audio catalogue and exact session format tags. Equipment ownership, a film title, restoration language, a premium cinema label and an IMAX tag do not establish film projection. Audio remains unknown where the source does not specify it. Research check dates remain distinct from programme collection and page-generation times.
+
+Validation and source-review details: [second-batch evidence](seo-geo-content-batch2-2026-11-19.json). Next editorial candidates remain VOSC and the sourced Gràcia guide; the broader format-comparison expansion, shared typed filters, seating research and measurement backlog are not marked complete by this batch.
+
+## First content batch — 19 November 2026 (Today destination superseded above)
 
 The first content batch is implemented in English, Spanish and Catalan:
 
@@ -20,7 +37,7 @@ Each match exposes its actual audio/subtitle labels, cinema, room, date/time, so
 
 **Deliberate scope boundary:** this batch selects from explicit session audio/subtitle fields, using the existing exact language normalizer. It does not infer English from film metadata, country, VOSE or an unknown language label. Supported film-to-session language derivation and shared typed browser/WebMCP language/time/geography filters remain follow-up work; the homepage’s broad free-text search has not been changed into an exact language filter.
 
-Still to implement from the first six concepts: **P02 this weekend**, **P05 original-version IMAX**, and **P06 35mm/70mm**. The Gràcia-after-20:00/seating question also still needs the planned geography and sourced seating selection. Search Console/Bing verification and submission, remote publication-freshness monitoring and production reporting follow-up remain separate operational tasks.
+P02, P05 and P06 were outstanding after this first batch and are now implemented in the second batch above. The Gràcia-after-20:00/seating question still needs the planned geography and sourced seating selection. Search Console/Bing verification and submission, remote publication-freshness monitoring and production reporting follow-up remain separate operational tasks.
 
 Validation: language independence and unknown/multilingual cases, Madrid midnight and DST boundaries, generated metadata/footer placement, all nine localized pages without JavaScript, exact-session modal/reload/keyboard behavior, mobile layout and expired-session handling. The static audit covers every generated page and checks internal links, fragments, alternates and sitemap membership. Evidence is recorded in `docs/seo-geo-discovery-pages-2026-11-19.json`.
 

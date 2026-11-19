@@ -1,7 +1,7 @@
 from datetime import datetime
 import unittest
 
-from discovery_content import select_sessions
+from discovery_content import select_sessions, weekend_dates
 
 
 def session(sid, starts='2026-11-20T20:00:00+01:00', **facts):
@@ -14,6 +14,42 @@ def select(sessions, kind, now='2026-11-19T12:00:00+00:00'):
 
 
 class SelectionTests(unittest.TestCase):
+    def test_weekend_stays_on_current_friday_sunday_then_rolls_on_monday(self):
+        for day in range(16, 23):
+            dates = weekend_dates(datetime.fromisoformat(f'2026-11-{day}T12:00:00+01:00'))
+            self.assertEqual([str(d) for d in dates], ['2026-11-20', '2026-11-21', '2026-11-22'])
+        self.assertEqual(str(weekend_dates(datetime.fromisoformat('2026-11-22T23:00:00Z'))[0]), '2026-11-27')
+        self.assertEqual(str(weekend_dates(datetime.fromisoformat('2026-12-31T23:00:00Z'))[0]), '2027-01-01')
+
+    def test_weekend_includes_only_remaining_sessions_inside_madrid_calendar_days(self):
+        sessions = [session('before', '2026-11-19T23:59:00+01:00'),
+                    session('friday', '2026-11-19T23:00:00Z'),
+                    session('saturday', '2026-11-21T20:00:00+01:00'),
+                    session('sunday', '2026-11-22T23:59:00+01:00'),
+                    session('monday', '2026-11-22T23:00:00Z')]
+        self.assertEqual(select(sessions, 'weekend'), {'friday': ['friday'], 'saturday': ['saturday'], 'sunday': ['sunday']})
+        self.assertEqual(select(sessions, 'weekend', '2026-11-21T20:00:00+01:00'), {'friday': [], 'saturday': [], 'sunday': ['sunday']})
+        # Sunday endpoints remain local midnight across both DST transitions.
+        for now, final, monday in [('2026-03-27T12:00:00Z', '2026-03-29T21:59:00Z', '2026-03-29T22:00:00Z'),
+                                    ('2026-10-23T12:00:00Z', '2026-10-25T22:59:00Z', '2026-10-25T23:00:00Z')]:
+            self.assertEqual(select([session('last', final), session('next', monday)], 'weekend', now),
+                             {'friday': [], 'saturday': [], 'sunday': ['last']})
+
+    def test_formats_require_same_session_tags_and_never_infer_from_venue_or_title(self):
+        sessions = [session('imax', formats=['IMAX'], version='VOSE'),
+                    session('isense', formats=['iSense'], room='IMAX'),
+                    session('venue', cinema_id='cinesa-diagonal-mar', big_screen=True),
+                    session('title-only', title='35mm IMAX'), session('null', formats=None),
+                    session('print', formats=['35mm']), session('large-print', formats=['70mm']),
+                    session('both', formats=['35mm', '70mm']),
+                    session('combined', formats=['IMAX', '70mm']),
+                    session('not-exact', formats=['not IMAX', '135mm']),
+                    session('past', '2026-11-19T12:00:00Z', formats=['IMAX', '35mm'])]
+        self.assertEqual(select(sessions, 'imax'), {'imax': ['combined', 'imax']})
+        self.assertEqual(select(sessions, 'film'), {'35mm': ['print'], '70mm': ['combined', 'large-print'], 'mixed-film': ['both']})
+        with self.assertRaises(ValueError):
+            select(sessions, 'typo')
+
     def test_audio_is_session_specific_and_independent_of_subtitles_and_film_metadata(self):
         sessions = [session('french-vose', language='French', subtitles='Español', version='VOSE'),
                     session('english-vosc', language='EN', subtitles='Català', version='VOSC'),

@@ -9,7 +9,7 @@ if(root){
   function refresh(){
     const now=Date.now();
     // A dated rolling list must not silently become yesterday's "today".
-    const stale=root.dataset.discoveryKind!=='subtitles'&&madrid.format(now)!==root.dataset.discoveryDate;
+    const stale=['english','weekend'].includes(root.dataset.discoveryKind)&&madrid.format(now)!==root.dataset.discoveryDate;
     results.hidden=stale;
     root.querySelector('.discovery-stale').hidden=!stale;
     if(stale)return;
@@ -23,7 +23,12 @@ if(root){
       film.hidden=total===0;
       film.querySelector('.discovery-film-count').textContent=`(${total})`;
     }
-    for(const group of root.querySelectorAll('.discovery-group'))group.hidden=![...group.querySelectorAll('[data-discovery-film]')].some(row=>!row.hidden);
+    for(const group of root.querySelectorAll('.discovery-group')){
+      const hasSessions=[...group.querySelectorAll('[data-discovery-film]')].some(row=>!row.hidden);
+      const empty=group.querySelector('.discovery-group-empty');
+      if(empty)empty.hidden=hasSessions;
+      group.hidden=!hasSessions&&!empty;
+    }
   }
   root.querySelector('.discovery-reload').addEventListener('click',()=>location.reload());
   refresh();

@@ -40,6 +40,7 @@ export default {
         routes.screenings=await response.json();
       }
       const decision=resolvePublicURL(url.href,routes);
+      if(decision.status===302)return new Response(null,{status:302,headers:{Location:new URL(decision.location,url).href,'Cache-Control':'no-store'}});
       if(decision.status===308)return Response.redirect(new URL(decision.location,url).href,308);
       if(decision.status===404)return assets(request,env,404,{'X-Robots-Tag':'noindex'});
       return assets(new Request(new URL(decision.path,url),request),env,undefined,

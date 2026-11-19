@@ -24,7 +24,21 @@ test('filter pages are noindex and tracking duplicates remain canonicalizable',(
   assert.equal(resolvePublicURL('https://vobarna.com/en/?q=dune',routes).noindex,true);
   assert.equal(resolvePublicURL('https://vobarna.com/en/?utm_source=test',routes).noindex,false);
 });
+test('retired Today pages redirect to the homepage filtered by the current Madrid date',()=>{
+  for(const [path,lang] of [['/en/showtimes/today/','en'],['/ES/CARTELERA/HOY','es'],['/ca/cartellera/avui/index.html','ca']]){
+    for(const [now,date] of [['2026-11-19T22:59:59Z','2026-11-19'],['2026-11-19T23:00:00Z','2026-11-20'],
+                            ['2026-03-29T22:00:00Z','2026-03-30'],['2026-10-25T23:00:00Z','2026-10-26']]){
+      assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?date=2000-01-01',routes,new Date(now)),{status:302,location:`/${lang}/?date=${date}`});
+    }
+  }
+});
 const env={ASSETS:{async fetch(request){const path=new URL(request.url).pathname;return path==='/routes.json'?Response.json(routes):new Response('<h1>Page</h1>',{headers:{'Content-Type':'text/html'}});}}};
+test('Today redirects are temporary and cannot be cached through midnight',async()=>{
+  const response=await worker.fetch(new Request('https://vobarna.com/en/showtimes/today/'),env);
+  assert.equal(response.status,302);
+  assert.equal(response.headers.get('Cache-Control'),'no-store');
+  assert.match(response.headers.get('Location'),/^https:\/\/vobarna\.com\/en\/\?date=\d{4}-\d{2}-\d{2}$/);
+});
 test('worker preserves 404 and noindex semantics even when an asset fallback is 200',async()=>{
   const missing=await worker.fetch(new Request('https://vobarna.com/en/missing/'),env);
   assert.equal(missing.status,404);assert.equal(missing.headers.get('X-Robots-Tag'),'noindex');

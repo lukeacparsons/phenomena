@@ -1,0 +1,119 @@
+{
+  "checked_at": "2026-11-19T21:01:04.238648+00:00",
+  "scope": [
+    "P02 Friday–Sunday weekend",
+    "P05 original-version IMAX",
+    "P06 35mm/70mm",
+    "P01 correction: Today is the homepage date filter"
+  ],
+  "routes": {
+    "weekend": {
+      "en": "/en/showtimes/this-weekend/",
+      "es": "/es/cartelera/este-fin-de-semana/",
+      "ca": "/ca/cartellera/aquest-cap-de-setmana/"
+    },
+    "imax": {
+      "en": "/en/guides/imax-original-version-barcelona/",
+      "es": "/es/guias/imax-version-original-barcelona/",
+      "ca": "/ca/guies/imax-versio-original-barcelona/"
+    },
+    "film": {
+      "en": "/en/guides/35mm-70mm-barcelona/",
+      "es": "/es/guias/cine-35mm-70mm-barcelona/",
+      "ca": "/ca/guies/cinema-35mm-70mm-barcelona/"
+    }
+  },
+  "today": {
+    "destination": "/{locale}/?date=YYYY-MM-DD",
+    "timezone": "Europe/Madrid",
+    "old_paths": "302, Cache-Control: no-store",
+    "sitemap": "former Today pages excluded",
+    "canonical": "locale homepage",
+    "indexing": "existing filtered-view noindex policy"
+  },
+  "selection_policy": "Validated original-audio catalogue; explicit same-session format tags; no inference from cinema equipment, film title, restoration, nationality or generic premium labels. Unknown audio stays unknown. Dual 35mm/70mm sessions counted once.",
+  "snapshot": {
+    "built_at": "2026-11-19T20:59:36.608975+00:00",
+    "programme_generated_at": "2026-11-19T20:55:26.949207+00:00",
+    "groups": {
+      "weekend": {
+        "friday": 313,
+        "saturday": 341,
+        "sunday": 339
+      },
+      "imax": {
+        "imax": 45
+      },
+      "film": {
+        "35mm": 14,
+        "70mm": 2,
+        "mixed-film": 0
+      }
+    }
+  },
+  "sources": [
+    {
+      "url": "https://www.cinesa.es/cines/diagonal-mar/",
+      "basis": "Existing reviewed operator cinemaGuide / Las salas and same-day booking-map room evidence in docs/auditoriums.json; fresh page fetch was challenged, so no claim of a fresh full-page re-verification.",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "url": "https://www.christiedigital.com/press-releases/phenomena-experience/",
+      "basis": "Manufacturer article retrieved; supports retained 35mm/70mm alongside digital projection.",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "url": "https://www.parcvalles.com/es/noticias/parc-valles-amplia-la-experiencia-de-cine-con-una-nueva-sala-imaxr-con-laser",
+      "basis": "Host-centre announcement retrieved; described as an announcement, not evidence of a qualifying original-version session.",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "url": "https://www.imax.com/news/one-battle-after-another-in-imax",
+      "basis": "Historical primary-source example separating IMAX film and laser presentations; not a current Barcelona schedule.",
+      "checked_on": "2026-11-19"
+    }
+  ],
+  "tests": {
+    "npm_test": {
+      "python": 307,
+      "node": 40,
+      "search_and_date_checks": "passed"
+    },
+    "routing_and_origin": {
+      "tests": 11,
+      "result": "passed"
+    },
+    "browser": "15 localized discovery pages without JavaScript; closed homepage footer; Today redirect and selected date; exact-session modal for every new type; reload and keyboard; mobile overflow; expiry and midnight; empty format sections passed.",
+    "final_browser": "Section anchors, 70mm jump, extracted Today-link module across Madrid midnight, mobile/desktop screenshots and no JavaScript errors passed."
+  },
+  "static_audit": {
+    "release": "/private/tmp/vobarna-content-batch2/releases/build-tczczw0x",
+    "pages": 1232,
+    "indexable": 1210,
+    "issues": {},
+    "missing_assets": [],
+    "broken_internal_links": [],
+    "broken_internal_fragments": [],
+    "alternate_errors": [],
+    "unreachable_indexable": [],
+    "sitemap": {
+      "urls": 1210,
+      "duplicates": 0,
+      "missing": [],
+      "extra": [],
+      "lastmod_mismatch": [],
+      "wrong_origin": []
+    }
+  },
+  "screenshots": [
+    "output/seo/weekend-desktop-final.png",
+    "output/seo/film-projection-mobile-final.png"
+  ],
+  "remaining": [
+    "VOSC candidate",
+    "Gràcia geography and seating evidence",
+    "General format comparison expansion",
+    "Shared typed language/time/geography filters",
+    "Search Console/Bing verification and measurement"
+  ]
+}

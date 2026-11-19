@@ -115,7 +115,7 @@ class PublicationTests(unittest.TestCase):
                 if tag == 'footer': self.footer = False
 
         original = self.data['films'][0]['sessions'][0]
-        original.update(language='EN', subtitles='English')
+        original.update(language='EN', subtitles='English', formats=['IMAX', '35mm'])
         self.write_input()
         self.publish()
         root = self.root / 'site/current/public'
@@ -123,7 +123,8 @@ class PublicationTests(unittest.TestCase):
         for lang in ('en', 'es', 'ca'):
             home = (root / lang / 'index.html').read_text()
             links = FooterLinks(); links.feed(home)
-            self.assertEqual(links.links, [(True, True)] * 3)
+            self.assertEqual(links.links, [(True, True)] * len(PATHS))
+            self.assertIn(f'href="/{lang}/?date=2026-11-19" data-today-link', home)
             for kind, paths in PATHS.items():
                 html = (root / paths[lang].lstrip('/') / 'index.html').read_text()
                 self.assertIn(f'<html lang="{lang}">', html)
@@ -132,16 +133,27 @@ class PublicationTests(unittest.TestCase):
                     self.assertIn(f'hreflang="{other}" href="https://vobarna.com{paths[other]}"', html)
                 self.assertIn(paths[lang], (root / 'sitemap.xml').read_text())
                 self.assertIn('index,follow', html)
-                if kind != 'today':
-                    self.assertIn(anchor, html)
-                    self.assertIn('class="screening-action" aria-label=', html)
-                    self.assertIn('https://cinema.example/programme', html)
-                    self.assertIn('https://cinema.example/tickets', html)
-                    self.assertIn('Phenomena Experience', html)
-                    self.assertIn(DISCOVERY_COPY[lang]['count'].format(films=1, sessions=1), html)
-                else:
-                    self.assertIn(DISCOVERY_COPY[lang]['none'], html)
-                    self.assertNotIn('data-discovery-film=', html)
+                self.assertIn(anchor, html)
+                self.assertIn('class="screening-action" aria-label=', html)
+                self.assertIn('https://cinema.example/programme', html)
+                self.assertIn('https://cinema.example/tickets', html)
+                self.assertIn('Phenomena Experience', html)
+                self.assertIn(DISCOVERY_COPY[lang]['count'].format(films=1, sessions=1), html)
+                if kind == 'weekend':
+                    for date in ('2026-11-20', '2026-11-21', '2026-11-22'):
+                        self.assertIn(date, html)
+                if kind == 'film':
+                    self.assertIn('id="35mm"', html)
+                    self.assertIn('id="70mm"', html)
+                    self.assertIn(DISCOVERY_COPY[lang]['format_none'], html)
+                    self.assertIn(DISCOVERY_COPY[lang]['film_edition_body'], html)
+                    self.assertIn(f'href="{paths[lang]}#70mm"', html)
+        from discovery_content import TODAY_PATHS
+        for lang, path in TODAY_PATHS.items():
+            self.assertFalse((root / path.lstrip('/') / 'index.html').exists())
+            self.assertNotIn(path, (root / 'sitemap.xml').read_text())
+            self.assertEqual(resolve_url(path, {}, now=NOW), (302, f'/{lang}/?date=2026-11-19'))
+            self.assertEqual(resolve_url(path, {}, now=datetime.fromisoformat('2026-11-19T23:00:00Z')), (302, f'/{lang}/?date=2026-11-20'))
         # Empty evergreen guides retain the explanation and useful indexable HTML.
         original['subtitles'] = 'Español'
         self.write_input(); self.publish()

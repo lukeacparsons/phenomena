@@ -1,11 +1,13 @@
 """Serve an atomically published site locally, with the production URL policy."""
 import json
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit, unquote
 from http_assets import serve_file
+from discovery_content import MADRID, TODAY_PATHS
 
 
-def resolve_url(raw, manifest):
+def resolve_url(raw, manifest, now=None):
     url = urlsplit(raw)
     path = unquote(url.path)
     query = parse_qs(url.query, keep_blank_values=True)
@@ -36,6 +38,9 @@ def resolve_url(raw, manifest):
         return 308, '/en/' + ('?' + url.query if url.query else '')
     if not normalized.endswith('/') and '.' not in normalized.split('/')[-1]:
         normalized += '/'
+    if normalized in TODAY_PATHS.values():
+        today = (now or datetime.now(MADRID)).astimezone(MADRID).date()
+        return 302, f'/{lang}/?date={today}'
     target = manifest['redirects'].get(normalized, normalized)
     if target not in manifest['pages']:
         return 404, None
@@ -53,9 +58,11 @@ def serve_public(handler, publication):
     manifest = json.loads((current / 'manifest.json').read_text())
     page_like = '.' not in url.path.rsplit('/', 1)[-1] or url.path.lower().endswith(('/cinemas.html', '/index.html', '/webmcp.html'))
     status, target = resolve_url(handler.path, manifest) if page_like else (200, url.path)
-    if status == 308:
-        handler.send_response(308)
+    if status in (302, 308):
+        handler.send_response(status)
         handler.send_header('Location', target)
+        if status == 302:
+            handler.send_header('Cache-Control', 'no-store')
         handler.end_headers()
         return True
     file = root / ((target or '/404.html').lstrip('/') + ('index.html' if target and target.endswith('/') else ''))
