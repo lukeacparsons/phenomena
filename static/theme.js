@@ -14,6 +14,8 @@
   let toggle;
   let syncing = false;
   let reveal;
+  let cloth;
+  let preparation;
   // The supplied curtain drawing has 15 steps, each held for 50 ms.
   const curtainDuration = 750;
   const artwork = '/cinema-curtain-toggle/';
@@ -52,65 +54,129 @@
   }
 
   function selectTheme(theme) {
+    cloth?.cancelPreparation();
+    clearTimeout(preparation);
     preference = theme;
     try { localStorage.setItem(key, preference); } catch {}
     transitionTo(theme);
   }
 
-  function playReveal(state, align = false) {
-    const animation = state.animation;
-    if (!animation) return;
-    // Align once after snapshot capture. Reversals keep the current position;
-    // snapping back to a discrete drawing would make the page visibly jump.
-    if (align && toggle?.localName === 'cinema-theme-toggle') {
-      const open = toggle.progress;
-      animation.currentTime = (state.to === 'light' ? open : 1 - open) * curtainDuration;
+  function renderReveal(state) {
+    if (reveal !== state) return;
+    state.frame = 0;
+    const target = selectedTheme() === 'light' ? 1 : 0;
+    if (toggle.localName === 'cinema-theme-toggle') {
+      // The icon and page use one reversible clock, not two queued animations.
+      state.progress = toggle.progress;
+    } else {
+      const now = performance.now();
+      const distance = Math.min((now - state.lastTime) / curtainDuration, Math.abs(state.target - state.progress));
+      state.progress += Math.sign(state.target - state.progress) * distance;
+      state.lastTime = now;
     }
-    animation.playbackRate = selectedTheme() === state.to ? 1 : -1;
-    animation.play();
+    state.target = target;
+    cloth.draw(state.progress);
+    if (state.progress === target) finishReveal(state);
+    else state.frame = requestAnimationFrame(() => renderReveal(state));
+  }
+
+  function finishReveal(state) {
+    if (reveal !== state) return;
+    cancelAnimationFrame(state.frame);
+    const theme = selectedTheme();
+    if (root.dataset.theme !== theme) root.dataset.theme = theme;
+    const focused = document.activeElement === toggle;
+    moveToggle(state.placeholder.parentElement, state.placeholder);
+    state.placeholder.remove();
+    if (state.originalStyle === null) toggle.removeAttribute('style');
+    else toggle.setAttribute('style', state.originalStyle);
+    state.stage.remove();
+    cloth.end();
+    delete root.dataset.themeReveal;
+    reveal = null;
+    if (focused && document.activeElement !== toggle) toggle.focus({ preventScroll: true });
+    state.resolve();
+    prepareCloth();
+  }
+
+  function moveToggle(parent, before = null) {
+    // Preserve focus and the icon's running clock when the browser supports
+    // moving connected elements without disconnecting/reinitializing them.
+    if (parent.moveBefore) parent.moveBefore(toggle, before);
+    else parent.insertBefore(toggle, before);
+  }
+
+  function makeReveal(theme) {
+    // The same dark cloth opens and returns along one reversible path. The
+    // light site is always the flat, live DOM underneath, in either direction.
+    const canvas = cloth.begin();
+    if (!canvas) return null;
+    // Read the existing button's position before moving it, so starting the
+    // effect does not force a second layout for the newly inserted placeholder.
+    const rect = toggle.getBoundingClientRect();
+    const layer = document.createElement('div');
+    layer.className = 'theme-reveal-layer';
+    const stage = document.createElement('div');
+    stage.className = 'theme-reveal-stage';
+    stage.setAttribute('aria-hidden', 'true');
+    stage.inert = true;
+    stage.append(layer);
+    layer.append(canvas);
+    const width = root.clientWidth, height = innerHeight;
+    const progress = root.dataset.theme === 'light' ? 1 : 0;
+    const placeholder = document.createElement('span');
+    placeholder.className = 'theme-toggle-placeholder';
+    placeholder.setAttribute('aria-hidden', 'true');
+    const originalStyle = toggle.getAttribute('style');
+    const focused = document.activeElement === toggle;
+    toggle.before(placeholder);
+    document.body.append(stage);
+    moveToggle(document.body);
+    Object.assign(toggle.style, { position: 'fixed', zIndex: '10001', margin: '0', left: `${rect.left}px`, top: `${rect.top}px` });
+    const state = { to: theme, layer, stage, placeholder, originalStyle, progress, width, height, target: theme === 'light' ? 1 : 0, lastTime: performance.now(), frame: 0 };
+    state.finished = new Promise(resolve => { state.resolve = resolve; });
+    if (focused && document.activeElement !== toggle) toggle.focus({ preventScroll: true });
+    return state;
   }
 
   function transitionTo(theme) {
     sync();
     if (reveal) {
-      playReveal(reveal);
+      // The target changed synchronously; the pending display frame reads it.
+      // Drawing here would add a second GPU submission inside the input event.
       return;
     }
     if (root.dataset.theme === theme) return;
-    if (!toggle || reducedMotion.matches || document.hidden || !document.startViewTransition) {
+    if (!toggle || !cloth || reducedMotion.matches || document.hidden || document.querySelector('dialog[open]')) {
       root.dataset.theme = theme;
       return;
     }
 
-    const state = { to: theme, animation: null, transition: null };
-    reveal = state;
-    root.dataset.themeReveal = theme;
-    state.transition = document.startViewTransition(() => {
-      root.dataset.theme = state.to;
-    });
-    state.transition.ready.then(() => {
-      // Light is always the upper layer: opening reveals it from the centre;
-      // closing draws its curved edges back together over the dark page.
-      const aperture = ['ellipse(0% 62% at 50% 50%)', 'ellipse(58% 100% at 50% 50%)'];
-      state.animation = root.animate(
-        { clipPath: theme === 'light' ? aperture : [...aperture].reverse() },
-        {
-          duration: curtainDuration, easing: 'linear', fill: 'both',
-          pseudoElement: `::view-transition-${theme === 'light' ? 'new' : 'old'}(root)`,
-        },
-      );
-      playReveal(state, true);
-    }).catch(() => {
-      // A hidden tab or an interrupted capture may skip the visual transition.
-      state.transition.skipTransition();
-    });
-    const finish = () => {
-      if (reveal !== state) return;
-      root.dataset.theme = selectedTheme();
-      delete root.dataset.themeReveal;
-      reveal = null;
-    };
-    state.transition.finished.then(finish, finish);
+    reveal = makeReveal(theme);
+    if (reveal) {
+      root.dataset.theme = 'light';
+      root.dataset.themeReveal = theme;
+      const state = reveal;
+      state.frame = requestAnimationFrame(() => renderReveal(state));
+    } else {
+      root.dataset.theme = theme;
+      prepareCloth();
+    }
+  }
+
+  function prepareCloth(invalidate = false) {
+    if (!cloth) return;
+    if (invalidate) cloth.invalidate();
+    clearTimeout(preparation);
+    preparation = setTimeout(async () => {
+      if (reveal || reducedMotion.matches || document.hidden) return;
+      try {
+        await cloth.prepare();
+        // Content can change during capture; retry the latest viewport once
+        // the previous capture releases its resources.
+        if (!cloth.has()) prepareCloth();
+      } catch { /* The native theme remains usable. */ }
+    }, 250);
   }
 
   async function mount() {
@@ -140,13 +206,7 @@
     sync();
 
     function isTogglePress(event) {
-      if (event.composedPath().includes(toggle)) return true;
-      // During a View Transition, hit testing can target its root snapshot.
-      // Route presses on the visible curtain back to the live control.
-      if (!reveal || document.querySelector('dialog[open]')) return false;
-      const rect = toggle.getBoundingClientRect();
-      return event.clientX >= rect.left && event.clientX <= rect.right
-        && event.clientY >= rect.top && event.clientY <= rect.bottom;
+      return event.composedPath().includes(toggle);
     }
     function press() {
       toggle.focus({ preventScroll: true });
@@ -177,12 +237,25 @@
       if (event.composedPath().includes(toggle) && [' ', 'Enter'].includes(event.key)) event.preventDefault();
     }, true);
 
+    const changed = () => prepareCloth(true);
+    const content = new MutationObserver(changed);
+    document.querySelectorAll('main').forEach(main => content.observe(main, {
+      childList: true, subtree: true, characterData: true,
+      attributes: true, attributeFilter: ['src', 'srcset', 'hidden', 'open', 'aria-pressed'],
+    }));
+    document.addEventListener('load', event => {
+      if (event.target.localName === 'img' && !event.target.closest('.theme-toggle')) changed();
+    }, true);
+    document.addEventListener('input', changed);
+    document.fonts.addEventListener('loadingdone', changed);
+
     try {
       await import(`${artwork}cinema-theme-toggle.js`);
       const curtains = document.createElement('cinema-theme-toggle');
       curtains.className = 'theme-toggle';
       curtains.setAttribute('size', '44');
       await curtains.ready;
+      if (reveal) await reveal.finished;
       const fallback = toggle;
       const focused = document.activeElement === fallback;
       toggle = curtains;
@@ -192,6 +265,15 @@
       });
       fallback.replaceWith(curtains);
       if (focused) curtains.focus();
+      // Install the working control before loading or preparing the 3D effect.
+      // Neither fonts nor a fresh texture may hold up a user's theme change.
+      if (!reducedMotion.matches) {
+        try {
+          const { ScreenCurtains } = await import(`${artwork}cloth.js`);
+          cloth = new ScreenCurtains();
+          prepareCloth();
+        } catch { cloth = null; }
+      }
     } catch {
       // Keep the native switch functional even when the animation is offline.
     }
@@ -199,11 +281,17 @@
 
   system.addEventListener('change', () => transitionTo(selectedTheme()));
   reducedMotion.addEventListener('change', () => {
-    if (reducedMotion.matches && reveal) {
-      reveal.transition.skipTransition();
-      root.dataset.theme = selectedTheme();
-    }
+    if (reducedMotion.matches && reveal) finishReveal(reveal);
   });
+  window.addEventListener('scroll', () => {
+    if (reveal) finishReveal(reveal);
+    prepareCloth(true);
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    if (reveal) finishReveal(reveal);
+    prepareCloth(true);
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && reveal) finishReveal(reveal); });
   window.addEventListener('storage', event => {
     if (event.key !== key && event.key !== null) return;
     preference = valid(event.newValue) ? event.newValue : null;

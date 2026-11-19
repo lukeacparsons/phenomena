@@ -132,6 +132,10 @@ export class CinemaThemeToggle extends HTMLElement {
     this._reducedMotion.removeEventListener("change", this._onMotionPreference);
   }
 
+  // The page temporarily moves the control above the cloth. A state-preserving
+  // DOM move must keep its focus, frame clock and motion listener intact.
+  connectedMoveCallback() {}
+
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue) return;
     if (name === "label") {
@@ -229,6 +233,7 @@ export class CinemaThemeToggle extends HTMLElement {
   }
 
   _advance(time) {
+    time = Math.max(time, this._lastTick ?? time);
     const destination = this._target ? 1 : 0;
     const elapsed = Math.max(0, time - this._lastTick) / (LAST_FRAME * FRAME_DELAY);
     this._lastTick = time;
