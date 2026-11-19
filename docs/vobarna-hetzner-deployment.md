@@ -16,7 +16,7 @@ VO Barna is hosted at **https://vobarna.com**, with Bunny DNS/CDN in front of th
 | Bunny DNS zone | `vobarna.com`, ID `1082969` |
 | Nameservers | `kiki.bunny.net`, `coco.bunny.net` |
 | Public hostnames | `vobarna.com`, `www.vobarna.com`; HTTPS required; www and the default CDN hostname permanently redirect to apex with path/query intact |
-| Data input | `/srv/vobarna/publication` on Otter, mounted at `/incoming` |
+| Data input | `/srv/vobarna/collector-publication` on Otter, mounted at `/collector-input` |
 | Rendered pages | `/app/.site`, private to each deployed container |
 | IndexNow state | `/srv/vobarna/indexnow` mounted at `/indexnow`, UID/GID 1000, mode 0700 |
 | Previous service | `vobarna`, UUID `jaksjk5shvd3mpkgyhsxomqn`, retained for recovery |
@@ -27,29 +27,22 @@ The application runs as the unprivileged Node user, with a 768 MB memory limit a
 
 ## Routine publication
 
-The collector now has a separate GitHub-backed Coolify application on Outrageous Otter. See the [collector deployment and cutover guide](collector-server-deployment.md) for its persistent mounts, scoped monitoring credentials and verification. After cutover the website reads `/srv/vobarna/collector-publication`; the older `/srv/vobarna/publication` input and Mac publisher are retained as a deliberate rollback path, not parallel production writers.
+The collector now has a separate GitHub-backed Coolify application on Outrageous Otter. See the [collector deployment and cutover guide](collector-server-deployment.md) for its persistent mounts, scoped monitoring credentials and verification. The website reads `/srv/vobarna/collector-publication` through its `/collector-input` mount and runtime `VOBARNA_INPUT_ROOT`. The old `/incoming` mount of `/srv/vobarna/publication` is retained for rollback. The Mac collector and publisher LaunchAgents are disabled; production collection and publication run on Otter.
 
 `scripts/serve_deployed_site.py` reads only the incoming catalogue, availability, artwork and initial identity registry. It renders them using the templates, scripts, styles and reference data packaged in the deployed Git image. Incoming HTML and JavaScript are never served. Each container renders into its own directory, so an older rolling container cannot overwrite a newer deployment. New input is checked every 15 seconds, with a rebuild at least every five minutes to expire sessions. Later build failures retain the last successful publication. Older input releases without private `catalogue.json` use `public/programme.json` during migration.
 
+The collector refreshes programmes hourly, seats every 15 minutes, and publishes atomic input releases every five minutes. It sends source-health receipts to the independent Cloudflare watchdog, using the existing Telegram destination. Inspect its Coolify logs and persistent `crawl-attempts.json`, `crawler-health.json` and `monitor-publisher.json`. A healthy process is not a substitute for successful source receipts and a recent published release.
+
+For an immediate manual refresh, use the collector's Coolify terminal:
+
 ```sh
-# Rebuild and upload cinema data immediately (does not deploy code):
-npm run site:build
-npm run site:publish:hetzner
-
-# Collect, build and publish explicitly:
-npm run site:publish -- --collect --deploy
-
-# Inspect the managed publisher:
-launchctl print gui/$(id -u)/com.vobarna.publisher
-tail -30 output/hetzner-publisher/stdout.log
-tail -30 output/hetzner-publisher/stderr.log
+python scripts/build_cinema_preview.py --skip-enrichment
+python scripts/build_public_site.py --registry /app/.site/registry.json
+python scripts/crawler_monitor.py
 ```
 
-`scripts/publish_hetzner.py` pins the completed local release, hashes every file and copies it using rsync. Unchanged files are hardlinked to the previous release. `/usr/local/libexec/vobarna-activate` verifies all checksums, the page inventory and identity registry before atomically changing `current`. Failed validation preserves the live site. The current and previous releases are retained; the previous one is the rollback copy. File permissions are normalized so the container can read releases made by the private local builder.
+The previous Mac uploader, `scripts/publish_hetzner.py`, remains available for deliberate rollback. It uses the dedicated unprivileged `vobarna-publish` account and ignored `.deploy-secrets/` credentials, hashes releases, and invokes `/usr/local/libexec/vobarna-activate` to verify and atomically select them. It publishes only to the old input directory. Stop the server collector before re-enabling the Mac collector and publisher; do not run both as production writers. Then switch the website's `VOBARNA_INPUT_ROOT` back to `/incoming` and redeploy.
 
-The uploader uses the dedicated, unprivileged `vobarna-publish` account, with SSH forwarding and PTY disabled. Its private key and local connection configuration are in ignored `.deploy-secrets/`; do not commit or publish them. The routine publisher does not use the Coolify or Bunny API tokens.
-
-Publisher logs and the last successful release are under `output/hetzner-publisher/`. The existing crawler watchdog still monitors collection. A separate remote alert on stale **published** content is a remaining monitoring improvement; publisher failures currently appear in its logs and retry on the next loop.
 
 ## Updating the origin code
 
@@ -60,7 +53,7 @@ npm run site:check
 git push origin main
 ```
 
-Coolify's installed GitHub App receives the push and builds that commit. No GitHub Actions deployment token or manual webhook secret is needed. Watch the deployment in the `vobarna-github` application, then check `https://origin.vobarna.com/healthz` and `https://vobarna.com/healthz`; their `commit` should match the pushed revision. The native directory storage for `/incoming` is required. A missing or invalid feed prevents startup rather than publishing an empty site. The HTTP health check must use `127.0.0.1:8787/healthz` (the server listens on IPv4), with a 180-second start period for the initial render.
+Coolify's installed GitHub App receives the push and builds that commit. No GitHub Actions deployment token or manual webhook secret is needed. Watch the deployment in the `vobarna-github` application, then check `https://origin.vobarna.com/healthz` and `https://vobarna.com/healthz`; their `commit` should match the pushed revision. The native directory storage for `/collector-input` is required. A missing or invalid feed prevents startup rather than publishing an empty site. The HTTP health check must use `127.0.0.1:8787/healthz` (the server listens on IPv4), with a 180-second start period for the initial render.
 
 The deployment uses `deploy/vobarna/Dockerfile.github`, `scripts/serve_deployed_site.py`, the public-site generator and `src/vobarna-server.mjs`. `.dockerignore` excludes credentials, local datasets and generated output. `deployment.json` records resource identifiers without credentials. `deploy_vobarna_origin.py`, `Dockerfile` and `compose.yaml` are legacy recovery tools for the previous service; do not use them for routine production deployments.
 
@@ -70,7 +63,7 @@ If the activation script changes, install `deploy/vobarna/activate.py` as `/usr/
 
 IndexNow uses runtime `INDEXNOW_KEY` and `INDEXNOW_STATE_DIR=/indexnow`. Preserve its mounted state through deployments and rollback; see [Bing indexing operations](bing-indexing.md) for initialization, retries and verification. The public manifest checkpoint also preserves unchanged sitemap timestamps when a new container starts.
 
-To roll back content, pause the local publisher, inspect the two directories under `/srv/vobarna/publication/releases`, and run `/usr/local/libexec/vobarna-activate RELEASE_NAME` as `vobarna-publish` with the previous release name. Wait for the application to detect and render that input, then allow Bunny's 60-second HTML/data TTL. Resolve the bad source build before resuming publication.
+To return to the old Mac feed, stop the server collector, set the website input to `/incoming`, and redeploy. Deliberately enable and bootstrap `com.vobarna.crawler` and `com.vobarna.publisher` in the Mac login session. The retained old publication and its activation tool support rollback of that feed. Resolve the source or publisher failure before switching back to Otter.
 
 For a code rollback, use the application's previous successful image in Coolify, or revert the faulty commit and push `main`. Keep the input directory mounted. If recovering through the previous service, transfer `origin.vobarna.com` back to it and restart that service; never leave both resources claiming the origin domain. Do not restart the shared proxy or other applications.
 
