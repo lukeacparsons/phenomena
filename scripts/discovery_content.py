@@ -10,6 +10,9 @@ from zoneinfo import ZoneInfo
 from language_names import parse_languages, without_language_placeholder
 from discovery_guides import COPY as GUIDE_COPY
 from discovery_local import COPY as LOCAL_COPY, GRACIA_VENUES
+from discovery_collections import (COPY as COLLECTION_COPY, EIXAMPLE_VENUES,
+                                   REPERTORY_GROUPS, REPERTORY_UNTIL, REVIEWED_ON,
+                                   repertory_match, DISCOUNT_VENUES)
 
 MADRID = ZoneInfo('Europe/Madrid')
 TODAY_PATHS = {'en': '/en/showtimes/today/', 'es': '/es/cartelera/hoy/', 'ca': '/ca/cartellera/avui/'}
@@ -21,6 +24,9 @@ PATHS = {
     'film': {'en': '/en/guides/35mm-70mm-barcelona/', 'es': '/es/guias/cine-35mm-70mm-barcelona/', 'ca': '/ca/guies/cinema-35mm-70mm-barcelona/'},
     'vosc': {'en': '/en/showtimes/catalan-subtitles/', 'es': '/es/cartelera/subtitulos-catalan/', 'ca': '/ca/cartellera/subtitols-catala/'},
     'gracia': {'en': '/en/guides/original-version-cinema-gracia/', 'es': '/es/guias/cine-version-original-gracia/', 'ca': '/ca/guies/cinema-versio-original-gracia/'},
+    'classics': {'en': '/en/guides/classic-films-barcelona/', 'es': '/es/guias/cine-clasico-barcelona/', 'ca': '/ca/guies/cinema-classic-barcelona/'},
+    'eixample': {'en': '/en/guides/original-version-cinema-eixample/', 'es': '/es/guias/cine-version-original-eixample/', 'ca': '/ca/guies/cinema-versio-original-eixample/'},
+    'discounts': {'en': '/en/guides/cinema-discount-days-barcelona/', 'es': '/es/guias/descuentos-cine-barcelona/', 'ca': '/ca/guies/descomptes-cinema-barcelona/'},
 }
 
 
@@ -46,7 +52,9 @@ def select_sessions(programme, kind, now):
     keys = {'today': ('daytime', 'tonight'), 'english': ('english', 'multilingual'),
             'subtitles': ('subtitles',), 'weekend': ('friday', 'saturday', 'sunday'),
             'imax': ('imax',), 'film': ('35mm', '70mm', 'mixed-film'),
-            'vosc': ('vosc',), 'gracia': ('gracia-english', 'gracia-multilingual', 'gracia-other')}[kind]
+            'vosc': ('vosc',), 'gracia': ('gracia-english', 'gracia-multilingual', 'gracia-other'),
+            'classics': REPERTORY_GROUPS, 'eixample': tuple(v[0] for v in EIXAMPLE_VENUES.values()),
+            'discounts': ('discount-screenings',)}[kind]
     groups = {key: [] for key in keys}
     for film in programme['films']:
         for session in film['sessions']:
@@ -59,6 +67,17 @@ def select_sessions(programme, kind, now):
             elif kind == 'weekend':
                 if starts.date() in weekend:
                     groups[weekend[starts.date()]].append((film, session))
+            elif kind == 'classics':
+                reviewed = repertory_match(film, session)
+                if reviewed and REVIEWED_ON <= starts.date().isoformat() <= REPERTORY_UNTIL:
+                    groups[reviewed[1]].append((film, session))
+            elif kind == 'eixample':
+                venue = EIXAMPLE_VENUES.get(session.get('cinema_id'))
+                if venue and starts.date() < end:
+                    groups[venue[0]].append((film, session))
+            elif kind == 'discounts':
+                if session.get('cinema_id') in DISCOUNT_VENUES and starts.date() < end:
+                    groups['discount-screenings'].append((film, session))
             elif kind == 'gracia':
                 if session.get('cinema_id') not in GRACIA_VENUES or starts.date() >= end:
                     continue
@@ -89,7 +108,17 @@ def select_sessions(programme, kind, now):
                 else:
                     group = kind
                 groups[group].append((film, session))
-    return {key: sorted(pairs, key=lambda pair: (datetime.fromisoformat(pair[1]['starts_at']).timestamp(), pair[1]['id'])) for key, pairs in groups.items()}
+    groups = {key: sorted(pairs, key=lambda pair: (datetime.fromisoformat(pair[1]['starts_at']).timestamp(), pair[1]['id'])) for key, pairs in groups.items()}
+    if kind == 'discounts':
+        # Programme examples only: these are not price/offer eligibility matches.
+        per_venue, selected = {}, []
+        for pair in groups['discount-screenings']:
+            cid = pair[1]['cinema_id']
+            if per_venue.get(cid, 0) < 2:
+                selected.append(pair)
+                per_venue[cid] = per_venue.get(cid, 0) + 1
+        groups['discount-screenings'] = selected
+    return groups
 
 
 COPY = {
@@ -194,4 +223,6 @@ COPY = {
 for _lang, _copy in GUIDE_COPY.items():
     COPY[_lang].update(_copy)
 for _lang, _copy in LOCAL_COPY.items():
+    COPY[_lang].update(_copy)
+for _lang, _copy in COLLECTION_COPY.items():
     COPY[_lang].update(_copy)

@@ -14,6 +14,43 @@ def select(sessions, kind, now='2026-11-19T12:00:00+00:00'):
 
 
 class SelectionTests(unittest.TestCase):
+    def test_classics_require_reviewed_edition_venue_and_season_not_age_or_format(self):
+        import copy
+        now = datetime.fromisoformat('2026-11-19T12:00:00Z')
+        film = {'id': 'dune', 'title': 'Dune', 'release_year': 1984, 'sessions': [
+            session('reviewed', cinema_id='phenomena', film_id='3045'),
+            session('other-venue', cinema_id='cinesa-diagonal-mar', film_id='3045'),
+            session('unknown-edition', cinema_id='phenomena', film_id='unknown', formats=['4K']),
+            session('other-season', '2027-01-01T00:00:00+01:00', cinema_id='phenomena', film_id='3045'),
+            session('last-day', '2026-12-31T22:59:00Z', cinema_id='phenomena', film_id='3045'),
+            session('expired', '2026-11-19T12:00:00Z', cinema_id='phenomena', film_id='3045')]}
+        before = copy.deepcopy(film)
+        groups = select_sessions({'films': [film]}, 'classics', now)
+        self.assertEqual([s['id'] for _, s in groups['revivals']], ['reviewed', 'last-day'])
+        self.assertEqual(film, before)  # Never attach a season's format to a session.
+        film['release_year'] = 2021
+        self.assertFalse(any(select_sessions({'films': [film]}, 'classics', now).values()))
+        film['release_year'] = None
+        self.assertFalse(any(select_sessions({'films': [film]}, 'classics', now).values()))
+
+    def test_eixample_membership_is_exact_and_uses_seven_madrid_days(self):
+        sessions = [session('phenomena', cinema_id='phenomena'), session('arenas', cinema_id='mooby-arenas'),
+                    session('gracia', cinema_id='verdi'), session('substring', cinema_id='eixample-nearby'),
+                    session('outside', '2026-11-25T23:00:00Z', cinema_id='cinemes-girona'),
+                    session('inside', '2026-11-25T22:59:00Z', cinema_id='cinemes-girona')]
+        self.assertEqual(select(sessions, 'eixample'), {'sagrada-familia': ['phenomena'], 'dreta': ['inside'],
+                         'antiga-esquerra': [], 'sant-antoni': [], 'nova-esquerra': ['arenas']})
+
+    def test_discount_examples_are_limited_per_venue_without_price_assignment(self):
+        import copy
+        sessions = [session('later', '2026-11-21T20:00:00+01:00', cinema_id='verdi'),
+                    session('first', cinema_id='verdi'), session('second', '2026-11-20T21:00:00+01:00', cinema_id='verdi'),
+                    session('texas', cinema_id='espai-texas'), session('unreviewed', cinema_id='phenomena'),
+                    session('outside', '2026-11-25T23:00:00Z', cinema_id='espai-texas')]
+        before = copy.deepcopy(sessions)
+        self.assertEqual(select(sessions, 'discounts'), {'discount-screenings': ['first', 'texas', 'second']})
+        self.assertEqual(sessions, before)
+
     def test_vosc_requires_catalan_subtitles_independently_of_audio_and_version(self):
         sessions = [session('french', language='French', subtitles='Català'),
                     session('mixed-subtitles', language='English', subtitles='Català, English'),

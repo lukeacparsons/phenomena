@@ -2,6 +2,24 @@
 
 Research date: 19 November 2026. Scope: VO Barna at the intended `vobarna.com` origin, including Barcelona and the nearby municipalities actually covered by the catalogue. This is a content and product plan, not a deployment or a traffic forecast.
 
+## Fourth content batch — 19 November 2026
+
+Three further guides are implemented in English, Spanish and Catalan:
+
+| English destination | Delivered content |
+| --- | --- |
+| `/en/guides/classic-films-barcelona/` | Reviewed returning editions, director seasons and anniversary screenings at Phenomena, Aribau and Renoir Floridablanca. Original years distinguish editions; individual sessions retain their own audio, subtitles and format evidence. |
+| `/en/guides/original-version-cinema-eixample/` | Seven local calendar days at five city-verified venues, grouped into Sagrada Família, Dreta, Antiga Esquerra, Sant Antoni and Nova Esquerra. Includes exact addresses and the Aribau Cinema / Sala 5 distinction. |
+| `/en/guides/cinema-discount-days-barcelona/` | Six dated offer cards from Verdi, Renoir, Mooby and Espai Texas, with conditions, fees, member-rate distinctions and official sources. Up to two upcoming programme examples per featured cinema are explicitly separate from offer eligibility and ticket totals. |
+
+Repertory selection requires a reviewed cinema/provider-film identity and matching original year. The current seasonal selection covers 19 November–31 December 2026; new seasons require editorial review. An old year or a 4K label cannot qualify an unreviewed film, and a cycle title does not assign a format to its sessions. After the reviewed programme ends, the guide keeps its edition and planning information with an honest empty state.
+
+Eixample membership is a closed set of five reviewed venues. Arenas belongs to Nova Esquerra de l’Eixample; geographic inclusion does not imply a walking time. The price guide records tariff review dates separately from programme collection, makes the conflicting Texas fee wording explicit, and does not attach published offer amounts or Offer structured data to its example screenings. Prices and seasonal selections require source review before their editorial check dates are renewed.
+
+All nine destinations have localized metadata, reciprocal alternates, sitemap entries, guide-index and closed-footer links, and English `llms.txt` references. Exact-session actions retain the modal and official-ticket journey. Eixample and discount programme examples request a refresh across Madrid midnight while the dated offer cards remain readable. Today remains the existing homepage filtered by the current Madrid date.
+
+Validation and source-review details: [fourth-batch evidence](seo-geo-content-batch4-2026-11-19.json). This completes the three agreed additions; further language, genre, family, accessibility and price-eligibility work remains in the evidence-gated backlog.
+
 ## Third content batch — 19 November 2026
 
 VOSC listings, the first neighbourhood guide and the expanded room comparison are implemented in English, Spanish and Catalan:

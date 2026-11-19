@@ -30,6 +30,8 @@ from language_names import without_language_placeholder
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
+from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS,
+                                   REVIEWED_ON, SOURCES as COLLECTION_SOURCES)
 from complete_programme import render_complete_programme
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -536,7 +538,7 @@ class Publication:
                 self.page(paths[lang], lang, t[prefix+'_title'] + ' | VO Barna', t[prefix+'_body'][:220], body, alternatives=paths)
                 links.append('<li>' + link(paths[lang], t[prefix+'_title']) + '</li>')
             links.extend('<li>' + link(paths[lang], DISCOVERY_COPY[lang][key]) + '</li>'
-                         for key, paths in DISCOVERY_PATHS.items() if key in ('subtitles', 'imax', 'film', 'vosc', 'gracia'))
+                         for key, paths in DISCOVERY_PATHS.items() if key not in ('english', 'weekend'))
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
             self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
@@ -567,8 +569,11 @@ class Publication:
                 description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
                 body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
+                if kind == 'discounts':
+                    body += self.discount_offers(lang)
+                    body += f'<h2 id="discount-programme">{text(d["discount-screenings"])}</h2><p class="editorial">{text(d["discount-screenings_note"])}</p>'
                 body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])}</p>'
-                if kind in ('weekend', 'film', 'imax', 'gracia'):
+                if kind in ('weekend', 'film', 'imax', 'gracia', 'classics', 'eixample'):
                     jumps = [(group, d.get(group + '_group', d.get(group))) for group, selected in groups.items()
                              if selected or kind == 'weekend' or group in ('35mm', '70mm')]
                     jumps.append(('guide-information', d['guide_information']))
@@ -585,12 +590,15 @@ class Publication:
                     heading = d.get(group + '_group', d.get(group))
                     if kind == 'weekend':
                         heading += f' · {dates[group]}'
-                    body += f'<section class="discovery-group" id="{group}"><h2>{text(heading)}</h2>'
+                    body += f'<section class="discovery-group" id="{group}"' + (' aria-labelledby="discount-programme">' if kind == 'discounts' else f'><h2>{text(heading)}</h2>')
                     if keep_empty:
                         body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d["day_none" if kind == "weekend" else "format_none"])}</p>'
-                    if group + '_note' in d:
+                    if group + '_note' in d and kind != 'discounts':
                         body += f'<p class="editorial">{text(d[group + "_note"])}</p>'
-                    if kind in ('english', 'weekend', 'imax', 'vosc', 'gracia'):
+                    if kind == 'classics':
+                        ids = [repertory_match(f, s)[2] for f, s in selected]
+                        body += '<p class="source-note">' + self.citations(ids, COLLECTION_SOURCES, lang) + '</p>'
+                    if kind in ('english', 'weekend', 'imax', 'vosc', 'gracia', 'classics', 'eixample', 'discounts'):
                         # Group by film so a long programme is navigable and each
                         # title is one recommendation, with its exact sessions inside.
                         films = {}
@@ -598,7 +606,12 @@ class Publication:
                             films.setdefault(film['id'], []).append((film, session))
                         for film_pairs in films.values():
                             film = film_pairs[0][0]
-                            body += f'<article class="discovery-film"><h3>{link(self.entity_path("films", film["id"], lang), film["title"])}</h3><details><summary>{text(d["show_sessions"])} <span class="discovery-film-count">({len(film_pairs)})</span></summary>{self.session_table(film_pairs, lang, discovery=True)}</details></article>'
+                            title = film['title']
+                            if kind == 'classics':
+                                year = repertory_match(film, film_pairs[0][1])[0]
+                                if not re.search(r'\(' + str(year) + r'\)$', title):
+                                    title += f' ({year})'
+                            body += f'<article class="discovery-film"><h3>{link(self.entity_path("films", film["id"], lang), title)}</h3><details><summary>{text(d["show_sessions"])} <span class="discovery-film-count">({len(film_pairs)})</span></summary>{self.session_table(film_pairs, lang, discovery=True)}</details></article>'
                     elif selected:
                         body += self.session_table(selected, lang, include_film=True, discovery=True)
                     body += '</section>'
@@ -609,6 +622,8 @@ class Publication:
                     body += f'<section class="editorial"><h2>{text(d[topic + "_question"])}</h2><p>{text(d[topic + "_answer"])}</p></section>'
                 if kind == 'gracia':
                     body += '<div id="guide-information">' + self.gracia_guide(lang) + '</div>'
+                if kind in ('classics', 'eixample'):
+                    body += '<div id="guide-information">' + self.collection_guide(kind, lang) + '</div>'
                 if kind in DISCOVERY_SECTIONS:
                     body += '<div id="guide-information">' + self.discovery_explanation(kind, lang) + '</div>'
                 body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
@@ -643,6 +658,41 @@ class Publication:
                                     self.cinemas[cid]['name'] + ' · ' + COPY[lang]['room'] + ' ' + room) + '</p>'
             sections.append(body + '</section>')
         return ''.join(sections)
+
+    def collection_guide(self, kind, lang):
+        d = DISCOVERY_COPY[lang]
+        body = ''
+        if kind == 'eixample':
+            body += f'<section class="editorial"><h2>{text(d["eixample_venues"])}</h2><p>{text(d["eixample_places"])}</p>'
+            for cid, (area, address, sid) in EIXAMPLE_VENUES.items():
+                if cid not in self.cinemas:
+                    continue
+                body += f'<article><h3>{link(self.entity_path("cinemas", cid, lang), d[area])}</h3><p>{text(address)}</p><p class="source-note">{self.citations([sid], COLLECTION_SOURCES, lang)}</p></article>'
+            body += f'<p>{text(d["eixample_aribau"])}</p><p class="source-note">{self.citations(["aribau-rooms"], COLLECTION_SOURCES, lang)}</p></section>'
+            related = ('gracia', 'classics', 'discounts', 'english')
+        else:
+            for prefix in ('classics_edition', 'classics_plan'):
+                body += f'<section class="editorial"><h2>{text(d[prefix + "_title"])}</h2><p>{text(d[prefix + "_body"])}</p></section>'
+            related = ('film', 'eixample', 'discounts')
+        return body + '<ul>' + ''.join('<li>' + link(DISCOVERY_PATHS[k][lang], d[k]) + '</li>' for k in related) + '</ul>'
+
+    def discount_offers(self, lang):
+        d = DISCOVERY_COPY[lang]
+        body = f'<p class="freshness">{text(d["offers_reviewed"])}: <time datetime="{REVIEWED_ON}">{REVIEWED_ON}</time></p><div class="comparison-rooms discount-offers">'
+        for key, venues, source, amount in OFFERS:
+            price = ('€' + amount if lang == 'en' else amount.replace('.', ',') + ' €') if amount else d[key + '_price']
+            cinemas = [cid for cid in venues if cid in self.cinemas]
+            body += f'<article class="comparison-room discount-offer" id="{key}"><h2>{text(d[key])}</h2><dl><dt>{text(d["published_price"])}</dt><dd>{text(price)}</dd><dt>{text(d["offer_conditions"])}</dt><dd>{text(d[key + "_body"])}</dd></dl><p class="source-note">{self.citations([source], COLLECTION_SOURCES, lang)}</p>'
+            if cinemas:
+                body += '<details><summary>' + text(d['venue_programme']) + '</summary><ul>' + ''.join('<li>' + link(self.entity_path('cinemas', cid, lang), self.cinemas[cid]['name']) + '</li>' for cid in cinemas) + '</ul></details>'
+            body += '</article>'
+        body += '</div><p class="editorial">' + text(d['mooby_fees']) + ' ' + self.citations(['mooby-prices'], COLLECTION_SOURCES, lang) + '</p>'
+        for key in ('memberships', 'price_check'):
+            body += f'<section class="editorial"><h2>{text(d[key + "_title"])}</h2><p>{text(d[key + "_body"])}</p>'
+            if key == 'memberships':
+                body += '<p class="source-note">' + self.citations(['verdi-prices', 'renoir-prices'], COLLECTION_SOURCES, lang) + '</p>'
+            body += '</section>'
+        return body
 
     def gracia_guide(self, lang):
         d = DISCOVERY_COPY[lang]
@@ -857,6 +907,9 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 - [English subtitles and VOSI]({origin}{DISCOVERY_PATHS['subtitles']['en']}): subtitle labels explained, with upcoming confirmed English-subtitled sessions.
 - [Catalan subtitles and VOSC]({origin}{DISCOVERY_PATHS['vosc']['en']}): upcoming sessions with explicit Catalan subtitles; audio is checked separately.
 - [Original-language cinema in Gràcia]({origin}{DISCOVERY_PATHS['gracia']['en']}): four reviewed venues, seven calendar days, English from 20:00, separate multilingual results and entrance guidance.
+- [Classics and repertory]({origin}{DISCOVERY_PATHS['classics']['en']}): reviewed returning editions and director seasons with current sessions; old release years and 4K labels alone do not qualify a film.
+- [Original-language cinema in Eixample]({origin}{DISCOVERY_PATHS['eixample']['en']}): five city-verified venues grouped by neighbourhood, with seven days of screenings.
+- [Cinema discount days]({origin}{DISCOVERY_PATHS['discounts']['en']}): dated operator tariffs with fees and conditions; linked programme examples are not verified discounted tickets.
 - [Compare screens, sound and seating]({origin}/en/{SECTIONS['en']['guides']}/{GUIDES['formats']['en']}/): six individual rooms with sourced dimensions, projection, sound and seating facts; missing measurements remain unknown.
 - [Film information]({origin}/en/films/): film facts, original audio, subtitles and official booking links.
 - [Cinema directory]({origin}/en/cinemas/): addresses and source-linked auditorium, seating and access research.

@@ -1,0 +1,220 @@
+{
+  "reviewed_on": "2026-11-19",
+  "scope": [
+    "Classics and repertory guide",
+    "Eixample cinema guide",
+    "Discount-day comparison"
+  ],
+  "routes": {
+    "classics": {
+      "en": "/en/guides/classic-films-barcelona/",
+      "es": "/es/guias/cine-clasico-barcelona/",
+      "ca": "/ca/guies/cinema-classic-barcelona/"
+    },
+    "eixample": {
+      "en": "/en/guides/original-version-cinema-eixample/",
+      "es": "/es/guias/cine-version-original-eixample/",
+      "ca": "/ca/guies/cinema-versio-original-eixample/"
+    },
+    "discounts": {
+      "en": "/en/guides/cinema-discount-days-barcelona/",
+      "es": "/es/guias/descuentos-cine-barcelona/",
+      "ca": "/ca/guies/descomptes-cinema-barcelona/"
+    }
+  },
+  "programme_generated_at": "2026-11-19T21:59:12.026493+00:00",
+  "built_at": "2026-11-19T22:35:09.726089+00:00",
+  "snapshot_selection": {
+    "classics": {
+      "sessions": 18,
+      "films_or_events": 16
+    },
+    "eixample": {
+      "sessions": 403,
+      "films_or_events": 42
+    },
+    "discounts": {
+      "sessions": 18,
+      "films_or_events": 11
+    }
+  },
+  "selection_rules": [
+    "Repertory requires an exact reviewed cinema/provider-film identity and original release year, a future session and a Madrid date from 2026-11-19 through 2026-12-31. No old-year, title, venue or 4K heuristic admits other films.",
+    "Season membership does not assign projection formats, restoration claims, language or price. New seasons require editorial review; the guide remains readable when no reviewed future sessions remain.",
+    "Eixample uses five city-verified venue IDs and seven Europe/Madrid calendar days, grouped by verified neighbourhood. Arenas is in Nova Esquerra de l’Eixample.",
+    "Discount programme examples use future sessions at featured venues over seven local calendar days, capped at two per venue. They do not establish offer eligibility, final prices or discounted ticket availability.",
+    "Tariff review dates remain separate from programme collection. Published offer amounts are never assigned to example screenings or their structured data.",
+    "Today remains the current Madrid date selected on the ordinary homepage; retired Today documents continue to redirect."
+  ],
+  "coverage": {
+    "reviewed_repertory_identities": 16,
+    "eixample_venues": [
+      "phenomena",
+      "cinemes-girona",
+      "mooby-aribau",
+      "renoir-floridablanca",
+      "mooby-arenas"
+    ],
+    "discount_venues": [
+      "espai-texas",
+      "mooby-arenas",
+      "mooby-aribau",
+      "mooby-balmes",
+      "mooby-bosque",
+      "mooby-glories",
+      "renoir-floridablanca",
+      "verdi",
+      "verdi-park"
+    ],
+    "offer_cards": 6
+  },
+  "source_review": [
+    {
+      "id": "phenomena-programme",
+      "title": "Phenomena — programación",
+      "url": "https://phenomena-experience.com/index?pag=cartelera",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "scorsese",
+      "title": "Phenomena — Scorsese in 35",
+      "url": "https://phenomena-experience.com/index?lst_sel=9d202a4bae750ba948d27f59&pag=ciclo",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "wong",
+      "title": "Phenomena — Wong Kar-wai",
+      "url": "https://phenomena-experience.com/index?lst_sel=587bfaafad84c7d13d152aa6&pag=ciclo",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "cyberpunk",
+      "title": "Phenomena — Cyberpunk Is Here",
+      "url": "https://phenomena-experience.com/index?lst_sel=ca101491cbfa69aeccb6c950&pag=ciclo",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "noir",
+      "title": "Phenomena — Neo Noir 1990s",
+      "url": "https://phenomena-experience.com/index?lst_sel=5b98e190f011c0bf39e2345f&pag=ciclo",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "icons",
+      "title": "Mooby — ICONS",
+      "url": "https://www.moobycinemas.com/icons-by-mooby",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "wilder",
+      "title": "Renoir — Dr. Strangelove / Wilder Cinema",
+      "url": "https://www.cinesrenoir.com/pelicula/telefono-rojo-volamos-hacia-moscu-wilder-cinema/",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-phenomena",
+      "title": "Ajuntament de Barcelona — Phenomena location",
+      "url": "https://guia.barcelona.cat/ca/detall/13e-festival-internacional-de-series-de-barcelona-serializados-fest_99400370509.html",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-girona",
+      "title": "Ajuntament de Barcelona — Cinemes Girona",
+      "url": "https://guia.barcelona.cat/ca/detall/cinemes-girona_75990332131.html",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-aribau",
+      "title": "Ajuntament de Barcelona — Mooby Aribau",
+      "url": "https://guia.barcelona.cat/detall/cinema-mooby-aribau_75990017485.html",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-renoir",
+      "title": "Ajuntament de Barcelona — Renoir Floridablanca",
+      "url": "https://guia.barcelona.cat/es/detall/cinemes-renoir-floridablanca_2086161222.html",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "eix-arenas",
+      "title": "Ajuntament de Barcelona — Mooby Arenas",
+      "url": "https://guia.barcelona.cat/en/detall/cinemes-mooby-arenas-arenas-de-barcelona_99400267342.html",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "aribau-rooms",
+      "title": "Mooby — Aribau Cinema / Sala 5",
+      "url": "https://www.moobycinemas.com/sobre-aribau",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "verdi-prices",
+      "title": "Verdi — precios",
+      "url": "https://barcelona.cines-verdi.com/precios",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "renoir-prices",
+      "title": "Renoir — precios Barcelona",
+      "url": "https://www.cinesrenoir.com/precios/barcelona/",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "mooby-prices",
+      "title": "Mooby — preus",
+      "url": "https://www.moobycinemas.com/preus",
+      "checked_on": "2026-11-19"
+    },
+    {
+      "id": "texas-prices",
+      "title": "Espai Texas — informació pràctica",
+      "url": "https://espaitexas.cat/informacio-practica/",
+      "checked_on": "2026-11-19"
+    }
+  ],
+  "source_caveats": [
+    "Phenomena’s city event listing is used only for its venue address and district, not for past festival dates.",
+    "Verdi’s fee-inclusive footnote marks other starred tariffs, not the general Monday amount; checkout total remains to be confirmed.",
+    "Renoir online day-of-spectator price explicitly includes fees and VAT. Non-holiday and special-screening conditions remain visible.",
+    "Mooby offers are venue/version/day specific; Gran Sarrià is excluded from the Wednesday selection and format supplements are stated separately.",
+    "Texas publishes conflicting fee wording: FAQ says online only while another paragraph also mentions printed tickets. The guide preserves this uncertainty.",
+    "No citywide cheapest-cinema claim, live adjacent-seat availability or restoration claim is inferred."
+  ],
+  "validation": {
+    "python_tests": 335,
+    "node_tests": 57,
+    "additional_origin_server_tests": 1,
+    "browser": "Passed all nine localized pages without JavaScript, metadata, ItemList counts, six offer cards and absence of session Offer claims. Passed exact-session modal and reload on all three English pages, mobile overflow, section links, expiry/empty state and Madrid rollover; tariff cards remain readable when programme examples expire.",
+    "browser_environment": "Isolated worktree based on origin/main plus this batch. The first run hit an older preview on a reused port; the isolated port run passed.",
+    "static_audit": {
+      "pages": 1247,
+      "indexable": 1219,
+      "issues": {},
+      "missing_assets": [],
+      "broken_internal_links": [],
+      "broken_internal_fragments": [],
+      "alternate_errors": [],
+      "unreachable_indexable": [],
+      "sitemap": {
+        "urls": 1219,
+        "duplicates": 0,
+        "missing": [],
+        "extra": [],
+        "lastmod_mismatch": [],
+        "wrong_origin": []
+      }
+    },
+    "existing_duplicate_title_groups": 59,
+    "visual_artifacts": [
+      "output/seo/classics-mobile.png",
+      "output/seo/discounts-mobile.png",
+      "output/seo/discounts-desktop.png"
+    ]
+  },
+  "limitations": [
+    "Reviewed repertory identities currently stop at 2026-12-31 and need review for later programmes.",
+    "Discount examples are not offer-matched tickets; applicable checkout totals remain external.",
+    "This batch does not implement shared typed homepage filters or broaden the agreed scope into new language/genre collections."
+  ],
+  "deployment": "GitHub main → Coolify. Live HTTP and browser evidence is saved separately under ignored output/seo after deployment."
+}

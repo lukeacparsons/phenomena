@@ -9,7 +9,7 @@ if(root){
   function refresh(){
     const now=Date.now();
     // A dated rolling list must not silently become yesterday's "today".
-    const stale=['english','weekend','gracia'].includes(root.dataset.discoveryKind)&&madrid.format(now)!==root.dataset.discoveryDate;
+    const stale=['english','weekend','gracia','eixample','discounts'].includes(root.dataset.discoveryKind)&&madrid.format(now)!==root.dataset.discoveryDate;
     results.hidden=stale;
     root.querySelector('.discovery-stale').hidden=!stale;
     if(stale)return;

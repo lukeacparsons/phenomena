@@ -115,7 +115,7 @@ class PublicationTests(unittest.TestCase):
                 if tag == 'footer': self.footer = False
 
         original = self.data['films'][0]['sessions'][0]
-        original.update(language='EN', subtitles='English, Català', formats=['IMAX', '35mm'])
+        original.update(language='EN', subtitles='English, Català', formats=['IMAX', '35mm'], film_id='3045')
         self.write_input()
         self.publish()
         root = self.root / 'site/current/public'
@@ -134,6 +134,13 @@ class PublicationTests(unittest.TestCase):
                     self.assertIn(f'hreflang="{other}" href="https://vobarna.com{paths[other]}"', html)
                 self.assertIn(paths[lang], (root / 'sitemap.xml').read_text())
                 self.assertIn('index,follow', html)
+                if kind == 'discounts':
+                    self.assertEqual(html.count('class="comparison-room discount-offer"'), 6)
+                    self.assertIn('datetime="2026-11-19"', html)
+                    self.assertNotIn('data-discovery-film=', html)
+                    self.assertNotIn('"@type": "Offer"', html)
+                    self.assertIn('https://www.cinesrenoir.com/precios/barcelona/', html)
+                    continue
                 if kind == 'gracia':
                     self.assertIn(DISCOVERY_COPY[lang]['none'], html)
                     self.assertIn('id="guide-information"', html)
@@ -154,6 +161,13 @@ class PublicationTests(unittest.TestCase):
                     self.assertIn(DISCOVERY_COPY[lang]['format_none'], html)
                     self.assertIn(DISCOVERY_COPY[lang]['film_edition_body'], html)
                     self.assertIn(f'href="{paths[lang]}#70mm"', html)
+                if kind == 'classics':
+                    self.assertIn('Dune (1984)', html)
+                    self.assertIn('https://phenomena-experience.com/index?pag=cartelera', html)
+                    self.assertIn(DISCOVERY_COPY[lang]['classics_edition_body'], html)
+                if kind == 'eixample':
+                    self.assertIn('id="sagrada-familia"', html)
+                    self.assertIn('Carrer de Sant Antoni Maria Claret, 168', html)
         from discovery_content import TODAY_PATHS
         for lang, path in TODAY_PATHS.items():
             self.assertFalse((root / path.lstrip('/') / 'index.html').exists())
