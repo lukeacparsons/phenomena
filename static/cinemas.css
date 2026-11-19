@@ -83,6 +83,13 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .dialog-toolbar{display:flex;justify-content:flex-end;position:sticky;top:0;z-index:2;pointer-events:none;height:0}
 .dialog-close{display:flex;justify-content:center;align-items:center;pointer-events:auto;flex-shrink:0;margin:8px 10px 0;background:var(--s1);color:var(--tx2);border:1px solid transparent;border-radius:var(--radius);width:44px;height:44px;font-size:24px;line-height:1}
 .dialog-close:hover{background:var(--s2);color:var(--tx)}
+.dialog-drag-handle{display:none}
+@media(max-width:460px){
+ #filmDialog{overscroll-behavior-y:contain;transform:translateY(var(--sheet-offset,0));transition:transform .18s ease-out}
+ #filmDialog.is-sheet-dragging{transition:none;will-change:transform}
+ .dialog-drag-handle{display:block;position:absolute;top:0;left:68px;right:68px;height:22px;pointer-events:auto;touch-action:none}
+ .dialog-drag-handle::before{content:"";display:block;width:36px;height:4px;margin:9px auto;background:var(--tx3);border-radius:2px;opacity:.55}
+}
 .dialog-head{display:flex;gap:24px;padding:28px var(--dialog-gutter) 24px;align-items:flex-start}
 .dialog-heading{min-width:0;flex:1}
 .dialog-poster{width:112px;object-fit:contain;border-radius:var(--radius);flex-shrink:0;background:var(--s2)}
@@ -118,6 +125,10 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 @media(max-width:460px){:root{--header-height:82px}.dates{--date-gutter:14px}header{padding:6px 14px}.logo{gap:8px;font-size:20px}.logo-mark{width:52.8px;height:52.8px}.lang-switch button{padding:5px 6px}main{padding:0 14px 24px}h1{font-size:29px;letter-spacing:-1px}.dates button{flex-basis:72px;padding-inline:4px}.dates .all-dates{flex-basis:90px}.card h2{font-size:1.0625rem}.card-meta{font-size:11px;margin-bottom:9px}.card-body{padding:10px}.tag{font-size:10px;padding:2px 4px}.dialog-title{font-size:1.375rem}dialog{--dialog-gutter:18px;width:100%;max-width:100%;max-height:92dvh;margin:auto 0 0;border-radius:var(--radius)}.skeleton{height:390px}}
 @media(max-width:360px){:root{--header-height:92px}.logo{font-size:18px}.logo-mark{width:44px;height:44px}}
 .poster,.dialog-poster{height:auto}
+/* Keep full artwork visible; bound card poster heights to a 20% range. */
+.card .poster-button{container-type:inline-size}
+.card .poster-button :is(.poster,.public-poster){min-height:calc(400cqw / 3);max-height:160cqw;object-fit:contain}
+.card .poster-transition{background-size:contain;background-position:center}
 .filters{padding-top:20px}.card[data-open]{cursor:pointer}
 
 .seat-age{font-size:11px;color:var(--tx3);white-space:nowrap}
@@ -146,8 +157,35 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 }
 
 @media(max-width:600px){
+ :root:has(.programme-subtitle){--header-height:78px}
+ :root:has(.programme-subtitle) .header-wrap::before{height:var(--header-height);-webkit-mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%);mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%)}
+ main:has(> .sr-only + .filters > .programme-subtitle),.filters:has(> .programme-subtitle){padding-top:0}
+ .programme-subtitle{display:block;margin-bottom:20px;font-size:.875rem;line-height:1.5}
  .grid{grid-template-columns:minmax(0,1fr);gap:20px}
+ .card .poster-button{width:calc(100% - 32px);max-width:240px;margin:16px auto 0;border-radius:8px;background:transparent}
+ .card .poster-button :is(.poster,.public-poster){width:100%;height:auto;max-height:min(360px,160cqw);border-radius:8px;object-fit:contain}
+ .card .poster-placeholder{width:240px;max-width:100%;height:auto;aspect-ratio:2/3}
+ .card .poster-transition{background-size:contain;background-position:center;border-radius:8px}
  .card-body{padding:16px}
+}
+@media(max-width:460px){:root:has(.programme-subtitle){--header-height:68px}}
+
+.lang-switch .language-toggle,.language-name{display:none}
+.language-options{display:flex;gap:2px}
+@media(max-width:600px){
+ .header-actions:has(.has-language-menu){flex-wrap:nowrap;max-width:none}
+ .lang-switch.has-language-menu{position:relative;padding:0;border:0;background:transparent}
+ .lang-switch .language-toggle{display:flex;align-items:center;justify-content:center;gap:7px;min-width:60px;min-height:44px;padding:8px;border:0;border-radius:6px;background:transparent;color:var(--tx2);font-size:.875rem;font-weight:500;line-height:1.4}
+ .language-toggle svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+ .lang-switch .language-toggle:is(:hover,[aria-expanded=true]){background:var(--s2);color:var(--tx)}
+ .language-toggle[aria-expanded=true] svg{transform:rotate(180deg)}
+ .lang-switch .language-options{display:none;position:absolute;top:calc(100% + 6px);right:0;z-index:40;width:168px;padding:6px;border:1px solid var(--border);border-radius:10px;background:var(--s1);box-shadow:0 8px 24px var(--dialog-shadow)}
+ .lang-switch.is-language-open .language-options{display:grid;gap:2px}
+ .lang-switch .language-options > :is(a,button){display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;margin:0;padding:10px 12px;border:0;border-radius:5px;background:transparent;color:var(--tx2);font-size:.875rem;font-weight:400;line-height:1.4;text-align:left;text-decoration:none}
+ .lang-switch .language-options > :is(a,button):is(:hover,:focus-visible,[aria-current],[aria-pressed=true]){background:var(--s2);color:var(--tx)}
+ .language-options > :is([aria-current],[aria-pressed=true])::after{content:"";width:6px;height:10px;margin-right:3px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+ .language-code{display:none}
+ .language-name{display:inline}
 }
 
 .film-ratings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 16px;margin-top:18px}

@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import unicodedata
 
-from poster_fallbacks import meets_target
+from poster_policy import poster_quality, copy_poster
 
 
 def title_key(title):
@@ -139,13 +139,9 @@ def merge(films, imdb=None):
         result['details']=details
     posters = [film for film in films if film.get("poster_url")]
     if posters:
-        best = max(posters, key=lambda f: (meets_target(f.get("poster_width", 0), f.get("poster_height", 0), (600, 900)),
-                   f.get("poster_width", 0) * f.get("poster_height", 0), bool(f.get("poster_provenance"))))
-        for key in ("poster_url", "poster_width", "poster_height", "poster_provenance", "poster_original"):
-            if key in best:
-                result[key] = best[key]
-            else:
-                result.pop(key, None)
+        best = max(posters, key=lambda f: (*poster_quality(f.get("poster_width"), f.get("poster_height")),
+                                          bool(f.get("poster_provenance"))))
+        copy_poster(best, result)
     return result
 
 

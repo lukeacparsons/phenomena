@@ -10,7 +10,7 @@ import unittest
 from unittest.mock import Mock
 
 from PIL import Image
-from poster_fallbacks import enrich, identity, select_candidate
+from poster_fallbacks import enrich, enrich_sources, identity, select_candidate
 
 NOW = datetime(2026, 11, 19, 12, tzinfo=timezone.utc)
 IMAGE = "https://m.media-amazon.com/images/M/poster.jpg"
@@ -71,6 +71,52 @@ class FallbackTests(unittest.TestCase):
         movie, result = self.run_fallback()
         self.assertEqual(movie["poster_url"], "/cinema.jpg")
         self.assertEqual(result["films"][movie["id"]]["status"], "below_target")
+
+    def test_smaller_verified_portrait_replaces_large_landscape_and_is_cached(self):
+        movie = film()
+        movie.update(poster_width=2560, poster_height=1440)
+        self.download.return_value = self.image((500, 721))
+        first, result = self.run_fallback(deepcopy(movie))
+        self.assertEqual((first['poster_width'], first['poster_height']), (500, 721))
+        self.assertFalse(result['films'][movie['id']]['meets_target'])
+        second, _ = self.run_fallback(movie, NOW + timedelta(hours=1))
+        self.assertEqual(first['poster_url'], second['poster_url'])
+        self.lookup.assert_called_once()
+
+    def test_lower_quality_fallback_does_not_replace_existing_portrait(self):
+        movie = film()
+        movie.update(poster_width=500, poster_height=750)
+        self.download.return_value = self.image((1200, 1500))
+        updated, result = self.run_fallback(movie)
+        self.assertEqual(updated['poster_url'], '/cinema.jpg')
+        self.assertEqual(result['upgraded'], 0)
+
+    def test_reviewed_cinema_poster_replaces_banner_and_survives_offline_refresh(self):
+        movie = film()
+        movie.update(poster_width=1200, poster_height=630, merged_ids=['texas:123'],
+                     poster_image={'source': '/cinema.jpg'})
+        sources = {'texas:123': {'url': 'https://espaitexas.cat/wp-content/uploads/poster.jpg',
+                                 'source_url': 'https://espaitexas.cat/pelicula/film/'}}
+        self.download.return_value = self.image((500, 700))
+        first = deepcopy(movie)
+        self.assertEqual(enrich_sources({'films': [first]}, self.output, self.download, NOW, (600, 900), sources), 1)
+        self.assertEqual(first['poster_provenance']['provider'], 'cinema')
+        self.assertNotIn('poster_image', first)
+        self.download.side_effect = ValueError('offline')
+        second = deepcopy(movie)
+        self.assertEqual(enrich_sources({'films': [second]}, self.output, self.download, NOW, (600, 900), sources), 1)
+        self.assertEqual(first['poster_url'], second['poster_url'])
+        self.download.assert_called_once()
+
+    def test_reviewed_cinema_failure_keeps_original(self):
+        movie = film()
+        sources = {movie['id']: {'url': 'https://espaitexas.cat/wp-content/uploads/poster.jpg',
+                                'source_url': 'https://espaitexas.cat/pelicula/film/'}}
+        for body in (b'not an image', self.image((1200, 630))):
+            self.download.return_value = body
+            original = deepcopy(movie)
+            self.assertEqual(enrich_sources({'films': [movie]}, self.output, self.download, NOW, (600, 900), sources), 0)
+            self.assertEqual(movie, original)
 
     def test_four_to_five_imdb_poster_replaces_banner_and_retries_old_rejection(self):
         movie=film();movie.update(poster_width=1200,poster_height=630,

@@ -10,10 +10,11 @@ import unicodedata
 from urllib.parse import quote, urlsplit
 
 from cinesa_showtimes import atomic_write
-from collect_posters import cached_file, image_metadata, save_image
-from poster_policy import IMAGE_POLICY_VERSION, meets_target, prefer_poster, copy_poster
+from collect_posters import allowed_url, cached_file, image_metadata, save_image
+from poster_policy import IMAGE_POLICY_VERSION, meets_target, usable_poster, prefer_poster, copy_poster
 
 IDENTITIES = Path(__file__).with_name("poster_identities.json")
+SOURCES = Path(__file__).with_name("poster_sources.json")
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -79,15 +80,57 @@ def apply_poster(film, record, *, stale=False):
                     **{key: record[key] for key in ("imdb_id", "source_url", "url", "matched_by", "fetched_at")}})
 
 
-def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), reviewed=None):
+def enrich_sources(data, output, fetch_image, now, minimum, sources):
+    """Use reviewed theatrical artwork on the cinema's own film page."""
+    manifest = output / 'reviewed-sources.json'
+    try:
+        records = json.loads(manifest.read_text())
+    except (OSError, ValueError):
+        records = {}
+    upgraded = 0
+    for film in data['films']:
+        source = next((sources[key] for key in [film['id'], *film.get('merged_ids', [])] if key in sources), None)
+        if not source or meets_target(film.get('poster_width'), film.get('poster_height'), minimum):
+            continue
+        url = source['url']
+        if not allowed_url(url):
+            continue
+        prior = records.get(url, {})
+        try:
+            record = prior if cached_file(output, prior) else {}
+            if not record:
+                body = fetch_image(url)
+                metadata = image_metadata(body)
+                if not usable_poster(metadata['width'], metadata['height']):
+                    continue
+                record = {**metadata, 'filename': save_image(output, body, metadata), 'fetched_at': now.isoformat()}
+                records[url] = record
+            candidate = {'poster_url': '/preview-data/posters/' + record['filename'],
+                         'poster_width': record['width'], 'poster_height': record['height'],
+                         'poster_original': {'url': film.get('poster_url'), 'width': film.get('poster_width'), 'height': film.get('poster_height')},
+                         'poster_provenance': {'provider': 'cinema', 'url': url, 'source_url': source['source_url'],
+                                               'matched_by': 'reviewed_film_page', 'fetched_at': record['fetched_at']}}
+            if prefer_poster(candidate, film, minimum):
+                copy_poster(candidate, film)
+                upgraded += 1
+        except Exception:
+            # A bad or unavailable image must not interrupt programme updates.
+            continue
+    atomic_write(manifest, records)
+    return upgraded
+
+
+def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), reviewed=None, sources=None):
     output.mkdir(parents=True, exist_ok=True)
     reviewed = json.loads(IDENTITIES.read_text()) if reviewed is None else reviewed
+    sources = json.loads(SOURCES.read_text()) if sources is None else sources
     manifest = output / "fallbacks.json"
     try:
         previous = json.loads(manifest.read_text())["films"]
     except (OSError, ValueError, KeyError):
         previous = {}
-    records, upgraded = dict(previous), 0
+    records = dict(previous)
+    upgraded = enrich_sources(data, output, fetch_image, now, minimum, sources)
     for film in data["films"]:
         if meets_target(film.get("poster_width", 0), film.get("poster_height", 0), minimum):
             prior = previous.get(film["id"], {})
@@ -113,7 +156,7 @@ def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), revie
             elapsed = now - datetime.fromisoformat(prior.get("checked_at", "1970-01-01T00:00:00+00:00"))
             fresh = (prior.get("query") == query and timedelta(0) <= elapsed < timedelta(days=7 if prior.get("status") == "ok" else 1)
                      and (prior.get("status") == "ok" or prior.get("image_policy_version") == IMAGE_POLICY_VERSION))
-            if fresh and prior.get("status") == "ok" and cached_file(output, prior) and meets_target(prior["width"], prior["height"], minimum):
+            if fresh and prior.get("status") == "ok" and cached_file(output, prior) and usable_poster(prior["width"], prior["height"]):
                 record = {**prior, "reused_from_cache": True}
             elif fresh and prior.get("status") != "ok":
                 record = prior
@@ -147,21 +190,28 @@ def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), revie
                     record.update(imdb_id=candidate["id"], matched_by=matched_by or "exact_title_and_year",
                                   url=url, original_image_url=original_url, source_url="https://www.imdb.com/title/" + candidate["id"] + "/",
                                   matched_title=candidate["l"], year=candidate.get("y"))
-                    if meets_target(metadata["width"], metadata["height"], minimum):
+                    if usable_poster(metadata["width"], metadata["height"]):
                         record.update(metadata, filename=save_image(output, body, metadata), status="ok",
+                                      meets_target=meets_target(metadata["width"], metadata["height"], minimum),
                                       fetched_at=now.isoformat(), reused_from_cache=False)
                     else:
                         record.update(status="below_target", width=metadata["width"], height=metadata["height"])
             if record["status"] == "ok":
-                apply_poster(film, record)
-                upgraded += 1
+                candidate = {"poster_url": "/preview-data/posters/" + record["filename"],
+                             "poster_width": record["width"], "poster_height": record["height"]}
+                if prefer_poster(candidate, film, minimum):
+                    apply_poster(film, record)
+                    upgraded += 1
         except Exception as error:
             # A failed fallback must never erase the cinema poster or sessions.
             record.update(status="error", error=type(error).__name__)
             prior = previous.get(film["id"], {})
             if (prior.get("status") == "ok" and prior.get("query") == record.get("query")
-                    and cached_file(output, prior) and meets_target(prior["width"], prior["height"], minimum)):
-                apply_poster(film, prior, stale=True)
+                    and cached_file(output, prior) and usable_poster(prior["width"], prior["height"])):
+                candidate = {"poster_url": "/preview-data/posters/" + prior["filename"],
+                             "poster_width": prior["width"], "poster_height": prior["height"]}
+                if prefer_poster(candidate, film, minimum):
+                    apply_poster(film, prior, stale=True)
                 record = {**prior, "last_error": type(error).__name__}
         records[film["id"]] = record
     result = {"checked_at": now.isoformat(), "minimum": {"width": minimum[0], "height": minimum[1]},
