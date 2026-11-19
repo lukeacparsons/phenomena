@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from language_names import parse_languages, without_language_placeholder
 from discovery_guides import COPY as GUIDE_COPY
+from discovery_local import COPY as LOCAL_COPY, GRACIA_VENUES
 
 MADRID = ZoneInfo('Europe/Madrid')
 TODAY_PATHS = {'en': '/en/showtimes/today/', 'es': '/es/cartelera/hoy/', 'ca': '/ca/cartellera/avui/'}
@@ -18,6 +19,8 @@ PATHS = {
     'weekend': {'en': '/en/showtimes/this-weekend/', 'es': '/es/cartelera/este-fin-de-semana/', 'ca': '/ca/cartellera/aquest-cap-de-setmana/'},
     'imax': {'en': '/en/guides/imax-original-version-barcelona/', 'es': '/es/guias/imax-version-original-barcelona/', 'ca': '/ca/guies/imax-versio-original-barcelona/'},
     'film': {'en': '/en/guides/35mm-70mm-barcelona/', 'es': '/es/guias/cine-35mm-70mm-barcelona/', 'ca': '/ca/guies/cinema-35mm-70mm-barcelona/'},
+    'vosc': {'en': '/en/showtimes/catalan-subtitles/', 'es': '/es/cartelera/subtitulos-catalan/', 'ca': '/ca/cartellera/subtitols-catala/'},
+    'gracia': {'en': '/en/guides/original-version-cinema-gracia/', 'es': '/es/guias/cine-version-original-gracia/', 'ca': '/ca/guies/cinema-versio-original-gracia/'},
 }
 
 
@@ -42,7 +45,8 @@ def select_sessions(programme, kind, now):
     weekend = dict(zip(weekend_dates(now), ('friday', 'saturday', 'sunday')))
     keys = {'today': ('daytime', 'tonight'), 'english': ('english', 'multilingual'),
             'subtitles': ('subtitles',), 'weekend': ('friday', 'saturday', 'sunday'),
-            'imax': ('imax',), 'film': ('35mm', '70mm', 'mixed-film')}[kind]
+            'imax': ('imax',), 'film': ('35mm', '70mm', 'mixed-film'),
+            'vosc': ('vosc',), 'gracia': ('gracia-english', 'gracia-multilingual', 'gracia-other')}[kind]
     groups = {key: [] for key in keys}
     for film in programme['films']:
         for session in film['sessions']:
@@ -55,6 +59,14 @@ def select_sessions(programme, kind, now):
             elif kind == 'weekend':
                 if starts.date() in weekend:
                     groups[weekend[starts.date()]].append((film, session))
+            elif kind == 'gracia':
+                if session.get('cinema_id') not in GRACIA_VENUES or starts.date() >= end:
+                    continue
+                audio = parse_languages(without_language_placeholder(session.get('language')))
+                group = 'gracia-other'
+                if starts.hour >= 20 and 'en' in audio['codes']:
+                    group = 'gracia-english' if audio['codes'] == ['en'] and audio['complete'] else 'gracia-multilingual'
+                groups[group].append((film, session))
             elif kind in ('imax', 'film'):
                 formats = {str(value).strip().casefold() for value in session.get('formats') or []}
                 if kind == 'imax':
@@ -68,14 +80,14 @@ def select_sessions(programme, kind, now):
             else:
                 field = 'language' if kind == 'english' else 'subtitles'
                 evidence = parse_languages(without_language_placeholder(session.get(field)))
-                if 'en' not in evidence['codes']:
+                if ('ca' if kind == 'vosc' else 'en') not in evidence['codes']:
                     continue
                 if kind == 'english':
                     if starts.date() >= end:
                         continue
                     group = 'english' if evidence['codes'] == ['en'] and evidence['complete'] else 'multilingual'
                 else:
-                    group = 'subtitles'
+                    group = kind
                 groups[group].append((film, session))
     return {key: sorted(pairs, key=lambda pair: (datetime.fromisoformat(pair[1]['starts_at']).timestamp(), pair[1]['id'])) for key, pairs in groups.items()}
 
@@ -180,4 +192,6 @@ COPY = {
 }
 
 for _lang, _copy in GUIDE_COPY.items():
+    COPY[_lang].update(_copy)
+for _lang, _copy in LOCAL_COPY.items():
     COPY[_lang].update(_copy)

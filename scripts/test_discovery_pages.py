@@ -14,6 +14,29 @@ def select(sessions, kind, now='2026-11-19T12:00:00+00:00'):
 
 
 class SelectionTests(unittest.TestCase):
+    def test_vosc_requires_catalan_subtitles_independently_of_audio_and_version(self):
+        sessions = [session('french', language='French', subtitles='Català'),
+                    session('mixed-subtitles', language='English', subtitles='Català, English'),
+                    session('audio-only', language='Catalan', subtitles=None),
+                    session('version-only', version='VOSC', subtitles=None),
+                    session('unknown', subtitles='Otras Lenguas'),
+                    session('spanish', subtitles='Español'),
+                    session('expired', '2026-11-19T12:00:00Z', subtitles='ca')]
+        self.assertEqual(select(sessions, 'vosc'), {'vosc': ['french', 'mixed-subtitles']})
+
+    def test_gracia_uses_reviewed_venues_local_time_and_disjoint_language_groups(self):
+        sessions = [session('english', cinema_id='verdi', language='English'),
+                    session('mixed', cinema_id='verdi-park', language='English, French'),
+                    session('early', '2026-11-20T18:59:00Z', cinema_id='mooby-bosque', language='English'),
+                    session('unknown', cinema_id='espai-texas', language=None),
+                    session('elsewhere', cinema_id='phenomena', language='English'),
+                    session('substring', cinema_id='casa-seat-passeig-de-gracia', language='English'),
+                    session('outside', '2026-11-25T23:00:00Z', cinema_id='verdi', language='English'),
+                    session('last', '2026-11-25T22:59:00Z', cinema_id='verdi', language='English'),
+                    session('expired', '2026-11-19T12:00:00Z', cinema_id='verdi', language='English')]
+        self.assertEqual(select(sessions, 'gracia'), {'gracia-english': ['english', 'last'],
+                         'gracia-multilingual': ['mixed'], 'gracia-other': ['early', 'unknown']})
+
     def test_weekend_stays_on_current_friday_sunday_then_rolls_on_monday(self):
         for day in range(16, 23):
             dates = weekend_dates(datetime.fromisoformat(f'2026-11-{day}T12:00:00+01:00'))

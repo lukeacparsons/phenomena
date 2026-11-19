@@ -1,0 +1,121 @@
+{
+  "reviewed_on": "2026-11-19",
+  "scope": [
+    "VOSC listings",
+    "Gràcia guide",
+    "Expanded existing room comparison"
+  ],
+  "routes": {
+    "vosc": {
+      "en": "/en/showtimes/catalan-subtitles/",
+      "es": "/es/cartelera/subtitulos-catalan/",
+      "ca": "/ca/cartellera/subtitols-catala/"
+    },
+    "gracia": {
+      "en": "/en/guides/original-version-cinema-gracia/",
+      "es": "/es/guias/cine-version-original-gracia/",
+      "ca": "/ca/guies/cinema-versio-original-gracia/"
+    },
+    "comparison": {
+      "en": "/en/guides/cinema-screen-sound-formats/",
+      "es": "/es/guias/formatos-pantalla-sonido-cine/",
+      "ca": "/ca/guies/formats-pantalla-so-cinema/"
+    }
+  },
+  "programme_generated_at": "2026-11-19T21:26:22.109168+00:00",
+  "built_at": "2026-11-19T21:33:54.037703+00:00",
+  "snapshot_selection": {
+    "vosc": {
+      "sessions": 89,
+      "films_or_events": 56
+    },
+    "gracia": {
+      "sessions": 345,
+      "films_or_events": 41,
+      "english_from_20": 60,
+      "multilingual_english_from_20": 4,
+      "other": 281
+    }
+  },
+  "selection_rules": [
+    "Catalan subtitle membership uses the explicit session subtitle field independently of audio; a VOSC label without the normalized subtitle field is not sufficient.",
+    "Gràcia is a closed set of reviewed venue IDs: verdi, verdi-park, mooby-bosque, espai-texas. Address/name substrings do not qualify.",
+    "Gràcia spans seven Europe/Madrid calendar days. English-only, multilingual English after 20:00, and other sessions are disjoint. Unknown audio cannot qualify as English.",
+    "Expired sessions are excluded at build time and hidden in the browser. Gràcia requests refresh across Madrid midnight.",
+    "Today remains the dated homepage; no standalone Today documents are generated."
+  ],
+  "source_review": [
+    {
+      "url": "https://barcelona.cines-verdi.com/donde-estamos",
+      "checked_on": "2026-11-19",
+      "supports": "Two Gràcia addresses and separate entrances; no internal connection."
+    },
+    {
+      "url": "https://www.moobycinemas.com/sobre-bosque",
+      "checked_on": "2026-11-19",
+      "supports": "Gràcia membership and room-specific Sala 1 4K/Atmos claim."
+    },
+    {
+      "url": "https://espaitexas.cat/informacio-practica/",
+      "checked_on": "2026-11-19",
+      "supports": "Gràcia address and cinema stairlift 150 kg combined person-and-wheelchair limit; no alternative above limit."
+    },
+    {
+      "url": "https://phenomena-experience.com/index?pag=terminos-de-compra",
+      "checked_on": "2026-11-19",
+      "supports": "Unnumbered seating, group QR entry, late-admission policy."
+    },
+    {
+      "url": "https://www.moobycinemas.com/sobre-balmes",
+      "checked_on": "2026-11-19",
+      "supports": "Room-specific laser and Atmos evidence."
+    },
+    {
+      "url": "https://kinepolis.es/cines/kinepolis-barcelona-splau/info/",
+      "checked_on": "2026-11-19",
+      "basis": "Fresh web retrieval returned 403; reused reviewed source record splau-es from docs/auditoriums.json. Raw dimensions retained without labeling inferred axes."
+    },
+    {
+      "url": "https://www.cinesa.es/cines/diagonal-mar/",
+      "basis": "Reused reviewed operator pageData evidence in docs/auditoriums.json, checked 2026-11-19. IMAX Sala 9 and iSense Sala 10 remain separate."
+    },
+    {
+      "url": "https://www.parcvalles.com/es/noticias/parc-valles-amplia-la-experiencia-de-cine-con-una-nueva-sala-imaxr-con-laser",
+      "basis": "Existing reviewed host-centre announcement; laser/sound/seating are attributed announcement facts."
+    }
+  ],
+  "validation": {
+    "python_tests": 319,
+    "node_tests": 42,
+    "additional_origin_and_routing_tests": 11,
+    "browser": "Passed: 21 localized discovery pages and 3 room comparisons, no-JS content, locale metadata, closed-footer navigation, exact-session modal/reload/keyboard, mobile overflow, expired sessions, empty states, Madrid rollover, and Today homepage date selection.",
+    "browser_environment": "Final acceptance used isolated HEAD source plus only this batch’s owned changes. Initial browser run crashed; rerun passed.",
+    "static_audit": {
+      "pages": 1238,
+      "indexable": 1210,
+      "issues": {},
+      "missing_assets": [],
+      "broken_internal_links": [],
+      "broken_internal_fragments": [],
+      "alternate_errors": [],
+      "unreachable_indexable": [],
+      "sitemap": {
+        "urls": 1210,
+        "duplicates": 0,
+        "missing": [],
+        "extra": [],
+        "lastmod_mismatch": [],
+        "wrong_origin": []
+      }
+    },
+    "existing_duplicate_title_groups": 59,
+    "visual_artifact": "output/seo/gracia-mobile.png"
+  },
+  "limitations": [
+    "Not live seat inventory or an adjacent-seat guarantee.",
+    "No comfort ranking or citywide biggest-screen claim.",
+    "No new independent auditorium measurements.",
+    "Does not complete the shared typed homepage-filter backlog."
+  ],
+  "deployment": "GitHub main → Coolify. Live verification evidence is saved separately under ignored output/seo after deployment."
+}
