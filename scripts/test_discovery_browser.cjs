@@ -7,6 +7,13 @@ const routes={
  es:['/es/cartelera/peliculas-en-ingles/','/es/guias/cine-subtitulos-ingles-barcelona/','/es/cartelera/este-fin-de-semana/','/es/guias/imax-version-original-barcelona/','/es/guias/cine-35mm-70mm-barcelona/'],
  ca:['/ca/cartellera/pellicules-en-angles/','/ca/guies/cinema-subtitols-angles-barcelona/','/ca/cartellera/aquest-cap-de-setmana/','/ca/guies/imax-versio-original-barcelona/','/ca/guies/cinema-35mm-70mm-barcelona/']
 };
+const additions={
+ en:['/en/showtimes/catalan-subtitles/','/en/guides/original-version-cinema-gracia/'],
+ es:['/es/cartelera/subtitulos-catalan/','/es/guias/cine-version-original-gracia/'],
+ ca:['/ca/cartellera/subtitols-catala/','/ca/guies/cinema-versio-original-gracia/']
+};
+const comparisons={en:'/en/guides/cinema-screen-sound-formats/',es:'/es/guias/formatos-pantalla-sonido-cine/',ca:'/ca/guies/formats-pantalla-so-cinema/'};
+for(const lang of Object.keys(routes))routes[lang].push(...additions[lang]);
 (async()=>{
  const browser=await chromium.launch({headless:true,channel:'chrome'});
  try{
@@ -14,7 +21,7 @@ const routes={
   await plain.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
   const page=await plain.newPage();
   for(const [lang,paths] of Object.entries(routes)){
-   await page.goto(base+`/${lang}/`);
+   await page.goto(base+`/${lang}/`,{waitUntil:'domcontentloaded'});
    assert.equal(await page.locator('.card[data-film]').count(),24);
    assert.equal(await page.locator('main .discovery-links').count(),0);
    const footer=page.locator('footer .site-information');
@@ -24,7 +31,7 @@ const routes={
    assert.equal(await footer.locator('.discovery-links').isVisible(),true);
    assert.match(await footer.locator('[data-today-link]').getAttribute('href'),new RegExp(`^/${lang}/\\?date=\\d{4}-\\d{2}-\\d{2}$`));
    for(const path of paths){
-    const response=await page.goto(base+path);
+    const response=await page.goto(base+path,{waitUntil:'domcontentloaded'});
     assert.equal(response.status(),200);
     assert.equal(await page.locator('h1').count(),1);
     assert.equal(await page.locator('html').getAttribute('lang'),lang);
@@ -34,7 +41,14 @@ const routes={
     assert.equal(await page.locator('.discovery [data-discovery-film]').count(),await page.locator('.discovery a.screening-action').count());
     assert.equal(await page.locator('.discovery').getAttribute('data-discovery-kind')==='today',false);
    }
+   await page.goto(base+comparisons[lang],{waitUntil:'domcontentloaded'});
+   assert.equal(await page.locator('.comparison-room').count(),6);
+   assert.ok((await page.locator('#compare-cinesa-diagonal-mar-9').textContent()).includes('IMAX'));
+   assert.ok((await page.locator('#compare-cinesa-diagonal-mar-10').textContent()).includes('iSense'));
+   assert.ok((await page.locator('#compare-kinepolis-splau-18').textContent()).includes('Cornellà'));
   }
+  await plain.close();
+  console.log('No-JS checks passed for all 24 localized pages.');
   const js=await browser.newContext({viewport:{width:1280,height:900}});
   await js.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
   const live=await js.newPage(),errors=[];
@@ -78,8 +92,15 @@ const routes={
    await live.waitForSelector('dialog[open] .buyrow.is-highlighted');
    assert.equal(await live.locator('.buyrow.is-highlighted').getAttribute('data-session'),expected);
    await live.keyboard.press('Escape');
+   console.log('Exact-session action passed:',path);
   }
   await live.setViewportSize({width:390,height:844});
+  for(const path of Object.values(comparisons)){
+   await live.goto(base+path);
+   assert.equal(await live.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,path+' comparison must fit mobile');
+   await live.locator('main nav a[href*="#compare-"]').last().click();
+   assert.equal(new URL(live.url()).hash,'#compare-cinesa-parc-valles-imax');
+  }
   for(const path of routes.en){
    await live.goto(base+path);
    assert.equal(await live.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,path+' must not overflow on mobile');
@@ -89,7 +110,7 @@ const routes={
    }
   }
   fs.mkdirSync('output/seo',{recursive:true});
-  await live.screenshot({path:'output/seo/film-projection-mobile.png',fullPage:true});
+  await live.screenshot({path:'output/seo/gracia-mobile.png',fullPage:true});
   await live.setViewportSize({width:1280,height:900});
   await live.goto(base+routes.en[2]);
   await live.screenshot({path:'output/seo/weekend-desktop.png',fullPage:false});
@@ -100,6 +121,9 @@ const routes={
   await live.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
   assert.equal(await live.locator('.discovery-results').isVisible(),false);
   assert.equal(await live.locator('.discovery-stale').isVisible(),true);
+  await live.goto(base+additions.en[1]);
+  assert.equal(await live.locator('.discovery-results').isVisible(),false,'Gràcia rolling window must refresh across Madrid midnight');
+  assert.equal(await live.locator('.discovery-stale').isVisible(),true);
   await live.clock.setSystemTime(new Date(date+'T12:00:00+01:00'));
   await live.goto(base+routes.en[1]);
   const starts=await live.locator('[data-discovery-film]').first().getAttribute('data-starts');
@@ -109,7 +133,7 @@ const routes={
   assert.equal(await live.locator('#'+rowId).isVisible(),false);
   const remaining=await live.locator('[data-discovery-film]:visible').count();
   assert.match(await live.locator('.discovery-count').textContent(),new RegExp(`· ${remaining} screenings`));
-  for(const path of routes.en.slice(3)){
+  for(const path of routes.en.slice(3,6)){
    await live.clock.setSystemTime(new Date(date+'T12:00:00+01:00'));
    await live.goto(base+path);
    await live.clock.setSystemTime(new Date(date+'T12:00:00+01:00').getTime()+86400000);
@@ -125,6 +149,6 @@ const routes={
    }
   }
   assert.deepEqual(errors,[]);
-  console.log('Fifteen localized pages: no-JS content, closed-footer discovery, Today homepage filter, exact-session modal/reload/keyboard, mobile layout, expiry, empty format sections and Madrid rollover passed.');
+  console.log('21 localized discovery pages and 3 room comparisons: no-JS content, closed-footer discovery, Today homepage filter, exact-session modal/reload/keyboard, mobile layout, expiry, empty format sections and Madrid rollover passed.');
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

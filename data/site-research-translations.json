@@ -1,6 +1,18 @@
 {
   "version": 1,
   "translations": {
+    "Ezcaray Seating; unnumbered seating": {
+      "es": "Butacas Ezcaray Seating; asientos sin numerar",
+      "ca": "Butaques Ezcaray Seating; seients sense numerar"
+    },
+    "LUXE reclining seats": {
+      "es": "Butacas reclinables LUXE",
+      "ca": "Butaques reclinables LUXE"
+    },
+    "172 recliners, including 44 Premier-category positions.": {
+      "es": "172 butacas reclinables, incluidas 44 plazas de categoría Premier.",
+      "ca": "172 butaques reclinables, incloses 44 places de categoria Premier."
+    },
     "Public programme evidence names rooms 5, 6, 10 and 14; an event listing additionally names Sala 8. Twelve reported rooms does not establish numbers 1–12; seven room identities remain placeholders.": {
       "es": "La información de la cartelera pública identifica las salas 5, 6, 10 y 14; una ficha de eventos identifica además la Sala 8. Que se indiquen doce salas no acredita una numeración del 1 al 12; la identidad de siete salas sigue pendiente y se representa mediante marcadores.",
       "ca": "La informació de la cartellera pública identifica les sales 5, 6, 10 i 14; una fitxa d’esdeveniments identifica també la Sala 8. Que s’indiquin dotze sales no acredita una numeració de l’1 al 12; la identitat de set sales continua pendent i es representa mitjançant marcadors."

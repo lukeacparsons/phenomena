@@ -29,6 +29,7 @@ from browser_programme import browser_programme
 from language_names import without_language_placeholder
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
+from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
@@ -529,7 +530,7 @@ class Publication:
                 self.page(paths[lang], lang, t[prefix+'_title'] + ' | VO Barna', t[prefix+'_body'][:220], body, alternatives=paths)
                 links.append('<li>' + link(paths[lang], t[prefix+'_title']) + '</li>')
             links.extend('<li>' + link(paths[lang], DISCOVERY_COPY[lang][key]) + '</li>'
-                         for key, paths in DISCOVERY_PATHS.items() if key in ('subtitles', 'imax', 'film'))
+                         for key, paths in DISCOVERY_PATHS.items() if key in ('subtitles', 'imax', 'film', 'vosc', 'gracia'))
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
             self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['intro'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
@@ -561,7 +562,7 @@ class Publication:
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
                 body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
                 body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])} · {text(d["built"])}: {stamp(self.now.isoformat())}</p>'
-                if kind in ('weekend', 'film', 'imax'):
+                if kind in ('weekend', 'film', 'imax', 'gracia'):
                     jumps = [(group, d.get(group + '_group', d.get(group))) for group, selected in groups.items()
                              if selected or kind == 'weekend' or group in ('35mm', '70mm')]
                     jumps.append(('guide-information', d['guide_information']))
@@ -583,7 +584,7 @@ class Publication:
                         body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d["day_none" if kind == "weekend" else "format_none"])}</p>'
                     if group + '_note' in d:
                         body += f'<p class="editorial">{text(d[group + "_note"])}</p>'
-                    if kind in ('english', 'weekend', 'imax'):
+                    if kind in ('english', 'weekend', 'imax', 'vosc', 'gracia'):
                         # Group by film so a long programme is navigable and each
                         # title is one recommendation, with its exact sessions inside.
                         films = {}
@@ -596,9 +597,12 @@ class Publication:
                         body += self.session_table(selected, lang, include_film=True, discovery=True)
                     body += '</section>'
                 body += '</div></div><script type="module" src="/discovery-page.js"></script>'
-                if kind == 'subtitles':
+                if kind in ('subtitles', 'vosc'):
                     body += self.version_explanation(lang)
-                    body += f'<section class="editorial"><h2>{text(d["subtitle_question"])}</h2><p>{text(d["subtitle_answer"])}</p></section>'
+                    topic = 'vosc' if kind == 'vosc' else 'subtitle'
+                    body += f'<section class="editorial"><h2>{text(d[topic + "_question"])}</h2><p>{text(d[topic + "_answer"])}</p></section>'
+                if kind == 'gracia':
+                    body += '<div id="guide-information">' + self.gracia_guide(lang) + '</div>'
                 if kind in DISCOVERY_SECTIONS:
                     body += '<div id="guide-information">' + self.discovery_explanation(kind, lang) + '</div>'
                 body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
@@ -634,28 +638,70 @@ class Publication:
             sections.append(body + '</section>')
         return ''.join(sections)
 
+    def gracia_guide(self, lang):
+        d = DISCOVERY_COPY[lang]
+        body = f'<section class="editorial"><h2>{text(d["gracia_venues"])}</h2>'
+        for cid, sid in GRACIA_VENUES.items():
+            if cid not in self.cinemas:
+                continue
+            body += f'<article><h3>{link(self.entity_path("cinemas", cid, lang), self.cinemas[cid]["name"])}</h3><p>{text(d[cid + "_note"])}</p><p class="source-note">{self.citations([sid], LOCAL_SOURCES, lang)}</p></article>'
+        body += f'</section><section class="editorial"><h2>{text(d["gracia_seats_title"])}</h2><p>{text(d["gracia_seats_body"])}</p></section>'
+        body += '<p>' + link(DISCOVERY_PATHS['vosc'][lang], d['vosc']) + ' · ' + link(DISCOVERY_PATHS['english'][lang], d['english']) + '</p>'
+        return body
+
     def room_comparison(self, lang):
-        t = COPY[lang]
+        t, d = COPY[lang], DISCOVERY_COPY[lang]
         sources = self.research['rooms'].get('sources', {})
         if isinstance(sources, list):
             sources = {s['id']: s for s in sources}
-        selected = {'phenomena:1', 'mooby-balmes:9', 'cinesa-diagonal-mar:10',
+        selected = {'phenomena:1', 'mooby-balmes:9', 'cinesa-diagonal-mar:9', 'cinesa-diagonal-mar:10',
                     'kinepolis-splau:18', 'cinesa-parc-valles:imax'}
-        rows = []
+        cards, navigation = [], []
         for room in self.research['rooms'].get('rooms', []):
             if room['id'] not in selected or room['cinema_id'] not in self.cinemas:
                 continue
             cid, rid = room['cinema_id'], str(room['room'])
             url = self.entity_path('cinemas', cid, lang) + '#sala-' + rid.lower().replace(' ', '-')
             label = self.cinemas[cid]['name'] + ' · ' + t['room'] + ' ' + rid
-            cells = []
-            for key in ('projection', 'sound'):
-                items = room.get(key) or []
-                cells.append('<ul>' + ''.join('<li>' + self.research_text(i['value'], lang) + ' ' + self.citations(i.get('source_ids'), sources, lang) + '</li>' for i in items) + '</ul>' if items else text(t['unknown']))
-            rows.append('<tr><th scope="row">' + link(url, label) + '</th>' + ''.join('<td>' + c + '</td>' for c in cells) + '</tr>')
-        if not rows:
+            if cid == 'kinepolis-splau':
+                label += ' · Cornellà de Llobregat'
+            elif cid == 'cinesa-parc-valles':
+                label += ' · Terrassa'
+            brand = next((i['value'] for i in room.get('features', []) if i['value'] in ('IMAX', 'iSense')), None)
+            if brand:
+                label += ' · ' + brand
+            anchor = 'compare-' + cid + '-' + rid.lower()
+            path = f'/{lang}/{SECTIONS[lang]["guides"]}/{GUIDES["formats"][lang]}/'
+            navigation.append('<li>' + link(path + '#' + anchor, label) + '</li>')
+            screen = room.get('screen') or {}
+            dimensions = text(t['unknown'])
+            if screen.get('width_m') and screen.get('height_m'):
+                if 'inferred' in screen.get('orientation', ''):
+                    # Preserve the source order, rather than presenting inferred axes as measurements.
+                    dimensions = text(d['screen_raw'].format(dimensions=screen.get('raw_dimensions', t['unknown'])))
+                else:
+                    height = ('≈' if screen.get('height_approximate') else '') + str(screen['height_m'])
+                    dimensions = text(d['screen_explicit'].format(width=screen['width_m'], height=height))
+                dimensions += ' ' + self.citations(screen.get('source_ids'), sources, lang)
+            facts = [(t['screen'], dimensions)]
+            for key, limit in [('projection', 2), ('sound', 1), ('seating', 1)]:
+                items = (room.get(key) or [])[:limit]
+                value = '<ul>' + ''.join('<li>' + self.research_text(i['value'], lang) + ' ' + self.citations(i.get('source_ids'), sources, lang) + '</li>' for i in items) + '</ul>' if items else text(t['unknown'])
+                if key == 'seating' and cid == 'phenomena':
+                    practical = self.research.get('practical', {})
+                    policy = next((f for f in practical.get('facts', []) if f['id'] == 'phenomena-seating'), None)
+                    if policy:
+                        value = self.research_text(policy['value'], lang) + ' ' + self.citations(policy['source_ids'], practical.get('sources', {}), lang)
+                facts.append((d['seating'] if key == 'seating' else t[key], value))
+            cards.append(f'<article class="comparison-room" id="{text(anchor)}"><h3>{text(label)}</h3><dl>' + ''.join(f'<dt>{text(k)}</dt><dd>{v}</dd>' for k, v in facts) + f'</dl><p>{link(url, d["comparison_more"])}</p></article>')
+        if not cards:
             return ''
-        return f'<section><h2>{t["rooms"]}</h2><p>{text(t["size_note"])}</p><div class="table-scroll"><table class="screenings"><thead><tr><th scope="col">{t["room"]}</th><th scope="col">{t["projection"]}</th><th scope="col">{t["sound"]}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>'
+        body = f'<section><h2>{text(d["comparison_title"])}</h2><p class="editorial">{text(d["comparison_intro"])}</p><p class="editorial">{text(t["size_note"])}</p>'
+        body += f'<nav class="discovery-sections" aria-label="{text(d["on_this_page"])}"><ul>{"".join(navigation)}</ul></nav><div class="comparison-rooms">{"".join(cards)}</div></section>'
+        for key in ('comparison_size', 'comparison_seats'):
+            body += f'<section class="editorial"><h2>{text(d[key + "_title"])}</h2><p>{text(d[key + "_body"])}</p></section>'
+        body += '<ul>' + ''.join('<li>' + link(DISCOVERY_PATHS[key][lang], d[key]) + '</li>' for key in ('imax', 'film', 'english')) + '</ul>'
+        return body
 
 
 def compact_programme(programme, registry, now):

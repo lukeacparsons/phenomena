@@ -60,3 +60,6 @@
 }
 .discovery-sections ul{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;list-style:none;padding:0;margin:1rem 0 1.5rem}
 .discovery-sections a{display:inline-flex;align-items:center;min-height:2rem}
+.comparison-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr));gap:1rem}
+.comparison-room{border:1px solid var(--border);border-radius:12px;padding:1.25rem;min-width:0;scroll-margin-top:5rem}
+.comparison-room h3{margin-top:0}.comparison-room dt{font-weight:700;margin-top:1rem}.comparison-room dd{margin:.35rem 0;overflow-wrap:anywhere}.comparison-room ul{padding-left:1.25rem;margin:.25rem 0}

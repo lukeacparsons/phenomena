@@ -115,7 +115,7 @@ class PublicationTests(unittest.TestCase):
                 if tag == 'footer': self.footer = False
 
         original = self.data['films'][0]['sessions'][0]
-        original.update(language='EN', subtitles='English', formats=['IMAX', '35mm'])
+        original.update(language='EN', subtitles='English, Català', formats=['IMAX', '35mm'])
         self.write_input()
         self.publish()
         root = self.root / 'site/current/public'
@@ -133,6 +133,11 @@ class PublicationTests(unittest.TestCase):
                     self.assertIn(f'hreflang="{other}" href="https://vobarna.com{paths[other]}"', html)
                 self.assertIn(paths[lang], (root / 'sitemap.xml').read_text())
                 self.assertIn('index,follow', html)
+                if kind == 'gracia':
+                    self.assertIn(DISCOVERY_COPY[lang]['none'], html)
+                    self.assertIn('id="guide-information"', html)
+                    self.assertNotIn('data-discovery-film=', html)
+                    continue
                 self.assertIn(anchor, html)
                 self.assertIn('class="screening-action" aria-label=', html)
                 self.assertIn('https://cinema.example/programme', html)
@@ -162,6 +167,42 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('VOSI</th>', html)
         self.assertIn('index,follow', html)
         self.assertNotIn('data-discovery-film=', html)
+        html = (root / PATHS['vosc']['en'].lstrip('/') / 'index.html').read_text()
+        self.assertIn(DISCOVERY_COPY['en']['vosc_answer'], html)
+        self.assertNotIn('data-discovery-film=', html)
+
+    def test_gracia_renders_matching_sessions_and_reviewed_entrances(self):
+        import copy
+        from discovery_content import PATHS
+        venue = copy.deepcopy(self.data['cinemas'][0])
+        venue.update(id='verdi', name='Verdi')
+        self.data['cinemas'].append(venue)
+        session = copy.deepcopy(self.data['films'][0]['sessions'][0])
+        session.update(id='verdi-evening', cinema_id='verdi', language='English',
+                       starts_at='2026-11-20T20:00:00+01:00', time='20:00')
+        self.data['films'][0]['sessions'].append(session)
+        self.write_input(); self.publish()
+        html = (self.root / 'site/current/public' / PATHS['gracia']['en'].lstrip('/') / 'index.html').read_text()
+        self.assertIn('1 films or events · 1 screenings', html)
+        self.assertIn('id="gracia-english"', html)
+        self.assertIn('Carrer de Verdi, 32', html)
+        self.assertIn('https://barcelona.cines-verdi.com/donde-estamos', html)
+        self.assertIn('data-ticket-screening="verdi-evening"', html)
+        self.assertNotIn('id="gracia-other"', html)
+
+    def test_room_comparison_preserves_approximate_dimensions_and_unknown_seating(self):
+        rooms = {'sources': {'source': {'title': 'Room source', 'url': 'https://cinema.example/room', 'checked_on': '2026-11-19'}},
+                 'rooms': [{'id': 'phenomena:1', 'cinema_id': 'phenomena', 'room': '1',
+                            'screen': {'width_m': 15, 'height_m': 6.2, 'height_approximate': True, 'source_ids': ['source']},
+                            'projection': [{'value': 'Laser projection', 'source_ids': ['source']}]}]}
+        (self.docs / 'auditoriums.json').write_text(json.dumps(rooms))
+        self.publish()
+        html = (self.root / 'site/current/public/en/guides/cinema-screen-sound-formats/index.html').read_text()
+        self.assertIn('Width 15 m × height ≈6.2 m', html)
+        self.assertIn('<dt>Seating and allocation</dt><dd>Not confirmed</dd>', html)
+        self.assertIn('id="compare-phenomena-1"', html)
+        self.assertIn('https://cinema.example/room', html)
+        self.assertIn('cannot establish the biggest screen', html)
 
     def test_discovery_actions_and_thin_archive_policy(self):
         self.data['films'].append({'id': 'thin', 'title': 'Unresolved archive', 'sessions': []})

@@ -2,6 +2,22 @@
 
 Research date: 19 November 2026. Scope: VO Barna at the intended `vobarna.com` origin, including Barcelona and the nearby municipalities actually covered by the catalogue. This is a content and product plan, not a deployment or a traffic forecast.
 
+## Third content batch — 19 November 2026
+
+VOSC listings, the first neighbourhood guide and the expanded room comparison are implemented in English, Spanish and Catalan:
+
+| English destination | Delivered content |
+| --- | --- |
+| `/en/showtimes/catalan-subtitles/` | Upcoming sessions with explicit Catalan subtitles, expandable film lists and exact-session actions. Explains VOSC versus Catalan audio and retains useful guidance when no sessions match. |
+| `/en/guides/original-version-cinema-gracia/` | Seven calendar days at Verdi, Verdi Park, Mooby Bosque and Espai Texas. Disjoint sections for English-only audio from 20:00, multilingual evening audio containing English, and other original-language sessions. Includes sourced entrance and access guidance. |
+| `/en/guides/cinema-screen-sound-formats/` | The existing guide now compares six rooms with mobile-friendly cards: screen dimensions, projection, sound and seating. Diagonal Mar IMAX Sala 9 and iSense Sala 10 remain distinct. Cornellà and Terrassa are identified. Approximate dimensions and unlabelled axes remain explicit; unavailable measurements are not ranked. |
+
+The Gràcia venue set is reviewed individually against operator sources; a name or address containing “Gràcia” cannot qualify a venue. English requires the session audio field, Catalan subtitles require the separate subtitle field, and every session appears only once per page. An open Gràcia list requests a refresh after Madrid midnight. Today continues to use the filtered homepage.
+
+The room comparison includes Phenomena’s operator-confirmed unnumbered seating policy and published recliner descriptions where available. This does **not** complete live adjacent-seat availability, a comfort ranking, a complete seating-policy survey, shared typed homepage filters, or independent screen measurements. Visitors can continue to each room’s profile and the exact session’s official booking page.
+
+Both new concepts have translated metadata, reciprocal locale alternates, ItemList/breadcrumb data, sitemap and `llms.txt` entries, guide-index links and closed-footer navigation. Validation and source-review details: [third-batch evidence](seo-geo-content-batch3-2026-11-19.json).
+
 ## Second content batch — 19 November 2026
 
 The next three concepts are implemented in EN/ES/CA. The user's correction to P01 is authoritative: **Today is the existing homepage with its date filter selected**, for example `/en/?date=2026-11-19`. It is no longer a standalone discovery document. The former EN/ES/CA Today paths return a non-cacheable temporary redirect to the current Europe/Madrid date. Those paths are removed from the sitemap; filtered programme URLs retain the homepage canonical and the existing noindex policy.
@@ -17,7 +33,7 @@ Each new page has a concise introduction, navigation to its sections, source and
 
 Selection deliberately uses the validated original-audio catalogue and exact session format tags. Equipment ownership, a film title, restoration language, a premium cinema label and an IMAX tag do not establish film projection. Audio remains unknown where the source does not specify it. Research check dates remain distinct from programme collection and page-generation times.
 
-Validation and source-review details: [second-batch evidence](seo-geo-content-batch2-2026-11-19.json). Next editorial candidates remain VOSC and the sourced Gràcia guide; the broader format-comparison expansion, shared typed filters, seating research and measurement backlog are not marked complete by this batch.
+Validation and source-review details: [second-batch evidence](seo-geo-content-batch2-2026-11-19.json). VOSC, the Gràcia guide and format-comparison expansion followed in the third batch above; shared typed filters and the remaining seating and measurement research remain separate work.
 
 ## First content batch — 19 November 2026 (Today destination superseded above)
 
