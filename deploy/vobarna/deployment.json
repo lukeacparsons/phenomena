@@ -7,5 +7,12 @@
   "public_origin": "https://vobarna.com",
   "cdn_origin": "https://origin.vobarna.com",
   "bunny_pull_zone_id": 7049405,
-  "bunny_dns_zone_id": 1082969
+  "bunny_dns_zone_id": 1082969,
+  "application_uuid": "oeftpz2pddqgx83zbebbtgfa",
+  "previous_service_uuid": "jaksjk5shvd3mpkgyhsxomqn",
+  "github_repository": "lukeacparsons/phenomena",
+  "github_branch": "main",
+  "dockerfile": "deploy/vobarna/Dockerfile.github",
+  "input_directory": "/srv/vobarna/publication",
+  "automatic_deployments": true
 }

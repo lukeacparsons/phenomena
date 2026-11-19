@@ -1,31 +1,37 @@
 # VO Barna deployment — 19 November 2026
 
-VO Barna is hosted at **https://vobarna.com**, with Bunny DNS/CDN in front of a dedicated Coolify service on Outrageous Otter. The original Phenomena app is a separate resource.
+VO Barna is hosted at **https://vobarna.com**, with Bunny DNS/CDN in front of the `vobarna-github` Coolify application on Outrageous Otter. Pushing `main` in `lukeacparsons/phenomena` automatically builds and deploys the site through the existing Coolify GitHub App webhook. The original Phenomena app is a separate resource.
 
 ## Resources
 
 | Resource | Configuration |
 | --- | --- |
-| Coolify service | `vobarna`, UUID `jaksjk5shvd3mpkgyhsxomqn` |
+| Coolify application | `vobarna-github`, UUID `oeftpz2pddqgx83zbebbtgfa` |
+| Git source | `lukeacparsons/phenomena`, branch `main`, automatic deployments enabled |
+| Build | `deploy/vobarna/Dockerfile.github`, repository root context |
 | Coolify server | Outrageous Otter, `of4fec7d9pc7vccw3h8hvimb`, `178.105.17.34` |
-| Container | `web-jaksjk5shvd3mpkgyhsxomqn`, port 8787 inside Docker |
+| Container | Coolify-managed rolling container, port 8787 inside Docker |
 | HTTPS origin | `https://origin.vobarna.com` |
 | Bunny pull zone | `vobarna`, ID `7049405` |
 | Bunny DNS zone | `vobarna.com`, ID `1082969` |
 | Nameservers | `kiki.bunny.net`, `coco.bunny.net` |
 | Public hostnames | `vobarna.com`, `www.vobarna.com`; HTTPS required; www and the default CDN hostname permanently redirect to apex with path/query intact |
-| Publication directory | `/srv/vobarna/publication` on Otter; mounted read-only at `/publication` |
+| Data input | `/srv/vobarna/publication` on Otter, mounted at `/incoming` |
+| Rendered pages | `/app/.site`, private to each deployed container |
+| Previous service | `vobarna`, UUID `jaksjk5shvd3mpkgyhsxomqn`, retained for recovery |
 
-DNS has an apex PullZone record, `www` CNAME to `vobarna.b-cdn.net`, and `origin` A to Otter. Bunny verifies the origin certificate. A temporary bootstrap domain, `vobarna-origin.luke.ac`, also routes to the service but is no longer Bunny's origin.
+DNS has an apex PullZone record, `www` CNAME to `vobarna.b-cdn.net`, and `origin` A to Otter. Bunny verifies the origin certificate. The bootstrap domain `vobarna-origin.luke.ac` belongs to the previous service and is not Bunny's origin.
 
-The container runs as the unprivileged Node user, with a read-only filesystem, dropped capabilities, a 256 MB memory limit, 0.5 CPU limit and bounded Docker logs. `/healthz` checks the active publication. No collectors, credentials, research source databases or checkout endpoints are served by the container.
+The application runs as the unprivileged Node user, with a 768 MB memory limit and 1.5 CPU limit. Python and Pillow generate the static site; Node serves the completed atomic publication. `/healthz` reports the active publication and deployed Git commit. Coolify waits for a healthy container before retiring the previous one. No collectors, credentials, research source databases or checkout endpoints are served publicly.
 
 ## Routine publication
 
-The existing Mac collector still collects screenings and builds the static site. It has **not** been migrated to Hetzner. A separate `com.vobarna.publisher` LaunchAgent checks for completed releases every minute and publishes changed releases. Fresh data therefore still depends on this Mac being awake and its collector running.
+The existing Mac collector still collects screenings. It has **not** been migrated to Hetzner. A separate `com.vobarna.publisher` LaunchAgent checks for completed local releases every minute and uploads changed releases as the server's data input. Fresh data therefore still depends on this Mac being awake and its collector running.
+
+`scripts/serve_deployed_site.py` reads only the incoming catalogue, availability, artwork and initial identity registry. It renders them using the templates, scripts, styles and reference data packaged in the deployed Git image. Incoming HTML and JavaScript are never served. Each container renders into its own directory, so an older rolling container cannot overwrite a newer deployment. New input is checked every 15 seconds, with a rebuild at least every five minutes to expire sessions. Later build failures retain the last successful publication. Older input releases without private `catalogue.json` use `public/programme.json` during migration.
 
 ```sh
-# Rebuild and publish a local change immediately:
+# Rebuild and upload cinema data immediately (does not deploy code):
 npm run site:build
 npm run site:publish:hetzner
 
@@ -46,30 +52,32 @@ Publisher logs and the last successful release are under `output/hetzner-publish
 
 ## Updating the origin code
 
-Ordinary content updates do not rebuild the container. For changes to the HTTP server or routing code:
+Commit the intended source changes and push `main`:
 
 ```sh
 npm run site:check
-.venv/bin/python -m unittest discover -s scripts -p 'test_hetzner_publication.py'
-.venv/bin/python scripts/deploy_vobarna_origin.py \
-  --coolify-env /Users/luke/dev/surf-shoulders/.env.local
+git push origin main
 ```
 
-The script builds a small, explicit context on Otter, gives the image a source-content tag, updates only this Coolify service and queues its restart. It uses the existing Coolify server key in a temporary mode-0600 file, deleted on exit. Alternatively provide `COOLIFY_API_TOKEN` in the process environment. Tokens never go into the build context, image, git or logs.
+Coolify's installed GitHub App receives the push and builds that commit. No GitHub Actions deployment token or manual webhook secret is needed. Watch the deployment in the `vobarna-github` application, then check `https://origin.vobarna.com/healthz` and `https://vobarna.com/healthz`; their `commit` should match the pushed revision. The native directory storage for `/incoming` is required. A missing or invalid feed prevents startup rather than publishing an empty site. The HTTP health check must use `127.0.0.1:8787/healthz` (the server listens on IPv4), with a 180-second start period for the initial render.
 
-The source files are `src/vobarna-server.mjs`, `src/public-routing.mjs` and `deploy/vobarna/Dockerfile`. `deploy/vobarna/compose.yaml` records the deployed image and resource limits; `deployment.json` records resource identifiers without credentials. The existing shared working tree was not committed or pushed as part of deployment.
+The deployment uses `deploy/vobarna/Dockerfile.github`, `scripts/serve_deployed_site.py`, the public-site generator and `src/vobarna-server.mjs`. `.dockerignore` excludes credentials, local datasets and generated output. `deployment.json` records resource identifiers without credentials. `deploy_vobarna_origin.py`, `Dockerfile` and `compose.yaml` are legacy recovery tools for the previous service; do not use them for routine production deployments.
 
 If the activation script changes, install `deploy/vobarna/activate.py` as `/usr/local/libexec/vobarna-activate`, owned by root and executable, before publishing with the new version.
 
 ## Rollback and recovery
 
-To roll back content, pause the local publisher, inspect the two directories under `/srv/vobarna/publication/releases`, and run `/usr/local/libexec/vobarna-activate RELEASE_NAME` as `vobarna-publish` with the previous release name. Then resolve the bad source build before resuming publication. Bunny's HTML/data TTL is 60 seconds, so a successful rollback may take up to a minute to become visible.
+To roll back content, pause the local publisher, inspect the two directories under `/srv/vobarna/publication/releases`, and run `/usr/local/libexec/vobarna-activate RELEASE_NAME` as `vobarna-publish` with the previous release name. Wait for the application to detect and render that input, then allow Bunny's 60-second HTML/data TTL. Resolve the bad source build before resuming publication.
 
-For a code rollback, restore the previous image tag in the service's Compose definition and restart only the VO Barna service. Do not restart the shared proxy or other applications.
+For a code rollback, use the application's previous successful image in Coolify, or revert the faulty commit and push `main`. Keep the input directory mounted. If recovering through the previous service, transfer `origin.vobarna.com` back to it and restart that service; never leave both resources claiming the origin domain. Do not restart the shared proxy or other applications.
 
 Preserve `data/site-registry.json`, `.site/current/registry.json`, and the server release registry. Those files retain permanent semantic URLs and historical aliases. Local and server copies exist; dedicated off-server backup and restore testing have not been configured for VO Barna yet.
 
-At deployment, Otter had about 3.4 GB free on its 38 GB root disk. Two retained releases used about 253 MB after verification; all 1,111 unchanged images were hardlinked between them. Expand disk capacity or review existing storage separately before adding substantial workloads. No unrelated images, volumes or files were deleted.
+At migration, Otter had about 3.4 GB free on its 38 GB root disk. Incoming releases share unchanged images through hardlinks. Account for image retention and per-container generated pages when adding workloads. No unrelated images, volumes or files were deleted.
+
+## 19 November 404 repair
+
+The long-running collector had imported an older page generator and kept rebuilding with it, removing newly published discovery pages and curtain frames. `scripts/public_build.py` now runs the generator in a fresh Python subprocess on every build. The managed collector was restarted and the missing pages republished. Git-owned server rendering additionally prevents uploaded local HTML from reverting deployed code.
 
 ## HTTP and CDN behaviour
 

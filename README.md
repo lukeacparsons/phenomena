@@ -2,7 +2,7 @@
 
 The existing Phenomena page is `static/index.html`. VO Barna is the separate generated multi-cinema site; its interactive CSS and JavaScript are `static/cinemas.css` and `static/cinemas.js`. `static/cinemas.html` is the old development shell, available only in legacy preview mode. The wordmark uses the supplied Bungee font, served locally from `static/fonts/` alongside its SIL Open Font License.
 
-The generated public site targets **https://vobarna.com**, with readable EN/ES/CA pages, persistent film and cinema URLs, source-linked profiles, metadata, sitemap and crawler routing. Run `npm run site:build`, then `npm run dev:public -- --no-background --port 8789`. See [public-site build, slug policy and launch instructions](docs/vobarna-publication.md) and the [SEO/GEO audit](docs/seo-geo-audit-2026-11-19.md). Domain attachment and public deployment remain separate. The local collector and Cloudflare stale-cinema watchdog are configured; see the [crawler audit and operations guide](docs/crawler-robustness-audit.md).
+The generated public site targets **https://vobarna.com**, with readable EN/ES/CA pages, persistent film and cinema URLs, source-linked profiles, metadata, sitemap and crawler routing. Run `npm run site:build`, then `npm run dev:public -- --no-background --port 8789`. See [public-site build, slug policy and launch instructions](docs/vobarna-publication.md) and the [SEO/GEO audit](docs/seo-geo-audit-2026-11-19.md). Pushing `main` deploys VO Barna through Coolify; see the [deployment and rollback guide](docs/vobarna-hetzner-deployment.md). The local collector and Cloudflare stale-cinema watchdog are configured; see the [crawler audit and operations guide](docs/crawler-robustness-audit.md).
 
 ## Local preview
 
