@@ -23,7 +23,7 @@
     }
   },
   "programme_generated_at": "2026-11-19T21:59:12.026493+00:00",
-  "built_at": "2026-11-19T22:35:09.726089+00:00",
+  "built_at": "2026-11-19T22:47:13.971493+00:00",
   "snapshot_selection": {
     "classics": {
       "sessions": 18,
@@ -181,11 +181,11 @@
     "No citywide cheapest-cinema claim, live adjacent-seat availability or restoration claim is inferred."
   ],
   "validation": {
-    "python_tests": 335,
+    "python_tests": 343,
     "node_tests": 57,
     "additional_origin_server_tests": 1,
     "browser": "Passed all nine localized pages without JavaScript, metadata, ItemList counts, six offer cards and absence of session Offer claims. Passed exact-session modal and reload on all three English pages, mobile overflow, section links, expiry/empty state and Madrid rollover; tariff cards remain readable when programme examples expire.",
-    "browser_environment": "Isolated worktree based on origin/main plus this batch. The first run hit an older preview on a reused port; the isolated port run passed.",
+    "browser_environment": "Isolated worktree with the content batch merged with origin/main 9677643. Full tests, browser acceptance and the complete static audit passed after that merge. The first pre-merge browser run hit an older preview on a reused port; subsequent isolated-port runs passed.",
     "static_audit": {
       "pages": 1247,
       "indexable": 1219,
