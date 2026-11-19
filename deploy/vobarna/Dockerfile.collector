@@ -1,4 +1,4 @@
-FROM node:24-bookworm-slim@sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e
+FROM node:24-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
@@ -14,6 +14,8 @@ COPY --chown=node:node static/ ./static/
 COPY --chown=node:node data/ ./data/
 COPY --chown=node:node docs/cinema-dossiers.json docs/auditoriums.json docs/cinema-practical-info.json ./docs/
 COPY --chown=node:node barcelona-mascot-point-right-brow-refined.webp barcelona-mascot-poke.webp ./
+RUN python -m compileall -q scripts \
+    && PYTHONPATH=scripts python -m unittest test_deployed_crawler test_cinesa_showtimes test_public_site
 RUN mkdir -p /app/.site /app/static/preview-data && chown -R node:node /app
 USER node
 HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 CMD ["python", "scripts/run_deployed_crawler.py", "--health"]

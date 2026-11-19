@@ -11,7 +11,7 @@ services:
       VPN_SERVICE_PROVIDER: mullvad
       VPN_TYPE: wireguard
       SERVER_COUNTRIES: Spain
-      SERVER_HOSTNAMES: es-bcn-wg-001
+      SERVER_HOSTNAMES: es-mad-wg-101
       HTTPPROXY: 'on'
       HTTPPROXY_STEALTH: 'on'
       HTTPPROXY_LOG: 'off'
