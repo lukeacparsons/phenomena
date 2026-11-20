@@ -8,8 +8,8 @@ const dictionaries={
 };
 const lookups=Object.fromEntries(Object.entries(dictionaries).map(([field,rows])=>[field,new Map(rows.flatMap(row=>row.map(alias=>[fold(alias),row[0]])))]));
 export const canonical=(field,value)=>lookups[field]?.get(fold(value))||String(value).trim();
-export const fields=['genre','country','language','producer','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','duration','start_time','date','certified_fresh'];
-const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,duration:1440,start_time:1439};
+export const fields=['genre','country','language','producer','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
+const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,release_year:2999,duration:1440,start_time:1439};
 const ops=['eq','ne','gt','gte','lt','lte','in'];
 export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',sort:'soonest',unsupported:[]});
 export const conditionId=({field,op,value})=>field+':'+op+':'+fold(value);
@@ -28,6 +28,7 @@ export function validateIntent(value,programme){
     if(!c||Object.keys(c).some(k=>!['field','op','value'].includes(k))||!fields.includes(c.field)||!ops.includes(c.op)||typeof c.value!=='string'||!c.value||c.value.length>150)throw new Error('Invalid search condition');
     if(c.field in numeric){
       if(c.op==='in'||!/^\d+(?:\.\d+)?$/.test(c.value)||Number(c.value)>numeric[c.field])throw new Error('Invalid numeric condition');
+      if(c.field==='release_year'&&(!/^\d{4}$/.test(c.value)||Number(c.value)<1800))throw new Error('Invalid release year');
     }else if(c.field==='date'){
       if(!/^\d{4}-\d{2}-\d{2}$/.test(c.value)||!Number.isFinite(Date.parse(c.value))||new Date(c.value+'T12:00Z').toISOString().slice(0,10)!==c.value||c.op==='in')throw new Error('Invalid date condition');
     }else if(c.field==='certified_fresh'){
@@ -78,6 +79,14 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
     if(other.replace(/\b(?:or|o|at|en|movies|films|show me)\b/g,' ').trim())return plan;
   }
   const consume=(pattern,callback)=>{rest=rest.replace(pattern,(...args)=>{callback(...args);return ' ';});};
+  // Release dates are film metadata; story settings and screening dates remain distinct.
+  if(!/\b(?:set|setting|ambientad|ambientat|about|sobre)\b/.test(rest)){
+    consume(/\b((?:19|20)?[0-9]0)\s*s\s+(?:released|releases|movies|films)\b|\b(?:released|made)\s+in\s+(?:the\s+)?((?:19|20)?[0-9]0)\s*s\b/g,(_,suffix,prefix)=>{
+      let year=Number(suffix||prefix);if(year<100)year+=year>=30?1900:2000;
+      add('release_year','gte',year);add('release_year','lte',year+9);
+    });
+    consume(/\b(?:released|made)\s+in\s+((?:18|19|20)\d{2})\b/g,(_,year)=>add('release_year','eq',year));
+  }
   // Source-qualified subjective ratings belong to the interpreter. Do not
   // install an RT default that could override a later IMDb interpretation.
   const namedRatingSource=/\b(?:imdb|film\s*affinity|rotten\s+tomatoes|rt|tomatometer|audience|popcornmeter)\b/.test(rest);
@@ -168,6 +177,7 @@ export function matchesConditions(film,session,conditions){
   return conditions.every(c=>{
     let value;
     if(c.field.startsWith('rating_')||c.field==='reviews_rt')value=ratingValue(film,c.field);
+    else if(c.field==='release_year')value=film.release_year??film.details?.release_year;
     else if(c.field==='duration')value=film.details?.runtime_minutes??film.runtime_minutes;
     else if(c.field==='start_time'){
       const time=session.time||session.starts_at?.match(/T(\d\d:\d\d)/)?.[1];
@@ -187,7 +197,7 @@ export function matchesConditions(film,session,conditions){
 }
 
 export function intentChips(plan,language='en',programme){
-  const words={en:{producer:'Produced by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{producer:'Producida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{producer:'Produïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{release_year:'Released',producer:'Produced by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{release_year:'Estreno',producer:'Producida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{release_year:'Estrena',producer:'Produïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');

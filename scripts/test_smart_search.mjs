@@ -63,6 +63,21 @@ test('qualified producer searches match producing credits, not acting credits',(
     assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.id),['produced']);
   }
 });
+test('release decades use original years, include both boundaries and exclude unknowns',()=>{
+  const p={...programme,films:[1969,1970,1974,1979,1980,null].map(year=>film('year-'+year,{release_year:year,details:{release_dates:[{date:'1975-01-01',kind:'theatrical'}]}}))};
+  for(const query of ['70’s released',"70's released",'1970s movies','released in the 1970s']){
+    const index=createSearchIndex(p),filters={...emptySearch(),query};
+    assert.equal(interpretSearch(p,filters,{index,now}).text,'');
+    assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.release_year).sort(),[1970,1974,1979],query);
+  }
+  assert.deepEqual(queryFilms(p,{...emptySearch(),query:'released in 1974'},{now}).map(f=>f.release_year),[1974]);
+  assert.deepEqual(parseIntent('set in the 1970s',{programme:p}).conditions,[]);
+  assert.throws(()=>validateIntent({...emptyIntent(),conditions:[{field:'release_year',op:'gte',value:'70'}]},p));
+});
+test('an unsupported request cannot expand into unrelated catalogue matches',()=>{
+  const intent={...emptyIntent(),unsupported:['Wheelchair access is not in the catalogue']};
+  assert.deepEqual(search('wheelchair accessible',{}, {intent}),[]);
+});
 test('film knowledge can retrieve a low-vector candidate but cannot bypass factual filters',async()=>{
   const p={...programme,films:[film('known-classic',{details:{countries:['France']}}),film('actor-only',{details:{countries:['Spain']}})]};
   const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{

@@ -216,6 +216,9 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
   const parsed=resolvedSearch(programme,filters,now,index);
   if(ignoreExplicitDates&&(filters.date_from||filters.date_to))parsed.range=null;
   const plan=interpretSearch(programme,filters,{now,index,intent});
+  // Never present the whole catalogue as matches when a requested constraint
+  // could not be applied and the model removed its words from the query.
+  if(plan.unsupported.length)return [];
   const query=normalise(plan.text);
   const semantic=plan.semantic_query&&semanticScores?new Map(semanticScores.map(row=>[row.film_id,row.score])):null;
   const conditions=plan.conditions.filter(c=>!(c.field==='date'&&(filters.date_from||filters.date_to)));
