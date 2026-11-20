@@ -227,7 +227,9 @@ class Publication:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="/theme.js"></script>
-<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}</head>
+<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
+<script src="https://cdn.nekuda.ai/v1/nekuda/snippet.js" data-domain="dom-9lls5fcgd2ae" data-api="https://api.nekuda.ai"></script>
+</head>
 <body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}"{cinema_scope} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
 <main id="main">{navigation}{breadcrumb}{body}</main>
