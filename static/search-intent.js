@@ -9,7 +9,7 @@ const dictionaries={
 };
 const lookups=Object.fromEntries(Object.entries(dictionaries).map(([field,rows])=>[field,new Map(rows.flatMap(row=>row.map(alias=>[fold(alias),row[0]])))]));
 export const canonical=(field,value)=>lookups[field]?.get(fold(value))||String(value).trim();
-export const fields=['genre','country','language','colour','producer','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
+export const fields=['genre','country','language','colour','producer','company','distributor','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
 const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,release_year:2999,duration:1440,start_time:1439};
 const ops=['eq','ne','gt','gte','lt','lte','in'];
 export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',sort:'soonest',unsupported:[]});
@@ -50,7 +50,7 @@ export function validateIntent(value,programme){
   return result;
 }
 
-export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}={}){
+export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid'}).format(new Date())}={}){
   const plan={...emptyIntent(),text};
   if(exactTitle||!text.trim())return plan;
   if(/\b(?:from|made in|produced in|de|produidas? a|producidas? en) (?:catalunya|cataluna|catalonia|catalon[ia]+)\b/.test(fold(text))){
@@ -62,9 +62,18 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
   let changed=false;
   const add=(field,op,value)=>{plan.conditions.push({field,op,value:String(value)});changed=true;};
   // Qualified producer credits are distinct from the ordinary cast/name search.
-  const producers=[...new Set(programme?.films.flatMap(f=>f.details?.producers||[])||[])].sort((a,b)=>b.length-a.length);
+  const companies=[...new Set(programme?.films.flatMap(f=>[...(f.details?.studios||[]),...(f.details?.distributors||[])])||[])].sort((a,b)=>b.length-a.length);
+  const producers=[...new Set(programme?.films.flatMap(f=>[...(f.details?.producers||[]),...(f.details?.studios||[])])||[])].sort((a,b)=>b.length-a.length);
   for(const name of /\b(?:or|o)\b/.test(rest)?[]:producers){
     rest=rest.replace(new RegExp('\\b(?:produced by|producer|producid[ao]s? por|produid[ae]s? per)\\s+'+esc(fold(name))+'\\b','g'),()=>{add('producer','eq',name);return ' ';});
+  }
+  const venuesAndChains=new Set([...(programme?.films.flatMap(f=>f.sessions.map(s=>fold(s.provider)))||[]),...(programme?.cinemas.flatMap(c=>[fold(c.short),fold(c.name)])||[])]);
+  for(const name of companies){
+    const company=esc(fold(name));
+    rest=rest.replace(new RegExp('\\b(?:distributed by|distribuid[ao]s? por|distribuid[ae]s? per)\\s+'+company+'\\b','g'),()=>{add('distributor','eq',name);return ' ';});
+    // A bare company is a catalogue association, not a person's producer credit.
+    const bare=new RegExp('^(?:(?:show me|find me)\\s+)?(?:(?:movies?|films?|peliculas?|pel licules)\\s+(?:(?:from|by|de)\\s+)?)?'+company+'(?:\\s+(?:movies?|films?|peliculas?|pel licules))?$');
+    if(!venuesAndChains.has(fold(name))&&bare.test(rest.trim())){add('company','eq',name);rest=' ';}
   }
   const protectedText=[];
   for(const name of [...protectedNames].sort((a,b)=>b.length-a.length)){
@@ -80,6 +89,9 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
     if(other.replace(/\b(?:or|o|at|en|movies|films|show me)\b/g,' ').trim())return plan;
   }
   const consume=(pattern,callback)=>{rest=rest.replace(pattern,(...args)=>{callback(...args);return ' ';});};
+  // Year precision is explicit in the chip; a cinema showing is never a release date.
+  if(!/\b(?:week|month|days?|semana|mes|setmana|mesos|dies)\b/.test(rest))
+    consume(/\b(?:new releases|latest releases|recent releases|new movies|new films|nuevos estrenos|estrenos recientes|estrenos|novetats|noves estrenes|estrenes recents|estrenes)\b/g,()=>add('release_year','eq',today.slice(0,4)));
   consume(/\b(?:(not|no|without|sin|sense)\s+)?(?:black[ -]+and[ -]+white|monochrome|blanco y negro|blanc i negre)\b/g,(_,negative)=>add('colour',negative?'ne':'eq','black-and-white'));
   // Release dates are film metadata; story settings and screening dates remain distinct.
   if(!/\b(?:set|setting|ambientad|ambientat|about|sobre)\b/.test(rest)){
@@ -162,6 +174,31 @@ export function effectiveIntent(plan,ignored=[]){
   return {...plan,conditions:plan.conditions.filter(c=>!ignored.includes(conditionId(c))),semantic_query:ignored.includes('semantic')?'':plan.semantic_query};
 }
 
+export function filmMatchReason(film,plan,language='en'){
+  const country=plan.conditions.find(c=>c.field==='country'&&c.op!=='ne');
+  const company=plan.conditions.find(c=>['company','distributor','producer'].includes(c.field)&&c.op!=='ne');
+  const labels={en:{production:'Production',coproduction:'Co-production',producer:'Produced by',distributor:'Distributed by'},es:{production:'Producción',coproduction:'Coproducción',producer:'Producida por',distributor:'Distribuida por'},ca:{production:'Producció',coproduction:'Coproducció',producer:'Produïda per',distributor:'Distribuïda per'}}[language]||{};
+  if(country){
+    const countries=film.details?.countries||[];
+    const matched=country.value.split('|').find(v=>countries.some(c=>fold(canonical('country',c))===fold(canonical('country',v))));
+    if(!matched)return null;
+    const evidence=film.details?.country_provenance?.find(p=>fold(canonical('country',p.country))===fold(canonical('country',matched)))?.sources?.[0];
+    return {label:(countries.length>1?labels.coproduction:labels.production)+': '+countries.join(' / '),sourceURL:evidence?.source_url||'',source:evidence?.source||''};
+  }
+  if(company){
+    const wanted=company.value.split('|'),d=film.details||{};
+    const produced=wanted.filter(v=>[...(d.studios||[]),...(d.producers||[])].some(c=>fold(c)===fold(v)));
+    const distributed=wanted.filter(v=>(d.distributors||[]).some(c=>fold(c)===fold(v)));
+    return {label:[produced.length?labels.producer+': '+produced.join(' / '):'',distributed.length?labels.distributor+': '+distributed.join(' / '):''].filter(Boolean).join(' · ')};
+  }
+  return null;
+}
+
+export function searchExplanation(plan,language='en'){
+  const copy={en:{countries:'Includes co-productions',soonest:'Soonest showing first',rating:'Highest rated first',relevance:'Most relevant first'},es:{countries:'Incluye coproducciones',soonest:'Próximas sesiones primero',rating:'Mejor valoradas primero',relevance:'Más relevantes primero'},ca:{countries:'Inclou coproduccions',soonest:'Sessions més properes primer',rating:'Més ben valorades primer',relevance:'Més rellevants primer'}}[language];
+  return [plan.conditions.some(c=>c.field==='country'&&c.op!=='ne')?copy.countries:'',copy[plan.semantic_query?'relevance':plan.sort]].filter(Boolean).join(' · ');
+}
+
 const compare=(actual,op,wanted)=>({eq:()=>actual===wanted,ne:()=>actual!==wanted,gt:()=>actual>wanted,gte:()=>actual>=wanted,lt:()=>actual<wanted,lte:()=>actual<=wanted}[op]?.()??false);
 function textMatch(values,c){
   if(!values.length)return false; // Unknown metadata cannot satisfy a positive or negative condition.
@@ -191,7 +228,9 @@ export function matchesConditions(film,session,conditions){
       value=film.ratings?.rotten_tomatoes?.certified_fresh;
       return typeof value==='boolean'&&compare(value,c.op,c.value==='true');
     }else{
-      const values=c.field==='genre'?film.details?.genres:c.field==='country'?film.details?.countries:c.field==='colour'?film.details?.colours:c.field==='producer'?film.details?.producers:
+      const values=c.field==='genre'?film.details?.genres:c.field==='country'?film.details?.countries:c.field==='colour'?film.details?.colours:
+        c.field==='producer'?[...(film.details?.producers||[]),...(film.details?.studios||[])]:
+        c.field==='company'?[...(film.details?.studios||[]),...(film.details?.distributors||[])]:c.field==='distributor'?film.details?.distributors:
         c.field==='language'?(session.language?String(session.language).split(/[,;|/]+/).map(x=>x.trim()).filter(Boolean):film.details?.language_status?.state==='conflict'?[]:film.details?.languages):
         c.field==='provider'?[session.provider].filter(Boolean):c.field==='cinema'?[session.cinema_id]:session.formats;
       return textMatch(values||[],c);
@@ -201,7 +240,7 @@ export function matchesConditions(film,session,conditions){
 }
 
 export function intentChips(plan,language='en',programme){
-  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');

@@ -6,7 +6,7 @@ import {observeImages,posterMarkup} from './progressive-images.js';
 import {hydrateProgramme} from './programme-data.js';
 import {readProgrammeCache,saveProgrammeCache} from './programme-cache.js';
 import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch,interpretSearch} from './cinema-search.js';
-import {intentChips} from './search-intent.js';
+import {intentChips,filmMatchReason,searchExplanation} from './search-intent.js';
 import {createSmartSearchUI} from './smart-search-ui.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
 import {registerWebMCP} from './webmcp-registration.js';
@@ -211,6 +211,10 @@ function renderFilterChips(){
   }
   $('filterChips').hidden=!chips.length;
   $('filterChips').innerHTML=chips.map(({field,value,label})=>`<button type="button" class="filter-chip" data-remove-filter="${field}" data-value="${escapeHTML(value)}" aria-label="${escapeHTML(labels.remove+' '+label)}">${escapeHTML(label)} <span aria-hidden="true">×</span></button>`).join('');
+  let explanation=$('searchExplanation');
+  if(!explanation){explanation=document.createElement('p');explanation.id='searchExplanation';explanation.className='search-explanation';$('filterChips').after(explanation);}
+  explanation.hidden=!state.query.trim();
+  explanation.textContent=data&&state.query.trim()?searchExplanation(interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent}),language):'';
 }
 
 function updateDateFades(){
@@ -271,8 +275,9 @@ function render(films=filteredFilms()){
     return;
   }
   const view=listingView();
+  const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
   const nodes=visible.slice(0,cardLimit).map(film=>{
-    const body=view.bodyMarkup(film);
+    const body=view.bodyMarkup(film,{matchReason:filmMatchReason(film,plan,language)});
     let cached=cardNodes.get(film.id);
     if(!cached){
       const node=document.createElement('article');

@@ -179,6 +179,39 @@ class FilmDetailsTests(unittest.TestCase):
         html = '<h1 id="main-title">Film</h1><dl><dt>Compañías</dt><dd><a href="/es/name.php?name-id=1">Studio</a><i>Productor:</i><a href="/es/name.php?name-id=2">A Person</a></dd></dl>'
         self.assertEqual(parse_fa(html)["studios"], ["Studio"])
 
+    def test_coproduction_and_distribution_are_separate_explicit_credits(self):
+        html = '<h1 id="main-title">Film</h1><dl><dt>País</dt><dd>Francia</dd><dt>Compañías</dt><dd>Coproducción Francia-Italia; <a href="/es/name.php?name-id=1">Studio</a><i>Distribuidora:</i><a href="/es/name.php?name-id=2">A24</a><i>Productor:</i><a href="/es/name.php?name-id=3">A Person</a></dd></dl>'
+        facts = parse_fa(html)
+        self.assertEqual(facts['countries'], ['France', 'Italy'])
+        self.assertEqual(facts['country_evidence'], 'explicit_coproduction')
+        self.assertEqual(facts['studios'], ['Studio'])
+        self.assertEqual(facts['distributors'], ['A24'])
+        rt = parse_rt(RT + '<div data-qa="item"><dt data-qa="item-label">Distributor</dt><dd data-qa="item-value">A24</dd></div>')
+        self.assertEqual(rt['distributors'], ['A24'])
+        self.assertNotIn('A24', rt['producers'])
+
+    def test_country_claims_require_evidence_and_rejected_aliases_do_not_leak(self):
+        sources = {'wikidata': {'url': 'https://www.wikidata.org/entity/Q1', 'status': 'ok',
+            'facts': {'countries': ['United States', 'Italy', 'The Gambia'], 'search_aliases': ['Italia', 'Italy', 'United States']}},
+            'filmaffinity': {'url': 'https://example.com/film', 'status': 'ok', 'facts': {'countries': ['Estados Unidos']}}}
+        facts = combine(sources)
+        self.assertEqual(facts['countries'], ['United States'])
+        self.assertEqual(facts['country_status']['excluded'], ['Italy', 'The Gambia'])
+        self.assertNotIn('Italia', facts['search_aliases'])
+        self.assertNotIn('Italy', facts['search_aliases'])
+        self.assertEqual(facts['country_provenance'][0]['sources'][0]['source'], 'filmaffinity')
+        self.assertEqual(combine({'wikidata': sources['wikidata']})['countries'], [])
+        self.assertEqual(combine({'wikidata': sources['wikidata']})['country_status']['state'], 'unknown')
+
+    def test_referenced_country_and_reviewed_coproduction_are_preserved(self):
+        wd = parse_wikidata([binding('P495', valueLabel='Italy', referenceURL='https://example.com/credits')])['tt1160419']
+        facts = combine({'wikidata': {**wd, 'status': 'ok'}})
+        self.assertEqual(facts['countries'], ['Italy'])
+        self.assertEqual(facts['country_provenance'][0]['sources'][0]['source_url'], 'https://example.com/credits')
+        facts = combine({}, 'tt0212712')
+        self.assertIn('Italy', facts['countries'])
+        self.assertEqual(facts['country_provenance'][-1]['sources'][0]['source'], 'BFI')
+
     def test_cache_and_failed_refresh_retain_verified_facts(self):
         now = datetime(2026, 11, 19, tzinfo=timezone.utc)
         film = {"id": "film:1", "imdb_id": "tt1160419", "release_year": 2021}

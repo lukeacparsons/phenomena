@@ -11,15 +11,16 @@ from urllib.parse import urlencode
 from cinesa_showtimes import atomic_write
 from original_audio import language_code
 from film_synopsis import clean_synopsis, unique_synopses
+from film_countries import canonical as country_name, resolve as resolve_countries, filter_aliases as filter_country_aliases
 
 VERSION = 1
-WIKIDATA_VERSION = 3
-SEARCH_CONTENT_VERSION = 2
+WIKIDATA_VERSION = 4
+SEARCH_CONTENT_VERSION = 3
 LIST_FIELDS = ("directors", "writers", "cast", "producers", "composers", "cinematographers", "editors",
-               "genres", "topics", "colours", "countries", "languages", "studios", "based_on", "source_authors")
+               "genres", "topics", "colours", "countries", "languages", "studios", "distributors", "based_on", "source_authors")
 PROPERTIES = {"P57": "directors", "P58": "writers", "P161": "cast", "P725": "cast", "P162": "producers", "P86": "composers",
               "P344": "cinematographers", "P1040": "editors", "P136": "genres", "P495": "countries",
-              "P364": "languages", "P272": "studios", "P144": "based_on", "P462": "colours"}
+              "P364": "languages", "P272": "studios", "P750": "distributors", "P144": "based_on", "P462": "colours"}
 GENRES = {
     "Science fiction": ["Sci-Fi", "scifi", "science fiction film", "Ciencia ficción", "Ciència-ficció"],
     "Action": ["action film", "Acción", "Acció"], "Adventure": ["adventure film", "Aventuras", "Aventures"],
@@ -137,7 +138,7 @@ def parse_rt(html):
         facts["synopsis"] = synopsis
     if movie.get("contentRating"):
         facts["certification"] = clean(movie["contentRating"])
-    labels = {"Director": "directors", "Screenwriter": "writers", "Producer": "producers",
+    labels = {"Director": "directors", "Screenwriter": "writers", "Producer": "producers", "Distributor": "distributors",
               "Original Language": "languages", "Production Co": "studios", "Genre": "genres"}
     for group in doc.find(**{"data-qa": "item"}):
         label = group.find(**{"data-qa": "item-label"})
@@ -178,12 +179,21 @@ def parse_fa(html):
                 links = [n.text() for n in value.find(itemprop="genre")]
                 facts['topics'] = unique(n.text() for n in value.find('a') if 'movietopic.php?' in n.attrs.get('href', ''))
             elif label == "Compañías":
+                coproduction = re.match(r'Coproducci[oó]n\s+([^;]+);', value.text())
+                if coproduction:
+                    facts['countries'] = [country_name(c) for c in coproduction[1].split('-') if c.strip()]
+                    facts['country_evidence'] = 'explicit_coproduction'
                 links = []
+                role = 'production'
                 for node in value.find():
                     if node.tag == "i":
-                        break  # Distributor/individual producer credits follow this label.
+                        role = 'distribution' if re.search(r'Distribuidora', node.text(), re.I) else 'other'
+                        continue
                     if node.tag == "a" and "name.php?" in node.attrs.get("href", ""):
-                        links.append(node.text())
+                        if role == 'distribution':
+                            facts.setdefault('distributors', []).append(node.text())
+                        elif role == 'production':
+                            links.append(node.text())
             facts[fields[label]] = unique(links)
         elif label == "Guion":
             facts["writers"], facts["source_authors"] = [], []
@@ -194,7 +204,8 @@ def parse_fa(html):
                 if node.tag == "a" and "name.php?" in node.attrs.get("href", ""):
                     facts[field].append(node.text())
         elif label == "País":
-            facts["countries"] = [value.text()]
+            facts.setdefault('countries', [country_name(value.text())])
+            facts.setdefault('country_evidence', 'explicit_production_country')
         elif label == "Duración":
             facts["runtime_minutes"] = duration(value.text())
         elif label == "Sinopsis":
@@ -206,9 +217,15 @@ def parse_fa(html):
 
 def wikidata_query(ids):
     properties = " ".join("wdt:" + prop for prop in PROPERTIES)
-    return '''SELECT ?imdb ?item ?property ?value ?valueLabel ?esLabel ?caLabel ?precision ?placeLabel WHERE {
+    return '''SELECT ?imdb ?item ?property ?value ?valueLabel ?esLabel ?caLabel ?precision ?placeLabel ?referenceURL ?statedIn WHERE {
       VALUES ?imdb { %s } ?item wdt:P345 ?imdb.
       { VALUES ?property { %s } ?item ?property ?value.
+        OPTIONAL { FILTER(?property = wdt:P495)
+          ?item p:P495 ?countryStatement. ?countryStatement ps:P495 ?value; prov:wasDerivedFrom ?reference.
+          FILTER NOT EXISTS { ?countryStatement wikibase:rank wikibase:DeprecatedRank }
+          OPTIONAL { ?reference pr:P854 ?referenceURL. }
+          OPTIONAL { ?reference pr:P248 ?statedIn. }
+        }
         OPTIONAL { ?value rdfs:label ?valueLabel. FILTER(LANG(?valueLabel)="en") }
         OPTIONAL { ?value rdfs:label ?esLabel. FILTER(LANG(?esLabel)="es") }
         OPTIONAL { ?value rdfs:label ?caLabel. FILTER(LANG(?caLabel)="ca") }
@@ -235,6 +252,9 @@ def parse_wikidata(rows):
             label = value.get("valueLabel") or value.get("esLabel") or value.get("caLabel")
             if label:
                 facts.setdefault(PROPERTIES[prop], []).append(label)
+                if prop == 'P495' and (value.get('referenceURL') or value.get('statedIn')):
+                    facts.setdefault('country_claims', []).append({'country': label,
+                        'reference_url': value.get('referenceURL'), 'stated_in': value.get('statedIn')})
                 if PROPERTIES[prop] != "producers":
                     facts.setdefault("search_aliases", []).extend(value.get(key) for key in ("valueLabel", "esLabel", "caLabel"))
         elif prop == "P577":
@@ -276,7 +296,7 @@ def filter_language_aliases(details, aliases):
     return unique(v for v in aliases if key(v) not in excluded)
 
 
-def combine(sources):
+def combine(sources, imdb=None):
     facts = {name: record.get("facts", {}) for name, record in sources.items()}
     result = {}
     for field in LIST_FIELDS:
@@ -335,6 +355,9 @@ def combine(sources):
     for genre in result["genres"]:
         result["search_aliases"] = unique([*result["search_aliases"], genre, *GENRES.get(genre, [])])
     result["search_aliases"] = filter_language_aliases(result, result["search_aliases"])
+    result.update(resolve_countries(sources, imdb))
+    result['search_aliases'] = filter_country_aliases(result, result['search_aliases'])
+    result['search_aliases'] = unique([*result['search_aliases'], *result['countries']])
     result["sources"] = [{"name": name, "url": r["url"], "checked_at": r.get("checked_at"), "status": r["status"]}
                          for name, r in sources.items() if r.get("facts")]
     return result
@@ -410,7 +433,7 @@ def enrich(data, output, mappings, fetch, now, *, force=False):
     for film in data["films"]:
         if film.get("imdb_id"):
             old_details = film.get('details', {})
-            film["details"] = combine(records[film["imdb_id"]])
+            film["details"] = combine(records[film["imdb_id"]], film['imdb_id'])
             if not film['details'].get('languages') and old_details.get('languages'):
                 from language_evidence import FIELDS
                 for field in FIELDS:

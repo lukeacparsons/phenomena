@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {emptySearch,createSearchIndex,interpretSearch,queryFilms,searchParams,searchFromURL} from '../static/cinema-search.js';
-import {emptyIntent,validateIntent,conditionId,parseIntent} from '../static/search-intent.js';
+import {emptyIntent,validateIntent,conditionId,parseIntent,filmMatchReason,searchExplanation} from '../static/search-intent.js';
 import {createSmartSearch,rankSemantic,semanticDocument,filmDocument} from '../src/smart-search.mjs';
 import {createSmartSearchUI} from '../static/smart-search-ui.js';
 
@@ -62,6 +62,41 @@ test('qualified producer searches match producing credits, not acting credits',(
     assert.equal(plan.text,'');assert.deepEqual(plan.conditions,[{field:'producer',op:'eq',value:'Brad Pitt'}]);
     assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.id),['produced']);
   }
+});
+test('company associations include distribution while produced by remains a production credit',async()=>{
+  const p={...programme,films:[film('produced',{details:{studios:['A24']}}),film('distributed',{details:{studios:['Annapurna Pictures'],distributors:['A24']}}),film('unrelated')]};
+  for(const query of ['a24','A24 films','films from A24']){
+    const index=createSearchIndex(p),filters={...emptySearch(),query};
+    const plan=interpretSearch(p,filters,{index,now});
+    assert.equal(plan.text,'');assert.deepEqual(plan.conditions,[{field:'company',op:'eq',value:'A24'}]);
+    assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.id).sort(),['distributed','produced']);
+    assert.equal(filmMatchReason(p.films[1],plan).label,'Distributed by: A24');
+  }
+  assert.deepEqual(queryFilms(p,{...emptySearch(),query:'produced by A24'},{now}).map(f=>f.id),['produced']);
+  assert.deepEqual(queryFilms(p,{...emptySearch(),query:'distributed by A24'},{now}).map(f=>f.id),['distributed']);
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('Known companies need no model')});
+  assert.equal((await api.search({query:'a24'})).mode,'local');
+});
+test('new releases use an explicit current year without requiring unavailable precise dates',async()=>{
+  const p={...programme,films:[2098,2099,2100,null].map(year=>film('release-'+year,{release_year:year}))};
+  const index=createSearchIndex(p);
+  for(const query of ['new releases','latest releases','estrenos','novetats','new releases from France']){
+    const filters={...emptySearch(),query},plan=interpretSearch(p,filters,{index,now});
+    assert.equal(plan.text,'');assert.deepEqual(plan.unsupported,[]);
+    assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.id),['release-2099']);
+  }
+  assert.equal(interpretSearch(p,{...emptySearch(),query:'new releases'},{index,now:Date.parse('2098-12-31T22:59Z')}).conditions[0].value,'2098');
+  assert.equal(interpretSearch(p,{...emptySearch(),query:'new releases'},{index,now:Date.parse('2098-12-31T23:01Z')}).conditions[0].value,'2099');
+  assert.deepEqual(parseIntent('new releases this week',{programme:p,today:'2099-01-01'}).conditions,[]);
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('New releases need no model')});
+  assert.equal((await api.search({query:'new releases'})).mode,'local');
+});
+test('country match explanations identify co-productions and use recorded source evidence',()=>{
+  const f=film('coproduction',{details:{countries:['France','Italy'],country_provenance:[{country:'Italy',sources:[{source:'CNC',source_url:'https://example.com/credits'}]}]}});
+  const plan=parseIntent('movies from Italy',{programme});
+  assert.deepEqual(filmMatchReason(f,plan),{label:'Co-production: France / Italy',sourceURL:'https://example.com/credits',source:'CNC'});
+  assert.equal(searchExplanation(plan),'Includes co-productions · Soonest showing first');
+  assert.equal(filmMatchReason(f,emptyIntent()),null);
 });
 test('release decades use original years, include both boundaries and exclude unknowns',()=>{
   const p={...programme,films:[1969,1970,1974,1979,1980,null].map(year=>film('year-'+year,{release_year:year,details:{release_dates:[{date:'1975-01-01',kind:'theatrical'}]}}))};

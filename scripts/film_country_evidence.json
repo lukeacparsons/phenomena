@@ -1,0 +1,15 @@
+{
+  "description": "Reviewed complete production-country lists. Identity uses the existing verified IMDb mapping; dates record this review, not a fresh provider scrape.",
+  "films": {
+    "tt15239678": {"title": "Dune: Part Two", "countries": ["United States"], "source": "European Audiovisual Observatory", "source_url": "https://lumiere.obs.coe.int/movie/461249", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt0212712": {"title": "2046", "countries": ["Hong Kong", "France", "Germany", "China", "Italy"], "source": "BFI", "source_url": "https://www.bfi.org.uk/film/e19fc37c-7ebd-55c0-b4a6-30b45e9765d7/2046", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt30388264": {"title": "The Violinist", "countries": ["Singapore", "Spain", "Italy"], "source": "Orisa Produzioni", "source_url": "https://www.orisa.it/en/productions/the-violinist/", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt37304295": {"title": "Fatherland", "countries": ["Poland", "Germany", "Italy", "France"], "source": "Festival de Cannes", "source_url": "https://www.festival-cannes.com/en/f/fatherland/", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt41592086": {"title": "Congo Boy", "countries": ["Central African Republic", "France", "Democratic Republic of the Congo", "Italy"], "source": "Festival de Cannes", "source_url": "https://www.festival-cannes.com/f/congo-boy/", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt36107185": {"title": "La Gradiva", "countries": ["France", "Italy"], "source": "Semaine de la Critique", "source_url": "https://www.semainedelacritique.com/en/edition/2026/movie/la-gradiva", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt39384835": {"title": "Lejos de los árboles", "countries": ["Spain", "Italy", "Peru"], "source": "ICAA", "source_url": "https://sede.mcu.gob.es/CatalogoICAA/es-es/Peliculas/Detalle?pelicula=89822", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt14129116": {"title": "A Talent for Murder", "countries": ["Switzerland", "Australia", "Italy", "United States", "United Kingdom"], "source": "British Council", "source_url": "https://filmsandfestivals.britishcouncil.org/projects/a-talent-for-murder", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt0050706": {"title": "Mon oncle", "countries": ["France", "Italy"], "source": "CNC", "source_url": "https://www.cnc.fr/professionnels/visas-et-classification/18069", "checked_at": "2026-11-20T23:05:00Z"},
+    "tt0062136": {"title": "Playtime", "countries": ["France", "Italy"], "source": "CNC", "source_url": "https://www.cnc.fr/professionnels/visas-et-classification/24991", "checked_at": "2026-11-20T23:05:00Z"}
+  }
+}

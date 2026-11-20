@@ -377,3 +377,8 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 @media(min-width:601px) and (pointer:coarse){
  .card .card-body .card-cinema-name,.card .card-showtime{min-height:44px;padding-block:10px}
 }
+
+.search-explanation{margin:10px 0 0;font-size:.8125rem;line-height:1.5;color:var(--tx2)}
+.search-explanation[hidden]{display:none}
+.search-match{margin:8px 0 12px;font-size:.8125rem;line-height:1.5;color:var(--tx2);overflow-wrap:anywhere}
+.search-match-source{white-space:nowrap;text-decoration:underline;text-underline-offset:3px}

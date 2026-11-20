@@ -79,8 +79,9 @@ export function createListingView({language='en',cinemas=[],today,listingPath='/
     return html;
   }
 
-  function bodyMarkup(film){
-    return `<h2><a href="${safeURL(filmHref(film))}" class="title-button" data-open="${escapeHTML(film.id)}" aria-haspopup="dialog">${escapeHTML(film.title)}</a></h2>${cardShowtimes(film)}`;
+  function bodyMarkup(film,{matchReason=null}={}){
+    const reason=matchReason?.label?`<p class="search-match">${escapeHTML(matchReason.label)}${safeURL(matchReason.sourceURL)?` <a class="search-match-source" href="${safeURL(matchReason.sourceURL)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHTML(matchReason.source)}">↗</a>`:''}</p>`:'';
+    return `<h2><a href="${safeURL(filmHref(film))}" class="title-button" data-open="${escapeHTML(film.id)}" aria-haspopup="dialog">${escapeHTML(film.title)}</a></h2>${reason}${cardShowtimes(film)}`;
   }
   return {bodyMarkup,datesMarkup,showtimeLabel};
 }

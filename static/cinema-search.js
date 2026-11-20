@@ -54,7 +54,7 @@ export function resolvedSearch(programme,filters,now=Date.now(),index){
   return {text:parsed.text,range:explicit?{start:filters.date_from,end:filters.date_to}:parsed.range};
 }
 
-const DETAIL_FIELDS=['directors','writers','cast','genres','topics','countries','languages','composers','cinematographers','editors','studios','based_on','source_authors'];
+const DETAIL_FIELDS=['directors','writers','cast','genres','topics','countries','languages','composers','cinematographers','editors','studios','distributors','based_on','source_authors'];
 const PEOPLE_FIELDS=['directors','writers','cast','composers','cinematographers','editors','source_authors'];
 
 // Codes are lookup keys for provider metadata, not extra words in the search index.
@@ -201,11 +201,12 @@ export function createSearchIndex(programme){
 export function interpretSearch(programme,filters,{now=Date.now(),index,intent}={}){
   const parsed=resolvedSearch(programme,filters,now,index);
   const text=normalise(parsed.text);
-  let plan=intent||index?.intents.get(parsed.text);
+  const intentKey=madridDate(now)+':'+parsed.text;
+  let plan=intent||index?.intents.get(intentKey);
   if(!plan){
     const protectedNames=index?[...index.people,...[...index.titles].filter(t=>t.includes(' '))].filter(name=>(' '+text+' ').includes(' '+name+' ')):[];
-    plan=parseIntent(parsed.text,{programme,exactTitle:index?.titles.has(text),protectedNames});
-    if(index){if(index.intents.size>=100)index.intents.delete(index.intents.keys().next().value);index.intents.set(parsed.text,plan);}
+    plan=parseIntent(parsed.text,{programme,exactTitle:index?.titles.has(text),protectedNames,today:madridDate(now)});
+    if(index){if(index.intents.size>=100)index.intents.delete(index.intents.keys().next().value);index.intents.set(intentKey,plan);}
   }
   return effectiveIntent(plan,filters.ignored_filters||[]);
 }
