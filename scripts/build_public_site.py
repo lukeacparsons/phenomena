@@ -832,7 +832,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.editorial()
             site.discovery_pages()
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
-            for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
+            for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):

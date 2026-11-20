@@ -53,6 +53,15 @@ class FilmDetailsTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 parse('<html>Access denied</html>')
 
+    def test_synopsis_uses_the_verified_film_record(self):
+        rt = parse_rt(RT.replace('"@type":"Movie"', '"@type":"Movie","description":"A journey across a desert planet."'))
+        fa = parse_fa(FA.replace('</dl>', '<dt>Sinopsis</dt><dd>Un viaje por un planeta desértico.</dd></dl>'))
+        self.assertEqual(rt['synopsis'], 'A journey across a desert planet.')
+        self.assertEqual(fa['synopsis'], 'Un viaje por un planeta desértico.')
+        combined = combine({'rotten_tomatoes': {'facts': rt, 'url': 'https://example.com/rt', 'status': 'ok'},
+                            'filmaffinity': {'facts': fa, 'url': 'https://example.com/fa', 'status': 'ok'}})
+        self.assertEqual(combined['synopsis'], rt['synopsis'])
+
     def test_wikidata_dates_keep_precision_and_country(self):
         rows = [binding("P577", value="2021-01-01T00:00:00Z", precision="9"),
                 binding("P577", value="2021-09-01T00:00:00Z", precision="10", placeLabel="Spain"),

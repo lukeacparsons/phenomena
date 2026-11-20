@@ -1,7 +1,8 @@
 import {parseDateQuery} from './search-dates.js';
+import {parseIntent,effectiveIntent,matchesConditions,ratingValue} from './search-intent.js';
 
 export const normalise = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
-export const emptySearch = () => ({query:'',date_from:null,date_to:null,cinema_ids:[],formats:[],big_screens_only:false});
+export const emptySearch = () => ({query:'',date_from:null,date_to:null,cinema_ids:[],formats:[],big_screens_only:false,ignored_filters:[]});
 export const matchesFilmId = (film,id) => film.id===id || (film.merged_ids||[]).includes(id);
 const madridDateFormatter=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'});
 export const madridDate = (now=Date.now()) => madridDateFormatter.format(new Date(now));
@@ -26,6 +27,7 @@ export function validateSearch(input,programme,index){
   }
   if(filters.date_from&&filters.date_to&&filters.date_to<filters.date_from)throw inputError('date_to must be on or after date_from.');
   if(typeof filters.big_screens_only!=='boolean')throw inputError('big_screens_only must be a boolean.');
+  if(!Array.isArray(filters.ignored_filters)||filters.ignored_filters.length>20||filters.ignored_filters.some(v=>typeof v!=='string'||v.length>220||!v))throw inputError('Invalid ignored search filters.');
   const known=index?.known||{cinema_ids:programme.cinemas.map(cinema=>cinema.id),formats:[...new Set(programme.films.flatMap(film=>film.sessions.flatMap(session=>session.formats||[])))]};
   for(const field of ['cinema_ids','formats']){
     if(!Array.isArray(filters[field])||filters[field].length>20||filters[field].some(value=>typeof value!=='string'||!value||value.length>128))throw inputError(field+' must contain at most 20 strings.');
@@ -191,15 +193,30 @@ export function createSearchIndex(programme){
     }).sort((a,b)=>a.starts-b.starts||a.session.id.localeCompare(b.session.id));
     return {film,words,personNames,sessions};
   });
-  return {programme,films,titles,people:[...people],providers:[...providers],known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
+  return {programme,films,titles,people:[...people],providers:[...providers],intents:new Map(),known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
 }
 
-export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index}={}){
+export function interpretSearch(programme,filters,{now=Date.now(),index,intent}={}){
+  const parsed=resolvedSearch(programme,filters,now,index);
+  const text=normalise(parsed.text);
+  let plan=intent||index?.intents.get(parsed.text);
+  if(!plan){
+    const protectedNames=index?[...index.people,...[...index.titles].filter(t=>t.includes(' '))].filter(name=>(' '+text+' ').includes(' '+name+' ')):[];
+    plan=parseIntent(parsed.text,{programme,exactTitle:index?.titles.has(text),protectedNames});
+    if(index){if(index.intents.size>=100)index.intents.delete(index.intents.keys().next().value);index.intents.set(parsed.text,plan);}
+  }
+  return effectiveIntent(plan,filters.ignored_filters||[]);
+}
+
+export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index,intent,semanticScores}={}){
   if(!programme)return [];
   if(!index||index.programme!==programme)index=createSearchIndex(programme);
   const parsed=resolvedSearch(programme,filters,now,index);
   if(ignoreExplicitDates&&(filters.date_from||filters.date_to))parsed.range=null;
-  const query=normalise(parsed.text);
+  const plan=interpretSearch(programme,filters,{now,index,intent});
+  const query=normalise(plan.text);
+  const semantic=plan.semantic_query&&semanticScores?new Map(semanticScores.map(row=>[row.film_id,row.score])):null;
+  const conditions=plan.conditions.filter(c=>!(c.field==='date'&&(filters.date_from||filters.date_to)));
   const bigScreens=filters.big_screens_only||/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/.test(query);
   const terms=query.replace(/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/g,' ').split(' ').filter(Boolean);
   const personQueries=index.people.filter(name=>(' '+query+' ').includes(' '+name+' '));
@@ -208,7 +225,8 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
   // A named operator must match the screening, even if it is also a film studio.
   // Preserve explicit titles and people such as "La vida es Verdi" or "Jean Renoir".
   const providerTerms=new Set(index.providers.filter(name=>(' '+query+' ').includes(' '+name+' ')).flatMap(name=>name.split(' ')));
-  return index.films.flatMap(({film,words,personNames,sessions:rows})=>{
+  const matches=index.films.flatMap(({film,words,personNames,sessions:rows})=>{
+    if(semantic&&!semantic.has(film.id))return [];
     if(!personQueries.every(name=>personNames.has(name)))return [];
     // Match shared film metadata once, then only test remaining terms per session.
     const sessionTerms=terms.filter(term=>(providerTerms.has(term)&&!namedTerms.has(term))||!words.some(word=>word.startsWith(term)));
@@ -218,11 +236,14 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
       if(filters.cinema_ids.length&&!filters.cinema_ids.includes(session.cinema_id))return false;
       if(!filters.formats.every(format=>(session.formats||[]).includes(format)))return false;
       if(bigScreens&&session.big_screen!==true)return false;
+      if(!matchesConditions(film,session,conditions))return false;
       return sessionTerms.every(term=>sessionWords.some(word=>word.startsWith(term)));
     }).map(row=>row.session);
     return sessions.length?[{...film,sessions}]:[];
-  })
-    .sort((a,b)=>Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
+  });
+  const floor=semantic?Math.max(.25,...matches.map(f=>semantic.get(f.id)-.12)):0;
+  return matches.filter(f=>!semantic||semantic.get(f.id)>=floor)
+    .sort((a,b)=>(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,'rating_rt')??-1)-(ratingValue(a,'rating_rt')??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
 }
 
 export function searchParams(filters,filmId=null,screeningId=null){
@@ -236,6 +257,7 @@ export function searchParams(filters,filmId=null,screeningId=null){
   for(const id of filters.cinema_ids)params.append('cinemas',id);
   for(const format of filters.formats)params.append('format',format);
   if(filters.big_screens_only)params.set('big','1');
+  for(const id of filters.ignored_filters||[])params.append('skip',id);
   if(filmId)params.set('film',filmId);
   if(screeningId)params.set('screening',screeningId);
   return params;
@@ -245,5 +267,5 @@ export function searchFromURL(params){
   const date=params.get('date');
   return {query:(params.get('q')||'').slice(0,500),date_from:validDate(date)?date:validDate(params.get('from'))?params.get('from'):null,
     date_to:validDate(date)?date:validDate(params.get('to'))?params.get('to'):null,
-    cinema_ids:params.getAll('cinemas'),formats:params.getAll('format'),big_screens_only:params.get('big')==='1'};
+    cinema_ids:params.getAll('cinemas'),formats:params.getAll('format'),big_screens_only:params.get('big')==='1',ignored_filters:params.getAll('skip').filter(v=>v&&v.length<=220).slice(0,20)};
 }

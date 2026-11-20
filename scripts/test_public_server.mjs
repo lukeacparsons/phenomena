@@ -55,3 +55,23 @@ test('production origin preserves routing, cache isolation and atomic releases',
   response=await get('/en/');assert.equal(response.status,503);assert.equal(response.headers.get('cache-control'),'no-store');
   response=await get('/healthz');assert.equal(response.status,503);
 });
+
+test('search endpoint accepts bounded same-origin JSON and keeps failures private',async t=>{
+  const programme={cinemas:[],films:[]};
+  const server=publicServer({smartSearchOptions:{apiKey:'',getProgramme:async()=>programme}});
+  await new Promise(done=>server.listen(0,'127.0.0.1',done));
+  t.after(()=>new Promise(done=>server.close(done)));
+  const base='http://127.0.0.1:'+server.address().port;
+  const post=(body,headers={})=>fetch(base+'/api/search',{method:'POST',headers:{'Content-Type':'application/json',...headers},body:typeof body==='string'?body:JSON.stringify(body)});
+  let response=await post({query:'rt >80',language:'en'},{Origin:'https://vobarna.com'});
+  assert.equal(response.status,200);assert.equal((await response.json()).mode,'local');
+  assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.equal(response.headers.get('x-robots-tag'),'noindex');
+  response=await post({query:'something uplifting'});assert.equal((await response.json()).mode,'unavailable');
+  assert.equal((await fetch(base+'/api/search')).status,405);
+  assert.equal((await post({query:'uplifting'},{Origin:'https://another.example'})).status,403);
+  assert.equal((await post({query:'uplifting'},{'Content-Type':'text/plain'})).status,415);
+  for(const body of ['{',JSON.stringify({query:'x'.repeat(5000)}),{query:'uplifting',model:'arbitrary'},{query:'uplifting',language:'invalid'}]){
+    response=await post(body);assert.equal(response.status,400);assert.deepEqual(await response.json(),{error:'invalid_input'});
+  }
+});

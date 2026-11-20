@@ -5,7 +5,9 @@ import './ticket-events.js';
 import {observeImages,posterMarkup} from './progressive-images.js';
 import {hydrateProgramme} from './programme-data.js';
 import {readProgrammeCache,saveProgrammeCache} from './programme-cache.js';
-import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch} from './cinema-search.js';
+import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch,interpretSearch} from './cinema-search.js';
+import {intentChips} from './search-intent.js';
+import {createSmartSearchUI} from './smart-search-ui.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
 import {registerWebMCP} from './webmcp-registration.js';
 
@@ -50,6 +52,16 @@ let pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('
 let legacyCinema=params.get('cinema');
 let data=null,visible=[],activeFilm=null,activeSession=null;
 let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0;
+const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
+  getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
+  onResult:()=>{refreshResults();if($('filmDialog')?.open)renderDialog();},
+  onStatus:(kind,unsupported=[])=>{
+    let status=$('searchStatus');
+    if(!status){status=document.createElement('p');status.id='searchStatus';status.className='search-status';status.setAttribute('role','status');$('filterChips')?.after(status);}
+    const messages={en:{loading:'Understanding your search…',unavailable:'Smart search is temporarily unavailable. Showing keyword matches.',noSemantic:'No close matches for this description.',unsupported:'Could not apply: '},es:{loading:'Interpretando tu búsqueda…',unavailable:'La búsqueda inteligente no está disponible. Mostramos coincidencias por palabras.',noSemantic:'No hay coincidencias cercanas para esta descripción.',unsupported:'No se pudo aplicar: '},ca:{loading:'Interpretant la cerca…',unavailable:'La cerca intel·ligent no està disponible. Mostrem coincidències per paraules.',noSemantic:'No hi ha coincidències properes per a aquesta descripció.',unsupported:'No s’ha pogut aplicar: '}};
+    status.textContent=(messages[language][kind]||'')+(kind==='unsupported'?unsupported.join(' · '):'');status.hidden=!kind;
+  }
+});
 const CARD_BATCH_SIZE=32;
 let cardLimit=CARD_BATCH_SIZE;
 const cardNodes=new Map([...$('grid').querySelectorAll('.card[data-film]')].map(node=>[node.dataset.film,{node,body:node.querySelector('.card-body').innerHTML,adopted:true}]));
@@ -114,7 +126,7 @@ function parsedSearch(){
 }
 
 function filteredFilms(ignoreDate=false){
-  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now()});
+  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now(),...smartSearchUI?.current()});
   if(initialViewTime!==null)films.sort((a,b)=>(initialOrder.get(a.id)??Infinity)-(initialOrder.get(b.id)??Infinity));
   return films;
 }
@@ -147,11 +159,13 @@ function applySearch(filters){
   initialViewTime=null;
   cancelSearchRender();
   const next=validateSearch(filters,data,searchIndex);
+  if(next.query!==state.query)next.ignored_filters=[];
   cardLimit=CARD_BATCH_SIZE;
   Object.assign(state,next);
   $('linkNotice').hidden=true;
   closeFilm();
   if($('search').value!==state.query)$('search').value=state.query;
+  smartSearchUI?.update();
   refreshResults();
   window.dispatchEvent(new CustomEvent('vobarna:search',{detail:{scope:'films',query_length:state.query.length,
     result_count:visible.length,screening_count:visible.reduce((sum,film)=>sum+film.sessions.length,0),
@@ -169,6 +183,10 @@ function renderFilterChips(){
   for(const id of state.cinema_ids)chips.push({field:'cinema_ids',value:id,label:cinema(id)?.name||id});
   for(const format of state.formats)chips.push({field:'formats',value:format,label:format});
   if(state.big_screens_only)chips.push({field:'big_screens_only',value:'',label:labels.big});
+  if(data){
+    const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
+    for(const chip of intentChips(plan,language,data))chips.push({field:'intent',value:chip.id,label:chip.label});
+  }
   $('filterChips').hidden=!chips.length;
   $('filterChips').innerHTML=chips.map(({field,value,label})=>`<button type="button" class="filter-chip" data-remove-filter="${field}" data-value="${escapeHTML(value)}" aria-label="${escapeHTML(labels.remove+' '+label)}">${escapeHTML(label)} <span aria-hidden="true">×</span></button>`).join('');
 }
@@ -277,6 +295,7 @@ function setLanguage(next){
   $('search').setAttribute('aria-label',t('search'));
   $('dates').setAttribute('aria-label',t('screeningDates'));
   if(data){
+    smartSearchUI?.update();
     refreshResults();
     if($('filmDialog').open)renderDialog();
   }
@@ -404,6 +423,7 @@ function useProgramme(next,{cached=false}={}){
         .filter(film=>film.sessions.length)};
   }
   searchIndex=createSearchIndex(data);
+  smartSearchUI?.reset();
   dateLabels.clear();
   if((searchTimer||searchFrame)&&parseFilmQuery(data,state.query,todayISO(),searchIndex).range){state.date_from=null;state.date_to=null;}
   cancelSearchRender();
@@ -516,6 +536,7 @@ document.addEventListener('click',event=>{
     const field=button.dataset.removeFilter,next={...state};
     if(field==='dates'){next.date_from=null;next.date_to=null;}
     else if(field==='big_screens_only')next.big_screens_only=false;
+    else if(field==='intent')next.ignored_filters=[...new Set([...(state.ignored_filters||[]),button.dataset.value])];
     else if(['cinema_ids','formats'].includes(field))next[field]=state[field].filter(value=>value!==button.dataset.value);
     applySearch(next);
   }
@@ -525,7 +546,9 @@ document.addEventListener('click',event=>{
 });
 function inputSearch(event){
   if(event.isComposing)return;
+  if(state.query!==event.target.value)state.ignored_filters=[];
   state.query=event.target.value;
+  smartSearchUI?.reset();
   initialViewTime=null;
   if(!data)return;
   cancelSearchRender();

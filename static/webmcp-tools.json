@@ -80,6 +80,14 @@
             "type": "boolean",
             "description": "Use the curated premium selection, including comfort-focused venues."
           },
+          "ignored_filters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Search interpretation filters removed by the user. Preserve from get_context when updating an existing view; normally omit."
+          },
           "limit": {
             "type": "integer",
             "minimum": 1,
@@ -194,6 +202,14 @@
           "big_screens_only": {
             "type": "boolean",
             "description": "Use the curated premium selection, including comfort-focused venues."
+          },
+          "ignored_filters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "description": "Search interpretation filters removed by the user. Preserve from get_context when updating an existing view; normally omit."
           }
         },
         "required": [],

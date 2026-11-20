@@ -203,7 +203,12 @@ def parse_rating(provider, html):
     # Only the critics' Tomatometer, never an audience score or a star average.
     if rating.get("name") != "Tomatometer" or str(rating.get("bestRating")) != "100":
         raise ValueError("Unrecognised Rotten Tomatoes rating")
-    return checked_score(rating.get("ratingValue"), rating.get("ratingCount"), 100)
+    result = checked_score(rating.get("ratingValue"), rating.get("ratingCount"), 100)
+    # This is an editorial designation, never inferred from a score threshold.
+    critics = (page.scorecard or {}).get('criticsScore') or {}
+    if result is not None:
+        result['certified_fresh'] = critics.get('certified') if isinstance(critics.get('certified'), bool) else None
+    return result
 
 
 def parse_audience_rating(html):
@@ -358,7 +363,7 @@ def enrich(data, output, fetch, now, *, force=False, reviewed=None):
                     score = imdb_scores.get(imdb)
                     record["ratings"][provider] = {"url": url, "status": "ok" if score else "unrated", "score": None,
                                                    **(score or {}), "checked_at": dataset_checked, "source_url": IMDB_DATASET}
-            elif not force and (provider != "rotten_tomatoes" or "audience" in old) and old.get("url") == url and fresh(old.get("attempted_at") or old.get("checked_at"), now,
+            elif not force and (provider != "rotten_tomatoes" or ("audience" in old and "certified_fresh" in old)) and old.get("url") == url and fresh(old.get("attempted_at") or old.get("checked_at"), now,
                                                                1 if old.get("status") in ("stale", "unavailable") or (old.get("audience") or {}).get("status") in ("stale", "unavailable") else 24):
                 record["ratings"][provider] = old
             else:
@@ -473,7 +478,9 @@ class RatingsRefresher:
         failed = previous.get("metadata_failed") or any(r.get("status") in ("stale", "unavailable") or (r.get("audience") or {}).get("status") in ("stale", "unavailable") for r in records)
         programme = json.loads(self.programme.read_text())
         same_films = set(previous.get("films", {})) == {f["id"] for f in programme["films"]}
-        if same_films and previous.get("identity_metadata_version") == IDENTITY_VERSION and fresh(previous.get("checked_at"), now, 1 if failed else 24):
+        missing_badges = any('certified_fresh' not in f.get('ratings', {}).get('rotten_tomatoes', {})
+                             for f in programme['films'] if f.get('ratings', {}).get('rotten_tomatoes', {}).get('score') is not None)
+        if same_films and not missing_badges and previous.get("identity_metadata_version") == IDENTITY_VERSION and fresh(previous.get("checked_at"), now, 1 if failed else 24):
             return False
         self.last_attempt = now.isoformat()
         result = self.refresh(self.programme, now=now)

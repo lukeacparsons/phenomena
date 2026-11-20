@@ -42,6 +42,14 @@ class RatingTests(unittest.TestCase):
         self.assertEqual(parse_rating("rotten_tomatoes", rt(score=0))["score"], 0)
         self.assertIsNone(parse_rating("rotten_tomatoes", rt(count=0)))
 
+    def test_certified_fresh_is_read_from_the_critics_badge_only(self):
+        for flag in (True, False):
+            html = rt(score=99).replace('"criticsScore": {', '"criticsScore": {"certified": ' + json.dumps(flag) + ',')
+            self.assertIs(parse_rating('rotten_tomatoes', html)['certified_fresh'], flag)
+        self.assertIsNone(parse_rating('rotten_tomatoes', rt(score=99))['certified_fresh'])
+        html = rt(score=99).replace('"audienceScore": {', '"audienceScore": {"certified": true,')
+        self.assertIsNone(parse_rating('rotten_tomatoes', html)['certified_fresh'])
+
     def test_audience_is_distinct_from_critics_and_keeps_verification(self):
         for verified in (True, False):
             audience = parse_audience_rating(rt(score=83, audience=90, verified=verified))

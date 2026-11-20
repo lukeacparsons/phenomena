@@ -1,0 +1,27 @@
+# Homepage smart search
+
+Search combines three layers through the existing search box, in English, Spanish and Catalan:
+
+1. Local parsing handles ratings (`rt > 80%`, `imdb >= 7`), review counts, genres (`funny movies`), production countries (`from France`), audio languages (`in French`), actual Certified Fresh badges, lengths, screening times, cinemas, chains and formats. The existing date parser handles relative dates. Unknown metadata never satisfies a factual filter.
+2. A server-side interpreter turns more complex wording into validated conditions. GPT-6 Luna uses the `fast` service tier with reasoning disabled and strict structured output. Existing deterministic constraints are preserved. It cannot invent film facts or screenings. Unsupported requests are displayed above the results.
+3. `text-embedding-3-small` (512 dimensions) ranks moods, themes and similarity against the current catalogue's titles, verified synopses, genres and credits. A known reference film contributes its real catalogue description. Exact filters still apply before the relative relevance cutoff. Results are approximate and depend on metadata coverage.
+
+Filter chips show the interpretation and can be removed. The original query and removed chips are shareable in the URL. Exact title/person and cinema-chain searches retain their existing behaviour and theatre labels.
+
+## Runtime configuration
+
+Set `OPENAI_API_KEY` as a **runtime-only secret on the website application**, never as a build argument, browser variable or collector credential. Defaults are `SEARCH_MODEL=gpt-6-luna`, `SEARCH_SERVICE_TIER=fast`, `SEARCH_EMBEDDING_MODEL=text-embedding-3-small`. Alternative interpreters must support reasoning `none` and the strict schema. Without credentials, local search continues and semantic requests show a brief availability message.
+
+`POST /api/search` accepts only `{query, language}`. It uses no-store responses, checks browser origin and JSON content type, bounds request/query sizes, validates model output, and returns generic provider errors. The key and embeddings are never served. Search text is sent to OpenAI with `store:false`; raw queries are not logged by this service.
+
+The browser waits 350 ms after local search settles, cancels superseded requests and uses a 6-second deadline. Film embeddings warm on startup and catalogue refresh; content hashes reuse unchanged vectors. Startup also primes the interpreter with one generic mood search to reduce the first user's cold-start delay. A private cache defaults to `.site/search-cache/embeddings.json` (`SEARCH_CACHE_DIR` overrides it). This cache is rebuilt on container replacement unless mounted persistently. Identical requests are coalesced, and completed interpretations have bounded in-memory browser/server caches. Relative dates expire with the Madrid calendar day.
+
+Limits per process: four active AI requests, 30 uncached queries per connection IP per minute, and `SEARCH_DAILY_LIMIT=1000` uncached interpretations per Madrid day. The IP limit is conservative behind a shared proxy. These reset on restart and are not an account spending limit. Standard filters and cache hits do not use the AI quota.
+
+Certified Fresh is read from Rotten Tomatoes' critics scorecard, independently of its numeric score and audience badge. Existing ratings missing that field refresh on the next metadata cycle. Publisher descriptions also refresh into the film metadata cache; no model-generated descriptions are stored as facts.
+
+## Validation and latency
+
+`node --test scripts/test_smart_search.mjs scripts/test_public_server.mjs` covers comparisons, missing data, language/origin distinction, badges, screening constraints, filter removal, semantic ranking, validation, caching, quotas, endpoint boundaries and stale responses. `npm run site:check` covers publication and serving. `node scripts/test_smart_search_browser.cjs` exercises the rendered interface with deterministic responses; set `VOBARNA_PUBLIC_URL` and `PLAYWRIGHT_MODULE` as needed.
+
+`node scripts/benchmark_search.mjs` is an opt-in live benchmark that uses `OPENAI_API_KEY` and writes timings/plans to ignored `output/smart-search/model-benchmark.json`. On 20 November 2026, all three multilingual samples passed for both Luna fast (848–1668 ms) and Sol ultrafast (1050–1631 ms). Luna was selected for comparable latency with lower cost. These are small-sample API observations, not a latency guarantee; complete searches also include network and embedding work. Local search makes no model call.

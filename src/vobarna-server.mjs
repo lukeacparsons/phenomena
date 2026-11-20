@@ -8,6 +8,7 @@ import {createGzip} from 'node:zlib';
 import {pipeline} from 'node:stream/promises';
 import {pathToFileURL} from 'node:url';
 import {isProgrammePath, resolvePublicURL} from './public-routing.mjs';
+import {createSmartSearch} from './smart-search.mjs';
 
 const types={'.html':'text/html; charset=utf-8','.json':'application/json; charset=utf-8',
   '.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8',
@@ -15,8 +16,9 @@ const types={'.html':'text/html; charset=utf-8','.json':'application/json; chars
   '.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.ico':'image/x-icon',
   '.woff2':'font/woff2','.ttf':'font/ttf'};
 
-export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY}={}) {
+export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={}}={}) {
   let active;
+  let catalogue;
   const canonical=new URL(origin);
   async function release() {
     const root=await realpath(resolve(publication,'current/public'));
@@ -29,6 +31,15 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
     }
     return active;
   }
+  const smartSearch=createSmartSearch({cacheDirectory:resolve(publication,'search-cache'),getProgramme:async()=>{
+    const current=await release();
+    if(catalogue?.root!==current.root){
+      const programme=JSON.parse(await readFile(resolve(current.root,'programme.json'),'utf8'));
+      if(!Array.isArray(programme.films)||!Array.isArray(programme.cinemas))throw new Error('Invalid catalogue');
+      catalogue={root:current.root,programme};
+    }
+    return catalogue.programme;
+  },...smartSearchOptions});
   const server=createServer(async(req,res)=>{
     res.setHeader('X-Content-Type-Options','nosniff');
     res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
@@ -37,10 +48,29 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       res.end(req.method==='HEAD'?undefined:body);
     }
     try {
-      if(!['GET','HEAD'].includes(req.method))return reply(405,'Method not allowed',{Allow:'GET, HEAD'});
       // Never trust forwarded hosts for redirect targets. Bunny passes a fixed origin Host.
       const url=new URL(req.url,canonical);
       if(!req.url.startsWith('/')||req.url.startsWith('//'))return reply(400,'Bad request');
+      if(url.pathname==='/api/search'){
+        const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};
+        if(req.method!=='POST')return reply(405,JSON.stringify({error:'method_not_allowed'}),{...headers,Allow:'POST'});
+        if(req.headers.origin&&req.headers.origin!==canonical.origin&&req.headers.origin!=='http://'+req.headers.host)return reply(403,JSON.stringify({error:'origin_not_allowed'}),headers);
+        if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']||''))return reply(415,JSON.stringify({error:'invalid_content_type'}),headers);
+        try{
+          const body=await new Promise((done,reject)=>{
+            let bytes=0,chunks=[];
+            req.on('data',chunk=>{bytes+=chunk.length;if(bytes>4096){chunks=[];reject(Object.assign(new Error('Request too large'),{code:'invalid_input'}));}else chunks.push(chunk);});
+            req.on('end',()=>{try{done(JSON.parse(Buffer.concat(chunks).toString('utf8')));}catch{reject(Object.assign(new Error('Invalid JSON'),{code:'invalid_input'}));}});
+            req.on('error',reject);
+          });
+          const result=await smartSearch.search(body,{client:req.socket.remoteAddress});
+          return reply(200,JSON.stringify(result),headers);
+        }catch(error){
+          const code=['invalid_input','rate_limited'].includes(error.code)?error.code:'search_unavailable';
+          return reply(code==='invalid_input'?400:code==='rate_limited'?429:503,JSON.stringify({error:code}),headers);
+        }
+      }
+      if(!['GET','HEAD'].includes(req.method))return reply(405,'Method not allowed',{Allow:'GET, HEAD'});
       if(req.headers.host?.split(':')[0]==='www.'+canonical.hostname)
         return reply(301,'',{'Location':canonical.origin+url.pathname+url.search});
       if(/^[A-Za-z0-9-]{8,128}$/.test(indexNowKey||'')&&url.pathname===`/${indexNowKey}.txt`)
@@ -103,11 +133,14 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
   server.requestTimeout=30_000;
   server.headersTimeout=15_000;
   server.keepAliveTimeout=5_000;
+  server.warmSearch=options=>smartSearch.warm(options);
   return server;
 }
 
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const server=publicServer();
   server.listen(Number(process.env.PORT||8787),'0.0.0.0',()=>console.log(JSON.stringify({event:'origin_started'})));
+  const warm=options=>server.warmSearch(options).catch(()=>console.error(JSON.stringify({event:'search_warmup_failed'})));
+  void warm({interpreter:true});const searchRefresh=setInterval(()=>void warm(),300000);searchRefresh.unref();
   for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),10_000).unref();});
 }

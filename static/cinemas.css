@@ -229,6 +229,8 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .filter-chip:is(:hover,:focus-visible){background:var(--s3);color:var(--tx)}
 .filter-chip span{display:inline-flex;align-items:center;justify-content:center;flex:none;width:16px;height:16px;font-size:18px;line-height:1;color:inherit}
 .link-notice{margin-top:12px;font-size:.875rem;color:var(--tx2)}
+.search-status{margin:10px 0 0;font-size:.875rem;line-height:1.5;color:var(--tx2);overflow-wrap:anywhere}
+.search-status[hidden]{display:none}
 @media(pointer:coarse){.filter-chip{min-height:44px}}
 
 .site-footer{max-width:1160px;margin:0 auto;padding:24px 20px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;color:var(--tx2);font-size:.875rem}.site-footer a{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px}.site-footer a:hover{color:var(--red)}

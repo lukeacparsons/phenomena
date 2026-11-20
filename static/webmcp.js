@@ -4,7 +4,8 @@ const searchProperties={
   date_to:{type:['string','null'],description:'Inclusive last screening date, YYYY-MM-DD, in Europe/Madrid. Use the same date_from and date_to for one day.'},
   cinema_ids:{type:'array',items:{type:'string'},maxItems:20,description:'Match any of these cinema IDs from get_context. Empty means all cinemas.'},
   formats:{type:'array',items:{type:'string'},maxItems:20,description:'Require every listed format on the same screening. Use format values from get_context.'},
-  big_screens_only:{type:'boolean',description:'Use the curated premium selection, including comfort-focused venues.'}
+  big_screens_only:{type:'boolean',description:'Use the curated premium selection, including comfort-focused venues.'},
+  ignored_filters:{type:'array',items:{type:'string'},maxItems:20,description:'Search interpretation filters removed by the user. Preserve from get_context when updating an existing view; normally omit.'}
 };
 const schema=(properties={},required=[])=>({type:'object',properties,required,additionalProperties:false});
 const screeningSchema=schema({screening_id:{type:'string',maxLength:256,description:'Exact screening_id returned by search_screenings.'}},['screening_id']);

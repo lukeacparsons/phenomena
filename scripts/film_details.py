@@ -129,6 +129,8 @@ def parse_rt(html):
         facts[field] = unique(v.get("name") for v in values if isinstance(v, dict))
     genres = movie.get("genre") or []
     facts["genres"] = unique(genres if isinstance(genres, list) else [genres])
+    if isinstance(movie.get("description"), str):
+        facts["synopsis"] = clean(movie["description"])[:4000]
     if movie.get("contentRating"):
         facts["certification"] = clean(movie["contentRating"])
     labels = {"Director": "directors", "Screenwriter": "writers", "Producer": "producers",
@@ -190,6 +192,8 @@ def parse_fa(html):
             facts["countries"] = [value.text()]
         elif label == "Duración":
             facts["runtime_minutes"] = duration(value.text())
+        elif label == "Sinopsis":
+            facts["synopsis"] = value.text()[:4000]
         elif label == "Año" and re.fullmatch(r"\d{4}", value.text()):
             facts["release_year"] = int(value.text())
     return facts
@@ -292,7 +296,7 @@ def combine(sources):
     if selected:
         result["language_selection"] = {"source": selected, "source_url": sources[selected]["url"],
             "evidence": "catalogue_language_list" if selected == "wikidata" else "explicit_original_language"}
-    for field in ("runtime_minutes", "certification", "release_year"):
+    for field in ("runtime_minutes", "certification", "release_year", "synopsis"):
         value = next((facts.get(name, {}).get(field) for name in ("rotten_tomatoes", "filmaffinity", "wikidata") if facts.get(name, {}).get(field)), None)
         if value is not None:
             result[field] = value
@@ -357,7 +361,7 @@ def enrich(data, output, mappings, fetch, now, *, force=False):
                 records[imdb].pop(provider, None)
                 continue
             cached = old.get(provider, {})
-            if force or cached.get("url") != url or not fresh(cached, now, 1 if cached.get("status") in ("stale", "unavailable") else hours):
+            if force or cached.get("synopsis_version") != 1 or cached.get("url") != url or not fresh(cached, now, 1 if cached.get("status") in ("stale", "unavailable") else hours):
                 jobs.append((imdb, provider, url, cached))
     def retrieve_wikidata(ids):
         try:
@@ -387,7 +391,7 @@ def enrich(data, output, mappings, fetch, now, *, force=False):
         imdb, provider, url, old = job
         try:
             facts = (parse_rt if provider == "rotten_tomatoes" else parse_fa)(fetch(url).decode("utf-8"))
-            record = {"url": url, "facts": facts, "checked_at": now.isoformat(), "status": "ok"}
+            record = {"url": url, "facts": facts, "checked_at": now.isoformat(), "status": "ok", "synopsis_version": 1}
         except Exception as error:
             record = failure(old, url, now, type(error).__name__)
         return imdb, provider, record
