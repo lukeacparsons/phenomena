@@ -1,4 +1,4 @@
-import {interpretSearch,queryFilms,madridDate,normalise} from './cinema-search.js';
+import {interpretSearch,madridDate,normalise} from './cinema-search.js';
 import {validateIntent} from './search-intent.js';
 
 export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguage,onResult,onStatus,fetchImpl=fetch,delay=350}){
@@ -15,8 +15,9 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
     const local=interpretSearch(programme,filters,{index});
     if(local.unsupported.length){onStatus('unsupported',local.unsupported);return;}
     if(!local.text||index.titles.has(normalise(query)))return;
-    const discovery=/\b(?:like|similar|something|feel|mood|uplifting|heartwarming|lighthearted|parecid|algo|semblant|alguna cosa|feelgood)\b/i.test(local.text);
-    if(!discovery&&queryFilms(programme,filters,{index}).length)return;
+    // A keyword hit must not prevent semantic discovery of other relevant films.
+    // Full, known credit names already have a precise local interpretation.
+    if(index.people.includes(normalise(local.text)))return;
     if(cache.has(key)){result=cache.get(key);onStatus(result.intent.unsupported.length?'unsupported':'',result.intent.unsupported);onResult();return;}
     const version=request;
     timer=setTimeout(async()=>{

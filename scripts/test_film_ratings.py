@@ -191,7 +191,7 @@ class DailyRatingsTests(unittest.TestCase):
         self.start = datetime(2026, 11, 19, tzinfo=timezone.utc)
         self.now = self.start
         self.manifest = self.programme.parent / "ratings.json"
-        self.manifest.write_text(json.dumps({"checked_at": self.start.isoformat(), "identity_metadata_version": 1, "films": {"film:1": {"ratings": {}}}}))
+        self.manifest.write_text(json.dumps({"checked_at": self.start.isoformat(), "identity_metadata_version": 1, "search_content_version": 2, "films": {"film:1": {"ratings": {}}}}))
         self.calls = []
 
         def refresh(path, **kwargs):
@@ -211,6 +211,12 @@ class DailyRatingsTests(unittest.TestCase):
     def test_existing_cache_gets_identity_resolution_without_waiting_a_day(self):
         data = json.loads(self.manifest.read_text())
         data.pop("identity_metadata_version")
+        self.manifest.write_text(json.dumps(data))
+        self.assertTrue(self.runner.refresh_if_due())
+
+    def test_existing_cache_gets_story_content_without_waiting_a_day(self):
+        data = json.loads(self.manifest.read_text())
+        data.pop('search_content_version')
         self.manifest.write_text(json.dumps(data))
         self.assertTrue(self.runner.refresh_if_due())
 

@@ -10,11 +10,13 @@ from urllib.parse import urlencode
 
 from cinesa_showtimes import atomic_write
 from original_audio import language_code
+from film_synopsis import clean_synopsis, unique_synopses
 
 VERSION = 1
 WIKIDATA_VERSION = 2
+SEARCH_CONTENT_VERSION = 2
 LIST_FIELDS = ("directors", "writers", "cast", "producers", "composers", "cinematographers", "editors",
-               "genres", "countries", "languages", "studios", "based_on", "source_authors")
+               "genres", "topics", "countries", "languages", "studios", "based_on", "source_authors")
 PROPERTIES = {"P57": "directors", "P58": "writers", "P161": "cast", "P725": "cast", "P162": "producers", "P86": "composers",
               "P344": "cinematographers", "P1040": "editors", "P136": "genres", "P495": "countries",
               "P364": "languages", "P272": "studios", "P144": "based_on"}
@@ -129,8 +131,10 @@ def parse_rt(html):
         facts[field] = unique(v.get("name") for v in values if isinstance(v, dict))
     genres = movie.get("genre") or []
     facts["genres"] = unique(genres if isinstance(genres, list) else [genres])
-    if isinstance(movie.get("description"), str):
-        facts["synopsis"] = clean(movie["description"])[:4000]
+    synopsis = next((clean_synopsis(node.text()) for node in doc.find(**{"data-qa": "synopsis-value"}) if clean_synopsis(node.text())), '')
+    synopsis = synopsis or clean_synopsis(movie.get("description"))
+    if synopsis:
+        facts["synopsis"] = synopsis
     if movie.get("contentRating"):
         facts["certification"] = clean(movie["contentRating"])
     labels = {"Director": "directors", "Screenwriter": "writers", "Producer": "producers",
@@ -172,6 +176,7 @@ def parse_fa(html):
             links = [n.text() for n in value.find("a") if "name.php?" in n.attrs.get("href", "")]
             if label == "Género":
                 links = [n.text() for n in value.find(itemprop="genre")]
+                facts['topics'] = unique(n.text() for n in value.find('a') if 'movietopic.php?' in n.attrs.get('href', ''))
             elif label == "Compañías":
                 links = []
                 for node in value.find():
@@ -296,7 +301,10 @@ def combine(sources):
     if selected:
         result["language_selection"] = {"source": selected, "source_url": sources[selected]["url"],
             "evidence": "catalogue_language_list" if selected == "wikidata" else "explicit_original_language"}
-    for field in ("runtime_minutes", "certification", "release_year", "synopsis"):
+    result['synopses'] = unique_synopses(facts.get(name, {}).get('synopsis') for name in ('rotten_tomatoes', 'filmaffinity', 'wikidata'))
+    if result['synopses']:
+        result['synopsis'] = result['synopses'][0]
+    for field in ("runtime_minutes", "certification", "release_year"):
         value = next((facts.get(name, {}).get(field) for name in ("rotten_tomatoes", "filmaffinity", "wikidata") if facts.get(name, {}).get(field)), None)
         if value is not None:
             result[field] = value
@@ -361,7 +369,7 @@ def enrich(data, output, mappings, fetch, now, *, force=False):
                 records[imdb].pop(provider, None)
                 continue
             cached = old.get(provider, {})
-            if force or cached.get("synopsis_version") != 1 or cached.get("url") != url or not fresh(cached, now, 1 if cached.get("status") in ("stale", "unavailable") else hours):
+            if force or cached.get("synopsis_version") != SEARCH_CONTENT_VERSION or cached.get("url") != url or not fresh(cached, now, 1 if cached.get("status") in ("stale", "unavailable") else hours):
                 jobs.append((imdb, provider, url, cached))
     def retrieve_wikidata(ids):
         try:
@@ -391,7 +399,7 @@ def enrich(data, output, mappings, fetch, now, *, force=False):
         imdb, provider, url, old = job
         try:
             facts = (parse_rt if provider == "rotten_tomatoes" else parse_fa)(fetch(url).decode("utf-8"))
-            record = {"url": url, "facts": facts, "checked_at": now.isoformat(), "status": "ok", "synopsis_version": 1}
+            record = {"url": url, "facts": facts, "checked_at": now.isoformat(), "status": "ok", "synopsis_version": SEARCH_CONTENT_VERSION}
         except Exception as error:
             record = failure(old, url, now, type(error).__name__)
         return imdb, provider, record

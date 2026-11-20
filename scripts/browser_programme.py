@@ -2,6 +2,7 @@
 from copy import deepcopy
 from datetime import datetime
 from language_names import without_language_placeholder
+from film_synopsis import unique_synopses
 
 FILM_FIELDS = ('id', 'title', 'titles', 'original_title', 'english_title', 'release_year', 'imdb_id',
                'runtime_minutes', 'details', 'ratings', 'poster_url', 'poster_width', 'poster_height',
@@ -19,10 +20,12 @@ def browser_programme(programme, now=None):
     result['films'] = []
     for film in programme['films']:
         value = {key: deepcopy(film[key]) for key in FILM_FIELDS if key in film}
-        if not value.get('synopsis'):
-            value['synopsis'] = film.get('details', {}).get('synopsis') or next((s['synopsis'] for s in film['sessions'] if isinstance(s.get('synopsis'), str) and s['synopsis']), '')
-        if isinstance(value.get('synopsis'), str):
-            value['synopsis'] = value['synopsis'][:4000]
+        details = value.get('details', {})
+        value['synopses'] = unique_synopses([film.get('synopsis'), *film.get('synopses', []),
+            details.get('synopsis'), *details.get('synopses', []), *(s.get('synopsis') for s in film['sessions'])])
+        value['synopsis'] = next(iter(value['synopses']), '')
+        if 'synopsis' in details:
+            details['synopsis'] = next(iter(unique_synopses([details['synopsis']])), '')
         value['sessions'] = [{key: deepcopy(session[key]) for key in SESSION_FIELDS if key in session}
                              for session in film['sessions']
                              if now is None or datetime.fromisoformat(session['starts_at']) >= now]

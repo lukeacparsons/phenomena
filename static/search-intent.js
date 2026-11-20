@@ -8,7 +8,7 @@ const dictionaries={
 };
 const lookups=Object.fromEntries(Object.entries(dictionaries).map(([field,rows])=>[field,new Map(rows.flatMap(row=>row.map(alias=>[fold(alias),row[0]])))]));
 export const canonical=(field,value)=>lookups[field]?.get(fold(value))||String(value).trim();
-export const fields=['genre','country','language','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','duration','start_time','date','certified_fresh'];
+export const fields=['genre','country','language','producer','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','duration','start_time','date','certified_fresh'];
 const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,duration:1440,start_time:1439};
 const ops=['eq','ne','gt','gte','lt','lte','in'];
 export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',sort:'soonest',unsupported:[]});
@@ -57,6 +57,13 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
   }
   // Keep operators until parsed. The ordinary keyword normalizer strips > and <.
   let rest=String(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’'·]/g,' ');
+  let changed=false;
+  const add=(field,op,value)=>{plan.conditions.push({field,op,value:String(value)});changed=true;};
+  // Qualified producer credits are distinct from the ordinary cast/name search.
+  const producers=[...new Set(programme?.films.flatMap(f=>f.details?.producers||[])||[])].sort((a,b)=>b.length-a.length);
+  for(const name of /\b(?:or|o)\b/.test(rest)?[]:producers){
+    rest=rest.replace(new RegExp('\\b(?:produced by|producer|producid[ao]s? por|produid[ae]s? per)\\s+'+esc(fold(name))+'\\b','g'),()=>{add('producer','eq',name);return ' ';});
+  }
   const protectedText=[];
   for(const name of [...protectedNames].sort((a,b)=>b.length-a.length)){
     rest=rest.replace(new RegExp('\\b'+fold(name).split(' ').map(esc).join('[\\s\\W]+')+'\\b','g'),matched=>{
@@ -70,8 +77,6 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
     for(const provider of new Set(programme?.films.flatMap(f=>f.sessions.map(s=>s.provider).filter(Boolean))||[]))other=other.replace(new RegExp('\\b'+esc(fold(provider))+'\\b','g'),' ');
     if(other.replace(/\b(?:or|o|at|en|movies|films|show me)\b/g,' ').trim())return plan;
   }
-  let changed=false;
-  const add=(field,op,value)=>{plan.conditions.push({field,op,value:String(value)});changed=true;};
   const consume=(pattern,callback)=>{rest=rest.replace(pattern,(...args)=>{callback(...args);return ' ';});};
   // Source-qualified subjective ratings belong to the interpreter. Do not
   // install an RT default that could override a later IMDb interpretation.
@@ -106,10 +111,6 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
       consume(new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?'+prefix+'\\s+'+esc(fold(name))+'\\b','g'),(_,negative)=>add(field,negative?'ne':'eq',canonical(field,name)));
     }
   }
-  for(const row of dictionaries.genre){
-    const names=row.map(fold).sort((a,b)=>b.length-a.length).map(esc).join('|');
-    consume(new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?(?:'+names+')\\b','g'),(_,negative)=>add('genre',negative?'ne':'eq',row[0]));
-  }
   // Chain and venue words can combine with structured constraints and semantics.
   if(programme){
     const providers=[...new Set(programme.films.flatMap(f=>f.sessions.map(s=>s.provider).filter(Boolean)))].sort((a,b)=>b.length-a.length);
@@ -127,8 +128,19 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
     const formats=[...new Set(programme.films.flatMap(f=>f.sessions.flatMap(s=>s.formats||[])))];
     for(const format of formats)consume(new RegExp('\\b'+esc(fold(format))+'\\b','g'),()=>add('format','eq',format));
   }
+  const filler=/\b(?:show me|find me|looking for|i want|i d like|quiero ver|quiero|busco|vull veure|vull|busca|recomiendame|recomana m|movies?|films?|peliculas?|pelis|pel licules|cinema|with|and|or|at|the|a|an|some|con|y|o|en|el|la|los|las|un|una|unes|uns|amb|i|al|a les|a las)\b/g;
+  const genrePatterns=dictionaries.genre.map(row=>({genre:row[0],pattern:new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?(?:'+row.map(fold).sort((a,b)=>b.length-a.length).map(esc).join('|')+')\\b','g')}));
+  // A genre word inside a topic (civil war, family secrets, action against
+  // injustice) is ambiguous. Let the interpreter consider the complete phrase.
+  const genreOnly=!genrePatterns.reduce((text,{pattern})=>text.replace(pattern,' '),rest).replace(filler,' ').trim();
+  for(const {genre,pattern} of genrePatterns){
+    rest=rest.replace(pattern,(whole,negative)=>{
+      if(!genreOnly&&!negative)return whole;
+      add('genre',negative?'ne':'eq',genre);return ' ';
+    });
+  }
   if(changed){
-    rest=rest.replace(/\b(?:show me|find me|looking for|i want|i d like|quiero ver|quiero|busco|vull veure|vull|busca|recomiendame|recomana m|movies?|films?|peliculas?|pelis|pel licules|cinema|with|and|or|at|the|a|an|some|con|y|o|en|el|la|los|las|un|una|unes|uns|amb|i|al|a les|a las)\b/g,' ');
+    rest=rest.replace(filler,' ');
     plan.text=rest.replace(/\s+/g,' ').trim();
     for(const [token,original] of protectedText)plan.text=plan.text.replaceAll(token,original);
   }
@@ -165,7 +177,7 @@ export function matchesConditions(film,session,conditions){
       value=film.ratings?.rotten_tomatoes?.certified_fresh;
       return typeof value==='boolean'&&compare(value,c.op,c.value==='true');
     }else{
-      const values=c.field==='genre'?film.details?.genres:c.field==='country'?film.details?.countries:
+      const values=c.field==='genre'?film.details?.genres:c.field==='country'?film.details?.countries:c.field==='producer'?film.details?.producers:
         c.field==='language'?(session.language?String(session.language).split(/[,;|/]+/).map(x=>x.trim()).filter(Boolean):film.details?.language_status?.state==='conflict'?[]:film.details?.languages):
         c.field==='provider'?[session.provider].filter(Boolean):c.field==='cinema'?[session.cinema_id]:session.formats;
       return textMatch(values||[],c);
@@ -175,7 +187,7 @@ export function matchesConditions(film,session,conditions){
 }
 
 export function intentChips(plan,language='en',programme){
-  const words={en:{genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{producer:'Produced by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{producer:'Producida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{producer:'Produïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');

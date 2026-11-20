@@ -1,5 +1,6 @@
 import {parseDateQuery} from './search-dates.js';
 import {parseIntent,effectiveIntent,matchesConditions,ratingValue} from './search-intent.js';
+import {filmSynopses} from './film-search-content.js';
 
 export const normalise = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 export const emptySearch = () => ({query:'',date_from:null,date_to:null,cinema_ids:[],formats:[],big_screens_only:false,ignored_filters:[]});
@@ -53,7 +54,7 @@ export function resolvedSearch(programme,filters,now=Date.now(),index){
   return {text:parsed.text,range:explicit?{start:filters.date_from,end:filters.date_to}:parsed.range};
 }
 
-const DETAIL_FIELDS=['directors','writers','cast','genres','countries','languages','composers','cinematographers','editors','studios','based_on','source_authors'];
+const DETAIL_FIELDS=['directors','writers','cast','genres','topics','countries','languages','composers','cinematographers','editors','studios','based_on','source_authors'];
 const PEOPLE_FIELDS=['directors','writers','cast','composers','cinematographers','editors','source_authors'];
 
 // Codes are lookup keys for provider metadata, not extra words in the search index.
@@ -182,7 +183,8 @@ export function createSearchIndex(programme){
       languageSearchWords(details.languages||[]),...(details.countries||[]).flatMap(country=>countryAliases.get(normalise(country))||[]),
       film.release_year,details.release_year,details.runtime_minutes,
       ...(details.release_dates||[]).flatMap(release=>[release.date,release.region])].join(' '));
-    const words=[...new Set((title+' '+metadata).split(' ').filter(Boolean))];
+    const plot=normalise(filmSynopses(film).join(' '));
+    const words=[...new Set((title+' '+metadata+' '+plot).split(' ').filter(Boolean))];
     const sessions=film.sessions.map(session=>{
       (session.formats||[]).forEach(format=>formats.add(format));
       const venue=cinemas.get(session.cinema_id);
@@ -191,7 +193,7 @@ export function createSearchIndex(programme){
       // Operator names remain searchable even when a venue uses an unbranded name.
       return {session,starts:Date.parse(session.starts_at),words:normalise([venue?.name,venue?.short,provider,...(session.formats||[]),session.version,languageSearchWords([session.language])].join(' ')).split(' ').filter(Boolean)};
     }).sort((a,b)=>a.starts-b.starts||a.session.id.localeCompare(b.session.id));
-    return {film,words,personNames,sessions};
+    return {film,words,personNames,plot,sessions};
   });
   return {programme,films,titles,people:[...people],providers:[...providers],intents:new Map(),known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
 }
@@ -225,9 +227,9 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
   // A named operator must match the screening, even if it is also a film studio.
   // Preserve explicit titles and people such as "La vida es Verdi" or "Jean Renoir".
   const providerTerms=new Set(index.providers.filter(name=>(' '+query+' ').includes(' '+name+' ')).flatMap(name=>name.split(' ')));
-  const matches=index.films.flatMap(({film,words,personNames,sessions:rows})=>{
+  const matches=index.films.flatMap(({film,words,personNames,plot,sessions:rows})=>{
     if(semantic&&!semantic.has(film.id))return [];
-    if(!personQueries.every(name=>personNames.has(name)))return [];
+    if(!personQueries.every(name=>personNames.has(name)||(' '+plot+' ').includes(' '+name+' ')))return [];
     // Match shared film metadata once, then only test remaining terms per session.
     const sessionTerms=terms.filter(term=>(providerTerms.has(term)&&!namedTerms.has(term))||!words.some(word=>word.startsWith(term)));
     const sessions=rows.filter(({session,starts,words:sessionWords})=>{

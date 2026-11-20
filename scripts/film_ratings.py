@@ -17,7 +17,7 @@ from urllib.parse import quote, urlencode
 from cinesa_showtimes import atomic_write
 from poster_fallbacks import IDENTITIES, SOURCES, identity, enrich as enrich_posters, meets_target
 from poster_policy import copy_poster
-from film_details import enrich as enrich_details
+from film_details import enrich as enrich_details, SEARCH_CONTENT_VERSION
 from film_grouping import deduplicate_programme
 from film_identity import enrich as enrich_identities, VERSION as IDENTITY_VERSION
 
@@ -399,7 +399,7 @@ def enrich(data, output, fetch, now, *, force=False, reviewed=None):
     summary = {provider: sum(film["ratings"][provider].get("score") is not None for film in data["films"]) for provider in PROVIDERS}
     result = {"checked_at": now.isoformat(), "imdb_dataset_checked_at": dataset_checked,
               "mappings": mappings, "films": records, "scores": summary, "metadata_coverage": details["coverage"], "metadata_failed": details["has_failures"] or identity_result["failed"],
-              "identity_metadata_version": IDENTITY_VERSION}
+              "identity_metadata_version": IDENTITY_VERSION, "search_content_version": SEARCH_CONTENT_VERSION}
     atomic_write(manifest, result)
     return result
 
@@ -480,7 +480,7 @@ class RatingsRefresher:
         same_films = set(previous.get("films", {})) == {f["id"] for f in programme["films"]}
         missing_badges = any('certified_fresh' not in f.get('ratings', {}).get('rotten_tomatoes', {})
                              for f in programme['films'] if f.get('ratings', {}).get('rotten_tomatoes', {}).get('score') is not None)
-        if same_films and not missing_badges and previous.get("identity_metadata_version") == IDENTITY_VERSION and fresh(previous.get("checked_at"), now, 1 if failed else 24):
+        if same_films and not missing_badges and previous.get("search_content_version") == SEARCH_CONTENT_VERSION and previous.get("identity_metadata_version") == IDENTITY_VERSION and fresh(previous.get("checked_at"), now, 1 if failed else 24):
             return False
         self.last_attempt = now.isoformat()
         result = self.refresh(self.programme, now=now)

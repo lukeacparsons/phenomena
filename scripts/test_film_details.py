@@ -61,6 +61,28 @@ class FilmDetailsTests(unittest.TestCase):
         combined = combine({'rotten_tomatoes': {'facts': rt, 'url': 'https://example.com/rt', 'status': 'ok'},
                             'filmaffinity': {'facts': fa, 'url': 'https://example.com/fa', 'status': 'ok'}})
         self.assertEqual(combined['synopsis'], rt['synopsis'])
+        self.assertEqual(combined['synopses'], [rt['synopsis'], fa['synopsis']])
+
+    def test_rt_synopsis_uses_story_text_and_rejects_seo_boilerplate(self):
+        seo = 'Discover reviews, ratings, and trailers for La Bola Negra on Rotten Tomatoes. Stay updated with critic and audience scores today!'
+        page = RT.replace('"@type":"Movie"', '"@type":"Movie","description":' + json.dumps(seo))
+        self.assertNotIn('synopsis', parse_rt(page))
+        facts = parse_rt(page + '<rt-text data-qa="synopsis-value">Three lives in 1932, 1937 and 2017.</rt-text>')
+        self.assertEqual(facts['synopsis'], 'Three lives in 1932, 1937 and 2017.')
+        from browser_programme import browser_programme
+        p = browser_programme({'films': [{'id': 'story', 'details': {'synopsis': seo},
+            'sessions': [{'synopsis': 'Una obra de Federico García Lorca.'}]}]})
+        self.assertEqual(p['films'][0]['synopsis'], 'Una obra de Federico García Lorca.')
+        self.assertNotIn('Discover reviews', json.dumps(p))
+
+    def test_story_topics_are_kept_separate_from_genres(self):
+        page = FA.replace('</dl>', '<dt>Género</dt><dd><span itemprop="genre">Drama</span> | <a href="/es/movietopic.php?topic=607659">Guerra Civil Española</a></dd></dl>')
+        facts = parse_fa(page)
+        self.assertEqual(facts['genres'], ['Drama'])
+        self.assertEqual(facts['topics'], ['Guerra Civil Española'])
+        combined = combine({'filmaffinity': {'facts': facts, 'url': 'https://example.com/fa', 'status': 'ok'}})
+        self.assertEqual(combined['topics'], ['Guerra Civil Española'])
+        self.assertIn('Guerra Civil Española', combined['search_aliases'])
 
     def test_wikidata_dates_keep_precision_and_country(self):
         rows = [binding("P577", value="2021-01-01T00:00:00Z", precision="9"),

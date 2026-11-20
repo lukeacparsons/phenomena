@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {emptySearch,createSearchIndex,interpretSearch,queryFilms,searchParams,searchFromURL} from '../static/cinema-search.js';
 import {emptyIntent,validateIntent,conditionId,parseIntent} from '../static/search-intent.js';
-import {createSmartSearch,rankSemantic,semanticDocument} from '../src/smart-search.mjs';
+import {createSmartSearch,rankSemantic,semanticDocument,filmDocument} from '../src/smart-search.mjs';
 import {createSmartSearchUI} from '../static/smart-search-ui.js';
 
 const now=Date.parse('2099-01-01T10:00:00Z');
@@ -34,6 +34,77 @@ test('origin, language, genres and exclusions use distinct factual fields',()=>{
   assert.deepEqual(ids('pel·lícules divertides de França'),ids('funny movies from France'));
   assert(!ids('not horror').includes('unknown'));
   assert.deepEqual(ids('Funny Games'),['funny-games'],'An exact film title must not turn into a genre filter');
+});
+test('topic phrases do not silently become mandatory genre filters',()=>{
+  for(const query of ['civil war','family secrets','action against injustice','civil war movies from France']){
+    const plan=parseIntent(query,{programme});
+    assert(!plan.conditions.some(c=>c.field==='genre'),query);
+    assert(plan.text.includes(query.split(' ')[0]),query);
+  }
+  assert.deepEqual(parseIntent('war films at mooby',{programme}).conditions.map(c=>c.field).sort(),['genre','provider']);
+  assert(parseIntent('civil war not horror',{programme}).conditions.some(c=>c.field==='genre'&&c.op==='ne'&&c.value==='Horror'));
+});
+test('plots and source authors are searchable even when another title already matches',()=>{
+  const p={...programme,films:[
+    film('bola',{title:'La bola negra',synopsis:'Una obra inacabada de Federico García Lorca.',details:{genres:['Drama']}}),
+    film('lorca',{title:'Lorca, la voz quebrada',details:{source_authors:['Federico García Lorca']}}),
+    film('marketing',{synopsis:'Discover reviews, ratings, and trailers for Lorca on Rotten Tomatoes. Stay updated with critic and audience scores today!'})
+  ]};
+  for(const query of ['lorca','Federico García Lorca']){
+    const rows=queryFilms(p,{...emptySearch(),query},{now,index:createSearchIndex(p)});
+    assert.deepEqual(rows.map(f=>f.id).sort(),['bola','lorca']);
+  }
+});
+test('qualified producer searches match producing credits, not acting credits',()=>{
+  const p={...programme,films:[film('produced',{details:{producers:['Brad Pitt']}}),film('acted',{details:{cast:['Brad Pitt']}}),film('unknown',{details:{}})]};
+  for(const query of ['produced by brad pitt','producida por Brad Pitt','produïda per Brad Pitt']){
+    const index=createSearchIndex(p),filters={...emptySearch(),query},plan=interpretSearch(p,filters,{index,now});
+    assert.equal(plan.text,'');assert.deepEqual(plan.conditions,[{field:'producer',op:'eq',value:'Brad Pitt'}]);
+    assert.deepEqual(queryFilms(p,filters,{index,now}).map(f=>f.id),['produced']);
+  }
+});
+test('film knowledge can retrieve a low-vector candidate but cannot bypass factual filters',async()=>{
+  const p={...programme,films:[film('known-classic',{details:{countries:['France']}}),film('actor-only',{details:{countries:['Spain']}})]};
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
+    const body=JSON.parse(opts.body);
+    if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((text,index)=>({index,embedding:text.includes('black')?[1,0]:[0,1]}))})};
+    assert.equal(JSON.parse(body.input).catalogue.length,2);
+    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),semantic_query:'black and white',film_matches:[0,1]})}]}]})};
+  }});
+  const r=await api.search({query:'black and white from France'});
+  assert.equal(r.semantic_scores.length,2);
+  const rows=queryFilms(p,{...emptySearch(),query:'black and white from France'},{now,intent:r.intent,semanticScores:r.semantic_scores});
+  assert.deepEqual(rows.map(f=>f.id),['known-classic']);
+});
+test('embedding documents include complementary plots and credits beyond the first eight cast',()=>{
+  const doc=filmDocument(film('story',{synopsis:'A family separated by conflict.',details:{synopsis:'Discover reviews, ratings, and trailers for Story on Rotten Tomatoes.',
+    synopses:['An unfinished play inspires three generations.'],cast:Array.from({length:15},(_,i)=>'Actor '+i),writers:['Writer'],source_authors:['Author'],based_on:['A play']},sessions:[{...session('story'),synopsis:'Three men in 1932, 1937 and 2017.'}]}));
+  for(const text of ['family separated','unfinished play','1937','Actor 14','Writer','Author','A play'])assert(doc.includes(text),text);
+  assert(!doc.includes('Discover reviews'));
+});
+test('large full-dimension embeddings are the default and old small vectors are not reused',async()=>{
+  const {mkdtemp,writeFile,rm}=await import('node:fs/promises');
+  const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+  const cacheDirectory=await mkdtemp(join(tmpdir(),'vobarna-vector-migration-'));
+  try{
+    await writeFile(join(cacheDirectory,'embeddings.json'),JSON.stringify({model:'text-embedding-3-small',dimensions:512,values:{old:Array(512).fill(1)}}));
+    let calls=0;
+    const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test',cacheDirectory,fetchImpl:async(url,opts)=>{
+      const body=JSON.parse(opts.body);calls++;
+      assert.equal(body.model,'text-embedding-3-large');assert.equal(body.dimensions,3072);
+      return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:Array(3072).fill(1)}))})};
+    }});
+    await api.warm();assert.equal(calls,1);assert.equal(api.status().dimensions,3072);
+    await api.warm();assert.equal(calls,1);
+  }finally{await rm(cacheDirectory,{recursive:true,force:true});}
+});
+test('a local topic hit does not prevent the UI from requesting semantic results',async()=>{
+  const p={...programme,films:[film('keyword',{synopsis:'A civil war divides a country.'}),film('semantic',{synopsis:'A rebellion tears families apart.'})]};
+  let calls=0;
+  const ui=createSmartSearchUI({getProgramme:()=>p,getIndex:()=>createSearchIndex(p),getFilters:()=>({...emptySearch(),query:'civil war'}),getLanguage:()=> 'en',onResult:()=>{},onStatus:()=>{},delay:0,
+    fetchImpl:async()=>{calls++;return {ok:true,json:async()=>({query:'civil war',intent:{...emptyIntent(),semantic_query:'civil war'},semantic_scores:[{film_id:'keyword',score:.8},{film_id:'semantic',score:.75}],mode:'semantic'})};}});
+  ui.update();await new Promise(resolve=>setTimeout(resolve,20));
+  assert.equal(calls,1);assert.equal(ui.current().semanticScores.length,2);ui.cancel();
 });
 test('Certified Fresh requires a sourced badge, not a high score',()=>{
   assert.deepEqual(ids('certified fresh'),['above','funny-games','mixed','spanish-french']);
@@ -125,7 +196,7 @@ test('AI interpretation is cached, embeddings are reused, and local constraints 
   const count=requests.length;const second=await api.search({query:'uplifting from France',language:'en'});
   assert.equal(second.cached,true);assert.equal(requests.length,count);
   await api.warm();assert.equal(requests.length,count);assert.equal(count-warmRequests,2);
-  assert.equal(requests.find(r=>r.url.endsWith('/responses')).body.reasoning.effort,'none');
+  assert.equal(requests.find(r=>r.url.endsWith('/responses')).body.reasoning.effort,'low');
   assert.equal(requests.find(r=>r.url.endsWith('/responses')).body.store,false);
 });
 test('missing credentials and provider failures preserve the local interpretation',async()=>{
