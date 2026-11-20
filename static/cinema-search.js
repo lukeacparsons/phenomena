@@ -165,7 +165,7 @@ function searchableAliases(details){
 // omit the index; queryFilms then builds a fresh one rather than caching stale facts.
 export function createSearchIndex(programme){
   const cinemas=new Map(programme.cinemas.map(cinema=>[cinema.id,cinema]));
-  const titles=new Set(),people=new Set(),formats=new Set();
+  const titles=new Set(),people=new Set(),formats=new Set(),providers=new Set();
   const films=programme.films.map(film=>{
     for(const title of [film.title,film.original_title,film.english_title,...(film.titles||[])])if(title)titles.add(normalise(title));
     const title=normalise([film.title,film.original_title,film.english_title,...(film.titles||[]).map(title=>title
@@ -184,11 +184,14 @@ export function createSearchIndex(programme){
     const sessions=film.sessions.map(session=>{
       (session.formats||[]).forEach(format=>formats.add(format));
       const venue=cinemas.get(session.cinema_id);
-      return {session,starts:Date.parse(session.starts_at),words:normalise([venue?.name,venue?.short,...(session.formats||[]),session.version,languageSearchWords([session.language])].join(' ')).split(' ').filter(Boolean)};
+      const provider=normalise(session.provider);
+      if(provider)providers.add(provider);
+      // Operator names remain searchable even when a venue uses an unbranded name.
+      return {session,starts:Date.parse(session.starts_at),words:normalise([venue?.name,venue?.short,provider,...(session.formats||[]),session.version,languageSearchWords([session.language])].join(' ')).split(' ').filter(Boolean)};
     }).sort((a,b)=>a.starts-b.starts||a.session.id.localeCompare(b.session.id));
     return {film,words,personNames,sessions};
   });
-  return {programme,films,titles,people:[...people],known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
+  return {programme,films,titles,people:[...people],providers:[...providers],known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
 }
 
 export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index}={}){
@@ -200,10 +203,15 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
   const bigScreens=filters.big_screens_only||/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/.test(query);
   const terms=query.replace(/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/g,' ').split(' ').filter(Boolean);
   const personQueries=index.people.filter(name=>(' '+query+' ').includes(' '+name+' '));
+  const titleQueries=[...index.titles].filter(title=>title.includes(' ')&&(' '+query+' ').includes(' '+title+' '));
+  const namedTerms=new Set([...personQueries,...titleQueries].flatMap(name=>name.split(' ')));
+  // A named operator must match the screening, even if it is also a film studio.
+  // Preserve explicit titles and people such as "La vida es Verdi" or "Jean Renoir".
+  const providerTerms=new Set(index.providers.filter(name=>(' '+query+' ').includes(' '+name+' ')).flatMap(name=>name.split(' ')));
   return index.films.flatMap(({film,words,personNames,sessions:rows})=>{
     if(!personQueries.every(name=>personNames.has(name)))return [];
     // Match shared film metadata once, then only test remaining terms per session.
-    const sessionTerms=terms.filter(term=>!words.some(word=>word.startsWith(term)));
+    const sessionTerms=terms.filter(term=>(providerTerms.has(term)&&!namedTerms.has(term))||!words.some(word=>word.startsWith(term)));
     const sessions=rows.filter(({session,starts,words:sessionWords})=>{
       if(!(starts>=now))return false;
       if(parsed.range&&((parsed.range.start&&session.date<parsed.range.start)||(parsed.range.end&&session.date>parsed.range.end)))return false;

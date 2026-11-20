@@ -92,6 +92,54 @@ for(const [lang,expected] of [['en','just now'],['es','ahora mismo'],['ca','ara 
 vm.runInContext("language='en'",context);
 assert.equal(vm.runInContext("age('invalid')",context),'');
 
+// Chain searches use screening operators without adding brands to venue labels.
+const chainVenues=[
+  ['diagonal-mar','Diagonal Mar','cinesa'],['la-farga','La Farga','cinesa'],
+  ['balmes','Balmes','mooby'],['bosque','Bosque','mooby'],
+  ['maquinista','La Maquinista','yelmo'],['splau','Splau','kinepolis'],
+  ['magic','Màgic','ocine-magic'],['gran-via','Gran Via','filmax']
+];
+const chainProgramme={
+  cinemas:chainVenues.map(([id,name])=>({id,name,short:name})),
+  films:[{id:'shared-film',title:'Shared film',details:{studios:['Filmax']},sessions:[
+    ...chainVenues.map(([id,,provider])=>({...session(id,id==='diagonal-mar'?['IMAX']:[],id==='diagonal-mar'),cinema_id:id,provider,time:'19:00'})),
+    {...session('expired',[],false),cinema_id:'balmes',provider:'mooby',starts_at:'2098-12-30T19:00:00+01:00',date:'2098-12-30'}
+  ]}]
+};
+const chainSnapshot=JSON.stringify(chainProgramme),chainIndex=searchModule.createSearchIndex(chainProgramme);
+const chainSearch=(query,filters={},index=chainIndex)=>searchModule.queryFilms(chainProgramme,{...searchModule.emptySearch(),...filters,query},
+  {index,now:Date.parse('2098-12-31T12:00:00Z')});
+const chainSessions=(query,filters,index)=>chainSearch(query,filters,index).flatMap(film=>film.sessions.map(s=>s.id)).sort();
+for(const [query,ids] of [
+  ['cinesa',['diagonal-mar','la-farga']],['CÍNESA',['diagonal-mar','la-farga']],
+  ['mooby',['balmes','bosque']],['MoObY',['balmes','bosque']],['moo',['balmes','bosque']],
+  ['yelmo',['maquinista']],['Kinépolis',['splau']],['ocine',['magic']],
+  ['Filmax',['gran-via']],['Filmax Shared film',['gran-via']],
+  ['cinesa IMAX',['diagonal-mar']],['mooby Balmes',['balmes']],
+  ['cinesa 2099-01-01',['diagonal-mar','la-farga']],['cinesa 2099-01-02',[]],
+  ['cinesa mooby',[]],['unknown-chain',[]]
+]){
+  assert.deepEqual(chainSessions(query),ids,query);
+  assert.deepEqual(chainSessions(query,{},null),ids,query+' without a cached index');
+}
+assert.deepEqual(chainSessions('cinesa',{cinema_ids:['la-farga']}),['la-farga']);
+assert.deepEqual(chainSessions('cinesa',{formats:['IMAX']}),['diagonal-mar']);
+assert.deepEqual(chainSessions('mooby',{cinema_ids:['diagonal-mar']}),[]);
+const chainView=listingModule.createListingView({cinemas:chainProgramme.cinemas,today:'2099-01-01'});
+const chainMarkup=chainView.bodyMarkup(chainSearch('cinesa')[0]);
+assert(chainMarkup.includes('>Diagonal Mar</a>'));
+assert(chainMarkup.includes('>La Farga</a>'));
+assert(!chainMarkup.toLowerCase().includes('cinesa'));
+assert.equal(JSON.stringify(chainProgramme),chainSnapshot,'Search must preserve cinema names and source data');
+const nameOverlap={cinemas:[{id:'test',name:'Test cinema'}],films:[
+  {id:'chain',title:'A film',sessions:[{...session('chain',[],false),provider:'renoir'}]},
+  {id:'credit',title:'Another film',details:{directors:['Jean Renoir']},sessions:[session('credit',[],false)]},
+  {id:'title',title:'Renoir the painter',sessions:[session('title',['IMAX'],true)]}
+]};
+for(const [query,ids] of [['renoir',['chain']],['Jean Renoir',['credit']],['Renoir the painter IMAX',['title']]]){
+  assert.deepEqual(searchModule.queryFilms(nameOverlap,{...searchModule.emptySearch(),query}).map(film=>film.id),ids,query);
+}
+
 // Language terms match either original audio or production origin, in all UI languages.
 // Include films with missing metadata and different audio on individual sessions.
 const localeFilm=(id,details={},sessions=[session(id,[],false)])=>({id,title:id,titles:[],details,sessions});
