@@ -189,6 +189,9 @@ class FilmDetailsTests(unittest.TestCase):
         rt = parse_rt(RT + '<div data-qa="item"><dt data-qa="item-label">Distributor</dt><dd data-qa="item-value">A24</dd></div>')
         self.assertEqual(rt['distributors'], ['A24'])
         self.assertNotIn('A24', rt['producers'])
+        combined = combine({'rotten_tomatoes': {'url': 'https://example.com/rt', 'status': 'ok', 'facts': rt},
+            'wikidata': {'url': 'https://example.com/wd', 'status': 'ok', 'facts': {'distributors': ['Spanish Distributor', 'French Distributor']}}})
+        self.assertEqual(combined['distributors'], ['A24', 'Spanish Distributor', 'French Distributor'])
 
     def test_country_claims_require_evidence_and_rejected_aliases_do_not_leak(self):
         sources = {'wikidata': {'url': 'https://www.wikidata.org/entity/Q1', 'status': 'ok',

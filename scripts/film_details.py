@@ -305,6 +305,10 @@ def combine(sources, imdb=None):
             # Prefer English taxonomy; keep every source's terms as search aliases.
             order = ("rotten_tomatoes", "wikidata", "filmaffinity") if field in ("genres", "languages") else ("wikidata", "rotten_tomatoes", "filmaffinity")
             values = next((facts.get(name, {}).get(field) for name in order if facts.get(name, {}).get(field)), [])
+        elif field == 'distributors':
+            # Different territories legitimately have different distributors.
+            # Keep every explicit credit, including a sole RT distributor.
+            values = [value for choice in choices for value in choice]
         else:
             # Use the fullest credit list, avoiding duplicate shortened/full names across sites.
             values = max(choices, key=len)
