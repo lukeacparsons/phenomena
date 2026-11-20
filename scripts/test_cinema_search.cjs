@@ -10,14 +10,15 @@ const webMCPModule=await import('../static/webmcp.js');
 const programmeModule=await import('../static/programme-data.js');
 const copyModule=await import('../static/cinema-copy.js');
 const listingModule=await import('../static/listing-view.js');
+const {filmMarkup}=await import('../static/film-view.js');
 const appSource = fs.readFileSync(path.join(__dirname, '../static/cinemas.js'), 'utf8').split("document.addEventListener('click'")[0];
 const context = vm.createContext({
-  ...searchModule,...serviceModule,...webMCPModule,...programmeModule,...copyModule,...listingModule,observeImages:()=>{},posterMarkup:()=>'',AbortController,URLSearchParams, Intl, Date, location: {search: ''}, document: {body:{dataset:{}},getElementById: id => id==='grid'?{dataset:{},querySelectorAll:()=>[]}:null,querySelectorAll: () => []},
+  ...searchModule,...serviceModule,...webMCPModule,...programmeModule,...copyModule,...listingModule,observeImages:()=>{},posterMarkup:()=>'',AbortController,URLSearchParams, Intl, Date, location: {search: ''}, document: {body:{dataset:{}},querySelector:()=>null,getElementById: id => id==='grid'?{dataset:{},querySelectorAll:()=>[]}:null,querySelectorAll: () => []},
   navigator: {language: 'en'}, localStorage: {getItem: () => null}
 });
 const source=appSource.replace(/^import[^\n]*\n/gm,'');
 vm.runInContext(source, context);
-const dialogContext=vm.createContext({...context});
+const dialogContext=vm.createContext({...context,filmMarkup});
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../static/film-dialog.js'),'utf8').replace(/^import[^\n]*\n/gm,'').replace(/^export /gm,''),dialogContext);
 function languageMarkup(film){
   dialogContext.film={title:'Test film',sessions:[],...film};dialogContext.dialog={dataset:{},scrollTop:0};

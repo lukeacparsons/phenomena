@@ -69,3 +69,28 @@
 .public-site main .date-heading{margin:0 0 20px}
 .public-site main .date-heading h1{font-size:clamp(1.25rem,3vw,1.6rem);margin:0 0 8px}
 .date-heading a{text-decoration:underline;text-underline-offset:3px}
+
+/* Film landing pages use the same compact view as the programme dialog. */
+.film-page main{max-width:876px;padding-top:16px}
+.film-page .breadcrumbs{font-size:.875rem;margin:0 0 16px}
+.film-page .breadcrumbs a{display:inline-flex;align-items:center;min-height:44px}
+.film-sheet{--dialog-gutter:28px;background:var(--s1);border:1px solid var(--border);border-radius:var(--radius)}
+.film-sheet .dialog-poster{max-width:112px}
+.public-site .film-sheet .dialog-title{font-size:1.75rem;line-height:1.2;letter-spacing:-.4px;margin:0 0 10px;padding-right:0}
+.public-site .film-sheet .dialog-intro p{margin:0;line-height:1.5;font-size:.875rem}
+.public-site .film-sheet section{margin:0}
+.public-site .film-sheet .dialog-day-label{font-size:1rem;line-height:1.4;margin:0 calc(-1 * var(--dialog-gutter));padding:14px var(--dialog-gutter);top:var(--header-height)}
+.public-site .film-sheet .dialog-cinema-name{font-size:.9375rem;margin:0;line-height:1.45}
+.public-site .film-sheet .dialog-cinema-name a{color:var(--tx);text-decoration:none}
+.public-site .film-sheet .dialog-cinema-name a:hover{text-decoration:underline}
+.public-site .film-sheet .buyrow-room{font:inherit;line-height:inherit;margin:0}
+.public-site .film-sheet .buyrow-ticket{color:#fff;text-decoration:none}
+.film-sheet #screeningNotice{margin:0;padding:0 0 24px}
+.film-page .site-footer{display:block;max-width:876px;margin:auto}
+@media(max-width:460px){
+ .film-page main{padding:8px 14px 24px}
+ .film-page .breadcrumbs{margin-bottom:8px}
+ .film-sheet{--dialog-gutter:18px}
+ .public-site .film-sheet .dialog-title{font-size:1.375rem;margin:0}
+ .film-sheet .dialog-poster{max-width:72px}
+}

@@ -1,7 +1,7 @@
 import './progressive-images.js';
 // Public detail pages remain complete when this small enhancement is unavailable.
 const now=Date.now();
-for(const row of document.querySelectorAll('[data-starts]')){
+for(const row of document.querySelectorAll('[data-starts]:not(.buyrow)')){
   if(Date.parse(row.dataset.starts)<now){
     row.classList.add('past-screening');
     const label={en:'This screening has started',es:'Esta sesión ya ha empezado',ca:'Aquesta sessió ja ha començat'}[document.documentElement.lang]||'This screening has started';

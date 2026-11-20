@@ -9,6 +9,6 @@ document.addEventListener('click',event=>{
     film_id:anchor.dataset.ticketFilm||null,
     screening_id:anchor.dataset.ticketScreening||null,
     cinema_id:anchor.dataset.ticketCinema||null,
-    placement:anchor.classList.contains('buyrow-ticket')?'dialog':'information'
+    placement:anchor.closest('dialog')?'dialog':'information'
   }}));
 });

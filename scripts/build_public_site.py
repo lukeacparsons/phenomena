@@ -173,7 +173,7 @@ class Publication:
                 found.append(link(source['url'], label) + (f' <small>({text(checked)})</small>' if checked else ''))
         return '<span class="citations">' + ' · '.join(found) + '</span>' if found else ''
 
-    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True):
+    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True, film_page=False):
         t = COPY[lang]
         alternatives = alternatives or {lang: path}
         canonical = self.origin + path
@@ -187,7 +187,7 @@ class Publication:
         breadcrumb = ''
         if crumbs:
             entries = [(t['current'], f'/{lang}/'), *crumbs]
-            visible_entries = entries[1:] if venue else entries
+            visible_entries = entries[1:] if venue or film_page else entries
             breadcrumb = f'<nav class="breadcrumbs" aria-label="{t["breadcrumb"]}">' + ' / '.join(link(url, label) for label, url in visible_entries) + '</nav>'
             nodes.append({'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'name': label, 'item': self.origin + url} for i, (label, url) in enumerate(entries)]})
         ld = json.dumps({'@context': 'https://schema.org', '@graph': nodes}, ensure_ascii=False).replace('<', '\\u003c')
@@ -200,7 +200,7 @@ class Publication:
         tomorrow_link = link(DAY_PATHS['tomorrow'][lang], DATE_COPY[lang]['tomorrow_link'])
         discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li><li>{tomorrow_link}</li>' + ''.join(
             '<li>' + link(paths[lang], DISCOVERY_COPY[lang][kind]) + '</li>' for kind, paths in DISCOVERY_PATHS.items()) + '</ul></nav>'
-        if interactive or venue:
+        if interactive or venue or film_page:
             footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{navigation}{footer_extra}{discovery_links}{footer}</details>'
             navigation = ''
         else:
@@ -233,7 +233,7 @@ class Publication:
 <script src="/theme.js"></script>
 <link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
 </head>
-<body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
+<body class="public-site{' venue-page' if venue else ''}{' film-page' if film_page else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
 <main id="main">{navigation}{breadcrumb}{body}</main>
 <footer class="site-footer">{footer}</footer>
@@ -322,8 +322,23 @@ class Publication:
 
     def films(self):
         records = [(key, record) for key, record in self.registry['entities'].items() if record['kind'] == 'films']
+        film_data = {key: self.film_data(key, record) for key, record in records}
+        dialog_films = {}
         for entity_id, record in records:
-            film = self.film_data(entity_id, record)
+            film = browser_programme({'films': [film_data[entity_id]]})['films'][0]
+            film['urls'] = {lang: path_for(record, lang) for lang in LOCALES}
+            for session in film['sessions']:
+                session['url_fragment'] = 'screening-' + hashlib.sha256(session['id'].encode()).hexdigest()[:16]
+            dialog_films[entity_id] = film
+        dialog_cinemas = [{'id': venue['id'], 'name': venue['name'],
+                          'urls': {lang: self.entity_path('cinemas', venue['id'], lang) for lang in LOCALES}}
+                         for venue in self.cinemas.values()]
+        rendered = subprocess.run(['node', str(ROOT / 'scripts/render_film_views.mjs')],
+                                  input=json.dumps({'films': list(dialog_films.values()), 'cinemas': dialog_cinemas}),
+                                  text=True, capture_output=True, check=True)
+        views = json.loads(rendered.stdout)
+        for entity_id, record in records:
+            film = film_data[entity_id]
             year = film.get('release_year') or film.get('details', {}).get('release_year')
             display_title = film['title']
             if isinstance(year, int) and not re.search(r'\(' + str(year) + r'\)$', display_title):
@@ -331,35 +346,16 @@ class Publication:
             alternatives = {l: path_for(record, l) for l in LOCALES}
             for lang in LOCALES:
                 t, details = COPY[lang], film.get('details', {})
-                facts = [(t['original'], film.get('original_title')), (t['year'], film.get('release_year') or details.get('release_year')),
-                         (t['director'], ', '.join(details.get('directors', []))),
-                         (t['runtime'], str(details.get('runtime_minutes') or film.get('runtime_minutes') or '') + ' min'),
-                         (t['languages'], ', '.join(language_name(x, lang) for x in details.get('languages', []))),
-                         (t['cast'], ', '.join(details.get('cast', [])[:12]))]
-                dl = '<dl class="facts">' + ''.join(f'<dt>{text(k)}</dt><dd>{text(v)}</dd>' for k, v in facts if v and v != ' min') + '</dl>'
-                body = f'<h1>{text(display_title)}</h1><p>{text(t["film_description"].format(title=display_title))}</p><section class="film-facts">{self.poster(film)}<div><h2>{t["facts"]}</h2>{dl}</div></section>'
-                if details.get('sources'):
-                    body += f'<details><summary>{t["sources"]}</summary><ul>' + ''.join('<li>' + link(s.get('url'), s.get('name', t['source'])) + ' · ' + stamp(s.get('checked_at')) + '</li>' for s in details['sources']) + '</ul></details>'
-                ratings = []
-                for name, label in [('imdb', 'IMDb'), ('rotten_tomatoes', 'Rotten Tomatoes'), ('filmaffinity', 'FilmAffinity')]:
-                    score = film.get('ratings', {}).get(name, {})
-                    if score.get('url'):
-                        scale = '%' if name == 'rotten_tomatoes' else '/10'
-                        rating_label = label + (' · ' + t['critic'] if name == 'rotten_tomatoes' else '')
-                        ratings.append('<li>' + link(score['url'], rating_label) + (': ' + text(score['score']) + scale if score.get('score') is not None else '') + ' · ' + stamp(score.get('checked_at')) + '</li>')
-                        audience = score.get('audience') or {}
-                        if name == 'rotten_tomatoes' and audience.get('score') is not None:
-                            ratings.append('<li>' + link(score['url'], label + ' · ' + t['audience']) + ': ' + text(audience['score']) + '%</li>')
-                if ratings:
-                    body += f'<section><h2>{t["external_rating"]}</h2><ul>{"".join(ratings)}</ul></section>'
-                body += f'<section id="showtimes"><h2>{t["showtimes"]}</h2><p id="screeningNotice" role="status" tabindex="-1" hidden>{t["expired_screening"]}</p><p class="freshness">{text(t["stale"])}</p>{self.session_table([(film, s) for s in film["sessions"]], lang)}</section>'
-                body += f'<p>{link(f"/{lang}/{SECTIONS[lang]["guides"]}/{GUIDES["versions"][lang]}/", t["version_title"])}</p>'
-                dialog_film = browser_programme({'films': [film]})['films'][0]
-                dialog_film['urls'] = alternatives
-                for session in dialog_film['sessions']:
-                    session['url_fragment'] = 'screening-' + hashlib.sha256(session['id'].encode()).hexdigest()[:16]
-                dialog_cinemas = [{**{k: venue[k] for k in ('id', 'name')}, 'urls': {l: self.entity_path('cinemas', venue['id'], l) for l in LOCALES}} for venue in self.cinemas.values() if any(s['cinema_id'] == venue['id'] for s in film['sessions'])]
-                payload = json.dumps({'film': dialog_film, 'cinemas': dialog_cinemas}, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
+                poster = (self.poster(film, eager=True).replace('class="public-poster', 'class="dialog-poster')
+                          .replace('.film-facts>noscript', '.film-sheet .dialog-head>noscript'))
+                body = '<article class="film-sheet" id="filmPage" aria-labelledby="filmTitle">'
+                notice = f'<p id="screeningNotice" role="status" tabindex="-1" hidden>{t["expired_screening"]}</p>'
+                body += (views[film['id']][lang].replace('<!--film-poster-->', poster)
+                         .replace('<div class="dialog-section" id="showtimes">', '<div class="dialog-section" id="showtimes">' + notice))
+                body += '</article>'
+                dialog_film = dialog_films[entity_id]
+                cinemas = [venue for venue in dialog_cinemas if any(s['cinema_id'] == venue['id'] for s in film['sessions'])]
+                payload = json.dumps({'film': dialog_film, 'cinemas': cinemas}, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
                 body += f'<script type="application/json" id="film-dialog-data">{payload}</script>'
                 # Expiration alone does not remove a useful film profile from search.
                 substantive = bool(film['sessions'] or (details.get('directors') and (year or details.get('cast') or details.get('runtime_minutes'))))
@@ -388,7 +384,7 @@ class Publication:
                         event['subtitleLanguage'] = {'@type': 'Language', 'name': s['subtitles']}
                     graph.append(event)
                 self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', t['film_description'].format(title=display_title), body,
-                          alternatives=alternatives, graph=graph, index=substantive, crumbs=[(t['films'], f'/{lang}/{SECTIONS[lang]["films"]}/'), (film['title'], alternatives[lang])])
+                          alternatives=alternatives, graph=graph, index=substantive, film_page=True, crumbs=[(t['films'], f'/{lang}/{SECTIONS[lang]["films"]}/')])
 
     def programme_listing(self, lang, *, cinema_id='', date=None):
         """Paint the full listing before the search catalogue or JavaScript arrives."""
@@ -841,7 +837,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
-                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
+                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
             guide = (ROOT / 'static/webmcp.html').read_text().replace('/cinemas.html', '/en/')
