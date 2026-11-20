@@ -155,15 +155,17 @@
       <section class="guide-section" id="access" aria-labelledby="access-title">
         <h2 id="access-title">Access for agents and developers</h2>
         <p>This guide is static HTML. Its content, links and the <a href="/webmcp-tools.json">JSON tool reference</a> can be read without JavaScript, an account or a WebMCP-enabled browser. The JSON reference is generated from the implemented tool definitions and includes each tool’s description, input schema and annotations.</p>
-        <p><strong>To execute tools, open <a href="/en/">the screenings page</a> in a WebMCP-capable browser agent and allow its programme to load.</strong> VO Barna registers its tools through <code>document.modelContext.registerTool()</code>. Tools are available on the <a href="/en/">English</a>, <a href="/es/">Spanish</a> and <a href="/ca/">Catalan</a> listings pages. Direct film and cinema pages provide static details and ticket links; return to a listings page to execute tools. This guide does not register them. Tool names are in-page operations, not HTTP API routes; the JSON file is documentation, not an executable endpoint.</p>
+        <p><strong>To execute tools, open <a href="/en/">the screenings page</a> in a WebMCP-capable browser agent and allow its programme to load.</strong> VO Barna registers its tools through Nekuda’s SDK and the browser’s <code>document.modelContext</code> interface. Tools are available on the <a href="/en/">English</a>, <a href="/es/">Spanish</a> and <a href="/ca/">Catalan</a> listings pages. Localized cinema pages also register the tools after their programme loads. Direct film pages provide static details and ticket links; return to a listings page to execute tools. This guide does not register them. Tool names are in-page operations, not HTTP API routes; the JSON file is documentation, not an executable endpoint.</p>
         <p>In a browser that supports discovery and execution through the current API, an example console call on the screenings page is:</p>
         <pre><code>const tools = await document.modelContext.getTools();
 const search = tools.find(tool =&gt; tool.name === 'search_screenings');
-await document.modelContext.executeTool(search, {
+const result = await document.modelContext.executeTool(search, {
   query: 'Villeneuve this weekend',
   limit: 10
-});</code></pre>
-        <p>Tool results are JSON-serializable values. Successful operations return <code>ok: true</code>. Application failures use this shape:</p>
+});
+const envelope = typeof result === 'string' ? JSON.parse(result) : result;
+console.log(envelope.structuredContent);</code></pre>
+        <p>Tool results use an MCP envelope: <code>structuredContent</code> contains the application result, <code>content[0].text</code> contains the same data serialized as JSON, and <code>isError</code> marks failures. Successful application results contain <code>ok: true</code>. On failure, <code>structuredContent</code> contains:</p>
         <pre><code>{
   "ok": false,
   "error": {

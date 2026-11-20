@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {emptySearch,madridDate,queryFilms,searchFromURL,searchParams,validateSearch} from '../static/cinema-search.js';
 import {availabilityFor,createCinemaService} from '../static/cinema-service.js';
-import {createWebMCPTools,registerWebMCP} from '../static/webmcp.js';
+import {createWebMCPTools} from '../static/webmcp.js';
+import {registerWebMCP} from '../static/webmcp-registration.js';
 import {hydrateProgramme} from '../static/programme-data.js';
 
 const NOW=Date.parse('2026-11-19T18:00:00Z');
@@ -198,19 +199,30 @@ test('tools see refreshed programme and return useful errors while data is unava
 test('registration is optional, annotates actions, rolls back failures and cleans up',async()=>{
   const app=setup(),registered=new Map();
   assert.equal(await registerWebMCP(undefined,app.service),null);
-  const registry={registerTool(tool,{signal}){registered.set(tool.name,tool);signal.addEventListener('abort',()=>registered.delete(tool.name),{once:true});}};
+  const registry={registerTool(tool,{signal}){registered.set(tool.name,tool);signal.addEventListener('abort',()=>registered.delete(tool.name),{once:true});return Promise.resolve();}};
   const stop=await registerWebMCP(registry,app.service);
   assert.equal(registered.size,6);
   assert.equal(registered.get('search_screenings').annotations.readOnlyHint,true);
   assert.equal(registered.get('set_search').annotations.readOnlyHint,false);
   assert.equal(registered.get('get_film').annotations.untrustedContentHint,true);
-  assert.equal((await registered.get('get_context').execute({})).ok,true);
+  const context=await registered.get('get_context').execute({});
+  assert.deepEqual(context.structuredContent,app.service.get_context({}));
+  assert.equal(context.isError,false);
+  assert.deepEqual(JSON.parse(context.content[0].text),context.structuredContent);
+  const invalid=await registered.get('get_film').execute({film_id:'missing'});
+  assert.equal(invalid.isError,true);
+  assert.equal(invalid.structuredContent.error.code,'not_found');
+  assert.deepEqual(JSON.parse(invalid.content[0].text),invalid.structuredContent);
+  const cancel=new AbortController();cancel.abort();
+  const cancelled=await registered.get('set_search').execute({}, {signal:cancel.signal});
+  assert.equal(cancelled.isError,true);
+  assert.equal(cancelled.structuredContent.error.code,'cancelled');
   stop();assert.equal(registered.size,0);
   for(const asyncFailure of [false,true]){
     let errors=0;
     const broken={registerTool(tool,options){
       if(registered.size===2){if(asyncFailure)return Promise.reject(new Error('failed'));throw new Error('failed');}
-      registry.registerTool(tool,options);
+      return registry.registerTool(tool,options);
     }};
     assert.equal(await registerWebMCP(broken,app.service,{onError:()=>errors++}),null);
     assert.equal(errors,1);assert.equal(registered.size,0);

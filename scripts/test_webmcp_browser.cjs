@@ -36,7 +36,7 @@ async function main(){
         const tool=(await document.modelContext.getTools()).find(tool=>tool.name===name);
         let result=await document.modelContext.executeTool(tool,input);
         if(typeof result==='string')result=JSON.parse(result);
-        return result;
+        return result.structuredContent;
       },{name,input});
     }
     const initialURL=page.url();
@@ -124,7 +124,7 @@ async function main(){
     await live.waitForFunction(async()=> (await document.modelContext.getTools()).length===6);
     const liveResult=await live.evaluate(async()=>{
       const tools=await document.modelContext.getTools();
-      const call=async(name,input)=>{const result=await document.modelContext.executeTool(tools.find(tool=>tool.name===name),input);return typeof result==='string'?JSON.parse(result):result;};
+      const call=async(name,input)=>{const result=await document.modelContext.executeTool(tools.find(tool=>tool.name===name),input);return (typeof result==='string'?JSON.parse(result):result).structuredContent;};
       const found=await call('search_screenings',{limit:1});
       if(!found.results.length)throw new Error('No upcoming screenings in the collected programme.');
       const row=found.results[0];
