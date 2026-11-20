@@ -7,6 +7,40 @@ import {createHash} from 'node:crypto';
 import {request} from 'node:http';
 import {publicServer} from '../src/vobarna-server.mjs';
 
+test('date HTML rolls over without rebuilding and isolates indexing, caches and empty dates',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'vobarna-dates-')),root=join(dir,'one/public');
+  const routes={origin:'https://vobarna.com',pages:['/en/','/en/showtimes/today/','/en/showtimes/tomorrow/'],redirects:{},films:{},cinemas:{},date_views:{version:1,dates:['2026-11-19','2026-11-20','2026-11-21']}};
+  await mkdir(join(root,'en'),{recursive:true});await mkdir(join(root,'date-views/en'),{recursive:true});
+  await writeFile(join(root,'routes.json'),JSON.stringify(routes));
+  await writeFile(join(root,'en/index.html'),'<h1>General programme</h1>');await writeFile(join(root,'404.html'),'<h1>Not found</h1>');
+  for(const kind of ['today','tomorrow','date'])await writeFile(join(root,'date-views/en',kind+'.txt'),`<title>${kind} __VOBARNA_DATE__</title>__VOBARNA_DATE_LISTING__`);
+  for(const day of routes.date_views.dates)await writeFile(join(root,'date-views/en',day+'.txt'),'<p>Screenings on '+day+'</p>');
+  await writeFile(join(root,'date-views/en/empty.txt'),'<p>Not collected</p>');
+  await symlink('one',join(dir,'current'));
+  let instant=new Date('2026-11-19T22:59:59Z');
+  const server=publicServer({publication:dir,now:()=>instant});await new Promise(done=>server.listen(0,'127.0.0.1',done));
+  t.after(async()=>{await new Promise(done=>server.close(done));await rm(dir,{recursive:true,force:true});});
+  const get=(path,options={})=>fetch('http://127.0.0.1:'+server.address().port+path,{redirect:'manual',...options});
+  let response=await get('/en/showtimes/today/');
+  assert.equal(response.status,200);assert.equal(response.headers.get('x-robots-tag'),null);
+  assert.equal(response.headers.get('cache-control'),'public, max-age=1');
+  assert.match(await response.text(),/today 2026-11-19.*Screenings on 2026-11-19/);
+  const etag=response.headers.get('etag');
+  assert.equal((await get('/en/showtimes/today/',{headers:{'If-None-Match':etag}})).status,304);
+  instant=new Date('2026-11-19T23:00:00Z');
+  response=await get('/en/showtimes/today/',{headers:{'If-None-Match':etag}});
+  assert.equal(response.status,200);assert.match(await response.text(),/today 2026-11-20.*Screenings on 2026-11-20/);
+  response=await get('/en/showtimes/tomorrow/');assert.match(await response.text(),/tomorrow 2026-11-21.*Screenings on 2026-11-21/);
+  response=await get('/en/?date=2026-11-21');assert.equal(response.headers.get('x-robots-tag'),'noindex, follow');
+  assert.match(await response.text(),/date 2026-11-21.*Screenings on 2026-11-21/);
+  response=await get('/en/?date=2026-12-31');assert.equal(response.status,200);assert.match(await response.text(),/2026-12-31.*Not collected/);
+  response=await get('/en/?date=2026-02-30');assert.equal(response.status,404);
+  response=await get('/en/');assert.equal(response.headers.get('x-robots-tag'),null);assert.match(await response.text(),/General programme/);
+  response=await get('/en/showtimes/today/',{method:'HEAD'});assert.equal(response.status,200);assert.equal(await response.text(),'');
+  assert.equal((await get('/date-views/en/today.txt')).status,404);
+  assert.equal((await get('/%64ate-views/en/today.txt')).status,404);
+});
+
 test('production origin preserves routing, cache isolation and atomic releases',async t=>{
   const dir=await mkdtemp(join(tmpdir(),'vobarna-origin-'));
   const routes={origin:'https://vobarna.com',pages:['/en/','/en/films/dune-1984/'],redirects:{},films:{old:{en:'/en/films/dune-1984/'}},cinemas:{},screening_shards:true};
@@ -33,8 +67,7 @@ test('production origin preserves routing, cache isolation and atomic releases',
   response=await get('/en/',{method:'HEAD'});assert.equal(response.status,200);assert.equal(await response.text(),'');
   response=await get('/en/?q=dune');assert.equal(response.headers.get('x-robots-tag'),'noindex, follow');
   response=await get('/en/showtimes/today/');
-  assert.equal(response.status,302);assert.equal(response.headers.get('cache-control'),'no-store');
-  assert.match(response.headers.get('location'),/^\/en\/\?date=\d{4}-\d{2}-\d{2}$/);
+  assert.equal(response.status,404); // Older publications without day pages do not invent a redirect.
   response=await get('/en/?utm_source=check');assert.equal(response.headers.get('x-robots-tag'),null);
   for(const [path,target] of [['/','/en/'],['/EN/index.html','/en/'],['/cinemas.html?film=old','/en/films/dune-1984/'],['/en/?screening=s1','/en/films/dune-1984/#screening-s1']]){
     response=await get(path);assert.equal(response.status,301);assert.equal(response.headers.get('location'),target);

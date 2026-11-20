@@ -20,6 +20,11 @@ const publicLanguage=document.body.dataset.siteLang;
 const listingCinemaId=document.body.dataset.cinemaId;
 if(TEXT[publicLanguage])language=publicLanguage;
 const listingPath=location.pathname;
+const listingDate=document.body.dataset.listingDate;
+const dateKind=document.body.dataset.dateKind;
+const relativeDate=dateKind==='today'||dateKind==='tomorrow';
+const dateHeading=document.querySelector('.date-heading');
+const originalDateHeading=dateHeading?.querySelector('h1').textContent;
 let restoringHistory=false;
 const listingTitle=document.title;
 const listingLanguageLinks=[...document.querySelectorAll('.lang-switch a[hreflang]')].map(node=>({node,href:node.getAttribute('href')}));
@@ -47,6 +52,7 @@ const age = value => {
 };
 const params = new URLSearchParams(location.search);
 const state = searchFromURL(params);
+if(relativeDate&&!params.has('date')&&!params.has('from')&&!params.has('to'))state.date_from=state.date_to=listingDate;
 if(!params.has('q')&&$('search')?.value)state.query=$('search').value;
 let pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('film'),screeningId:params.get('screening')}:null;
 let legacyCinema=params.get('cinema');
@@ -99,23 +105,41 @@ function syncURL(push=false){
   const session=film?.sessions.find(s=>s.id===screeningId);
   const canonical=session?.urls?.[language]||(film?.urls?.[language]?film.urls[language]+'#showtimes':null);
   const query=searchParams(state,...(publicLanguage?[]:[filmId,screeningId]));
+  const defaultDate=relativeDate&&query.size===1&&query.get('date')===listingDate;
+  if(defaultDate)query.delete('date');
+  const viewPath=listingDate&&!defaultDate?`/${language}/`:listingPath;
   const listingHash=listingCinemaId&&location.pathname===listingPath?location.hash:'';
-  const url=canonical||listingPath+(query.size?'?'+query.toString():'')+listingHash;
+  const url=canonical||viewPath+(query.size?'?'+query.toString():'')+listingHash;
   const view=publicLanguage?{listingPath,filters:state,filmId,screeningId}:null;
   if(url!==location.pathname+location.search+location.hash||JSON.stringify(history.state?.vobarna)!==JSON.stringify(view)){
     history[push?'pushState':'replaceState'](view?{vobarna:view}:null,'',url);
     window.dispatchEvent(new Event('vobarna:navigation'));
   }
   if(publicLanguage){
-    document.title=film?film.title+' | VO Barna':listingTitle;
+    const changedDate=listingDate&&selectedDate()!==listingDate;
+    document.title=film?film.title+' | VO Barna':changedDate?document.body.dataset.programmeHeading+' | VO Barna':listingTitle;
+    if(dateHeading){
+      dateHeading.querySelector('h1').textContent=changedDate?document.body.dataset.programmeHeading:originalDateHeading;
+      const label=dateHeading.querySelector('[data-date-label]');
+      label.hidden=selectedDate()==='all';
+      const time=label.querySelector('time');
+      if(!label.hidden){time.dateTime=selectedDate();time.textContent=selectedDate();}
+      const complete=document.querySelector('details#complete-programme');
+      if(complete)complete.hidden=changedDate||Boolean(state.query)||state.cinema_ids.length>0||state.formats.length>0||state.big_screens_only;
+    }
     for(const {node,href} of listingLanguageLinks){
       const localePath=film?.urls?.[node.hreflang];
-      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:'#showtimes'):href);
+      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:'#showtimes'):listingDate&&!defaultDate?`/${node.hreflang}/`+(query.size?'?'+query.toString():''):href);
     }
     for(const {node,value} of listingMetadata){
       const attr=node.tagName==='LINK'?'href':'content';
       const lang=node.hreflang==='x-default'?'en':node.hreflang||language;
       const next=film?.urls?.[lang];
+      if(!next&&listingDate&&!defaultDate){
+        const path=`/${lang}/`+(selectedDate()!=='all'?'?date='+selectedDate():'');
+        node.setAttribute(attr,node.getAttribute('property')==='og:title'?document.title:new URL(path,value).href);
+        continue;
+      }
       node.setAttribute(attr,next?(node.getAttribute('property')==='og:title'?document.title:new URL(next,value).href):value);
     }
   }
@@ -590,6 +614,7 @@ window.addEventListener('popstate',event=>{
   }
   const params=new URLSearchParams(location.search);
   const next=searchFromURL(params);
+  if(relativeDate&&location.pathname===listingPath&&!params.size)next.date_from=next.date_to=listingDate;
   if(!data){Object.assign(state,next);pendingLink={filmId:params.get('film'),screeningId:params.get('screening')};return;}
   try{applySearch(next);}catch{applySearch(emptySearch());}
   pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('film'),screeningId:params.get('screening')}:null;
@@ -641,3 +666,18 @@ document.addEventListener('visibilitychange',()=>{
     availabilityTimer=setTimeout(loadAvailability,Math.max(0,availabilityDue-Date.now()));
   }
 });
+
+// Relative-date pages follow Madrid midnight, including a restored background tab.
+function refreshRelativeDate(){
+  if(!relativeDate||document.hidden||location.pathname!==listingPath||$('filmDialog').open)return;
+  const day=new Date(todayISO()+'T12:00:00Z');
+  if(dateKind==='tomorrow')day.setUTCDate(day.getUTCDate()+1);
+  if(day.toISOString().slice(0,10)!==listingDate)location.reload();
+}
+if(relativeDate){
+  refreshRelativeDate();
+  setInterval(refreshRelativeDate,30000);
+  window.addEventListener('pageshow',refreshRelativeDate);
+  window.addEventListener('vobarna:navigation',refreshRelativeDate);
+  document.addEventListener('visibilitychange',refreshRelativeDate);
+}

@@ -52,7 +52,7 @@ def main():
     service = api('/services/' + config['service_uuid'])
     if service['name'] != 'vobarna':
         raise SystemExit('Unexpected Coolify service; refusing deployment')
-    files = ['deploy/vobarna/Dockerfile', 'src/vobarna-server.mjs', 'src/public-routing.mjs', 'src/smart-search.mjs',
+    files = ['deploy/vobarna/Dockerfile', 'src/vobarna-server.mjs', 'src/public-routing.mjs', 'src/date-listings.mjs', 'src/smart-search.mjs',
              'static/cinema-search.js', 'static/search-intent.js', 'static/search-dates.js']
     digest = hashlib.sha256(b''.join((ROOT / path).read_bytes() for path in files)).hexdigest()[:12]
     image = 'vobarna-web:' + digest

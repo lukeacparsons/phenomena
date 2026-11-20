@@ -93,6 +93,46 @@ class IdentityTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
+    def test_date_pages_keep_exact_sessions_and_complete_html_with_localized_metadata(self):
+        from date_listings import DAY_PATHS, date_view, render_date_view
+        import re
+        session = self.data['films'][0]['sessions'][0]
+        self.data['films'][0]['sessions'] += [dict(session, id='tonight', starts_at='2026-11-19T23:59:00+01:00', date='2026-11-19', time='23:59')]
+        # More films than the first grid batch: all must remain readable in HTML.
+        for i in range(28):
+            self.data['films'].append({'id': f'extra:{i}', 'title': f'Extra {i}', 'sessions': [dict(session, id=f'extra:{i}')]})
+        self.write_input(); self.publish()
+        root = self.root / 'site/current/public'
+        manifest = json.loads((self.root / 'site/current/manifest.json').read_text())
+        for lang in ('en', 'es', 'ca'):
+            for kind, day in [('today','2026-11-19'),('tomorrow','2026-11-20')]:
+                path = DAY_PATHS[kind][lang]
+                view = date_view(path, {}, NOW)
+                html = render_date_view(root, manifest, view)
+                self.assertEqual(html, (root / path.lstrip('/') / 'index.html').read_text())
+                self.assertIn(f'data-listing-date="{day}"', html)
+                self.assertIn(f'<link rel="canonical" href="https://vobarna.com{path}">', html)
+                self.assertIn('<meta name="robots" content="index,follow">', html)
+                for other in ('en','es','ca'):
+                    self.assertIn(f'hreflang="{other}" href="https://vobarna.com{DAY_PATHS[kind][other]}"', html)
+                starts = re.findall(r'<time datetime="(2026-11-\d\dT[^\"]+)"', html)
+                # Snapshot timestamps may be Nov 19; screening timestamps retain offsets.
+                self.assertTrue(all(stamp.startswith(day) for stamp in starts if stamp.endswith('+01:00')))
+                if kind == 'tomorrow':
+                    self.assertIn('Extra 27', html)
+                    self.assertIn('data-sessions="29"', html)
+            html = render_date_view(root, manifest, date_view(f'/{lang}/', {'date':['2026-11-20']}, NOW))
+            self.assertIn('noindex,follow', html)
+            self.assertIn(f'canonical" href="https://vobarna.com/{lang}/?date=2026-11-20"', html)
+            self.assertNotIn('?date=', (root / 'sitemap.xml').read_text())
+            empty = render_date_view(root, manifest, date_view(f'/{lang}/', {'date':['2026-12-31']}, NOW))
+            self.assertIn('data-listing-date="2026-12-31"', empty)
+            self.assertNotIn('class="card"', empty)
+        for instant, day in [('2026-11-19T23:00:00Z','2026-11-20'),('2026-03-29T22:00:00Z','2026-03-30'),('2026-10-25T23:00:00Z','2026-10-26')]:
+            self.assertEqual(date_view(DAY_PATHS['today']['en'], {}, datetime.fromisoformat(instant))['date'], day)
+        self.assertEqual(resolve_url('/en/?date=2026-02-30', manifest), (404, None))
+        self.assertEqual(resolve_url('/en/showtimes/today/', manifest, now=NOW), (200, '/en/showtimes/today/'))
+
     def test_discovery_pages_are_readable_localized_and_linked_only_in_closed_footer(self):
         from discovery_content import PATHS, COPY as DISCOVERY_COPY
         import hashlib
@@ -124,7 +164,9 @@ class PublicationTests(unittest.TestCase):
             home = (root / lang / 'index.html').read_text()
             links = FooterLinks(); links.feed(home)
             self.assertEqual(links.links, [(True, True)] * len(PATHS))
-            self.assertIn(f'href="/{lang}/?date=2026-11-19" data-today-link', home)
+            from date_listings import DAY_PATHS
+            self.assertIn(f'href="{DAY_PATHS["today"][lang]}"', home)
+            self.assertIn(f'href="{DAY_PATHS["tomorrow"][lang]}"', home)
             for kind, paths in PATHS.items():
                 self.assertIn('https://vobarna.com' + paths['en'], (root / 'llms.txt').read_text())
                 html = (root / paths[lang].lstrip('/') / 'index.html').read_text()
@@ -168,12 +210,13 @@ class PublicationTests(unittest.TestCase):
                 if kind == 'eixample':
                     self.assertIn('id="sagrada-familia"', html)
                     self.assertIn('Carrer de Sant Antoni Maria Claret, 168', html)
-        from discovery_content import TODAY_PATHS
-        for lang, path in TODAY_PATHS.items():
-            self.assertFalse((root / path.lstrip('/') / 'index.html').exists())
-            self.assertNotIn(path, (root / 'sitemap.xml').read_text())
-            self.assertEqual(resolve_url(path, {}, now=NOW), (302, f'/{lang}/?date=2026-11-19'))
-            self.assertEqual(resolve_url(path, {}, now=datetime.fromisoformat('2026-11-19T23:00:00Z')), (302, f'/{lang}/?date=2026-11-20'))
+        from date_listings import DAY_PATHS
+        for kind, paths in DAY_PATHS.items():
+            for lang, path in paths.items():
+                html = (root / path.lstrip('/') / 'index.html').read_text()
+                self.assertIn(path, (root / 'sitemap.xml').read_text())
+                self.assertIn('index,follow', html)
+                self.assertIn(f'data-date-kind="{kind}"', html)
         # Empty evergreen guides retain the explanation and useful indexable HTML.
         original['subtitles'] = 'Español'
         self.write_input(); self.publish()

@@ -6,6 +6,8 @@ import {resolve, extname, sep} from 'node:path';
 import {createHash} from 'node:crypto';
 import {createGzip} from 'node:zlib';
 import {pipeline} from 'node:stream/promises';
+import {Readable} from 'node:stream';
+import {renderDateView,dateCacheControl} from './date-listings.mjs';
 import {pathToFileURL} from 'node:url';
 import {isProgrammePath, resolvePublicURL} from './public-routing.mjs';
 import {createSmartSearch} from './smart-search.mjs';
@@ -16,7 +18,7 @@ const types={'.html':'text/html; charset=utf-8','.json':'application/json; chars
   '.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.ico':'image/x-icon',
   '.woff2':'font/woff2','.ttf':'font/ttf'};
 
-export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={}}={}) {
+export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={},now=()=>new Date()}={}) {
   let active;
   let catalogue;
   const canonical=new URL(origin);
@@ -77,7 +79,9 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
         return reply(200,indexNowKey,{'X-Robots-Tag':'noindex','Cache-Control':'public, max-age=60'});
       const current=await release();
       if(url.pathname==='/healthz')return reply(200,JSON.stringify({ok:true,release:current.root.split(sep).at(-2),commit:process.env.SOURCE_COMMIT||null}),{'Content-Type':'application/json','X-Robots-Tag':'noindex'});
+      const requestedAt=now();
       let status=200, path=url.pathname;
+      if(path.startsWith('/date-views/'))return reply(404,'Not found',{'X-Robots-Tag':'noindex'});
       const pageLike=!/\.[a-z0-9]+$/i.test(path)||/\/(?:cinemas|index|webmcp)\.html$/i.test(path);
       if(pageLike){
         let routes=current.routes;
@@ -86,13 +90,32 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
           const shard=createHash('sha256').update(screening).digest('hex').slice(0,2);
           routes={...routes,screenings:JSON.parse(await readFile(resolve(current.root,'route-data/screenings',shard+'.json'),'utf8'))};
         }
-        const decision=resolvePublicURL(url.href,routes);
+        const decision=resolvePublicURL(url.href,routes,requestedAt);
         if(decision.status===302||decision.status===301)return reply(decision.status,'',{'Location':decision.location,'Cache-Control':decision.status===302?'no-store':'public, max-age=60'});
+        if(decision.dateView){
+          const html=await renderDateView(decision.dateView,routes,p=>readFile(resolve(current.root,'.'+p),'utf8'));
+          const etag='W/"'+createHash('sha256').update(html).digest('hex')+'"';
+          res.setHeader('Content-Type','text/html; charset=utf-8');
+          res.setHeader('Cache-Control',dateCacheControl(requestedAt));
+          res.setHeader('Vary','Accept-Encoding');
+          res.setHeader('ETag',etag);
+          if(decision.noindex)res.setHeader('X-Robots-Tag','noindex, follow');
+          if(String(req.headers['if-none-match']||'').split(',').map(x=>x.trim()).includes(etag)){res.writeHead(304);return res.end();}
+          const compressed=String(req.headers['accept-encoding']||'').split(',').some(part=>/^gzip(?:\s*;\s*q=(?!0(?:\.0*)?$)[0-9.]+)?$/i.test(part.trim()));
+          if(compressed)res.setHeader('Content-Encoding','gzip');
+          else res.setHeader('Content-Length',Buffer.byteLength(html));
+          res.writeHead(200);
+          if(req.method==='HEAD')return res.end();
+          if(compressed)await pipeline(Readable.from([html]),createGzip({level:4}),res);
+          else res.end(html);
+          return;
+        }
         if(decision.status===404){status=404;path='/404.html';}
         else {path=decision.path+'index.html';if(decision.noindex)res.setHeader('X-Robots-Tag','noindex, follow');}
       } else if(path.endsWith('.html')) {status=404;path='/404.html';}
       const decoded=decodeURIComponent(path);
       if(decoded.includes('\0')||decoded.includes('\\'))return reply(400,'Bad request');
+      if(decoded.startsWith('/date-views/'))return reply(404,'Not found',{'X-Robots-Tag':'noindex'});
       let file=resolve(current.root,'.'+decoded),info;
       if(!file.startsWith(current.root+sep))return reply(404,'Not found',{'X-Robots-Tag':'noindex'});
       try{

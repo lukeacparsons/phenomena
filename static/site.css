@@ -64,3 +64,8 @@
 .comparison-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr));gap:1rem}
 .comparison-room{border:1px solid var(--border);border-radius:12px;padding:1.25rem;min-width:0;scroll-margin-top:5rem}
 .comparison-room h3{margin-top:0}.comparison-room dt{font-weight:700;margin-top:1rem}.comparison-room dd{margin:.35rem 0;overflow-wrap:anywhere}.comparison-room ul{padding-left:1.25rem;margin:.25rem 0}
+
+/* Date landing pages keep the programme grid close to its day heading. */
+.public-site main .date-heading{margin:0 0 20px}
+.public-site main .date-heading h1{font-size:clamp(1.25rem,3vw,1.6rem);margin:0 0 8px}
+.date-heading a{text-decoration:underline;text-underline-offset:3px}

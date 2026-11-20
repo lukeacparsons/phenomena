@@ -4,7 +4,7 @@ WORKDIR /app
 ARG SOURCE_COMMIT=unknown
 ENV NODE_ENV=production PORT=8787 PUBLICATION_ROOT=/app/.site PUBLIC_ORIGIN=https://vobarna.com VOBARNA_INPUT_ROOT=/incoming SOURCE_COMMIT=$SOURCE_COMMIT
 COPY --chown=node:node scripts/ ./scripts/
-COPY --chown=node:node src/public-routing.mjs src/vobarna-server.mjs src/smart-search.mjs ./src/
+COPY --chown=node:node src/public-routing.mjs src/date-listings.mjs src/vobarna-server.mjs src/smart-search.mjs ./src/
 COPY --chown=node:node static/ ./static/
 COPY --chown=node:node data/ ./data/
 COPY --chown=node:node docs/cinema-dossiers.json docs/auditoriums.json docs/cinema-practical-info.json ./docs/

@@ -32,6 +32,7 @@ from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVER
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
 from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS,
                                    REVIEWED_ON, SOURCES as COLLECTION_SOURCES)
+from date_listings import DAY_PATHS, COPY as DATE_COPY, published_dates, build_date_views
 from complete_programme import LABELS as PROGRAMME_LABELS, paginate_programme, programme_path, render_programme_directory
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,6 +136,7 @@ class Publication:
         self.dest, self.data, self.registry = destination, programme, registry
         self.research, self.previous, self.now, self.origin = research, previous, now, origin
         self.pages = {}
+        self.dates = published_dates(programme, now)
         self.translations = ResearchTranslations()
         self.current = {f['id']: f for f in programme['films']}
         self.current_by_entity = {registry['aliases']['films:' + f['id']]: f for f in programme['films']}
@@ -150,7 +152,7 @@ class Publication:
         rendered = subprocess.run(['node', str(ROOT / 'scripts/render_listing_views.mjs')],
                                   input=json.dumps({'programme': self.browser_programme,
                                                     'now': now.isoformat(), 'limit': PAGE_SIZE,
-                                                    'cinema_ids': list(self.cinemas)}),
+                                                    'cinema_ids': list(self.cinemas), 'dates': self.dates}),
                                   text=True, capture_output=True, check=True)
         self.listing_views = json.loads(rendered.stdout)
 
@@ -171,7 +173,7 @@ class Publication:
                 found.append(link(source['url'], label) + (f' <small>({text(checked)})</small>' if checked else ''))
         return '<span class="citations">' + ' · '.join(found) + '</span>' if found else ''
 
-    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None):
+    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True):
         t = COPY[lang]
         alternatives = alternatives or {lang: path}
         canonical = self.origin + path
@@ -194,9 +196,9 @@ class Publication:
         nav = ''.join(link(f'/{lang}/{SECTIONS[lang][key]}/', t[key]) for key in ('films', 'cinemas', 'guides'))
         navigation = f'<nav class="site-nav" aria-label="{t['main_navigation']}">{nav}</nav>'
         footer = f'<p>{text(t["independent"])}</p><p>{link(f"/{lang}/{SECTIONS[lang]['about']}/", t["about"])} · {link("/webmcp/", t["agent_guide"])}</p>'
-        today = self.now.astimezone(MADRID).date().isoformat()
-        today_link = link(f'/{lang}/?date={today}', DISCOVERY_COPY[lang]['today_link'], ' data-today-link')
-        discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li>' + ''.join(
+        today_link = link(DAY_PATHS['today'][lang], DATE_COPY[lang]['today_link'])
+        tomorrow_link = link(DAY_PATHS['tomorrow'][lang], DATE_COPY[lang]['tomorrow_link'])
+        discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li><li>{tomorrow_link}</li>' + ''.join(
             '<li>' + link(paths[lang], DISCOVERY_COPY[lang][kind]) + '</li>' for kind, paths in DISCOVERY_PATHS.items()) + '</ul></nav>'
         if interactive or venue:
             footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{navigation}{footer_extra}{discovery_links}{footer}</details>'
@@ -205,7 +207,7 @@ class Publication:
             footer += f'<details class="site-information"><summary>{text(DISCOVERY_COPY[lang]["footer"])}</summary>{discovery_links}</details>'
         switch = ''.join(link(alternatives[l], l.upper(), f' hreflang="{l}" lang="{l}"' + (' aria-current="page"' if l == lang else '')) for l in LOCALES if l in alternatives)
         # The image loader can execute without waiting for the search module graph.
-        script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script><script type="module" src="/today-links.js"></script>'
+        script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script>'
         if interactive:
             script += ''.join(f'<link rel="modulepreload" href="/{name}.js">' for name in
                               ('programme-data', 'programme-cache', 'listing-view', 'cinema-copy', 'cinema-search', 'search-dates', 'cinema-service', 'webmcp', 'webmcp-registration', 'webmcp-sdk'))
@@ -213,8 +215,9 @@ class Publication:
         if not interactive or venue:
             script += '<script type="module" src="/site-page.js"></script>'
         cinema_scope = f' data-cinema-id="{text(cinema_id)}"' if cinema_id else ''
+        date_attrs = f' data-listing-date="{date_scope["date"]}" data-date-kind="{date_scope["kind"]}"' if date_scope else ''
         # This small disclosure style must not add a render-blocking request.
-        programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
+        programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if date_scope or path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
         if path == f'/{lang}/':
             script += '<script type="module" src="/complete-programme.js"></script>'
         html = f'''<!doctype html>
@@ -230,14 +233,17 @@ class Publication:
 <script src="/theme.js"></script>
 <link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
 </head>
-<body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}"{cinema_scope} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
+<body class="public-site{' venue-page' if venue else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
 <main id="main">{navigation}{breadcrumb}{body}</main>
 <footer class="site-footer">{footer}</footer>
 {'<dialog id="filmDialog" aria-labelledby="dialogTitle"></dialog>' if interactive else ''}</body></html>'''
-        # The global Today link rolls over daily without changing this page's facts.
-        version_html = re.sub(r'(href="/(?:en|es|ca)/\?date=)\d{4}-\d{2}-\d{2}(" data-today-link)', r'\1TODAY\2', html)
-        digest = hashlib.sha256(version_html.encode()).hexdigest()
+        if not write:
+            return html
+        self.save_page(path, lang, html, index)
+
+    def save_page(self, path, lang, html, index):
+        digest = hashlib.sha256(html.encode()).hexdigest()
         old = self.previous.get('pages', {}).get(path, {})
         modified = old.get('lastmod') if old.get('hash') == digest else self.now.isoformat()
         self.pages[path] = {'hash': digest, 'lastmod': modified, 'index': index, 'lang': lang}
@@ -384,10 +390,10 @@ class Publication:
                 self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', t['film_description'].format(title=display_title), body,
                           alternatives=alternatives, graph=graph, index=substantive, crumbs=[(t['films'], f'/{lang}/{SECTIONS[lang]["films"]}/'), (film['title'], alternatives[lang])])
 
-    def programme_listing(self, lang, *, cinema_id=''):
+    def programme_listing(self, lang, *, cinema_id='', date=None):
         """Paint the full listing before the search catalogue or JavaScript arrives."""
         t = COPY[lang]
-        view = self.listing_views[lang + ':' + cinema_id]
+        view = self.listing_views[lang + ':' + ('date:' + date if date else cinema_id)]
         filters = f'''<section class="filters" aria-label="{t['films']}"><nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
         cards = []
         for position, card in enumerate(view['cards']):
@@ -831,6 +837,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.venue_pages()
             site.editorial()
             site.discovery_pages()
+            date_views = build_date_views(site, language_name, stamp)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
@@ -882,7 +889,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
                     localized[lang] = registry['redirects'].get(page, page) + '#' + fragment
             manifest = {'origin': origin, 'built_at': now.isoformat(), 'programme_generated_at': programme['generated_at'],
                         'pages': site.pages, 'redirects': registry['redirects'], 'films': film_paths,
-                        'cinemas': cinema_paths, 'screenings': screening_paths}
+                        'cinemas': cinema_paths, 'screenings': screening_paths, 'date_views': date_views}
             dump(stage / 'manifest.json', manifest)
             dump(stage / 'registry.json', registry)
             # Private deployment input. The Git-deployed origin renders this data
@@ -890,7 +897,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             dump(stage / 'catalogue.json', programme)
             # The edge router reads bounded URL metadata, not the complete catalogue.
             dump(dest / 'routes.json', {k: manifest[k] for k in ('origin', 'redirects', 'films', 'cinemas')} |
-                 {'pages': list(site.pages), 'screening_shards': True})
+                 {'pages': list(site.pages), 'screening_shards': True, 'date_views': date_views})
             if (dest / 'routes.json').stat().st_size > 4_000_000:
                 raise ValueError('Routing manifest exceeds its reviewed size limit')
             # Historical screening links grow every day; only legacy requests need them.
@@ -917,7 +924,8 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 
 ## Pages
 - [Current programme]({origin}/en/): films and dated screenings; filters are interactive.
-- [Today’s programme]({origin}/en/?date={now.astimezone(MADRID).date()}): the main programme with today’s Europe/Madrid date selected; a filtered view, not a separate article.
+- [Today’s programme]({origin}{DAY_PATHS['today']['en']}): remaining original-language screenings today, with the explicit Europe/Madrid date and readable HTML.
+- [Tomorrow’s programme]({origin}{DAY_PATHS['tomorrow']['en']}): tomorrow’s original-language screenings, with the explicit Europe/Madrid date and readable HTML.
 - [This weekend]({origin}{DISCOVERY_PATHS['weekend']['en']}): the explicit Friday–Sunday range, grouped by day; already-started sessions are excluded.
 - [Original-version IMAX]({origin}{DISCOVERY_PATHS['imax']['en']}): same-session original audio and IMAX format, with sourced room guidance.
 - [35mm and 70mm]({origin}{DISCOVERY_PATHS['film']['en']}): separate film-format lists based on explicit session tags, with print and edition caveats.

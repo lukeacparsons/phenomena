@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {resolvePublicURL} from '../src/public-routing.mjs';
+import {dayPaths,dateView,dateCacheControl,renderDateView} from '../src/date-listings.mjs';
 import worker from '../src/vobarna-worker.mjs';
 
 const routes={pages:['/en/','/en/films/dune-1984/','/es/peliculas/dune-1984/'],redirects:{'/en/films/old-dune/':'/en/films/dune-1984/'},
@@ -24,20 +25,43 @@ test('filter pages are noindex and tracking duplicates remain canonicalizable',(
   assert.equal(resolvePublicURL('https://vobarna.com/en/?q=dune',routes).noindex,true);
   assert.equal(resolvePublicURL('https://vobarna.com/en/?utm_source=test',routes).noindex,false);
 });
-test('retired Today pages redirect to the homepage filtered by the current Madrid date',()=>{
-  for(const [path,lang] of [['/en/showtimes/today/','en'],['/ES/CARTELERA/HOY','es'],['/ca/cartellera/avui/index.html','ca']]){
-    for(const [now,date] of [['2026-11-19T22:59:59Z','2026-11-19'],['2026-11-19T23:00:00Z','2026-11-20'],
-                            ['2026-03-29T22:00:00Z','2026-03-30'],['2026-10-25T23:00:00Z','2026-10-26']]){
-      assert.deepEqual(resolvePublicURL('https://vobarna.com'+path+'?date=2000-01-01',routes,new Date(now)),{status:302,location:`/${lang}/?date=${date}`});
+test('relative date routes resolve Madrid midnight and DST without redirects',()=>{
+  const calendar={...routes,pages:[...routes.pages,...Object.values(dayPaths).flatMap(paths=>Object.values(paths))],date_views:{version:1,dates:[]}};
+  for(const [now,today,tomorrow] of [['2026-11-19T22:59:59Z','2026-11-19','2026-11-20'],['2026-11-19T23:00:00Z','2026-11-20','2026-11-21'],
+    ['2026-03-28T23:00:00Z','2026-03-29','2026-03-30'],['2026-03-29T22:00:00Z','2026-03-30','2026-03-31'],
+    ['2026-10-24T22:00:00Z','2026-10-25','2026-10-26'],['2026-10-25T23:00:00Z','2026-10-26','2026-10-27']]){
+    for(const kind of ['today','tomorrow'])for(const [lang,path] of Object.entries(dayPaths[kind])){
+      const result=resolvePublicURL('https://vobarna.com'+path,calendar,new Date(now));
+      assert.equal(result.status,200);assert.equal(result.noindex,false);
+      assert.deepEqual(result.dateView,{lang,kind,date:kind==='today'?today:tomorrow});
     }
   }
+  assert.equal(dateCacheControl(new Date('2026-11-19T22:59:59Z')),'public, max-age=1');
+  assert.equal(dateCacheControl(new Date('2026-03-29T21:59:59Z')),'public, max-age=1');
+  assert.equal(resolvePublicURL('https://vobarna.com/ES/CARTELERA/HOY',calendar).location,'/es/cartelera/hoy/');
+  assert.equal(resolvePublicURL('https://vobarna.com/en/showtimes/today/?date=2026-11-21',calendar).location,'/en/?date=2026-11-21');
+  for(const query of ['date=2026-02-30','date=2026-11-20&date=2026-11-21','date=garbage','date=0000-01-01'])assert.equal(resolvePublicURL('https://vobarna.com/en/?'+query,calendar).status,404);
+  const filtered=resolvePublicURL('https://vobarna.com/en/?date=2026-11-21&q=dune',calendar);
+  assert.equal(filtered.noindex,true);assert.equal(filtered.dateView.date,'2026-11-21');
 });
 const env={ASSETS:{async fetch(request){const path=new URL(request.url).pathname;return path==='/routes.json'?Response.json(routes):new Response('<h1>Page</h1>',{headers:{'Content-Type':'text/html'}});}}};
-test('Today redirects are temporary and cannot be cached through midnight',async()=>{
-  const response=await worker.fetch(new Request('https://vobarna.com/en/showtimes/today/'),env);
-  assert.equal(response.status,302);
-  assert.equal(response.headers.get('Cache-Control'),'no-store');
-  assert.match(response.headers.get('Location'),/^https:\/\/vobarna\.com\/en\/\?date=\d{4}-\d{2}-\d{2}$/);
+test('worker serves indexed relative pages and noindex date filters from the same fragments',async()=>{
+  const now=new Date(),view=dateView('/en/showtimes/today/',new URLSearchParams(),now);
+  const calendar={...routes,pages:[...routes.pages,dayPaths.today.en],date_views:{version:1,dates:[view.date]}};
+  const requested=[];
+  const assets={ASSETS:{fetch:async request=>{
+    const path=new URL(request.url).pathname;requested.push(path);
+    if(path==='/routes.json')return Response.json(calendar);
+    if(path.endsWith('/today.txt')||path.endsWith('/date.txt'))return new Response('<h1>__VOBARNA_DATE__</h1>__VOBARNA_DATE_LISTING__');
+    return new Response('<p>Screenings $&</p>');
+  }}};
+  for(const [path,index] of [[dayPaths.today.en,true],['/en/?date='+view.date,false]]){
+    const response=await worker.fetch(new Request('https://vobarna.com'+path),assets);
+    assert.equal(response.status,200);assert.equal(response.headers.get('X-Robots-Tag'),index?null:'noindex, follow');
+    assert.equal(await response.text(),'<h1>'+view.date+'</h1><p>Screenings $&</p>');
+  }
+  assert.equal((await worker.fetch(new Request('https://vobarna.com/date-views/en/today.txt'),assets)).status,404);
+  assert.equal((await worker.fetch(new Request('https://vobarna.com/%64ate-views/en/today.txt'),assets)).status,404);
 });
 test('worker preserves 404 and noindex semantics even when an asset fallback is 200',async()=>{
   const missing=await worker.fetch(new Request('https://vobarna.com/en/missing/'),env);
