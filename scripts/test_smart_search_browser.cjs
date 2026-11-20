@@ -12,10 +12,12 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     const programme={generated_at:'2099-01-01T08:00:00Z',timezone:'Europe/Madrid',cinemas:[{id:'balmes',name:'Balmes',short:'Balmes'}],films:[
       film('bright','Bright Afternoon','Comedy','France',90,true),film('paris','Paris Nights','Comedy','France',80,false),
       film('funny','Funny Games','Horror','Spain',95,true),film('unknown','Unknown','','',null,null)]};
+    programme.films[0].ratings.imdb={score:8};programme.films[3].ratings.imdb={score:9};
     await context.route('**/programme.json',route=>route.fulfill({json:programme}));
     let apiCalls=0;
     await context.route('**/api/search',async route=>{
       apiCalls++;const {query}=route.request().postDataJSON();
+      if(query==='highly rated on imdb')return route.fulfill({json:{query,mode:'interpreted',intent:{text:'',conditions:[{field:'rating_imdb',op:'gte',value:'7.5'}],semantic_query:'',sort:'rating',unsupported:[]},semantic_scores:null}});
       if(query==='something unavailable')return route.fulfill({status:503,json:{error:'search_unavailable'}});
       return route.fulfill({json:{query,mode:'semantic',intent:{text:'',conditions:[{field:'country',op:'eq',value:'France'}],semantic_query:'uplifting',sort:'relevance',unsupported:[]},semantic_scores:[{film_id:'funny',score:.9},{film_id:'bright',score:.8},{film_id:'paris',score:.7}]}});
     });
@@ -36,6 +38,11 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     await search('from catalunya');assert.deepEqual(await ids(),[]);
     assert.match(await page.locator('#searchStatus').textContent(),/does not yet identify films produced in Catalunya/);
     assert.equal(apiCalls,0,'unavailable regional metadata is not a provider outage');
+    await search('highly rated on imdb');
+    await page.waitForSelector('[data-remove-filter="intent"][data-value="rating_imdb:gte:7 5"]');
+    assert.deepEqual(await ids(),['bright','unknown']);
+    assert.equal(await page.locator('[data-remove-filter="intent"][data-value^="rating_rt"]').count(),0);
+    assert.equal(await page.locator('[data-remove-filter="intent"][data-value^="reviews_rt"]').count(),0);
     await search('funny movies rt >80');
     await page.locator('[data-remove-filter="intent"][data-value="rating_rt:gt:80"]').click();
     assert.deepEqual(await ids(),['bright','paris']);assert.match(page.url(),/skip=/);
@@ -45,7 +52,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     await page.waitForSelector('[data-remove-filter="intent"][data-value="semantic"]');
     assert.deepEqual(await ids(),['bright','paris'],'semantics must preserve country and rank eligible films');
     await search('');await search('something uplifting from France');
-    await page.waitForSelector('[data-remove-filter="intent"][data-value="semantic"]');assert.equal(apiCalls,1,'repeat search is cached');
+    await page.waitForSelector('[data-remove-filter="intent"][data-value="semantic"]');assert.equal(apiCalls,2,'repeat search is cached');
     await page.setViewportSize({width:390,height:844});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
     await page.screenshot({path:'/private/tmp/vobarna-smart-search-mobile.png'});

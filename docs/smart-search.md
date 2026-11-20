@@ -8,6 +8,8 @@ Search combines three layers through the existing search box, in English, Spanis
 
 Filter chips show the interpretation and can be removed. The original query and removed chips are shareable in the URL. Exact title/person and cinema-chain searches retain their existing behaviour and theatre labels.
 
+Subjective source-qualified requests such as `highly rated on IMDb` go to the interpreter, without local RT defaults. That example becomes IMDb ≥7.5 and sorts by IMDb score. Numeric expressions such as `IMDb >7.5` remain local. The visible chip makes the inferred threshold explicit and removable.
+
 `from Catalunya` currently reports the missing production-region metadata directly, without a model call. Country and audio-language metadata cannot establish regional production origin. This is distinct from an empty search result or a provider outage.
 
 ## Runtime configuration

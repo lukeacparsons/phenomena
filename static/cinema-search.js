@@ -242,8 +242,9 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
     return sessions.length?[{...film,sessions}]:[];
   });
   const floor=semantic?Math.max(.25,...matches.map(f=>semantic.get(f.id)-.12)):0;
+  const ratingField=plan.conditions.find(c=>c.field.startsWith('rating_')&&['gt','gte'].includes(c.op))?.field||plan.conditions.find(c=>c.field.startsWith('rating_'))?.field||'rating_rt';
   return matches.filter(f=>!semantic||semantic.get(f.id)>=floor)
-    .sort((a,b)=>(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,'rating_rt')??-1)-(ratingValue(a,'rating_rt')??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
+    .sort((a,b)=>(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,ratingField)??-1)-(ratingValue(a,ratingField)??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
 }
 
 export function searchParams(filters,filmId=null,screeningId=null){

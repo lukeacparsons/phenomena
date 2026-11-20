@@ -73,13 +73,16 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}=
   let changed=false;
   const add=(field,op,value)=>{plan.conditions.push({field,op,value:String(value)});changed=true;};
   const consume=(pattern,callback)=>{rest=rest.replace(pattern,(...args)=>{callback(...args);return ' ';});};
+  // Source-qualified subjective ratings belong to the interpreter. Do not
+  // install an RT default that could override a later IMDb interpretation.
+  const namedRatingSource=/\b(?:imdb|film\s*affinity|rotten\s+tomatoes|rt|tomatometer|audience|popcornmeter)\b/.test(rest);
   consume(/\b(?:(not|no|without|sin|sense)\s+)?(?:certified\s+fresh|certificado\s+fresh|certificada\s+fresh|certificat\s+fresh)\b/g,(_,negative)=>add('certified_fresh','eq',negative?'false':'true'));
   const ratingNames='rt(?:\\s+(?:critics|critica|critics score))?|rotten\\s+tomatoes|tomatometer|imdb|film\\s*affinity|fa|rt\\s+audience|audience|popcornmeter|publico|public';
   consume(new RegExp('\\b('+ratingNames+')\\s*(>=|<=|>|<|≥|≤|==|=|above|over|under|at least|more than|less than|mas de|menos de|mes de|menys de)\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:%|/\\s*(?:10|100))?','g'),(_,name,op,n)=>{
     const field=/audience|popcorn|public/.test(name)?'rating_audience':name==='imdb'?'rating_imdb':/affinity|^fa$/.test(name)?'rating_filmaffinity':'rating_rt';
     add(field,comparison(op),n.replace(',','.'));
   });
-  consume(/\b(?:good reviews|well[ -]reviewed|highly rated|critically acclaimed|buenas criticas|bien valoradas|mejores criticas|bones critiques|ben valorades)\b/g,()=>{
+  if(!namedRatingSource)consume(/\b(?:good reviews|well[ -]reviewed|critically acclaimed|buenas criticas|bien valoradas|mejores criticas|bones critiques|ben valorades)\b/g,()=>{
     // An explicit RT comparison wins over this subjective default.
     if(!plan.conditions.some(c=>c.field==='rating_rt'))add('rating_rt','gte',80);
     add('reviews_rt','gte',20);plan.sort='rating';

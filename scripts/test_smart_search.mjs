@@ -69,6 +69,25 @@ test('semantic ranking cannot relax exact constraints',()=>{
 test('model interpretations are validated before use',()=>{
   for(const conditions of [[{field:'checkout',op:'eq',value:'yes'}],[{field:'rating_rt',op:'gt',value:'101'}],[{field:'cinema',op:'eq',value:'invented'}],[{field:'date',op:'eq',value:'2099-02-30'}]])assert.throws(()=>validateIntent({...emptyIntent(),conditions},programme));
 });
+test('AI interprets subjective ratings on the named source without sticky RT defaults',async()=>{
+  const p={...programme,films:[film('high-imdb',{ratings:{imdb:{score:9},rotten_tomatoes:{score:20,count:1}}}),film('high-rt',{ratings:{imdb:{score:6},rotten_tomatoes:{score:99,count:100}}})]};
+  for(const query of ['highly rated on imdb','good reviews on IMDb','bien valoradas en IMDb','ben valorades a IMDb']){
+    assert.deepEqual(interpretSearch(p,{...emptySearch(),query},{index:createSearchIndex(p),now}).conditions,[]);
+  }
+  let calls=0;
+  const intent={...emptyIntent(),conditions:[{field:'rating_imdb',op:'gte',value:'7.5'}],sort:'rating'};
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
+    const body=JSON.parse(opts.body);
+    if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:[1,0]}))})};
+    calls++;assert.deepEqual(JSON.parse(body.input).deterministic,[]);
+    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(intent)}]}]})};
+  }});
+  const result=await api.search({query:'highly rated on imdb'});
+  assert.equal(calls,1);assert.equal(result.mode,'interpreted');assert.deepEqual(result.intent.conditions,intent.conditions);
+  assert.deepEqual(queryFilms(p,{...emptySearch(),query:'highly rated on imdb'},{index:createSearchIndex(p),now,intent:result.intent}).map(f=>f.id),['high-imdb']);
+  const ordered=queryFilms(p,{...emptySearch()},{index:createSearchIndex(p),now,intent:{...intent,conditions:[{field:'rating_imdb',op:'gte',value:'5'}]}});
+  assert.deepEqual(ordered.map(f=>f.id),['high-imdb','high-rt']);
+});
 test('similarity uses a real catalogue synopsis when the reference film is known',()=>{
   const films=[film('amelie',{title:'Amélie',synopsis:'A shy waitress helps the people around her.'})];
   assert.match(semanticDocument('something like Amelie',films),/shy waitress/);
