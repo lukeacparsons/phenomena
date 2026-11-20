@@ -72,7 +72,19 @@ if(['vobarna.com','www.vobarna.com'].includes(location.hostname)
       cross_subdomain_cookie:false,respect_dnt:true,
       autocapture:false,capture_pageview:false,capture_pageleave:false,
       capture_dead_clicks:false,rageclick:false,capture_heatmaps:false,capture_webmcp:false,
-      disable_session_recording:true,disable_surveys:true,advanced_disable_feature_flags:true,
+      disable_session_recording:false,enable_recording_console_log:false,
+      session_recording:{
+        maskAllInputs:true,
+        // Search summaries can repeat typed text; booking links contain operator URLs.
+        blockSelector:'#filterChips, #searchStatus, a.ticket-link, a.buyrow-ticket, a[href*="?q="], a[href*="&q="]',
+        recordHeaders:false,recordBody:false,
+        maskCapturedNetworkRequestFn:request=>{
+          if(!request.name)return request;
+          try{const url=new URL(request.name);return {...request,name:url.origin+url.pathname};}
+          catch{return null;}
+        }
+      },
+      disable_surveys:true,advanced_disable_feature_flags:true,
       capture_exceptions:false,capture_performance:{web_vitals:true,network_timing:false},
       before_send:sanitizeAnalyticsEvent,
       loaded:posthog=>{client=posthog;for(const [event,properties] of queued.splice(0))client.capture(event,properties);}

@@ -23,7 +23,11 @@ test('production analytics queues handoffs and tracks path changes without searc
   assert.equal(app.config.persistence,'localStorage');assert.equal(app.config.disable_persistence,false);
   assert.equal(app.events[0].properties.visitor_alert_version,1);
   assert.equal(app.events[0].properties.visitor_identity_persisted,true);
-  assert.equal(app.config.autocapture,false);assert.equal(app.config.disable_session_recording,true);
+  assert.equal(app.config.autocapture,false);assert.equal(app.config.disable_session_recording,false);
+  assert.equal(app.config.enable_recording_console_log,false);
+  assert.equal(app.config.session_recording.maskAllInputs,true);
+  const masked=app.config.session_recording.maskCapturedNetworkRequestFn({name:'https://vobarna.com/en/?q=private#secret'});
+  assert.equal(masked.name,'https://vobarna.com/en/');
   assert.deepEqual(app.events.map(event=>event.event),['$pageview','ticket_click']);
   assert.equal(app.events[0].properties.$referrer,'https://example.com');
   assert.equal(app.events[0].properties.$current_url,'https://vobarna.com/en/');

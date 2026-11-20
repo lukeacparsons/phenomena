@@ -22,7 +22,10 @@ No email address or raw IP address is included in messages.
 
 `static/analytics.js` uses local storage for an anonymous PostHog identity,
 replacing the previous daily cookieless identity. There are no analytics cookies,
-identified person profiles, autocapture or session recordings. Previous
+identified person profiles or autocapture. Session replay is enabled with inputs
+masked, search summaries and ticket links blocked, and query strings/fragments
+removed from recorded page URLs. Console logs and network request/response bodies
+and headers are disabled. Previous
 cookieless visits cannot be linked retroactively. Clearing storage or using
 another browser/device creates a new identity. When storage is blocked, the SDK
 uses memory and the alert explicitly leaves the visitor unclassified. Failed
@@ -75,6 +78,15 @@ uses the real SDK with all requests intercepted to test stable identity, session
 expiry, reloads, cleared/blocked storage, preview exclusion and blocked SDK.
 Set `PLAYWRIGHT_MODULE` to an installed Playwright module and download the SDK to
 `output/visitor-notifications/posthog-sdk.js` (or set `POSTHOG_SDK_FILE`).
+`scripts/test_session_replay_browser.mjs` uses the real SDK and recorder with every
+request intercepted. It checks that snapshots contain the public page while
+excluding typed input, search summaries, booking links, URL queries/fragments and
+console messages. Set `POSTHOG_TEST_ASSET_PREFIX` to downloaded fixture files named
+`<prefix>-sdk.js` (`/static/array.js`), `<prefix>-posthog-recorder.js` (the SDK's
+matching versioned recorder), and `<prefix>-remote-config.json` / `.js` (the
+project's `/array/<public-token>/config` and `config.js`). The default prefix is
+`output/session-replay/posthog`. `PLAYWRIGHT_MODULE` can point to Playwright's
+`index.mjs` when it is installed outside this repository.
 `check-visitors.mjs` runs live PostHog previews without sending Telegram messages
 or ingesting events. Delivery tests must use `notification_test=true`, a synthetic
 identity and a `TEST` heading.
