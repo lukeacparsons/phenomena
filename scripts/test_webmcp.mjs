@@ -196,7 +196,9 @@ test('tools see refreshed programme and return useful errors while data is unava
   assert.equal((await app.tools.get('search_screenings').execute({limit:0})).error.code,'invalid_input');
 });
 
-test('registration is optional, annotates actions, rolls back failures and cleans up',async()=>{
+test('registration is optional, annotates actions, rolls back failures and cleans up',async(t)=>{
+  // Registration fixtures must not send artificial calls to the connected account.
+  t.mock.method(globalThis,'fetch',async()=>new Response(null,{status:204}));
   const app=setup(),registered=new Map();
   assert.equal(await registerWebMCP(undefined,app.service),null);
   const registry={registerTool(tool,{signal}){registered.set(tool.name,tool);signal.addEventListener('abort',()=>registered.delete(tool.name),{once:true});return Promise.resolve();}};
