@@ -134,7 +134,7 @@ export function createSmartSearch({getProgramme,apiKey=process.env.OPENAI_API_KE
     if(catalogueIndex?.programme!==programme)catalogueIndex=createSearchIndex(programme);
     const index=catalogueIndex;
     const local=interpretSearch(programme,{...emptySearch(),query},{index,now:now()});
-    if(!local.text||index.titles.has(normalise(query)))return {query,intent:local,semantic_scores:null,mode:'local'};
+    if(!local.text||local.unsupported.length||index.titles.has(normalise(query)))return {query,intent:local,semantic_scores:null,mode:'local'};
     if(!enabled)return {query,intent:local,semantic_scores:null,mode:'unavailable'};
     const docs=programme.films.map(filmDocument),signature=hash(JSON.stringify([programme.cinemas,programme.films.map((f,i)=>[f.id,docs[i]])]));
     const key=hash([model,today,language,signature,query].join('\n'));

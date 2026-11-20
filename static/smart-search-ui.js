@@ -13,7 +13,7 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
     cancel();key=nextKey;result=null;onStatus('');
     if(!programme||!query||query.length<3)return;
     const local=interpretSearch(programme,filters,{index});
-    if(local.unsupported.length)onStatus('unsupported',local.unsupported);
+    if(local.unsupported.length){onStatus('unsupported',local.unsupported);return;}
     if(!local.text||index.titles.has(normalise(query)))return;
     const discovery=/\b(?:like|similar|something|feel|mood|uplifting|heartwarming|lighthearted|parecid|algo|semblant|alguna cosa|feelgood)\b/i.test(local.text);
     if(!discovery&&queryFilms(programme,filters,{index}).length)return;

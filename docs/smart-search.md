@@ -8,9 +8,13 @@ Search combines three layers through the existing search box, in English, Spanis
 
 Filter chips show the interpretation and can be removed. The original query and removed chips are shareable in the URL. Exact title/person and cinema-chain searches retain their existing behaviour and theatre labels.
 
+`from Catalunya` currently reports the missing production-region metadata directly, without a model call. Country and audio-language metadata cannot establish regional production origin. This is distinct from an empty search result or a provider outage.
+
 ## Runtime configuration
 
 Set `OPENAI_API_KEY` as a **runtime-only secret on the website application**, never as a build argument, browser variable or collector credential. Defaults are `SEARCH_MODEL=gpt-6-luna`, `SEARCH_SERVICE_TIER=fast`, `SEARCH_EMBEDDING_MODEL=text-embedding-3-small`. Alternative interpreters must support reasoning `none` and the strict schema. Without credentials, local search continues and semantic requests show a brief availability message.
+
+For local development, `npm run dev` starts a private Node companion and forwards `/api/search` to the same engine. Set `OPENAI_API_KEY` in the shell or the ignored root `.env.local` file. Both public and legacy preview modes support it. Restart a running preview after Python/Node server changes; refreshing the browser alone does not reload server code.
 
 `POST /api/search` accepts only `{query, language}`. It uses no-store responses, checks browser origin and JSON content type, bounds request/query sizes, validates model output, and returns generic provider errors. The key and embeddings are never served. Search text is sent to OpenAI with `store:false`; raw queries are not logged by this service.
 

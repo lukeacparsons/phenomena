@@ -18,6 +18,7 @@ from optimize_images import optimize_logo, refresh_programme_images
 from crawler_health import read_health
 from programme_store import file_lock
 from http_assets import serve_bytes, serve_file
+from preview_search import PreviewSearch
 
 STATIC = Path(__file__).resolve().parents[1] / "static"
 
@@ -29,7 +30,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def end_headers(self):
         path = urlsplit(self.path).path
-        cache = 'public, max-age=31536000, immutable' if self.response_status in (200, 304) and re.fullmatch(r'/preview-data/images/[a-f0-9]{64}-\d+\.webp', path) else 'no-cache'
+        cache = 'no-store' if path == '/api/search' else 'public, max-age=31536000, immutable' if self.response_status in (200, 304) and re.fullmatch(r'/preview-data/images/[a-f0-9]{64}-\d+\.webp', path) else 'no-cache'
         self.send_header("Cache-Control", cache)
         super().end_headers()
 
@@ -81,6 +82,21 @@ class Handler(SimpleHTTPRequestHandler):
     def do_HEAD(self):
         self.do_GET()
 
+    def do_POST(self):
+        if urlsplit(self.path).path != '/api/search':
+            self.json_response({'error': 'method_not_allowed'}, 405)
+            return
+        try:
+            length = int(self.headers.get('Content-Length', '0'))
+            if not 0 < length <= 4096:
+                self.json_response({'error': 'invalid_input'}, 400)
+                return
+            headers = {key: self.headers[key] for key in ('Content-Type', 'Origin', 'Host') if key in self.headers}
+            status, result = self.server.search.request(self.rfile.read(length), headers)
+            self.json_response(result, status)
+        except (ValueError, OSError, AttributeError):
+            self.json_response({'error': 'search_unavailable'}, 503)
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -113,6 +129,7 @@ def main():
     server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(Handler, directory=str(STATIC)))
     server.public_site = args.public_site
     server.no_background = args.no_background
+    server.search = PreviewSearch(args.port, public_site=args.public_site, publication=PUBLIC)
     server.availability = AvailabilityCache(STATIC / "preview-data" / "screenings.json",
                                             STATIC / "preview-data" / "availability.json",
                                             interval=args.seat_refresh_minutes * 60)
@@ -133,6 +150,7 @@ def main():
         server.availability.stop()
         server.ratings.stop()
         server.publication.stop()
+        server.search.stop()
         server.server_close()
 
 

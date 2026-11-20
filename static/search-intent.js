@@ -51,6 +51,10 @@ export function validateIntent(value,programme){
 export function parseIntent(text,{programme,exactTitle=false,protectedNames=[]}={}){
   const plan={...emptyIntent(),text};
   if(exactTitle||!text.trim())return plan;
+  if(/\b(?:from|made in|produced in|de|produidas? a|producidas? en) (?:catalunya|cataluna|catalonia|catalon[ia]+)\b/.test(fold(text))){
+    // Country and audio metadata cannot establish regional production origin.
+    plan.unsupported.push('origin:Catalunya');return plan;
+  }
   // Keep operators until parsed. The ordinary keyword normalizer strips > and <.
   let rest=String(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’'·]/g,' ');
   const protectedText=[];

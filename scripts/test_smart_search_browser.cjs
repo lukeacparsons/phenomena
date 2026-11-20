@@ -33,6 +33,9 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
       await search(query);assert.deepEqual(await ids(),expected,query);
     }
     assert.equal(apiCalls,0,'standard searches must not wait for the model');
+    await search('from catalunya');assert.deepEqual(await ids(),[]);
+    assert.match(await page.locator('#searchStatus').textContent(),/does not yet identify films produced in Catalunya/);
+    assert.equal(apiCalls,0,'unavailable regional metadata is not a provider outage');
     await search('funny movies rt >80');
     await page.locator('[data-remove-filter="intent"][data-value="rating_rt:gt:80"]').click();
     assert.deepEqual(await ids(),['bright','paris']);assert.match(page.url(),/skip=/);

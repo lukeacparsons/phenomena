@@ -40,6 +40,12 @@ test('Certified Fresh requires a sourced badge, not a high score',()=>{
   assert(!ids('certified fresh').includes('few-reviews'));
   assert.deepEqual(ids('not certified fresh'),['boundary']);
 });
+test('regional production requests do not become countries or service outages',async()=>{
+  const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('Unsupported regional metadata needs no model call')});
+  const result=await api.search({query:'from catalunya'});
+  assert.equal(result.mode,'local');assert.deepEqual(result.intent.unsupported,['origin:Catalunya']);
+  assert.deepEqual(result.intent.conditions,[]);assert.deepEqual(ids('from catalunya'),[]);
+});
 test('duration, time and chain conditions apply to each matching screening',()=>{
   assert.deepEqual(ids('under two hours from France'),['above','boundary','few-reviews','mixed']);
   const result=search('cinesa after 8pm').find(f=>f.id==='mixed');

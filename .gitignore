@@ -11,4 +11,5 @@ output/
 
 # Local metadata API credentials
 .env.tmdb
+.env.local
 .DS_Store
