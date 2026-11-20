@@ -1,4 +1,4 @@
-import {renderFilmDialog,focusSelectedScreening} from './film-dialog.js';
+import {renderFilmDialog,focusSelectedScreening,getDialogScroller} from './film-dialog.js';
 import {filmMarkup} from './film-view.js';
 const payload=JSON.parse(document.getElementById('film-dialog-data').textContent);
 const {film,cinemas}=payload,language=document.documentElement.lang;
@@ -12,8 +12,13 @@ const future=session=>Date.parse(session.starts_at)>=Date.now();
 const fragment=()=>location.hash.slice(1);
 // A cached HTML page can outlive a screening. Keep its remaining dates useful.
 page?.querySelectorAll('[data-starts]').forEach(row=>{if(Date.parse(row.dataset.starts)<Date.now())row.remove();});
-page?.querySelectorAll('.dialog-cinema,.dialog-day').forEach(section=>{if(!section.querySelector('.buyrow'))section.remove();});
+page?.querySelectorAll('.schedule-cinema,.dialog-cinema,.dialog-day').forEach(section=>{if(!section.querySelector('[data-session]'))section.remove();});
 if(page)page.querySelector('.film-empty').hidden=film.sessions.some(future);
+page?.querySelectorAll('.card-showtime[data-session]').forEach(anchor=>{
+  anchor.href='#'+anchor.id;
+  anchor.removeAttribute('target');anchor.removeAttribute('rel');
+  anchor.setAttribute('aria-haspopup','dialog');
+});
 function paint(){
   renderFilmDialog(dialog,{...film,sessions:film.sessions.filter(future)},
     {language,cinemas,selectedSessionId:selected?.id,availability});
@@ -21,6 +26,13 @@ function paint(){
 function restore(){
   const id=fragment();
   if(dialog.open&&id===activeFragment)return;
+  if(id==='showtimes'){
+    if(dialog.open){navigating=true;dialog.close();}
+    notice.hidden=true;
+    document.querySelectorAll('.lang-switch a[hreflang]').forEach(anchor=>{if(film.urls[anchor.hreflang])anchor.href=film.urls[anchor.hreflang]+'#showtimes';});
+    document.getElementById('showtimes')?.scrollIntoView({block:'start',behavior:'instant'});
+    return;
+  }
   if(id!=='showtimes'&&!id.startsWith('screening-')){
     if(dialog.open){navigating=true;dialog.close();}
     return;
@@ -34,11 +46,11 @@ function restore(){
   notice.hidden=true;navigating=false;activeFragment=id;paint();
   document.querySelectorAll('.lang-switch a[hreflang]').forEach(anchor=>{if(film.urls[anchor.hreflang])anchor.href=film.urls[anchor.hreflang]+'#'+id;});
   if(!dialog.open)dialog.showModal();
-  dialog.scrollTop=0;focusSelectedScreening(dialog);
+  getDialogScroller(dialog).scrollTop=0;focusSelectedScreening(dialog);
   window.dispatchEvent(new CustomEvent('vobarna:screening-open',{detail:{film_id:film.id,screening_id:selected?.id||null,placement:'information'}}));
 }
 document.addEventListener('click',event=>{
-  const anchor=event.target.closest?.('a.screening-action');
+  const anchor=event.target.closest?.('a.screening-action,#filmPage a.card-showtime[data-session]');
   if(!anchor||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   const url=new URL(anchor.href);
   if(url.pathname!==location.pathname)return;
@@ -48,6 +60,9 @@ document.addEventListener('click',event=>{
 });
 dialog.addEventListener('click',event=>{
   if(event.target.closest('[data-close]'))dialog.close();
+  else if(event.target.closest('[data-show-film-times]')){
+    navigating=true;dialog.close();location.hash='showtimes';restore();
+  }
   else if(event.target===dialog){
     const rect=dialog.getBoundingClientRect();
     if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();
@@ -67,10 +82,11 @@ document.querySelectorAll('.screening-action[hidden]').forEach(anchor=>{anchor.h
 restore();
 function refreshAvailability(){
   const staging=document.createElement('div');
-  staging.innerHTML=filmMarkup({...film,sessions:film.sessions.filter(future)},
-    {language,cinemas,selectedSessionId:selected?.id,availability,availabilityPending:false});
-  const updates=new Map([...staging.querySelectorAll('[data-session]')].map(node=>[node.dataset.session,node]));
   for(const root of [page,dialog.open?dialog:null]){
+    if(!root)continue;
+    staging.innerHTML=filmMarkup({...film,sessions:film.sessions.filter(future)},
+      {language,cinemas,selectedSessionId:selected?.id,availability,availabilityPending:false,view:root===page?'showtimes':'screening'});
+    const updates=new Map([...staging.querySelectorAll('[data-session]')].map(node=>[node.dataset.session,node]));
     root?.querySelectorAll('[data-session]').forEach(row=>{
       const update=updates.get(row.dataset.session);
       if(!update)return;

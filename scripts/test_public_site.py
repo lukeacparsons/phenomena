@@ -177,7 +177,7 @@ class PublicationTests(unittest.TestCase):
                 self.assertIn(paths[lang], (root / 'sitemap.xml').read_text())
                 self.assertIn('index,follow', html)
                 if kind == 'discounts':
-                    self.assertEqual(html.count('class="comparison-room discount-offer"'), 6)
+                    self.assertEqual(html.count('class="comparison-room discount-offer content-block"'), 6)
                     self.assertIn('datetime="2026-11-19"', html)
                     self.assertNotIn('data-discovery-film=', html)
                     self.assertNotIn('"@type": "Offer"', html)
@@ -275,7 +275,9 @@ class PublicationTests(unittest.TestCase):
         self.assertNotIn('/en/films/unresolved-archive/', (root / 'sitemap.xml').read_text())
         film = (root / 'en/films/dune-1984/index.html').read_text()
         self.assertIn('id="filmPage"', film)
-        self.assertIn('class="btn buyrow-ticket"', film)
+        self.assertIn('class="card-showtime"', film)
+        self.assertIn('href="https://cinema.example/tickets"', film)
+        self.assertIn('class="dialog-section showtimes-summary reading-wash" id="showtimes"', film)
         self.assertNotIn('Not confirmed', film)
         self.assertNotIn('class="screenings"', film)
         payload = json.loads(film.split('<script type="application/json" id="film-dialog-data">')[1].split('</script>')[0])
@@ -319,7 +321,7 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('https://vobarna.com/es/peliculas/dune-1984/', en)
         es = (root / 'es/peliculas/dune-1984/index.html').read_text()
         self.assertIn('<html lang="es">', es)
-        self.assertIn('<h2 class="sr-only">Sesiones</h2>', es)
+        self.assertIn('<h2 class="film-showtimes-heading">Sesiones</h2>', es)
         self.assertIn('href="/en/films/dune-1984/"', es)
         self.assertIn('dune-1984', (root / 'en/index.html').read_text())
 

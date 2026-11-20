@@ -32,7 +32,8 @@
     "crawlers": "node scripts/traffic-report.mjs",
     "search-console": "node scripts/search-console.mjs",
     "crawl:monitor": "node scripts/crawl-monitor.mjs",
-    "test:traffic": "node --test scripts/test_crawl_monitor.mjs"
+    "test:traffic": "node --test scripts/test_crawl_monitor.mjs",
+    "site:test:styles": "node scripts/test_ui_consistency_browser.cjs"
   },
   "devDependencies": {
     "wrangler": "^4.165.0"

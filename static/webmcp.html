@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <script src="/theme.js"></script>
   <link rel="stylesheet" href="/cinemas.css">
-  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/ui-components.css">
   <link rel="stylesheet" href="/webmcp-guide.css">
   <link rel="alternate" type="application/json" href="/webmcp-tools.json" title="VO Barna WebMCP tool definitions">
 </head>
@@ -66,13 +66,13 @@
         <h2 id="tools-title">The six tools</h2>
         <p>The tools are registered on the <a href="/en/">screenings page</a> after its programme loads. Four read information. Two update the visible page and its shareable URL.</p>
 
-        <section class="guide-tool" id="get_context" aria-labelledby="get-context-title">
+        <section class="guide-tool content-block" id="get_context" aria-labelledby="get-context-title">
           <div class="tool-heading"><h3 id="get-context-title"><code>get_context</code></h3><span class="tool-kind">Reads information</span></div>
           <p>Discover the supported cinema IDs and formats, current filters, interface language, selected film or screening, programme coverage and collection timestamps. Dates are interpreted in <code>Europe/Madrid</code>.</p>
           <p><strong>Input:</strong> <code>{}</code>. Use this to learn what is available and understand the user’s current view.</p>
         </section>
 
-        <section class="guide-tool" id="search_screenings" aria-labelledby="search-screenings-title">
+        <section class="guide-tool content-block" id="search_screenings" aria-labelledby="search-screenings-title">
           <div class="tool-heading"><h3 id="search-screenings-title"><code>search_screenings</code></h3><span class="tool-kind">Reads information</span></div>
           <p>Find upcoming sessions without changing the page. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>, plus optional <code>limit</code> and <code>offset</code>. An empty object searches all upcoming collected sessions, independently of the page’s current filters.</p>
@@ -80,26 +80,26 @@
           <p>Results include <code>total_screenings</code>, <code>total_films</code>, the resolved date range, a shareable search URL and <code>next_offset</code>. Sessions are ordered by start time, then screening ID. Use the same filters with <code>next_offset</code> to fetch the next page; <code>null</code> means there is no next page.</p>
         </section>
 
-        <section class="guide-tool" id="get_film" aria-labelledby="get-film-title">
+        <section class="guide-tool content-block" id="get_film" aria-labelledby="get-film-title">
           <div class="tool-heading"><h3 id="get-film-title"><code>get_film</code></h3><span class="tool-kind">Reads information</span></div>
           <p>Read collected film facts, credits, original languages, release information, runtime and ratings with their source links and observation dates. This includes details an assistant can use when comparing films.</p>
           <p><strong>Required input:</strong> <code>film_id</code>, copied from a search result. Film titles alone are not identifiers: different adaptations and double bills can be distinct entries.</p>
         </section>
 
-        <section class="guide-tool" id="get_screening" aria-labelledby="get-screening-title">
+        <section class="guide-tool content-block" id="get_screening" aria-labelledby="get-screening-title">
           <div class="tool-heading"><h3 id="get-screening-title"><code>get_screening</code></h3><span class="tool-kind">Reads information</span></div>
           <p>Inspect one session’s room, format, date, time and cached seat availability. Returns the official <code>booking_url</code>, its <code>booking_scope</code>, a VO Barna link and whether the screening has started.</p>
           <p><strong>Required input:</strong> <code>screening_id</code>, copied from a search result. This reads the shared cache; it does not make a fresh request to the cinema.</p>
         </section>
 
-        <section class="guide-tool" id="set_search" aria-labelledby="set-search-title">
+        <section class="guide-tool content-block" id="set_search" aria-labelledby="set-search-title">
           <div class="tool-heading"><h3 id="set-search-title"><code>set_search</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
           <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Structured filters appear as removable chips. Returns the first 20 matching sessions.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>. Omitted filters are cleared. Pass <code>{}</code> to reset everything. Pagination arguments apply only to <code>search_screenings</code>.</p>
           <pre><code>{ "query": "comedia mañana" }</code></pre>
         </section>
 
-        <section class="guide-tool" id="show_screening" aria-labelledby="show-screening-title">
+        <section class="guide-tool content-block" id="show_screening" aria-labelledby="show-screening-title">
           <div class="tool-heading"><h3 id="show-screening-title"><code>show_screening</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
           <p>Open an upcoming session in the film dialog and highlight its official ticket link. If the current filters hide that session, the dialog shows the film’s upcoming sessions while preserving the underlying search.</p>
           <p><strong>Required input:</strong> <code>screening_id</code>, copied from a search result. The shareable URL leads to the film’s permanent page at the selected screening row. Opening the dialog does not reserve a seat, open checkout or purchase a ticket.</p>

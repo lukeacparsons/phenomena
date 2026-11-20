@@ -13,7 +13,7 @@ export function posterMarkup(film,{className='poster',alt=''}={}){
   const width=optimized?.width||Number(film.poster_width)||600,height=optimized?.height||Number(film.poster_height)||900;
   const loaded=loadedImages.get(source);
   const ready=loaded&&variants.some(v=>v.url===loaded.url&&v.width===loaded.width)?loaded:null;
-  return `<img class="${escapeHTML(className)} progressive-image${ready?'':' is-preview'}" src="${escapeHTML(ready?.url||preview)}" ${ready?`data-image-width="${ready.width}"`:''} width="${width}" height="${height}" style="aspect-ratio:${width}/${height}" alt="${escapeHTML(alt)}" decoding="async" data-image-source="${escapeHTML(source)}" data-image-variants="${escapeHTML(JSON.stringify(variants))}">`;
+  return `<img class="${escapeHTML(className)} progressive-image${ready?'':' is-preview'}" src="${escapeHTML(ready?.url||preview)}" ${ready?`data-image-width="${ready.width}"`:''} width="${width}" height="${height}" style="--poster-ratio:${width}/${height};aspect-ratio:${width}/${height}" alt="${escapeHTML(alt)}" decoding="async" data-image-source="${escapeHTML(source)}" data-image-variants="${escapeHTML(JSON.stringify(variants))}">`;
 }
 
 const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;

@@ -39,9 +39,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
 # Rendered poster widths in the listing grid (static/cinemas.css). The phone
 # entries divide by the device pixel ratio above 2, matching the loader's cap.
-LISTING_POSTER_SIZES = ('(max-width:600px) and (min-resolution:3.5dppx) 120px, (max-width:600px) and (min-resolution:2.75dppx) 160px, '
-                        '(max-width:600px) and (min-resolution:2.25dppx) 192px, (max-width:600px) 240px, (max-width:730px) calc(50vw - 28px), '
-                        '(max-width:1000px) calc(33.4vw - 28px), (max-width:1160px) calc(25vw - 26px), 265px')
+LISTING_POSTER_SIZES = ('(max-width:600px) and (min-resolution:3.5dppx) 150px, (max-width:600px) and (min-resolution:2.75dppx) 200px, '
+                        '(max-width:600px) and (min-resolution:2.25dppx) 240px, (max-width:600px) 300px, (max-width:899px) calc(50vw - 36px), '
+                        '(max-width:1160px) calc(33.3333vw - 34.6667px), (max-width:1199px) 352px, '
+                        '(max-width:1240px) calc(25vw - 34px), 276px')
 ORIGIN = 'https://vobarna.com'
 MADRID = ZoneInfo('Europe/Madrid')
 PAGE_SIZE = 24
@@ -227,7 +228,7 @@ class Publication:
             script += '<script type="module" src="/complete-programme.js"></script>'
         # A listing repeats the subtitle above its dates. Small screens show that copy and drop
         # the header's, decided here so the header never changes height after first paint.
-        root_class = ' class="has-programme-subtitle"' if 'class="logo-subtitle programme-subtitle"' in body else ''
+        root_class = ' class="has-programme-subtitle"' if date_scope or 'class="logo-subtitle programme-subtitle"' in body else ''
         html = f'''<!doctype html>
 <html lang="{lang}"{root_class}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
@@ -239,7 +240,7 @@ class Publication:
 <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script async src="https://cdn.nekuda.ai/v1/trial-token.js" data-webmcp-trial onload="this.dataset.webmcpTrial='loaded'" onerror="this.dataset.webmcpTrial='failed'"></script>
 <script src="/theme.js"></script>
-<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
+<link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/ui-components.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
 </head>
 <body class="public-site{' venue-page' if venue else ''}{' film-page' if film_page else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
@@ -272,13 +273,16 @@ class Publication:
         if not url:
             return ''
         image = film.get('poster_image') or {}
-        dimensions = f'width="{int(image.get("width") or film.get("poster_width") or 600)}" height="{int(image.get("height") or film.get("poster_height") or 900)}"'
+        width = int(image.get('width') or film.get('poster_width') or 600)
+        height = int(image.get('height') or film.get('poster_height') or 900)
+        dimensions = f'width="{width}" height="{height}"'
+        sizing = f'--poster-ratio:{width}/{height};aspect-ratio:{width}/{height}'
         if not image or image.get('source') != url:
-            return f'<img class="public-poster" src="{text(url)}" {dimensions} alt="{text(film["title"])}" loading="{"eager" if eager else "lazy"}" decoding="async">'
+            return f'<img class="public-poster" src="{text(url)}" {dimensions} style="{sizing}" alt="{text(film["title"])}" loading="{"eager" if eager else "lazy"}" decoding="async">'
         variants = image['variants']
         fallback = next((v for v in variants if v['width'] >= 320), variants[-1])['url']
         srcset = ', '.join(f'{v["url"]} {v["width"]}w' for v in variants)
-        attrs = f'{dimensions} style="aspect-ratio:{int(image["width"])}/{int(image["height"])}" alt="{text(film["title"])}" decoding="async"'
+        attrs = f'{dimensions} style="{sizing}" alt="{text(film["title"])}" decoding="async"'
         noscript = (f'<noscript><style>.progressive-image{{display:none}}.film-facts>noscript{{display:contents}}</style><img class="public-poster" src="{text(fallback)}" '
                     f'srcset="{text(srcset)}" sizes="(max-width:730px) 45vw, 280px" {attrs} loading="lazy"></noscript>')
         if eager and sizes:
@@ -289,7 +293,7 @@ class Publication:
             preview = image['preview'] if re.fullmatch(r'data:image/webp;base64,[A-Za-z0-9+/=]+', image.get('preview') or '') else ''
             backdrop = f';background:url({preview}) center/contain no-repeat' if preview else ''
             return (f'<img class="public-poster progressive-image" src="{text(variants[0]["url"])}" srcset="{text(srcset)}" sizes="{text(sizes)}" '
-                    f'{dimensions} style="aspect-ratio:{int(image["width"])}/{int(image["height"])}{backdrop}" alt="{text(film["title"])}" decoding="async" loading="eager" fetchpriority="high" '
+                    f'{dimensions} style="{sizing}{backdrop}" alt="{text(film["title"])}" decoding="async" loading="eager" fetchpriority="high" '
                     f'data-image-preview="{text(preview)}" data-image-source="{text(url)}" data-image-variants="{text(json.dumps(variants, separators=(",", ":")))}">{noscript}')
         # Other eager posters start from HTML at a small, data-saving size, then
         # the independent loader upgrades them for the viewport and connection.
@@ -348,7 +352,7 @@ class Publication:
             for session in film['sessions']:
                 session['url_fragment'] = 'screening-' + hashlib.sha256(session['id'].encode()).hexdigest()[:16]
             dialog_films[entity_id] = film
-        dialog_cinemas = [{'id': venue['id'], 'name': venue['name'],
+        dialog_cinemas = [{'id': venue['id'], 'name': venue['name'], 'short': venue.get('short'),
                           'urls': {lang: self.entity_path('cinemas', venue['id'], lang) for lang in LOCALES}}
                          for venue in self.cinemas.values()]
         rendered = subprocess.run(['node', str(ROOT / 'scripts/render_film_views.mjs')],
@@ -369,7 +373,7 @@ class Publication:
                 body = '<article class="film-sheet" id="filmPage" aria-labelledby="filmTitle">'
                 notice = f'<p id="screeningNotice" role="status" tabindex="-1" hidden>{t["expired_screening"]}</p>'
                 body += (views[film['id']][lang].replace('<!--film-poster-->', poster)
-                         .replace('<div class="dialog-section" id="showtimes">', '<div class="dialog-section" id="showtimes">' + notice))
+                         .replace('<div class="dialog-section showtimes-summary reading-wash" id="showtimes">', '<div class="dialog-section showtimes-summary reading-wash" id="showtimes">' + notice))
                 body += '</article>'
                 dialog_film = dialog_films[entity_id]
                 cinemas = [venue for venue in dialog_cinemas if any(s['cinema_id'] == venue['id'] for s in film['sessions'])]
@@ -402,7 +406,7 @@ class Publication:
                         event['subtitleLanguage'] = {'@type': 'Language', 'name': s['subtitles']}
                     graph.append(event)
                 self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', t['film_description'].format(title=display_title), body,
-                          alternatives=alternatives, graph=graph, index=substantive, film_page=True, crumbs=[(t['films'], f'/{lang}/{SECTIONS[lang]["films"]}/')])
+                          alternatives=alternatives, graph=graph, index=substantive, film_page=True)
 
     def programme_listing(self, lang, *, cinema_id='', date=None):
         """Paint the full listing before the search catalogue or JavaScript arrives."""
@@ -452,7 +456,7 @@ class Publication:
                 if safe_url(maps):
                     body += link(maps, v['directions'], ' class="venue-action venue-action-primary"')
                 if safe_url(official):
-                    body += link(official, v['website'], ' class="venue-action"')
+                    body += link(official, v['website'], ' class="venue-action text-action"')
                 body += '</div></div>'
                 body += self.programme_listing(lang, cinema_id=cid)
                 if cinema.get('programme_url'):
@@ -466,7 +470,7 @@ class Publication:
                             continue
                         screen = room.get('screen') or {}
                         width, height = screen.get('width_m'), screen.get('height_m')
-                        body += f'<article class="room" id="sala-{text(rid.lower().replace(" ", "-"))}"><h3>{t["room"]} {text(rid)}</h3><dl class="facts">'
+                        body += f'<article class="room content-block" id="sala-{text(rid.lower().replace(" ", "-"))}"><h3>{t["room"]} {text(rid)}</h3><dl class="facts">'
                         if width and height:
                             approx = '≈ ' if screen.get('height_approximate') or screen.get('width_approximate') or 'infer' in str(screen.get('orientation', '')).lower() else ''
                             body += f'<dt>{t["screen"]}</dt><dd>{approx}{text(width)} × {text(height)} m {self.citations(screen.get("source_ids"), room_sources, lang)}</dd>'
@@ -553,7 +557,7 @@ class Publication:
                 body += '</nav>'
                 self.page(alternatives[lang], lang, f'{t["films"]} · {t["page"]} {page} | VO Barna', t['film_index_description'].format(page=page, pages=pages), body, alternatives=alternatives)
             paths = {l: f'/{l}/{SECTIONS[l]["cinemas"]}/' for l in LOCALES}
-            search = f'''<div id="cinemaFilters" class="directory-filters" role="search" aria-label="{t['cinema_search']}" hidden><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only">{t['cinema_search']}</span><input type="search" id="cinemaSearch" placeholder="{t['cinema_placeholder']}" maxlength="500" autocomplete="off" aria-controls="cinemaList"></label><button type="button" id="cinemaReset" hidden>{t['reset']}</button></div></div>'''
+            search = f'''<div id="cinemaFilters" class="directory-filters" role="search" aria-label="{t['cinema_search']}" hidden><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only">{t['cinema_search']}</span><input type="search" id="cinemaSearch" placeholder="{t['cinema_placeholder']}" maxlength="500" autocomplete="off" aria-controls="cinemaList"></label><button type="button" id="cinemaReset" class="clear-button" hidden>{t['reset']}</button></div></div>'''
             rows = []
             for record in venues:
                 cinema = record['cinema']
@@ -720,7 +724,7 @@ class Publication:
         for key, venues, source, amount in OFFERS:
             price = ('€' + amount if lang == 'en' else amount.replace('.', ',') + ' €') if amount else d[key + '_price']
             cinemas = [cid for cid in venues if cid in self.cinemas]
-            body += f'<article class="comparison-room discount-offer" id="{key}"><h2>{text(d[key])}</h2><dl><dt>{text(d["published_price"])}</dt><dd>{text(price)}</dd><dt>{text(d["offer_conditions"])}</dt><dd>{text(d[key + "_body"])}</dd></dl><p class="source-note">{self.citations([source], COLLECTION_SOURCES, lang)}</p>'
+            body += f'<article class="comparison-room discount-offer content-block" id="{key}"><h2>{text(d[key])}</h2><dl><dt>{text(d["published_price"])}</dt><dd>{text(price)}</dd><dt>{text(d["offer_conditions"])}</dt><dd>{text(d[key + "_body"])}</dd></dl><p class="source-note">{self.citations([source], COLLECTION_SOURCES, lang)}</p>'
             if cinemas:
                 body += '<details><summary>' + text(d['venue_programme']) + '</summary><ul>' + ''.join('<li>' + link(self.entity_path('cinemas', cid, lang), self.cinemas[cid]['name']) + '</li>' for cid in cinemas) + '</ul></details>'
             body += '</article>'
@@ -787,7 +791,7 @@ class Publication:
                     if policy:
                         value = self.research_text(policy['value'], lang) + ' ' + self.citations(policy['source_ids'], practical.get('sources', {}), lang)
                 facts.append((d['seating'] if key == 'seating' else t[key], value))
-            cards.append(f'<article class="comparison-room" id="{text(anchor)}"><h3>{text(label)}</h3><dl>' + ''.join(f'<dt>{text(k)}</dt><dd>{v}</dd>' for k, v in facts) + f'</dl><p>{link(url, d["comparison_more"])}</p></article>')
+            cards.append(f'<article class="comparison-room content-block" id="{text(anchor)}"><h3>{text(label)}</h3><dl>' + ''.join(f'<dt>{text(k)}</dt><dd>{v}</dd>' for k, v in facts) + f'</dl><p>{link(url, d["comparison_more"])}</p></article>')
         if not cards:
             return ''
         body = f'<section><h2>{text(d["comparison_title"])}</h2><p class="editorial">{text(d["comparison_intro"])}</p><p class="editorial">{text(t["size_note"])}</p>'
@@ -855,7 +859,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.discovery_pages()
             date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
-            for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
+            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):

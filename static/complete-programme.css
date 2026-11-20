@@ -8,4 +8,4 @@
 .complete-programme-content h3{font-size:1rem;margin:0 0 12px}
 .complete-programme-content ul{padding-left:20px;margin:0}
 .complete-programme-content li{margin:0 0 12px;line-height:1.7}
-.complete-programme .programme-times a{display:inline-block;white-space:nowrap;padding:3px 2px;font-variant-numeric:tabular-nums}
+.complete-programme .programme-times a{display:inline-flex;align-items:center;min-height:var(--touch-target);padding:8px 2px;white-space:nowrap;font-variant-numeric:tabular-nums;text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}

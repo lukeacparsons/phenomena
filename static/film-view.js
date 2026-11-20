@@ -26,7 +26,7 @@ function groupShowtimes(sessions){
 }
 
 // Shared HTML for the crawlable film page and the listing's dialog.
-export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null,availability={},poster='',page=false,availabilityPending=true}={}){
+export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null,availability={},poster='',page=false,availabilityPending=true,view='all'}={}){
   const activeSession=selectedSessionId;
   const t=key=>TEXT[language]?.[key]||TEXT.en[key]||key;
   const locale=()=>({en:'en-GB',es:'es-ES',ca:'ca-ES'}[language]||'en-GB');
@@ -35,8 +35,9 @@ export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null
   const availabilitySnapshot=()=>availability;
   const seatErrors=availability.errors||new Set(),availabilityFailed=availability.failed;
   const isSoldOut=session=>['booking_closed','sold_out'].includes(availabilityFor(session,availability).status);
-  const dayHeading=date=>new Intl.DateTimeFormat(locale(),{timeZone:'Europe/Madrid',weekday:'short',day:'numeric',month:'short',year:'numeric'}).format(new Date(date+'T12:00:00Z'));
-  const showtimeLabel=session=>[session.time,film.title,dayHeading(session.date),cinema(session.cinema_id)?.name||session.cinema_id,...(session.formats||[]),isSoldOut(session)?t('soldOut'):''].filter(Boolean).join(' · ');
+  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  const dayHeading=date=>(date===today?t('today')+' · ':'')+new Intl.DateTimeFormat(locale(),{timeZone:'Europe/Madrid',...(date===today?{}:{weekday:'short'}),day:'numeric',month:'short',...(date.slice(0,4)===today.slice(0,4)?{}:{year:'numeric'})}).format(new Date(date+'T12:00:00Z'));
+  const showtimeLabel=session=>[session.time,film.title,dayHeading(session.date),cinema(session.cinema_id)?.name||session.cinema_id,...(session.formats||[]),session.version,isSoldOut(session)?t('soldOut'):''].filter(Boolean).join(' · ');
   const tags=session=>[...(session.formats||[]),session.version].filter(Boolean).map(value=>`<span class="tag">${escapeHTML(value)}</span>`).join('');
 const age = value => {
   const minutes=Math.max(0,Math.floor((Date.now()-Date.parse(value))/60000));
@@ -78,6 +79,34 @@ function dialogShowtime(session){
   </article>`;
 }
 
+function scheduleShowtime(session){
+  const href=session.urls?.[language]||(film.urls?.[language]&&session.url_fragment?film.urls[language]+'#'+session.url_fragment:
+    '/'+language+'/?film='+encodeURIComponent(film.id)+'&screening='+encodeURIComponent(session.id));
+  // Static film pages keep a direct booking fallback; JS enhances these links.
+  const destination=page?session.booking_url:href;
+  const attributes=page?` id="${escapeHTML(session.url_fragment)}" data-starts="${escapeHTML(session.starts_at)}" target="_blank" rel="noopener noreferrer"`:' aria-haspopup="dialog"';
+  return `<a class="card-showtime${isSoldOut(session)?' is-sold-out':''}" data-open="${escapeHTML(film.id)}" data-session="${escapeHTML(session.id)}" href="${safeURL(destination)}"${attributes} aria-label="${escapeHTML(showtimeLabel(session))}">
+    <time datetime="${escapeHTML(session.starts_at)}">${escapeHTML(session.time)}</time>
+    ${session.formats?.length?`<span class="schedule-format">${escapeHTML(session.formats.join(' · '))}</span>`:''}
+    <span class="availability-content" data-availability="${escapeHTML(session.id)}" data-compact>${availabilityHTML(session,true)}</span>
+  </a>`;
+}
+
+function scheduleMarkup(){
+  return `<div class="dialog-section showtimes-summary reading-wash"${page?' id="showtimes"':''}>${page?`<h2 class="film-showtimes-heading">${t('showtimes')}</h2>`:`<h3 class="sr-only">${t('showtimes')}</h3>`}
+    <p class="film-empty"${film.sessions.length?' hidden':''}>${DETAIL_LABELS[language].empty}</p>
+    ${[...groupShowtimes(film.sessions)].map(([date,venues])=>`
+      <section class="dialog-day" data-date="${escapeHTML(date)}" aria-label="${escapeHTML(dayHeading(date))}">
+        <h3 class="dialog-day-label">${escapeHTML(dayHeading(date))}</h3>
+        <div class="schedule-cinemas">${[...venues].map(([id,sessions])=>`
+          <div class="schedule-cinema">
+            <a class="schedule-cinema-name" href="${safeURL(cinemaHref(id))}">${escapeHTML(cinema(id)?.short||cinema(id)?.name||id)}</a>
+            <div class="schedule-times">${sessions.map(scheduleShowtime).join('')}</div>
+          </div>`).join('')}</div>
+      </section>`).join('')}
+  </div>`;
+}
+
 function filmRatings(film){
   return `<div class="film-ratings">${RATING_PROVIDERS.map(provider=>{
     const source=film.ratings?.[provider.parent||provider.id];
@@ -105,9 +134,19 @@ function filmLanguages(film){
   const facts=[film.release_year||details.release_year,runtime?runtime+' '+t('min'):null,...(details.genres||[]).slice(0,3)].filter(Boolean).join(' · ');
   const directors=details.directors?.length?`<p class="dialog-director">${DETAIL_LABELS[language].directedBy} ${escapeHTML(details.directors.join(', '))}</p>`:'';
   const heading=page?'h1':'h2';
-  return `${page?'':`<div class="dialog-toolbar"><div class="dialog-drag-handle" aria-hidden="true"></div><button class="dialog-close" type="button" data-close aria-label="${t('close')}">×</button></div>`}
-    <div class="dialog-head">${poster}<div class="dialog-heading"><${heading} class="dialog-title" id="${page?'filmTitle':'dialogTitle'}" tabindex="-1">${escapeHTML(film.title)}</${heading}><div class="dialog-intro">${facts?`<p class="dialog-meta">${escapeHTML(facts)}</p>`:''}${directors}${filmLanguages(film)}</div>${filmRatings(film)}</div></div>
-    <div class="dialog-section"${page?' id="showtimes"':''}>${page?`<h2 class="sr-only">${t('showtimes')}</h2>`:''}<p class="film-empty"${film.sessions.length?' hidden':''}>${DETAIL_LABELS[language].empty}</p>${[...groupShowtimes(film.sessions)].map(([date,venues])=>`
+  const toolbar=page?'':`<div class="dialog-toolbar"><div class="dialog-drag-handle" aria-hidden="true"></div><button class="dialog-close" type="button" data-close aria-label="${t('close')}">×</button></div>`;
+  const title=view==='showtimes'?`<a class="dialog-film-link" href="${safeURL(film.urls?.[language]||'/'+language+'/?film='+encodeURIComponent(film.id))}" data-open="${escapeHTML(film.id)}" data-view="film" aria-haspopup="dialog">${escapeHTML(film.title)}</a>`:escapeHTML(film.title);
+  const header=`<div class="dialog-head${page?'':' reading-wash'}">${poster}<div class="dialog-heading${page?' reading-wash':''}"><${heading} class="dialog-title" id="${page?'filmTitle':'dialogTitle'}" tabindex="-1">${title}</${heading}>${['screening','showtimes'].includes(view)?'':`<div class="dialog-intro">${facts?`<p class="dialog-meta">${escapeHTML(facts)}</p>`:''}${directors}${filmLanguages(film)}</div>${filmRatings(film)}`}</div></div>`;
+  if(view==='showtimes')return toolbar+header+scheduleMarkup();
+  if(view==='film')return toolbar+header+`<div class="dialog-actions reading-wash"><button type="button" class="sheet-showtimes" data-show-film-times>${t('view')} <span aria-hidden="true">→</span></button></div>`;
+  if(view==='screening'){
+    const session=film.sessions.find(session=>session.id===activeSession);
+    if(!session)return toolbar+header+`<p class="dialog-section film-empty reading-wash">${DETAIL_LABELS[language].empty}</p>`;
+    return toolbar+header+`<div class="dialog-section screening-summary reading-wash"><p class="screening-date">${escapeHTML(dayHeading(session.date))}</p><h3 class="screening-cinema"><a href="${safeURL(cinemaHref(session.cinema_id))}">${escapeHTML(cinema(session.cinema_id)?.name||session.cinema_id)}</a></h3>${dialogShowtime(session)}</div><div class="dialog-actions reading-wash"><button type="button" class="sheet-showtimes" data-show-film-times>${t('view')} <span aria-hidden="true">→</span></button></div>`;
+  }
+  if(page)return header+scheduleMarkup();
+  return toolbar+header+`
+    <div class="dialog-section reading-wash"${page?' id="showtimes"':''}>${page?`<h2 class="sr-only">${t('showtimes')}</h2>`:''}<p class="film-empty"${film.sessions.length?' hidden':''}>${DETAIL_LABELS[language].empty}</p>${[...groupShowtimes(film.sessions)].map(([date,venues])=>`
       <section class="dialog-day" data-date="${escapeHTML(date)}" aria-label="${escapeHTML(dayHeading(date))}">
         <h3 class="dialog-day-label">${escapeHTML(dayHeading(date))}</h3>
         <div class="dialog-cinemas">${[...venues].map(([cinemaId,sessions])=>`

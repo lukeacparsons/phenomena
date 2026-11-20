@@ -1,6 +1,6 @@
 import {TEXT} from './cinema-copy.js';
-import {createListingView} from './listing-view.js';
-import {renderFilmDialog,focusSelectedScreening} from './film-dialog.js';
+import {createListingView,HOME_CARD_PREVIEW} from './listing-view.js';
+import {renderFilmDialog,focusSelectedScreening,getDialogScroller,prepareFilmTransition} from './film-dialog.js';
 import './ticket-events.js';
 import {observeImages,posterMarkup} from './progressive-images.js';
 import {hydrateProgramme} from './programme-data.js';
@@ -57,6 +57,7 @@ if(!params.has('q')&&$('search')?.value)state.query=$('search').value;
 let pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('film'),screeningId:params.get('screening')}:null;
 let legacyCinema=params.get('cinema');
 let data=null,visible=[],activeFilm=null,activeSession=null;
+let activeView='film',showtimesScroll=0,showtimesSession=null;
 let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0;
 const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
   getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
@@ -81,7 +82,7 @@ let cachedProgramme=null,viewCache=null;
 const listingView=()=>{
   const today=todayISO(),cinemas=data?.cinemas;
   if(viewCache?.language!==language||viewCache?.today!==today||viewCache?.cinemas!==cinemas)
-    viewCache={language,today,cinemas,view:createListingView({language,cinemas,today,listingPath,availabilityHTML,isSoldOut})};
+    viewCache={language,today,cinemas,view:createListingView({language,cinemas,today,listingPath,...(listingCinemaId?{}:HOME_CARD_PREVIEW),availabilityHTML,isSoldOut})};
   return viewCache.view;
 };
 const seats = new Map(), seatErrors = new Set();
@@ -104,14 +105,14 @@ function syncURL(push=false){
   const filmId=pendingLink?.filmId||activeFilm,screeningId=pendingLink?.screeningId||activeSession;
   const film=publicLanguage&&data?.films.find(f=>matchesFilmId(f,filmId));
   const session=film?.sessions.find(s=>s.id===screeningId);
-  const canonical=session?.urls?.[language]||(film?.urls?.[language]?film.urls[language]+'#showtimes':null);
+  const canonical=session?.urls?.[language]||(film?.urls?.[language]?film.urls[language]+(activeView==='showtimes'?'#showtimes':''):null);
   const query=searchParams(state,...(publicLanguage?[]:[filmId,screeningId]));
   const defaultDate=relativeDate&&query.size===1&&query.get('date')===listingDate;
   if(defaultDate)query.delete('date');
   const viewPath=listingDate&&!defaultDate?`/${language}/`:listingPath;
   const listingHash=listingCinemaId&&location.pathname===listingPath?location.hash:'';
   const url=canonical||viewPath+(query.size?'?'+query.toString():'')+listingHash;
-  const view=publicLanguage?{listingPath,filters:state,filmId,screeningId}:null;
+  const view=publicLanguage?{listingPath,filters:state,filmId,screeningId,filmView:activeView}:null;
   if(url!==location.pathname+location.search+location.hash||JSON.stringify(history.state?.vobarna)!==JSON.stringify(view)){
     history[push?'pushState':'replaceState'](view?{vobarna:view}:null,'',url);
     window.dispatchEvent(new Event('vobarna:navigation'));
@@ -126,7 +127,7 @@ function syncURL(push=false){
     }
     for(const {node,href} of listingLanguageLinks){
       const localePath=film?.urls?.[node.hreflang];
-      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:'#showtimes'):listingDate&&!defaultDate?`/${node.hreflang}/`+(query.size?'?'+query.toString():''):href);
+      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:activeView==='showtimes'?'#showtimes':''):listingDate&&!defaultDate?`/${node.hreflang}/`+(query.size?'?'+query.toString():''):href);
     }
     for(const {node,value} of listingMetadata){
       const attr=node.tagName==='LINK'?'href':'content';
@@ -161,7 +162,7 @@ function availabilitySnapshot(){
 }
 
 function closeFilm(){
-  activeFilm=null;activeSession=null;pendingLink=null;
+  activeFilm=null;activeSession=null;pendingLink=null;activeView='film';
   $('filmDialog').close();syncURL();
 }
 
@@ -245,7 +246,7 @@ function showtimeLabel(session,filmTitle=''){
 
 function markStartedShowtimes(){
   const label={en:'This screening has started',es:'Esta sesión ya ha comenzado',ca:'Aquesta sessió ja ha començat'}[language];
-  for(const link of $('grid').querySelectorAll('.card-showtime')){
+  for(const link of document.querySelectorAll('.card-showtime')){
     const started=Date.parse(link.querySelector('time')?.dateTime)<Date.now();
     if(started===link.classList.contains('is-started'))continue;
     link.classList.toggle('is-started',started);
@@ -276,7 +277,7 @@ function render(films=filteredFilms()){
     if(!cached){
       const node=document.createElement('article');
       node.className='card';node.dataset.film=film.id;node.dataset.open=film.id;
-      node.innerHTML=`<a href="${safeURL(filmHref(film))}" class="poster-button" data-open="${escapeHTML(film.id)}" aria-label="${escapeHTML(t('view')+': '+film.title)}">${imageMarkup(film)}</a><div class="card-body">${body}</div>`;
+      node.innerHTML=`<a href="${safeURL(filmHref(film))}" class="poster-button" data-open="${escapeHTML(film.id)}" aria-haspopup="dialog" aria-label="${escapeHTML(t('moreInfo')+': '+film.title)}">${imageMarkup(film)}</a><div class="card-body">${body}</div>`;
       cached={node,body};cardNodes.set(film.id,cached);
     }else{
       if(cached.body!==body){
@@ -290,6 +291,8 @@ function render(films=filteredFilms()){
       if((poster.querySelector('img')?.dataset.imageSource||'')!==(film.poster_url||''))poster.innerHTML=imageMarkup(film);
       const href=filmHref(film);
       if(poster.getAttribute('href')!==href)poster.setAttribute('href',href);
+      poster.setAttribute('aria-label',t('moreInfo')+': '+film.title);
+      poster.setAttribute('aria-haspopup','dialog');
     }
     return cached.node;
   });
@@ -349,10 +352,10 @@ function renderDialog(){
   const filtered=visible.find(f=>f.id===activeFilm);
   const candidate=filtered&&(!activeSession||filtered.sessions.some(session=>session.id===activeSession))?filtered:source;
   const film={...candidate,sessions:candidate.sessions.filter(future)};
-  renderFilmDialog($('filmDialog'),film,{language,cinemas:data.cinemas,selectedSessionId:activeSession,availability:availabilitySnapshot()});
+  renderFilmDialog($('filmDialog'),film,{language,cinemas:data.cinemas,selectedSessionId:activeSession,availability:availabilitySnapshot(),view:activeView});
 }
 
-function openFilm(id,sessionId=null,{push=true}={}){
+function openFilm(id,sessionId=null,{push=true,view=sessionId?'screening':'film',restoreScroll=false,revealSession=null}={}){
   const film=data?.films.find(film=>matchesFilmId(film,id));
   if(!film||!film.sessions.some(future)||(sessionId&&!film.sessions.some(session=>session.id===sessionId&&future(session))))return false;
   if(searchTimer||searchFrame){
@@ -360,11 +363,32 @@ function openFilm(id,sessionId=null,{push=true}={}){
     cancelSearchRender();refreshResults();
   }
   $('linkNotice').hidden=true;
-  pendingLink=null;activeFilm=film.id;activeSession=sessionId;renderDialog();
   const dialog=$('filmDialog');
+  const animateTransition=prepareFilmTransition(dialog,film.id,view);
+  if(dialog.open&&activeFilm===film.id&&activeView==='showtimes'){showtimesScroll=getDialogScroller(dialog).scrollTop;showtimesSession=sessionId;}
+  else if(!dialog.open||activeFilm!==film.id){showtimesScroll=0;showtimesSession=null;}
+  pendingLink=null;activeFilm=film.id;activeSession=sessionId;activeView=view;renderDialog();
   if(!dialog.open)dialog.showModal();
-  dialog.scrollTop=0;syncURL(push);
+  getDialogScroller(dialog).scrollTop=0;syncURL(push);
   focusSelectedScreening(dialog);
+  if(view==='showtimes'&&restoreScroll){
+    [...dialog.querySelectorAll('.card-showtime')].find(link=>link.dataset.session===showtimesSession)?.focus({preventScroll:true});
+    getDialogScroller(dialog).scrollTop=showtimesScroll;
+  }
+  if(view==='showtimes'&&revealSession){
+    const target=[...dialog.querySelectorAll('.card-showtime')].find(link=>link.dataset.session===revealSession);
+    if(target){
+      const scroller=getDialogScroller(dialog),header=dialog.querySelector('.dialog-head');
+      const available=scroller.clientHeight-header.getBoundingClientRect().height-16;
+      const bottom=target.getBoundingClientRect().bottom;
+      // Keep the date and cinema in view whenever they fit above the extra time.
+      const context=[target.closest('.dialog-day'),target.closest('.schedule-cinema'),target]
+        .find(node=>node&&bottom-node.getBoundingClientRect().top<=available)||target;
+      scroller.scrollTop+=context.getBoundingClientRect().top-header.getBoundingClientRect().bottom-8;
+      target.focus({preventScroll:true});
+    }
+  }
+  animateTransition();
   window.dispatchEvent(new CustomEvent('vobarna:screening-open',{detail:{film_id:film.id,screening_id:sessionId,placement:'listing'}}));
   return true;
 }
@@ -522,9 +546,9 @@ async function loadProgramme(){
 
 function restoreLink(final){
   if(!pendingLink||!data)return;
-  const {filmId,screeningId}=pendingLink;
+  const {filmId,screeningId,filmView}=pendingLink;
   const film=screeningId?data.films.find(f=>f.sessions.some(s=>s.id===screeningId&&future(s))):data.films.find(f=>matchesFilmId(f,filmId)&&f.sessions.some(future));
-  if(film&&(!filmId||matchesFilmId(film,filmId))){openFilm(film.id,screeningId,{push:false});return;}
+  if(film&&(!filmId||matchesFilmId(film,filmId))){openFilm(film.id,screeningId,{push:false,view:filmView});return;}
   if(final){
     pendingLink=null;syncURL();
     $('linkNotice').textContent={en:'This film or screening is no longer in the upcoming programme. Search for another session.',es:'Esta película o sesión ya no está en la próxima cartelera. Busca otra sesión.',ca:'Aquesta pel·lícula o sessió ja no és a la propera cartellera. Cerca una altra sessió.'}[language];
@@ -565,6 +589,10 @@ document.addEventListener('click',event=>{
   if(showtime&&Date.parse(showtime.querySelector('time')?.dateTime)<Date.now()){event.preventDefault();markStartedShowtimes();return;}
   const anchor=event.target.closest('a');
   if(anchor&&(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey))return;
+  if(event.target.closest('[data-show-film-times]')){
+    openFilm(activeFilm,null,{push:false,view:'showtimes',restoreScroll:true});
+    return;
+  }
   if(anchor?.hasAttribute('data-programme-session')){
     // The compact HTML already has the canonical screening URL. Reuse its hash
     // instead of repeating provider/session identifiers thousands of times.
@@ -575,8 +603,8 @@ document.addEventListener('click',event=>{
     return;
   }
   if(anchor&&!anchor.hasAttribute('data-open'))return;
-  const card=event.target.closest('[data-open]');
-  if(card){if(openFilm(card.dataset.open,card.dataset.session)&&anchor)event.preventDefault();return;}
+  const card=event.target.closest('a[data-open]');
+  if(card){if(openFilm(card.dataset.open,card.dataset.session,{push:!$('filmDialog').open,view:card.dataset.view,revealSession:card.dataset.revealSession})&&anchor)event.preventDefault();return;}
   const button=event.target.closest('button');
   if(!button)return;
   if(button.dataset.lang)setLanguage(button.dataset.lang);
@@ -627,7 +655,7 @@ document.addEventListener('keydown',event=>{
 });
 $('dates').addEventListener('scroll',updateDateFades,{passive:true});
 $('filmDialog').addEventListener('close',()=>{
-  if(!$('filmDialog').open){activeFilm=null;activeSession=null;syncURL();}
+  if(!$('filmDialog').open){activeFilm=null;activeSession=null;activeView='film';syncURL();}
 });
 window.addEventListener('popstate',event=>{
   const view=event.state?.vobarna;
@@ -635,7 +663,7 @@ window.addEventListener('popstate',event=>{
     restoringHistory=true;
     try{
       applySearch(view.filters);
-      pendingLink=view.filmId||view.screeningId?{filmId:view.filmId,screeningId:view.screeningId}:null;
+      pendingLink=view.filmId||view.screeningId?{filmId:view.filmId,screeningId:view.screeningId,filmView:view.filmView}:null;
       restoreLink(true);
     }finally{restoringHistory=false;}
     syncURL();

@@ -1,9 +1,9 @@
 .public-site main{padding-top:20px}
 /* A listing that opens the page sits flush under the small-screen header. A :has() rule on main applied only after the first paint and moved the page. */
 @media(max-width:600px){:root.has-programme-subtitle .public-site main>.sr-only+.filters{margin-top:-20px}}
-.site-nav,.pagination{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:24px}.site-nav a,.breadcrumbs a,.site-footer a,.public-site main section a,.pagination a,.venue-list a{color:var(--tx);text-decoration:underline;text-underline-offset:3px}.lang-switch a{padding:6px 9px;border:1px solid transparent;border-radius:4px;font-size:12px}.lang-switch a[aria-current]{background:var(--tx);color:var(--bg)}.site-intro{max-width:760px;margin:12px 0 28px;font-size:17px;line-height:1.7}.public-site main h1{font-size:clamp(25px,4vw,38px);line-height:1.2;margin:12px 0 20px;letter-spacing:-.5px}.public-site main h2{font-size:22px;margin:24px 0 14px}.public-site main h3{font-size:18px;margin:18px 0 10px}.public-site main h4{margin:12px 0 6px}.public-site :where(main,footer) p{margin:10px 0;line-height:1.65}.public-site main li{margin:8px 0;line-height:1.6}.public-site main ul{padding-left:22px}.breadcrumbs{font-size:13px;margin-bottom:20px}.facts{display:grid;grid-template-columns:minmax(100px,180px) 1fr;gap:8px 16px;margin:18px 0}.facts dt,.session-facts dt{font-weight:600}.facts dd{margin:0;overflow-wrap:anywhere}.film-facts{display:flex;gap:30px;align-items:flex-start}.public-poster{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover}.film-facts .public-poster{width:180px;flex-shrink:0}.public-site .card h2{font-size:18px;margin:0}.public-site .card p{font-size:13px}.public-site .card a{color:inherit}.public-site .card .poster-button{display:block}.public-site .card .public-poster{aspect-ratio:2/3}.table-scroll{overflow:auto}.screenings{border-collapse:collapse;width:100%;text-align:left;font-size:14px}.screenings th,.screenings td{padding:16px 12px;border-bottom:1px solid var(--border);vertical-align:top}.screenings thead{background:var(--s2)}.screenings tbody th{font-weight:500;min-width:155px}.session-facts{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px;margin-top:10px}.session-facts dd{margin:0}.public-site .ticket-link{display:inline-block;padding:8px 10px;border:1px solid var(--action-bg);border-radius:4px;min-width:100px;background:var(--action-bg);color:#fff;text-decoration:none}.public-site .ticket-link:hover,.public-site .ticket-link:focus-visible{background:var(--action-hover);border-color:var(--action-hover)}.source-note,.fineprint,.citations,.freshness{font-size:12px;color:var(--tx2)}.citations{display:block;margin-top:6px}.facts small{display:block;margin-top:5px}.room{padding:14px 20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);border-radius:4px}.room details{font-size:13px;margin-top:12px}.venue-list{columns:3;column-gap:35px}.venue-list li{break-inside:avoid}.editorial{max-width:800px;font-size:17px}.public-site main section{margin-bottom:30px}.public-site .filters{margin-bottom:0}.public-site .search span{font-size:12px;color:var(--tx2)}.public-site .site-footer{padding:24px}.public-site [id]{scroll-margin-top:90px}.public-site .past-screening{opacity:.65}.public-site .pagination{margin-top:24px}.public-site .grid{padding-bottom:10px}.public-site .site-nav a:focus-visible{outline:2px solid var(--tx)}@media(max-width:730px){.venue-list{columns:2}.film-facts{gap:16px}.film-facts .public-poster{width:110px}.facts{grid-template-columns:1fr;gap:4px}.facts dd{margin-bottom:8px}}@media(max-width:460px){.venue-list{columns:1}.site-nav{gap:16px;font-size:14px}.screenings th,.screenings td{padding:10px 7px}.film-facts{display:block}.film-facts .public-poster{float:right;margin:0 0 15px 15px;width:90px}.session-facts{display:block}.session-facts dd{margin-bottom:5px}.public-site .lang-switch a{padding:5px}.public-site .facts{font-size:14px}}
+.site-nav,.pagination{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:24px}.site-nav a,.breadcrumbs a,.site-footer a,.public-site main section a,.pagination a,.venue-list a{color:var(--tx);text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}.lang-switch a{padding:6px 9px;border:1px solid transparent;border-radius:4px;font-size:12px}.lang-switch a[aria-current]{background:var(--tx);color:var(--bg)}.site-intro{max-width:var(--film-page-width);margin:12px 0 28px;font-size:17px;line-height:1.7}.public-site main h1{font-size:clamp(1.5rem,3vw,2rem);line-height:1.2;margin:12px 0 20px;letter-spacing:-.5px}.public-site main h2{font-size:22px;margin:24px 0 14px}.public-site main h3{font-size:18px;margin:18px 0 10px}.public-site main h4{margin:12px 0 6px}.public-site :where(main,footer) p{margin:10px 0;line-height:1.65}.public-site main li{margin:8px 0;line-height:1.6}.public-site main ul{padding-left:22px}.breadcrumbs{font-size:13px;margin-bottom:20px}.facts{display:grid;grid-template-columns:minmax(100px,180px) 1fr;gap:8px 16px;margin:18px 0}.facts dt,.session-facts dt{font-weight:600}.facts dd{margin:0;overflow-wrap:anywhere}.film-facts{display:flex;gap:30px;align-items:flex-start}.public-poster{width:100%;height:auto;border-radius:var(--poster-radius);aspect-ratio:2/3;object-fit:cover}.film-facts .public-poster{width:180px;flex-shrink:0}.public-site .card h2{font-size:18px;margin:0}.public-site .card p{font-size:13px}.public-site .card a{color:inherit}.public-site .card .poster-button{display:flex}.public-site .card .public-poster{aspect-ratio:2/3}.table-scroll{overflow:auto}.screenings{border-collapse:collapse;width:100%;text-align:left;font-size:14px}.screenings th,.screenings td{padding:16px 12px;border-bottom:1px solid var(--border);vertical-align:top}.screenings thead{background:var(--s2)}.screenings tbody th{font-weight:500;min-width:155px}.session-facts{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px;margin-top:10px}.session-facts dd{margin:0}.public-site .ticket-link{display:inline-flex;align-items:center;justify-content:center;min-height:var(--touch-target);padding:8px 10px;border:1px solid var(--action-bg);border-radius:4px;min-width:100px;background:var(--action-bg);color:#fff;text-decoration:none}.public-site .ticket-link:hover,.public-site .ticket-link:focus-visible{background:var(--action-hover);border-color:var(--action-hover)}.source-note,.fineprint,.citations,.freshness{font-size:12px;color:var(--tx2)}.citations{display:block;margin-top:6px}.facts small{display:block;margin-top:5px}.room{margin:16px 0}.room details{font-size:13px;margin-top:12px}.venue-list{columns:3;column-gap:35px}.venue-list li{break-inside:avoid}.editorial{max-width:800px;font-size:17px}.public-site main section{margin-bottom:30px}.public-site .filters{margin-bottom:0}.public-site .search span{font-size:12px;color:var(--tx2)}.public-site .site-footer{padding:24px}.public-site [id]{scroll-margin-top:90px}.public-site .past-screening{opacity:.65}.public-site .pagination{margin-top:24px}.public-site .grid{padding-bottom:10px}.public-site .site-nav a:focus-visible{outline:2px solid var(--tx)}@media(max-width:730px){.venue-list{columns:2}.film-facts{gap:16px}.film-facts .public-poster{width:110px}.facts{grid-template-columns:1fr;gap:4px}.facts dd{margin-bottom:8px}}@media(max-width:460px){.venue-list{columns:1}.site-nav{gap:16px;font-size:14px}.screenings th,.screenings td{padding:10px 7px}.film-facts{display:block}.film-facts .public-poster{float:right;margin:0 0 15px 15px;width:90px}.session-facts{display:block}.session-facts dd{margin-bottom:5px}.public-site .lang-switch a{padding:5px}.public-site .facts{font-size:14px}}
 
-/* The homepage already gets its header gap from main; do not add it twice. */
+/* Main provides the gap above the listing filters. */
 .public-site main>.sr-only+.filters{padding-top:0}
 
 /* Keep previous cached HTML stable until its controls are enhanced. */
@@ -11,12 +11,12 @@
 .public-site [hidden]{display:none}
 .directory-filters{margin:24px 0}
 .directory-filters .filter-row{padding-inline:0}
-.venue-list li a{display:inline-block;min-height:32px;padding:4px 0}
+.venue-list li a{display:inline-flex;align-items:center;min-height:var(--touch-target);padding:8px 0}
 .public-site main .venue-list-address{font-size:.8125rem;color:var(--tx2);margin:0 0 18px;overflow-wrap:anywhere}
 .screening-action{display:block;padding:8px 0;margin-bottom:8px;min-height:44px}
 .buyrow:focus-visible,.dialog-title:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
 .site-information{max-width:1120px;margin:auto;font-size:13px;color:var(--tx2)}.site-information summary{cursor:pointer}.site-information[open] summary{margin-bottom:20px}.site-information .site-intro{font-size:13px}.site-information .site-nav{margin-top:20px}
-.discovery-links ul{list-style:none;padding:0;margin:20px 0}.discovery-links a{display:inline-block;padding:8px 0;min-height:36px}.discovery-film{padding:0 0 18px;border-bottom:1px solid var(--border)}.discovery-film summary{cursor:pointer;padding:8px 0;min-height:44px}.discovery-film details[open]>summary{margin-bottom:12px}.discovery-reload{padding:10px 14px;min-height:44px;border:1px solid var(--border);border-radius:4px}
+.discovery-links ul{list-style:none;padding:0;margin:20px 0}.discovery-links a{display:inline-block;padding:8px 0;min-height:var(--touch-target)}.discovery-film{padding:0 0 18px;border-bottom:1px solid var(--border)}.discovery-film summary{cursor:pointer;padding:8px 0;min-height:44px}.discovery-film details[open]>summary{margin-bottom:12px}.discovery-reload{padding:10px 14px;min-height:44px;border:1px solid var(--border);border-radius:4px}
 .discovery-screenings{list-style:none;padding:0}.discovery .discovery-session{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,3fr) minmax(140px,.8fr);gap:24px;margin:0;padding:24px 0;border-bottom:1px solid var(--border)}.discovery-session[hidden]{display:none}.discovery-time{font-weight:600;font-size:14px}.discovery .session-facts{font-size:14px}.discovery .source-note{overflow-wrap:anywhere}.discovery .discovery-actions a{min-height:44px}.discovery .screening-action{color:var(--tx);text-decoration:underline}
 @media(max-width:730px){.discovery .discovery-session{grid-template-columns:1fr;gap:12px}.discovery .session-facts{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:4px 12px}.discovery .session-facts dd{margin:0}.discovery-actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.discovery-actions .screening-action{margin:0}}
 
@@ -26,17 +26,17 @@
 .venue-page .breadcrumbs a{text-decoration:none}
 .venue-page .breadcrumbs a:hover{text-decoration:underline}
 .venue-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 0 28px;border-bottom:1px solid var(--border)}
-.venue-page main .venue-heading h1{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.045em;margin:0 0 12px;line-height:1.12}
+.venue-page main .venue-heading h1{font-size:clamp(1.75rem,3vw,2rem);letter-spacing:-.045em;margin:0 0 12px;line-height:1.12}
 .venue-heading>div:first-child{min-width:0}
 .venue-page .venue-address{display:flex;gap:8px;align-items:flex-start;max-width:70ch;margin:0;font-size:.875rem;line-height:1.6;color:var(--tx2)}
 .venue-address svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;margin-top:2px}
-.venue-address a:hover{text-decoration:underline;text-underline-offset:3px}
+.venue-address a:hover{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}
 .venue-actions{display:flex;gap:8px;flex-shrink:0}
-.venue-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:4px;background:var(--s1);font-size:.875rem}
-.venue-action:hover{background:var(--s2)}
-.venue-action-primary{background:var(--tx);border-color:var(--tx);color:var(--s1)}
+.venue-action{font-size:.875rem}
+
+.venue-action-primary{display:inline-flex;align-items:center;justify-content:center;min-height:var(--touch-target);padding:10px 16px;border:0;border-radius:var(--radius);background:var(--tx);color:var(--s1)}
 .venue-action-primary:hover{background:var(--primary-hover)}
-.venue-page .venue-programme-link a{text-decoration:underline;text-underline-offset:3px;font-size:.875rem}
+.venue-page .venue-programme-link a{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);font-size:.875rem}
 .venue-page main .venue-information{margin:48px 0 0;padding-top:24px;border-top:1px solid var(--border)}
 .venue-page main .venue-information>h2{margin:0 0 16px;font-size:1.25rem}
 .venue-disclosure{border-bottom:1px solid var(--border)}
@@ -46,7 +46,7 @@
 .venue-disclosure[open]>summary::after{content:'−'}
 .venue-disclosure>summary:hover{color:var(--red)}
 .venue-disclosure summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-.venue-room-count{font-size:.8125rem;color:var(--tx2);border:1px solid var(--border);padding:1px 7px;border-radius:4px}
+.venue-room-count{font-size:.8125rem;color:var(--tx2);margin-left:4px}
 .venue-disclosure-body{padding:0 0 24px;font-size:1rem;overflow-wrap:anywhere}
 .venue-disclosure-body .citations,.venue-disclosure-body .fineprint{font-size:.8125rem}
 .venue-page .venue-disclosure-body .table-scroll{overflow-x:auto}
@@ -62,36 +62,46 @@
  .venue-page main .venue-information{margin-top:36px}
 }
 .discovery-sections ul{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;list-style:none;padding:0;margin:1rem 0 1.5rem}
-.discovery-sections a{display:inline-flex;align-items:center;min-height:2rem}
-.comparison-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr));gap:1rem}
-.comparison-room{border:1px solid var(--border);border-radius:12px;padding:1.25rem;min-width:0;scroll-margin-top:5rem}
+.discovery-sections a{display:inline-flex;align-items:center;min-height:var(--touch-target)}
+.comparison-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr));gap:var(--space-section)}
+.comparison-room{min-width:0}
 .comparison-room h3{margin-top:0}.comparison-room dt{font-weight:700;margin-top:1rem}.comparison-room dd{margin:.35rem 0;overflow-wrap:anywhere}.comparison-room ul{padding-left:1.25rem;margin:.25rem 0}
 
 /* Date landing pages keep the programme grid close to its day heading. */
 .public-site main .date-heading{margin:0 0 20px}
 .public-site main .date-heading h1{font-size:clamp(1.25rem,3vw,1.6rem);margin:0 0 8px}
 
-/* Film landing pages use the same compact view as the programme dialog. */
-.film-page main{max-width:876px;padding-top:16px}
-.film-page .breadcrumbs{font-size:.875rem;margin:0 0 16px}
-.film-page .breadcrumbs a{display:inline-flex;align-items:center;min-height:44px}
-.film-sheet{--dialog-gutter:28px;background:var(--s1);border:1px solid var(--border);border-radius:var(--radius)}
-.film-sheet .dialog-poster{max-width:112px}
-.public-site .film-sheet .dialog-title{font-size:1.75rem;line-height:1.2;letter-spacing:-.4px;margin:0 0 10px;padding-right:0}
-.public-site .film-sheet .dialog-intro p{margin:0;line-height:1.5;font-size:.875rem}
+/* Film pages share the listing's flat surfaces and compact cinema/time rows. */
+.film-page main{max-width:var(--film-page-width);padding-top:36px}
+.film-sheet{--dialog-gutter:0px;background:none;border:0;border-radius:0}
+.film-sheet .dialog-head{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;align-items:start;padding:0 0 40px}
+.film-sheet .dialog-head:not(:has(.dialog-poster)){grid-template-columns:minmax(0,1fr)}
+.film-sheet .dialog-heading{display:flex;flex-direction:column;gap:16px}
+.film-sheet .dialog-heading.reading-wash{--reading-wash-top:-20px}
+.film-sheet .dialog-poster{grid-column:auto;grid-row:auto;width:200px;max-width:100%;height:auto;border-radius:var(--poster-radius);background:transparent}
+.public-site .film-sheet .dialog-title{font-size:1.75rem;font-weight:700;line-height:1.25;letter-spacing:-.4px;margin:0;padding:0;text-wrap:pretty;overflow-wrap:break-word}
+.film-sheet .dialog-intro{gap:6px}
+.public-site .film-sheet .dialog-intro p{margin:0;line-height:1.5;font-size:.875rem;color:var(--tx2)}
+.film-sheet .dialog-section{padding:0}
+.public-site .film-sheet .film-showtimes-heading{margin:0 0 20px;font-size:1.125rem;font-weight:600;line-height:1.4}
 .public-site .film-sheet section{margin:0}
-.public-site .film-sheet .dialog-day-label{font-size:1rem;line-height:1.4;margin:0 calc(-1 * var(--dialog-gutter));padding:14px var(--dialog-gutter);top:var(--header-height)}
-.public-site .film-sheet .dialog-cinema-name{font-size:.9375rem;margin:0;line-height:1.45}
-.public-site .film-sheet .dialog-cinema-name a{color:var(--tx);text-decoration:none}
-.public-site .film-sheet .dialog-cinema-name a:hover{text-decoration:underline}
-.public-site .film-sheet .buyrow-room{font:inherit;line-height:inherit;margin:0}
-.public-site .film-sheet .buyrow-ticket{color:#fff;text-decoration:none}
+.public-site .film-sheet #showtimes{scroll-margin-top:calc(var(--header-height) + 36px)}
 .film-sheet #screeningNotice{margin:0;padding:0 0 24px}
-.film-page .site-footer{display:block;max-width:876px;margin:auto}
-@media(max-width:460px){
- .film-page main{padding:8px 14px 24px}
- .film-page .breadcrumbs{margin-bottom:8px}
- .film-sheet{--dialog-gutter:18px}
- .public-site .film-sheet .dialog-title{font-size:1.375rem;margin:0}
- .film-sheet .dialog-poster{max-width:72px}
+.film-page .site-footer{display:block;max-width:var(--film-page-width);margin:auto}
+@media(min-width:601px) and (max-width:730px){
+ .film-sheet .film-ratings{--rating-columns:2}
 }
+@media(max-width:600px){
+ .film-page main{padding:36px 24px 24px}
+ .film-sheet{max-width:320px;margin-inline:auto}
+ .film-sheet .dialog-head{display:flex;flex-direction:column;gap:20px;padding-bottom:32px}
+ .film-sheet .dialog-poster{width:100%;align-self:center}
+ .film-sheet .dialog-heading{width:100%;gap:12px}
+ .public-site .film-sheet .dialog-title{font-size:1.375rem}
+ .film-sheet .film-ratings{--ratings-gap:8px}
+ .public-site .film-sheet .film-showtimes-heading{margin-bottom:16px}
+}
+
+/* Reading copy stays comfortably short even beside a wide programme. */
+.public-site main>p,.public-site .content-block p{max-width:76ch}
+.public-site main>.site-nav a,.public-site main>.pagination a{min-height:var(--touch-target);display:inline-flex;align-items:center}

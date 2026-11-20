@@ -1,7 +1,16 @@
 /* Shared by the programme, detail pages and guide. */
 :root{
+  color-scheme:light;
+  --bg:#f7f2e8;--s1:#fcf8ef;--s2:#eee5d7;--s3:#e2d5c1;--border:#d5c8b5;
+  --tx:#29251f;--green:#36634c;--gold:#80571f;--focus:#98603e;
   --background-base:var(--bg);
   --background-filter:none;
+  --background-wash:linear-gradient(#f7f2e8a6,#f7f2e8a6);
+  --reading-wash:color-mix(in srgb,var(--bg) 78%,transparent);
+  --tx2:#514a40;
+  --tx3:#665d50;
+  --red:#a52a36;
+  --red-h:#87222d;
   --film-stock:#cbbda9;
   --date-selected:#514b43;
   --poster-gradient:linear-gradient(150deg,#ede2cf,#ded0b8);

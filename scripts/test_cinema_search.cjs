@@ -132,6 +132,49 @@ assert(chainMarkup.includes('>Diagonal Mar</a>'));
 assert(chainMarkup.includes('>La Farga</a>'));
 assert(!chainMarkup.toLowerCase().includes('cinesa'));
 assert.equal(JSON.stringify(chainProgramme),chainSnapshot,'Search must preserve cinema names and source data');
+
+// Bounded previews must retain access to omitted times, venues and later days.
+const previewCinemas=['a','b','c','d','e'].map(id=>({id,name:'Cinema '+id,short:id}));
+const previewSession=(cinemaIndex,slot,date='2099-01-01')=>{
+  const cinema=previewCinemas[cinemaIndex].id,time=String(11+slot*3).padStart(2,'0')+':'+String(cinemaIndex*10).padStart(2,'0');
+  return {id:`${date}-${cinema}-${slot}`,cinema_id:cinema,date,time,starts_at:`${date}T${time}:00+01:00`,formats:[]};
+};
+const previewFilm=sessions=>({id:'preview',title:'Preview film',urls:{en:'/en/films/preview/'},sessions});
+const previewView=listingModule.createListingView({cinemas:previewCinemas,today:'2099-01-01',...listingModule.HOME_CARD_PREVIEW});
+const renderedSessions=html=>[...html.matchAll(/data-session="([^"]+)"/g)].map(match=>match[1]);
+const compactSessions=[0,1,2].flatMap(cinema=>[0,1,2].map(slot=>previewSession(cinema,slot)));
+const compactMarkup=previewView.bodyMarkup(previewFilm([...compactSessions].reverse()));
+assert.deepEqual(renderedSessions(compactMarkup),[0,1,2].flatMap(cinema=>[0,1].map(slot=>previewSession(cinema,slot).id)));
+assert(compactMarkup.includes('>3 more showtimes</a>'),'Hidden times on the same day must still expose the complete schedule');
+assert.equal((compactMarkup.match(/class="card-cinema-more"/g)||[]).length,3);
+assert.equal((compactMarkup.match(/>\+1 more<\/a>/g)||[]).length,3,'Each cinema indicates its own omitted time');
+assert.deepEqual([...compactMarkup.matchAll(/data-reveal-session="([^"]+)"/g)].map(match=>match[1]),[0,1,2].map(cinema=>previewSession(cinema,2).id));
+assert(compactMarkup.includes('<h3 class="card-day-label">Today ·'),'Keep the existing date label');
+const broadSessions=[0,1,2,3,4].flatMap(cinema=>[0,1,2].map(slot=>previewSession(cinema,slot)));
+const broadFilm=previewFilm([...broadSessions,previewSession(0,0,'2099-01-02')].reverse());
+const broadSnapshot=JSON.stringify(broadFilm),broadMarkup=previewView.bodyMarkup(broadFilm);
+assert.deepEqual(renderedSessions(broadMarkup),[0,1,2,3].flatMap(cinema=>[0,1,2].map(slot=>previewSession(cinema,slot).id)));
+assert(broadMarkup.includes('>4 more showtimes</a>'),'The count includes other venues and later days');
+assert(!broadMarkup.includes('class="card-cinema-more"'),'Other venues and dates do not inflate a complete cinema row');
+assert.equal(renderedSessions(filmMarkup(broadFilm,{cinemas:previewCinemas,view:'showtimes'})).length,broadFilm.sessions.length);
+assert.equal(JSON.stringify(broadFilm),broadSnapshot,'Previewing cannot discard or reorder the source schedule');
+const busyVenue=previewFilm(Array.from({length:12},(_,slot)=>({...previewSession(0,0),id:'busy-'+slot,time:`${String(10+slot).padStart(2,'0')}:00`,starts_at:`2099-01-01T${String(10+slot).padStart(2,'0')}:00:00+01:00`})));
+assert.equal(renderedSessions(previewView.bodyMarkup(busyVenue)).length,3,'A day with many screenings gets a fuller preview');
+assert(previewView.bodyMarkup(busyVenue).includes('>+9 more</a>'));
+const completePreview=previewFilm([previewSession(0,0),previewSession(0,1)]);
+assert(!previewView.bodyMarkup(completePreview).includes('class="card-more"'),'No more link when all matching sessions fit');
+assert(!previewView.bodyMarkup(completePreview).includes('class="card-cinema-more"'));
+const laterBreadth=previewFilm([...completePreview.sessions,...broadSessions.map(s=>({...s,id:s.id+'-later',date:'2099-01-02',starts_at:s.starts_at.replace('2099-01-01','2099-01-02')}))]);
+assert.equal(renderedSessions(previewView.bodyMarkup(laterBreadth)).length,2,'Later dates must not expand the previewed day');
+assert(!previewView.bodyMarkup(laterBreadth).includes('class="card-cinema-more"'),'Later dates alone do not require a local more-times cue');
+for(const [language,label] of [['en','1 more showtime'],['es','1 sesión más'],['ca','1 sessió més']]){
+  const localized=listingModule.createListingView({language,cinemas:previewCinemas,today:'2099-01-01',...listingModule.HOME_CARD_PREVIEW});
+  assert(localized.bodyMarkup(previewFilm([0,1,2].map(slot=>previewSession(0,slot)))).includes(`>${label}</a>`));
+  assert(localized.bodyMarkup(previewFilm([0,1,2].map(slot=>previewSession(0,slot)))).includes(`>+1 ${copyModule.TEXT[language].more}</a>`));
+}
+const venueView=listingModule.createListingView({cinemas:previewCinemas,today:'2099-01-01'});
+assert.equal(renderedSessions(venueView.bodyMarkup(previewFilm([...compactSessions.filter(s=>s.cinema_id==='a'),previewSession(0,0,'2099-01-02')]))).length,4,'Cinema-profile previews retain both dates and their full times');
+
 const nameOverlap={cinemas:[{id:'test',name:'Test cinema'}],films:[
   {id:'chain',title:'A film',sessions:[{...session('chain',[],false),provider:'renoir'}]},
   {id:'credit',title:'Another film',details:{directors:['Jean Renoir']},sessions:[session('credit',[],false)]},

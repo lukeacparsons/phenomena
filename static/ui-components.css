@@ -1,0 +1,120 @@
+/* Shared VO Barna design primitives. See docs/design-system.md. */
+:root{
+  --page-width:1160px;
+  --listing-width:1240px;
+  --film-page-width:760px;
+  --guide-width:920px;
+  --dialog-width:640px;
+  --poster-radius:6px;
+  --radius:4px;
+  --touch-target:44px;
+  --space-section:32px;
+  --space-group:24px;
+  --space-row:12px;
+  --space-cinema:6px;
+  --link-underline:color-mix(in srgb,currentColor 40%,transparent);
+  --link-offset:4px;
+  --modal-header-fade:20px;
+  --site-background:url('/barcelona-cinema-background.webp');
+  --background-size:480px 415.692194px;
+}
+
+/* Content is grouped with headings and whitespace. Controls may have surfaces. */
+.content-block{
+  min-width:0;
+  margin:0;
+  padding:var(--space-group) 0;
+  border:0;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
+  scroll-margin-top:calc(var(--header-height) + 36px);
+}
+.content-block>h3{margin:0 0 16px;font-size:1.125rem;font-weight:700;line-height:1.4}
+.text-action{
+  display:inline-flex;align-items:center;gap:8px;min-height:var(--touch-target);
+  padding:8px 0;border:0;background:none;color:var(--tx2);
+  text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);
+}
+.text-action:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
+
+/* Shared by listing cards and the film page/dialog reading sections. */
+.card-body,.reading-wash{
+  --reading-wash-spread:20px;
+  --reading-wash-top:-22px;
+  --reading-wash-bottom:-24px;
+  --reading-wash-inline:calc(-1 * var(--reading-wash-spread));
+  --reading-wash-fade-start:22px;
+  position:relative;isolation:isolate;
+}
+.card-body{--reading-wash-top:0px}
+/* Keep ::before available for the sticky modal header's opaque shield. */
+.card-body::before,.reading-wash::after{
+  content:'';position:absolute;z-index:-1;pointer-events:none;
+  inset:var(--reading-wash-top) var(--reading-wash-inline) var(--reading-wash-bottom);
+  background:var(--reading-wash);
+  --reading-wash-mask:
+    linear-gradient(to right,transparent,#000 var(--reading-wash-spread),#000 calc(100% - var(--reading-wash-spread)),transparent),
+    linear-gradient(to bottom,transparent,#000 var(--reading-wash-fade-start),#000 calc(100% - 26px),transparent);
+  -webkit-mask-image:var(--reading-wash-mask);mask-image:var(--reading-wash-mask);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
+}
+/* Stay inside the page gutters on narrow phones. */
+@media(max-width:360px){.card-body,.reading-wash{--reading-wash-spread:14px}}
+
+/* One rating component in both film pages and focused film dialogs. */
+.film-ratings{
+  display:grid;grid-template-columns:repeat(var(--rating-columns,4),minmax(0,1fr));
+  gap:16px 12px;margin-top:var(--ratings-gap,4px);
+}
+.film-rating{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;min-height:var(--touch-target);text-decoration:none}
+.rating-value{display:flex;align-items:center;gap:4px;line-height:1.4}
+.rating-value img{width:16px;height:16px;object-fit:contain;flex-shrink:0;border-radius:3px}
+.rating-value strong{font-size:.875rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rating-scale{font-size:.6875rem;font-weight:400;color:var(--tx2);margin-left:0}
+.rating-source{font-size:.75rem;line-height:1.4;color:var(--tx2)}
+.film-rating:is(:hover,:focus-visible) .rating-source{color:var(--tx);text-decoration:underline;text-underline-offset:var(--link-offset)}
+@media(max-width:360px){.film-ratings{--rating-columns:2}}
+
+/* Neutral time links stay identifiable by their underline in every schedule. */
+.card-showtime,.complete-programme .programme-times a{color:var(--tx)}
+.card-showtime:not(.is-started):not(.is-sold-out):not([aria-disabled=true]):is(:hover,:focus-visible,:active),
+.complete-programme .programme-times a:is(:hover,:focus-visible,:active){color:var(--red)}
+.card-showtime:is(:hover,:focus-visible,:active) time,
+.complete-programme .programme-times a:is(:hover,:focus-visible,:active){text-decoration-color:currentColor}
+
+/* Per-cinema overflow is a quiet action, distinct from individual times. */
+.card .card-body .card-cinema-more{
+  display:inline-flex;align-items:center;min-width:var(--touch-target);min-height:var(--touch-target);
+  padding:10px 0;font-size:.8125rem;font-weight:400;line-height:24px;white-space:nowrap;
+  color:var(--tx2);text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);
+}
+.card .card-body .card-cinema-more:is(:hover,:focus-visible,:active){color:var(--red);text-decoration-color:currentColor}
+@media(min-width:601px) and (pointer:fine){.card .card-body .card-cinema-more{min-height:40px;padding-block:8px}}
+
+/* Date → cinema → times: shared HTML from film-view.js, no boxed rows. */
+.showtimes-summary .dialog-day:not(:last-child){padding-bottom:var(--space-group)}
+.showtimes-summary .dialog-day-label{
+  position:static;min-height:0;margin:0;padding:0 0 8px;background:none;
+  font-size:1rem;font-weight:600;line-height:1.4;
+}
+.schedule-cinemas{display:grid;gap:var(--space-cinema)}
+.schedule-cinema{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;align-items:start}
+.schedule-cinema .schedule-cinema-name{
+  display:block;min-height:var(--touch-target);padding:10px 0;font-size:.9375rem;line-height:24px;color:var(--tx2);
+  overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);
+}
+.schedule-times{display:flex;flex-wrap:wrap;gap:0 14px}
+.showtimes-summary .card-showtime{
+  min-width:var(--touch-target);min-height:var(--touch-target);justify-content:flex-start;padding:10px 0;
+  font-size:1rem;line-height:24px;text-decoration:none;
+}
+.showtimes-summary .card-showtime time{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}
+.showtimes-summary .card-showtime.is-sold-out time{text-decoration:line-through}
+.showtimes-summary .card-showtime.is-started{color:var(--tx3)}
+.schedule-cinema-name:is(:hover,:focus-visible),.showtimes-summary .card-showtime:is(:hover,:focus-visible) time{text-decoration-color:currentColor}
+.schedule-format{font-size:.6875rem;line-height:1.3;color:var(--tx2)}
+@media(min-width:601px){
+  .showtimes-summary .dialog-day:not(:last-child){padding-bottom:var(--space-section)}
+  .schedule-cinema{grid-template-columns:180px minmax(0,1fr);column-gap:var(--space-group)}
+}

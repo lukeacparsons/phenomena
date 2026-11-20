@@ -103,7 +103,7 @@ const isPoster=url=>url.includes('/preview-data/images/')&&url.endsWith('.webp')
     assert.match(await plain.locator('noscript img').first().getAttribute('src'),/\/preview-data\/images\//);
     const filmLink=await plain.locator('.card h2 a').first().getAttribute('href');
     await plain.goto(base+filmLink,{waitUntil:'load'});
-    assert.equal((await plain.locator('noscript img').first().boundingBox()).width,180);
+    assert.equal((await plain.locator('noscript img').first().boundingBox()).width,200);
     report.noJavaScript=true;
     fs.writeFileSync('output/images/verification.json',JSON.stringify(report,null,2));
     console.log(JSON.stringify(report,null,2));
