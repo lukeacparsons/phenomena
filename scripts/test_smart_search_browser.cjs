@@ -14,6 +14,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
       film('funny','Funny Games','Horror','Spain',95,true),film('unknown','Unknown','','',null,null)]};
     programme.films[0].ratings.imdb={score:8};programme.films[3].ratings.imdb={score:9};
     programme.films[0].release_year=1970;programme.films[1].release_year=1979;programme.films[2].release_year=1980;
+    programme.films[0].details.colours=['black-and-white'];programme.films[1].details.colours=['color'];
     await context.route('**/programme.json',route=>route.fulfill({json:programme}));
     let apiCalls=0;
     await context.route('**/api/search',async route=>{
@@ -36,6 +37,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
       await search(query);assert.deepEqual(await ids(),expected,query);
     }
     await search('70’s released');assert.deepEqual(await ids(),['bright','paris']);
+    await search('black and white');assert.deepEqual(await ids(),['bright']);
     assert.equal(apiCalls,0,'standard searches must not wait for the model');
     await search('from catalunya');assert.deepEqual(await ids(),[]);
     assert.match(await page.locator('#searchStatus').textContent(),/does not yet identify films produced in Catalunya/);

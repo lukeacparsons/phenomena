@@ -191,7 +191,7 @@ class DailyRatingsTests(unittest.TestCase):
         self.start = datetime(2026, 11, 19, tzinfo=timezone.utc)
         self.now = self.start
         self.manifest = self.programme.parent / "ratings.json"
-        self.manifest.write_text(json.dumps({"checked_at": self.start.isoformat(), "identity_metadata_version": 1, "search_content_version": 2, "films": {"film:1": {"ratings": {}}}}))
+        self.manifest.write_text(json.dumps({"checked_at": self.start.isoformat(), "identity_metadata_version": 1, "search_content_version": 2, "wikidata_metadata_version": 3, "films": {"film:1": {"ratings": {}}}}))
         self.calls = []
 
         def refresh(path, **kwargs):

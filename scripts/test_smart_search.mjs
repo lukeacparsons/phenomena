@@ -78,17 +78,25 @@ test('an unsupported request cannot expand into unrelated catalogue matches',()=
   const intent={...emptyIntent(),unsupported:['Wheelchair access is not in the catalogue']};
   assert.deepEqual(search('wheelchair accessible',{}, {intent}),[]);
 });
+test('black-and-white queries use verified colour metadata and exclude colour or unknown films',async()=>{
+  const p={...programme,films:[film('monochrome',{details:{colours:['black-and-white']}}),film('colour',{details:{colours:['color']}}),film('unknown',{details:{}})]};
+  for(const query of ['black and white','black-and-white films','blanco y negro','blanc i negre']){
+    assert.deepEqual(queryFilms(p,{...emptySearch(),query},{now}).map(f=>f.id),['monochrome']);
+  }
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('Verified colour needs no model call')});
+  assert.equal((await api.search({query:'black and white'})).mode,'local');
+});
 test('film knowledge can retrieve a low-vector candidate but cannot bypass factual filters',async()=>{
   const p={...programme,films:[film('known-classic',{details:{countries:['France']}}),film('actor-only',{details:{countries:['Spain']}})]};
   const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
     const body=JSON.parse(opts.body);
-    if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((text,index)=>({index,embedding:text.includes('black')?[1,0]:[0,1]}))})};
+    if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((text,index)=>({index,embedding:text.includes('guns')?[1,0]:[0,1]}))})};
     assert.equal(JSON.parse(body.input).catalogue.length,2);
-    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),semantic_query:'black and white',film_matches:[0,1]})}]}]})};
+    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),semantic_query:'lots of guns',film_matches:[0,1]})}]}]})};
   }});
-  const r=await api.search({query:'black and white from France'});
+  const r=await api.search({query:'lots of guns from France'});
   assert.equal(r.semantic_scores.length,2);
-  const rows=queryFilms(p,{...emptySearch(),query:'black and white from France'},{now,intent:r.intent,semanticScores:r.semantic_scores});
+  const rows=queryFilms(p,{...emptySearch(),query:'lots of guns from France'},{now,intent:r.intent,semanticScores:r.semantic_scores});
   assert.deepEqual(rows.map(f=>f.id),['known-classic']);
 });
 test('embedding documents include complementary plots and credits beyond the first eight cast',()=>{

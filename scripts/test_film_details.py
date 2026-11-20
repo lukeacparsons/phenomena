@@ -95,6 +95,10 @@ class FilmDetailsTests(unittest.TestCase):
     def test_ambiguous_wikidata_id_is_rejected(self):
         self.assertEqual(parse_wikidata([binding(), binding(item="Q3")]), {})
 
+    def test_wikidata_colour_is_a_factual_attribute(self):
+        facts = parse_wikidata([binding('P462', valueLabel='black-and-white')])['tt1160419']['facts']
+        self.assertEqual(facts['colours'], ['black-and-white'])
+
     def test_english_facts_preserve_translated_genres_for_search(self):
         wd = parse_wikidata([binding("P136", valueLabel="science fiction film", esLabel="película de ciencia ficción", caLabel="pel·lícula de ciència-ficció")])
         sources = {"rotten_tomatoes": {"facts": parse_rt(RT), "url": "https://example.com/rt", "status": "ok"},

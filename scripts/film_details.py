@@ -13,13 +13,13 @@ from original_audio import language_code
 from film_synopsis import clean_synopsis, unique_synopses
 
 VERSION = 1
-WIKIDATA_VERSION = 2
+WIKIDATA_VERSION = 3
 SEARCH_CONTENT_VERSION = 2
 LIST_FIELDS = ("directors", "writers", "cast", "producers", "composers", "cinematographers", "editors",
-               "genres", "topics", "countries", "languages", "studios", "based_on", "source_authors")
+               "genres", "topics", "colours", "countries", "languages", "studios", "based_on", "source_authors")
 PROPERTIES = {"P57": "directors", "P58": "writers", "P161": "cast", "P725": "cast", "P162": "producers", "P86": "composers",
               "P344": "cinematographers", "P1040": "editors", "P136": "genres", "P495": "countries",
-              "P364": "languages", "P272": "studios", "P144": "based_on"}
+              "P364": "languages", "P272": "studios", "P144": "based_on", "P462": "colours"}
 GENRES = {
     "Science fiction": ["Sci-Fi", "scifi", "science fiction film", "Ciencia ficción", "Ciència-ficció"],
     "Action": ["action film", "Acción", "Acció"], "Adventure": ["adventure film", "Aventuras", "Aventures"],
