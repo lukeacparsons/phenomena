@@ -74,7 +74,8 @@ class Handler(SimpleHTTPRequestHandler):
             return
         # Avoid directory listings and any linked files outside the static root.
         requested = Path(self.translate_path(parsed.path)).resolve()
-        if not requested.is_relative_to(STATIC.resolve()) or not requested.is_file():
+        if (not requested.is_relative_to(STATIC.resolve()) or not requested.is_file()
+                or requested.is_relative_to((STATIC / 'preview-data/history').resolve())):
             self.send_error(404)
             return
         serve_file(self, requested)

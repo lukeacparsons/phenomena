@@ -1,7 +1,9 @@
 """Collection runs independently of page visits and retains honest stale data."""
 
 from datetime import datetime, timezone
+from contextlib import closing
 import json
+import sqlite3
 from pathlib import Path
 import tempfile
 import threading
@@ -81,6 +83,9 @@ class CacheTests(unittest.TestCase):
         self.assertEqual(self.fetcher.fetch.call_count, 5)
         self.assertEqual(cache.snapshot()["sessions"], {})
         self.assertEqual(len(cache.snapshot()["errors"]), 12)
+        with closing(sqlite3.connect(cache.history.path)) as db:
+            self.assertEqual(dict(db.execute('SELECT status,count(*) FROM observation_history GROUP BY status')),
+                             {'error': 5, 'skipped': 7})
 
     def test_unallocated_screenings_do_not_block_later_seat_maps(self):
         self.write_rows(*(self.row(str(i), 'verdi') for i in range(7)))
@@ -98,6 +103,8 @@ class CacheTests(unittest.TestCase):
         self.assertEqual(cache.snapshot()['sessions']['verdi:6']['available'], 24)
         self.assertEqual(len(cache.snapshot()['errors']), 6)
         self.assertNotIn('verdi:1', cache.snapshot()['sessions'])
+        with closing(sqlite3.connect(cache.history.path)) as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM observation_history WHERE status='unavailable'").fetchone()[0], 6)
 
     def test_reload_programme_picks_up_new_sessions_and_removes_old_ones(self):
         cache = self.manager()

@@ -7,6 +7,7 @@ import json
 import threading
 
 from cinesa_showtimes import atomic_write
+from observation_history import ObservationHistory
 from premium_availability import (AvailabilityFetcher, ScreeningAvailabilityUnavailable,
                                   fetch_phenomena_availability)
 
@@ -36,6 +37,8 @@ class AvailabilityCache:
         self.next_checkpoint = 0
         self.sessions, self.errors, self.attempts, self.rows = {}, {}, {}, {}
         self.refreshing, self.thread = False, None
+        self.history = ObservationHistory(path.parent)
+        self.history_seeded = False
         try:
             saved = json.loads(path.read_text())
             self.sessions = {sid: value for sid, value in saved["sessions"].items() if valid(value)}
@@ -63,10 +66,16 @@ class AvailabilityCache:
                              "refreshing": self.refreshing, "refresh_interval_seconds": self.interval,
                              "supported_providers": sorted(SUPPORTED)})
 
-    def _record(self, row, value=None):
+    def _record(self, row, value=None, *, status=None, reason=None):
+        attempted = self.clock()
+        # Commit history before replacing the latest-value cache. Storage errors
+        # must propagate, rather than silently discarding an observation.
+        self.history.record_availability(
+            row, value, collected_at=datetime.fromtimestamp(attempted, timezone.utc).isoformat(),
+            status=status or ('ok' if valid(value) else 'error'), reason=reason)
         with self.lock:
             sid = row["id"]
-            self.attempts[sid] = self.clock()
+            self.attempts[sid] = attempted
             if valid(value):
                 self.sessions[sid] = value
                 self.errors.pop(sid, None)
@@ -87,12 +96,15 @@ class AvailabilityCache:
 
     def _collect_provider(self, provider, rows):
         if provider == "phenomena":
+            reason = 'missing_session'
             try:
                 values = self.phenomena_fetcher()
-            except Exception:
+            except Exception as error:
                 values = {}
+                reason = type(error).__name__
             for row in rows:
-                self._record(row, values.get(row["id"]))
+                value = values.get(row['id'])
+                self._record(row, value, reason=None if valid(value) else reason)
             return
         failures = 0
         with self.fetcher_factory() as fetcher:
@@ -101,20 +113,29 @@ class AvailabilityCache:
                 if self.stop_event.is_set():
                     break
                 value = None
+                status, reason = 'skipped', 'provider_failure_limit'
                 if failures < 5:
+                    status, reason = 'error', 'invalid_response'
                     try:
                         value = fetcher.fetch(row)
                     except ScreeningAvailabilityUnavailable:
                         # A verified response without a seat map is specific
                         # to this performance, not evidence of a chain outage.
                         failures = 0
-                    except Exception:
+                        status, reason = 'unavailable', 'no_public_seat_map'
+                    except Exception as error:
                         failures += 1
+                        reason = type(error).__name__
                     else:
                         failures = 0 if valid(value) else failures + 1
-                self._record(row, value)
+                        if valid(value):
+                            status, reason = 'ok', None
+                self._record(row, value, status=status, reason=reason)
 
     def refresh(self):
+        if not self.history_seeded:
+            self.history.seed_files(self.programme, self.path)
+            self.history_seeded = True
         self._read_programme()
         with self.lock:
             if self.refreshing:

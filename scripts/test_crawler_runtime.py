@@ -10,6 +10,8 @@ import time
 import unittest
 import threading
 import urllib.request
+import urllib.error
+from functools import partial
 from http.server import ThreadingHTTPServer
 from unittest.mock import Mock, patch
 
@@ -78,6 +80,33 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(sorted(registered), sorted(expected))
         self.assertEqual(sorted(c['id'] for c in json.loads(POLICY.read_text())['cinemas']), sorted(expected))
         self.assertEqual(len(registered), len(set(registered)))
+
+    def test_private_history_and_sqlite_sidecars_are_not_served_by_legacy_preview(self):
+        class QuietHandler(Handler):
+            def log_message(self, *args):
+                pass
+        with tempfile.TemporaryDirectory() as folder, patch('serve_preview.STATIC', Path(folder)):
+            root = Path(folder)
+            private = root / 'preview-data/history'
+            private.mkdir(parents=True)
+            for name in ('observations.sqlite3', 'observations.sqlite3-wal', 'observations.sqlite3-shm'):
+                (private / name).write_text('private')
+            (root / 'linked.sqlite3').symlink_to(private / 'observations.sqlite3')
+            server = ThreadingHTTPServer(('127.0.0.1', 0), partial(QuietHandler, directory=folder))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                for path in ('/preview-data/history/observations.sqlite3', '/preview-data/%68istory/observations.sqlite3-wal',
+                             '/preview-data/history/observations.sqlite3-shm', '/linked.sqlite3'):
+                    for method in ('GET', 'HEAD'):
+                        request = urllib.request.Request(f'http://127.0.0.1:{server.server_port}{path}', method=method)
+                        with self.assertRaises(urllib.error.HTTPError) as error:
+                            urllib.request.urlopen(request)
+                        self.assertEqual(error.exception.code, 404)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=2)
 
     def test_metadata_file_writes_cannot_postpone_collection(self):
         with tempfile.TemporaryDirectory() as folder:

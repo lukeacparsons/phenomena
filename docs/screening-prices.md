@@ -22,6 +22,8 @@ The 19 November live refresh retained prices for **1,956 of 3,097 screenings (63
 
 `price_data` carries `currency`, `kind`, `scope`, `source_url`, `checked_at`, and either one `amount` or `minimum`/`maximum`. Named ticket `options` and `conditions` are retained when published. `fees: unknown` means the programme did not establish the final booking fee. Acquisition timestamps come from that provider's collection receipt, not a later page build or metadata update.
 
+Each accepted programme now also appends a timestamped price sample to the private [observation history](observation-history.md). Repeated prices share one stored payload while retaining every collection timestamp. History survives replacement of the current catalogue and expiry of the screening.
+
 The old `price_eur` field is retained internally for a single published amount. It is **not** populated with the cheapest fare in a range. Screening prices are kept in the crawler's source snapshot and excluded from the browser projection, generated screening HTML and WebMCP responses. Showtime details display the room and seat availability. General venue tariffs are separate directory research and are not automatically applied to every screening.
 
 For the A1 minor-unit conversion, 15 exact Verdi session IDs were cross-checked against the operator's structured HTML prices: for example, API `600` matches published EUR `6.00`. Mixed, malformed or zero-placeholder price arrays are rejected rather than interpreted as ordinary admission.

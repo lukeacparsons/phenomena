@@ -9,6 +9,7 @@ from cinesa_showtimes import atomic_write
 from crawler_health import coverage_by_cinema, instant
 from film_grouping import deduplicate_programme
 from catalogue_sources import CatalogueHTTPError
+from observation_history import ObservationHistory
 
 
 class InvalidCatalogue(ValueError):
@@ -50,6 +51,8 @@ class CrawlRun:
         self.output=Path(output);self.previous=previous;self.now=now;self.accept_drops=accept_drops
         self.monotonic=monotonic;self.started=monotonic()
         self.reports=[];self.failures={}
+        self.history=ObservationHistory(self.output)
+        self.history.seed(previous)
         try:self.state=json.loads((self.output/'crawl-attempts.json').read_text())
         except (OSError,ValueError):self.state={}
         self.state.setdefault('cinemas',{})
@@ -82,8 +85,13 @@ class CrawlRun:
             try:
                 checked_at=self.now+timedelta(seconds=max(0,self.monotonic()-self.started))
                 report=validate_report(report,cinema,self.previous,checked_at,accept_drops=self.accept_drops)
-                self.reports.append(report);self.record(cinema,count=report['count'])
-            except Exception as error:self.record(cinema,error)
+            except Exception as error:
+                self.record(cinema,error)
+                continue
+            # Preserve each accepted source immediately, even if a later source
+            # or publication fails. Rebuilding pages/metadata never adds samples.
+            self.history.record_catalogue(report,collected_at=checked_at.isoformat())
+            self.reports.append(report);self.record(cinema,count=report['count'])
 
     def finish(self,published):
         for report in self.reports:
