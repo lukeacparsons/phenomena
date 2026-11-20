@@ -31,24 +31,3 @@ export function createWebMCPTools(service){
     }
   }));
 }
-
-// Registration errors must never stop the normal page. A failed batch is removed
-// using its lifecycle signal; callbacks read current application data on every call.
-export async function registerWebMCP(registry,service,{signal,onError=()=>{}}={}){
-  if(typeof registry?.registerTool!=='function'||signal?.aborted)return null;
-  const lifecycle=new AbortController();
-  const abort=()=>lifecycle.abort();
-  signal?.addEventListener('abort',abort,{once:true});
-  let ready=false;
-  try{
-    for(const tool of createWebMCPTools(service)){
-      await registry.registerTool({...tool,execute:(...args)=>ready&&!lifecycle.signal.aborted?tool.execute(...args):{ok:false,error:{code:'not_ready',message:'The tools are not ready. Try again after page loading completes.'}}},{signal:lifecycle.signal});
-      if(lifecycle.signal.aborted)return null;
-    }
-    ready=true;
-    return ()=>{abort();signal?.removeEventListener('abort',abort);};
-  }catch(error){
-    abort();signal?.removeEventListener('abort',abort);onError(error);
-    return null;
-  }
-}

@@ -7,7 +7,7 @@ import {hydrateProgramme} from './programme-data.js';
 import {readProgrammeCache,saveProgrammeCache} from './programme-cache.js';
 import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch} from './cinema-search.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
-import {registerWebMCP} from './webmcp.js';
+import {registerWebMCP} from './webmcp-registration.js';
 
 const $ = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
