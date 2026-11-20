@@ -120,10 +120,6 @@ function syncURL(push=false){
     document.title=film?film.title+' | VO Barna':changedDate?document.body.dataset.programmeHeading+' | VO Barna':listingTitle;
     if(dateHeading){
       dateHeading.querySelector('h1').textContent=changedDate?document.body.dataset.programmeHeading:originalDateHeading;
-      const label=dateHeading.querySelector('[data-date-label]');
-      label.hidden=selectedDate()==='all';
-      const time=label.querySelector('time');
-      if(!label.hidden){time.dateTime=selectedDate();time.textContent=selectedDate();}
       const complete=document.querySelector('details#complete-programme');
       if(complete)complete.hidden=changedDate||Boolean(state.query)||state.cinema_ids.length>0||state.formats.length>0||state.big_screens_only;
     }

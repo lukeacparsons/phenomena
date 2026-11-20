@@ -504,9 +504,9 @@ class Publication:
         programme_pages = paginate_programme(self.browser_programme, self.now, language_name=language_name)
         for lang in LOCALES:
             t = COPY[lang]
-            body = f'<h1 class="sr-only">{t["home"]}</h1><p class="site-intro">{text(t["intro"])}</p>' + self.programme_listing(lang)
+            body = f'<h1 class="sr-only">{t["home"]}</h1>' + self.programme_listing(lang)
             body += render_programme_directory(programme_pages, lang)
-            footer_extra = f'<p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
+            footer_extra = f'<p class="site-intro">{text(t["intro"])}</p><p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
             self.page(f'/{lang}/', lang, t['home'] + ' | VO Barna', t['intro'], body, alternatives={l: f'/{l}/' for l in LOCALES}, interactive=True,
                       footer_extra=footer_extra,
                       graph=[{'@type': 'WebSite', '@id': self.origin + '/#website', 'name': 'VO Barna', 'description': t['intro'], 'url': self.origin + '/', 'inLanguage': list(LOCALES), 'publisher': {'@id': self.origin + '/#publisher'}}])
@@ -833,7 +833,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.venue_pages()
             site.editorial()
             site.discovery_pages()
-            date_views = build_date_views(site, language_name, stamp)
+            date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',

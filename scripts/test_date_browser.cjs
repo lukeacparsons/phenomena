@@ -58,7 +58,6 @@ const tomorrow=next.toISOString().slice(0,10);
   assert.equal(live.url(),base+'/es/cartelera/manana/');
   await live.locator(`#dates button[data-date="${day}"]`).click();
   await live.waitForFunction(day=>location.pathname==='/es/'&&new URLSearchParams(location.search).get('date')===day,day);
-  assert.equal(await live.locator('.date-heading time').first().textContent(),day);
   await live.reload();await live.waitForSelector('#grid[data-enhanced]');
   assert.equal(await live.locator('body').getAttribute('data-listing-date'),day);
   await live.locator('#dates [data-date=all]').click();

@@ -20,9 +20,7 @@ COPY = {
         'date': 'Original-language films in Barcelona',
         'today_link': 'Today’s programme', 'tomorrow_link': 'Tomorrow’s programme',
         'intro': 'Find original-language screenings in Barcelona and nearby towns on {date}. Compare audio, subtitles, times and formats, then book directly with the cinema.',
-        'scope': 'Screenings on {date}. Times are local to Barcelona (Europe/Madrid).',
         'empty': 'No upcoming screenings for this date in our collected programme. Unpublished dates and missing listings remain unknown; check the cinema’s official programme.',
-        'snapshot': 'Programme collected', 'all': 'Browse all dates',
     },
     'es': {
         'today': 'Películas en versión original en Barcelona hoy',
@@ -30,9 +28,7 @@ COPY = {
         'date': 'Películas en versión original en Barcelona',
         'today_link': 'Cartelera de hoy', 'tomorrow_link': 'Cartelera de mañana',
         'intro': 'Encuentra sesiones en versión original en Barcelona y alrededores el {date}. Compara audio, subtítulos, horarios y formatos, y compra las entradas directamente en la web del cine.',
-        'scope': 'Sesiones del {date}. Hora local de Barcelona (Europe/Madrid).',
         'empty': 'No hay próximas sesiones para esta fecha en nuestra cartelera recopilada. Las fechas no publicadas y las sesiones no recopiladas son desconocidas; consulta la programación oficial del cine.',
-        'snapshot': 'Cartelera recopilada', 'all': 'Ver todas las fechas',
     },
     'ca': {
         'today': 'Pel·lícules en versió original a Barcelona avui',
@@ -40,9 +36,7 @@ COPY = {
         'date': 'Pel·lícules en versió original a Barcelona',
         'today_link': 'Cartellera d’avui', 'tomorrow_link': 'Cartellera de demà',
         'intro': 'Troba sessions en versió original a Barcelona i rodalia el {date}. Compara àudio, subtítols, horaris i formats, i compra les entrades directament al web del cinema.',
-        'scope': 'Sessions del {date}. Hora local de Barcelona (Europe/Madrid).',
         'empty': 'No hi ha pròximes sessions per a aquesta data a la cartellera recopilada. Les dates no publicades i les sessions no recopilades són desconegudes; consulta la programació oficial del cinema.',
-        'snapshot': 'Cartellera recopilada', 'all': 'Veure totes les dates',
     },
 }
 
@@ -91,7 +85,7 @@ def render_date_view(root, manifest, view):
     return fill_template(template, fragment, day)
 
 
-def build_date_views(site, language_name, stamp):
+def build_date_views(site, language_name):
     today = site.now.astimezone(MADRID).date()
     for lang, copy in COPY.items():
         directory = site.dest / 'date-views' / lang
@@ -116,9 +110,7 @@ def build_date_views(site, language_name, stamp):
         for kind in ('today', 'tomorrow', 'date'):
             paths = DAY_PATHS[kind] if kind != 'date' else {l: f'/{l}/?date={DATE_TOKEN}' for l in COPY}
             title = copy[kind] + ' · ' + DATE_TOKEN
-            body = f'<section class="date-heading"><h1>{escape(copy[kind])}</h1><p data-date-label>{copy["scope"].format(date=f"<time datetime=\"{DATE_TOKEN}\">{DATE_TOKEN}</time>")}</p>'
-            body += f'<p class="fineprint">{escape(copy["snapshot"])}: {stamp(site.data["generated_at"])}</p>'
-            body += f'<p><a href="/{lang}/">{escape(copy["all"])}</a></p></section>{LISTING_TOKEN}'
+            body = f'<section class="date-heading"><h1>{escape(copy[kind])}</h1></section>{LISTING_TOKEN}'
             template = site.page(paths[lang], lang, title + ' | VO Barna', copy['intro'].format(date=DATE_TOKEN), body,
                                  alternatives=paths, interactive=True, index=kind != 'date',
                                  date_scope={'date': DATE_TOKEN, 'kind': kind}, write=False)
