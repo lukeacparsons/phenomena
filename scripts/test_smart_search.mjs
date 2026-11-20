@@ -169,11 +169,27 @@ test('Certified Fresh requires a sourced badge, not a high score',()=>{
   assert(!ids('certified fresh').includes('few-reviews'));
   assert.deepEqual(ids('not certified fresh'),['boundary']);
 });
-test('regional production requests do not become countries or service outages',async()=>{
-  const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('Unsupported regional metadata needs no model call')});
-  const result=await api.search({query:'from catalunya'});
-  assert.equal(result.mode,'local');assert.deepEqual(result.intent.unsupported,['origin:Catalunya']);
-  assert.deepEqual(result.intent.conditions,[]);assert.deepEqual(ids('from catalunya'),[]);
+test('regional cinema reaches AI discovery without invented country or language constraints',async()=>{
+  let calls=0;
+  const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
+    const body=JSON.parse(opts.body);
+    if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:[1,0]}))})};
+    calls++;
+    return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),semantic_query:'Catalan cinema',sort:'relevance',film_matches:[1,0,4]})}]}]})};
+  }});
+  for(const query of ['from catalonia','from catalunya','de Cataluña','cinema català','not from Catalonia']){
+    const local=parseIntent(query,{programme});
+    assert.deepEqual(local.unsupported,[],query);assert.deepEqual(local.conditions,[],query);assert.equal(local.text,query);
+  }
+  const query='from catalunya rt >80';
+  const result=await api.search({query});
+  assert.equal(calls,1);assert.equal(result.mode,'semantic');assert.deepEqual(result.intent.unsupported,[]);
+  assert.deepEqual(result.intent.conditions,[{field:'rating_rt',op:'gt',value:'80'}]);
+  assert.deepEqual(queryFilms(programme,{...emptySearch(),query},{now,intent:result.intent,semanticScores:result.semantic_scores}).map(f=>f.id),['above'],'exact ratings still reject selected films with lower or missing scores');
+  assert.equal(searchExplanation(result.intent),'AI matches · Most relevant first');
+  assert.deepEqual(parseIntent('from catalunya in Catalan',{programme}).conditions,[{field:'language',op:'eq',value:'Catalan'}]);
+  const offline=createSmartSearch({getProgramme:async()=>programme,apiKey:'',now:()=>now});
+  assert.equal((await offline.search({query:'from catalunya'})).mode,'unavailable','only a real provider limitation uses the unavailable state');
 });
 test('duration, time and chain conditions apply to each matching screening',()=>{
   assert.deepEqual(ids('under two hours from France'),['above','boundary','few-reviews','mixed']);

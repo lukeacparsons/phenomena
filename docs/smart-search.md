@@ -10,7 +10,7 @@ Filter chips show the interpretation and can be removed. The original query and 
 
 Subjective source-qualified requests such as `highly rated on IMDb` go to the interpreter, without local RT defaults. That example becomes IMDb ≥7.5 and sorts by IMDb score. Numeric expressions such as `IMDb >7.5` remain local. The visible chip makes the inferred threshold explicit and removable.
 
-`from Catalunya` currently reports the missing production-region metadata directly, without a model call. Country and audio-language metadata cannot establish regional production origin. This is distinct from an empty search result or a provider outage.
+Regional requests such as `from Catalunya` use AI-assisted discovery from retrieved descriptions and the model's reliable film knowledge. They are labelled `AI matches`, with a removable semantic interpretation, rather than claiming verified regional production metadata. The model may identify a film's connection to regional cinema but must not substitute a mandatory Spain or Catalan-language filter. `In Catalan` still uses exact audio-language metadata; separately requested ratings, countries and screening constraints remain mandatory. Setting or mentioning a region alone does not establish regional origin.
 
 ## Runtime configuration
 

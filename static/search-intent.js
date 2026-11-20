@@ -53,10 +53,8 @@ export function validateIntent(value,programme){
 export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid'}).format(new Date())}={}){
   const plan={...emptyIntent(),text};
   if(exactTitle||!text.trim())return plan;
-  if(/\b(?:from|made in|produced in|de|produidas? a|producidas? en) (?:catalunya|cataluna|catalonia|catalon[ia]+)\b/.test(fold(text))){
-    // Country and audio metadata cannot establish regional production origin.
-    plan.unsupported.push('origin:Catalunya');return plan;
-  }
+  // Unstructured regional origins remain text for AI discovery. They are not
+  // equivalent to a production country or an audio-language requirement.
   // Keep operators until parsed. The ordinary keyword normalizer strips > and <.
   let rest=String(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’'·]/g,' ');
   let changed=false;
@@ -195,8 +193,8 @@ export function filmMatchReason(film,plan,language='en'){
 }
 
 export function searchExplanation(plan,language='en'){
-  const copy={en:{countries:'Includes co-productions',soonest:'Soonest showing first',rating:'Highest rated first',relevance:'Most relevant first'},es:{countries:'Incluye coproducciones',soonest:'Próximas sesiones primero',rating:'Mejor valoradas primero',relevance:'Más relevantes primero'},ca:{countries:'Inclou coproduccions',soonest:'Sessions més properes primer',rating:'Més ben valorades primer',relevance:'Més rellevants primer'}}[language];
-  return [plan.conditions.some(c=>c.field==='country'&&c.op!=='ne')?copy.countries:'',copy[plan.semantic_query?'relevance':plan.sort]].filter(Boolean).join(' · ');
+  const copy={en:{ai:'AI matches',countries:'Includes co-productions',soonest:'Soonest showing first',rating:'Highest rated first',relevance:'Most relevant first'},es:{ai:'Coincidencias de IA',countries:'Incluye coproducciones',soonest:'Próximas sesiones primero',rating:'Mejor valoradas primero',relevance:'Más relevantes primero'},ca:{ai:'Coincidències d’IA',countries:'Inclou coproduccions',soonest:'Sessions més properes primer',rating:'Més ben valorades primer',relevance:'Més rellevants primer'}}[language];
+  return [plan.semantic_query?copy.ai:'',plan.conditions.some(c=>c.field==='country'&&c.op!=='ne')?copy.countries:'',copy[plan.semantic_query?'relevance':plan.sort]].filter(Boolean).join(' · ');
 }
 
 const compare=(actual,op,wanted)=>({eq:()=>actual===wanted,ne:()=>actual!==wanted,gt:()=>actual>wanted,gte:()=>actual>=wanted,lt:()=>actual<wanted,lte:()=>actual<=wanted}[op]?.()??false);
