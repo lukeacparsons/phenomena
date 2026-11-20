@@ -80,7 +80,7 @@ The long-running collector had imported an older page generator and kept rebuild
 - The Node origin shares the existing URL policy: semantic paths, legacy ID redirects, normalized paths, real 404s and noindex on search/filter combinations.
 - HTML and mutable assets/data have a 60-second TTL. Content-addressed posters have a one-year immutable TTL. Errors and health checks are not cached.
 - Bunny respects origin cache headers, varies by the full query string and hostname, and does not cache errors or serve stale pages indefinitely while the origin is offline. Search noindex headers cannot contaminate unfiltered pages.
-- Pages and film details work with JavaScript disabled. The homepage's extra introduction and navigation remain in the collapsed information footer.
+- Pages and film details work with JavaScript disabled. The homepage introduces the site's value above the search controls; additional navigation and coverage notes remain in the collapsed information footer.
 - Canonicals, hreflang, JSON-LD, robots and sitemap use `https://vobarna.com`.
 
 Verification covered the origin router, failed publication rollback, a real automatic publication, browser behaviour through Bunny, no-JavaScript content, semantic redirects, search noindex isolation, 404 responses, sitemap/robots, HTTPS and the www redirect. Indexing, Search Console/Bing verification, traffic reporting and field performance measurement are separate follow-up work.

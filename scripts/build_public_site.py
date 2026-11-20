@@ -502,12 +502,12 @@ class Publication:
         programme_pages = paginate_programme(self.browser_programme, self.now, language_name=language_name)
         for lang in LOCALES:
             t = COPY[lang]
-            body = f'<h1 class="sr-only">{t["home"]}</h1>' + self.programme_listing(lang)
+            body = f'<h1 class="sr-only">{t["home"]}</h1><p class="site-intro">{text(t["intro"])}</p>' + self.programme_listing(lang)
             body += render_programme_directory(programme_pages, lang)
-            footer_extra = f'<p class="site-intro">{t["intro"]}</p><p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
+            footer_extra = f'<p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
             self.page(f'/{lang}/', lang, t['home'] + ' | VO Barna', t['intro'], body, alternatives={l: f'/{l}/' for l in LOCALES}, interactive=True,
                       footer_extra=footer_extra,
-                      graph=[{'@type': 'WebSite', '@id': self.origin + '/#website', 'name': 'VO Barna', 'url': self.origin + '/', 'inLanguage': list(LOCALES), 'publisher': {'@id': self.origin + '/#publisher'}}])
+                      graph=[{'@type': 'WebSite', '@id': self.origin + '/#website', 'name': 'VO Barna', 'description': t['intro'], 'url': self.origin + '/', 'inLanguage': list(LOCALES), 'publisher': {'@id': self.origin + '/#publisher'}}])
             for number, programme_page in enumerate(programme_pages, 1):
                 title = f'{PROGRAMME_LABELS[lang][0]} · {t["page"]} {number}'
                 alternatives = {l: programme_path(l, number) for l in LOCALES}
@@ -558,9 +558,9 @@ class Publication:
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
             self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
-            body = f'<h1>{t["about"]}</h1><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
+            body = f'<h1>{t["about"]}</h1><p class="site-intro">{text(t["intro"])}</p><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
             body += f'<h2>{t["analytics_title"]}</h2><p>{text(t["analytics_body"])}</p>'
-            self.page(paths[lang], lang, t['about'], t['independent'], body, alternatives=paths)
+            self.page(paths[lang], lang, t['about'], t['intro'], body, alternatives=paths)
         self.page('/404.html', 'en', COPY['en']['notfound'], COPY['en']['notfound_text'], f'<h1>{COPY["en"]["notfound"]}</h1><p>{COPY["en"]["notfound_text"]}</p>', index=False)
 
     def version_explanation(self, lang):
@@ -912,6 +912,8 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             (dest / 'llms.txt').write_text(f'''# VO Barna
 
 > An independent guide to original-language cinema in Barcelona and nearby towns. Available in English, Spanish and Catalan.
+
+{COPY['en']['intro']}
 
 ## Pages
 - [Current programme]({origin}/en/): films and dated screenings; filters are interactive.
