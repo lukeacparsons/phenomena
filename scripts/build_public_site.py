@@ -37,6 +37,11 @@ from complete_programme import LABELS as PROGRAMME_LABELS, paginate_programme, p
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
+# Rendered poster widths in the listing grid (static/cinemas.css). The phone
+# entries divide by the device pixel ratio above 2, matching the loader's cap.
+LISTING_POSTER_SIZES = ('(max-width:600px) and (min-resolution:3.5dppx) 120px, (max-width:600px) and (min-resolution:2.75dppx) 160px, '
+                        '(max-width:600px) and (min-resolution:2.25dppx) 192px, (max-width:600px) 240px, (max-width:730px) calc(50vw - 28px), '
+                        '(max-width:1000px) calc(33.4vw - 28px), (max-width:1160px) calc(25vw - 26px), 265px')
 ORIGIN = 'https://vobarna.com'
 MADRID = ZoneInfo('Europe/Madrid')
 PAGE_SIZE = 24
@@ -211,7 +216,7 @@ class Publication:
         if interactive:
             script += ''.join(f'<link rel="modulepreload" href="/{name}.js">' for name in
                               ('programme-data', 'programme-cache', 'listing-view', 'cinema-copy', 'cinema-search', 'search-dates', 'cinema-service', 'webmcp', 'webmcp-registration', 'webmcp-sdk'))
-            script += '<script type="module" src="/cinemas.js"></script><noscript><style>.public-site .filters{display:none}</style></noscript>'
+            script += '<script type="module" src="/cinemas.js"></script><noscript><style>.public-site .filters{display:none}@media(max-width:600px){:root.has-programme-subtitle .logo-copy .logo-subtitle{display:block}}</style></noscript>'
         if not interactive or venue:
             script += '<script type="module" src="/site-page.js"></script>'
         cinema_scope = f' data-cinema-id="{text(cinema_id)}"' if cinema_id else ''
@@ -220,8 +225,11 @@ class Publication:
         programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if date_scope or path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
         if path == f'/{lang}/':
             script += '<script type="module" src="/complete-programme.js"></script>'
+        # A listing repeats the subtitle above its dates. Small screens show that copy and drop
+        # the header's, decided here so the header never changes height after first paint.
+        root_class = ' class="has-programme-subtitle"' if 'class="logo-subtitle programme-subtitle"' in body else ''
         html = f'''<!doctype html>
-<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{lang}"{root_class}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
 <title>{text(title)}</title><meta name="description" content="{text(description)}"><meta name="robots" content="{'index,follow' if index else 'noindex,follow'}">
 <link rel="canonical" href="{canonical}">{alternate}<meta property="og:type" content="website"><meta property="og:title" content="{text(title)}"><meta property="og:description" content="{text(description)}"><meta property="og:url" content="{canonical}"><meta property="og:site_name" content="VO Barna"><meta property="og:image" content="{self.origin}/clint.png"><meta name="twitter:card" content="summary">
@@ -229,7 +237,7 @@ class Publication:
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<script src="https://cdn.nekuda.ai/v1/trial-token.js"></script>
+<script async src="https://cdn.nekuda.ai/v1/trial-token.js" data-webmcp-trial onload="this.dataset.webmcpTrial='loaded'" onerror="this.dataset.webmcpTrial='failed'"></script>
 <script src="/theme.js"></script>
 <link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
 </head>
@@ -259,7 +267,7 @@ class Publication:
             film['sessions'] = [s for s in current['sessions'] if datetime.fromisoformat(s['starts_at']) >= self.now]
         return film
 
-    def poster(self, film, *, eager=False):
+    def poster(self, film, *, eager=False, sizes=''):
         url = safe_url(film.get('poster_url'))
         if not url:
             return ''
@@ -271,15 +279,25 @@ class Publication:
         fallback = next((v for v in variants if v['width'] >= 320), variants[-1])['url']
         srcset = ', '.join(f'{v["url"]} {v["width"]}w' for v in variants)
         attrs = f'{dimensions} style="aspect-ratio:{int(image["width"])}/{int(image["height"])}" alt="{text(film["title"])}" decoding="async"'
-        # The first row starts from HTML at a small, data-saving size, then
+        noscript = (f'<noscript><style>.progressive-image{{display:none}}.film-facts>noscript{{display:contents}}</style><img class="public-poster" src="{text(fallback)}" '
+                    f'srcset="{text(srcset)}" sizes="(max-width:730px) 45vw, 280px" {attrs} loading="lazy"></noscript>')
+        if eager and sizes:
+            # A slow phone's parser reaches the first cards, and runs the image
+            # loader, seconds after the document arrives. Only the browser's
+            # preload scanner is early, so it chooses the final size from HTML.
+            # The inline preview fills the box until that image paints.
+            preview = image['preview'] if re.fullmatch(r'data:image/webp;base64,[A-Za-z0-9+/=]+', image.get('preview') or '') else ''
+            backdrop = f';background:url({preview}) center/contain no-repeat' if preview else ''
+            return (f'<img class="public-poster progressive-image" src="{text(variants[0]["url"])}" srcset="{text(srcset)}" sizes="{text(sizes)}" '
+                    f'{dimensions} style="aspect-ratio:{int(image["width"])}/{int(image["height"])}{backdrop}" alt="{text(film["title"])}" decoding="async" loading="eager" fetchpriority="high" '
+                    f'data-image-preview="{text(preview)}" data-image-source="{text(url)}" data-image-variants="{text(json.dumps(variants, separators=(",", ":")))}">{noscript}')
+        # Other eager posters start from HTML at a small, data-saving size, then
         # the independent loader upgrades them for the viewport and connection.
         initial = variants[0] if eager else None
         source = initial['url'] if initial else image['preview']
         priority = f' loading="eager" fetchpriority="high" data-image-width="{initial["width"]}" data-image-preview="{text(image["preview"])}"' if initial else ''
         return (f'<img class="public-poster progressive-image{"" if initial else " is-preview"}" src="{text(source)}" {attrs}{priority} '
-                f'data-image-source="{text(url)}" data-image-variants="{text(json.dumps(variants, separators=(",", ":")))}">'
-                f'<noscript><style>.progressive-image{{display:none}}.film-facts>noscript{{display:contents}}</style><img class="public-poster" src="{text(fallback)}" '
-                f'srcset="{text(srcset)}" sizes="(max-width:730px) 45vw, 280px" {attrs} loading="lazy"></noscript>')
+                f'data-image-source="{text(url)}" data-image-variants="{text(json.dumps(variants, separators=(",", ":")))}">{noscript}')
 
     def cards(self, films, lang, *, eager=False):
         cards = []
@@ -390,12 +408,14 @@ class Publication:
         """Paint the full listing before the search catalogue or JavaScript arrives."""
         t = COPY[lang]
         view = self.listing_views[lang + ':' + ('date:' + date if date else cinema_id)]
-        filters = f'''<section class="filters" aria-label="{t['films']}"><nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
+        filters = f'''<section class="filters" aria-label="{t['films']}"><span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span><nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
         cards = []
         for position, card in enumerate(view['cards']):
             film = self.current[card['id']]
             path = self.entity_path('films', film['id'], lang)
-            poster = self.poster(film, eager=position < 4).replace('class="public-poster', 'class="poster')
+# Only the first poster is certain to be visible on a phone. The rest
+            # of the row keeps the connection-aware loader, which a slow link needs.
+            poster = self.poster(film, eager=position < 4, sizes=LISTING_POSTER_SIZES if position == 0 else '').replace('class="public-poster', 'class="poster')
             if not film.get('poster_url'):
                 poster = f'<div class="poster-placeholder">{text(film["title"])}</div>'
             cards.append(f'<article class="card" data-film="{text(film["id"])}" data-open="{text(film["id"])}"><a class="poster-button" href="{path}" data-open="{text(film["id"])}" aria-label="{text(film["title"])}">{poster}</a><div class="card-body">{card["body"]}</div></article>')

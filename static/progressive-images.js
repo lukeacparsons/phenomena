@@ -28,6 +28,11 @@ function desired(state,width){
   const target=Math.min(policy().maxWidth,Math.ceil(width*Math.min(devicePixelRatio||1,2)));
   return state.variants.find(item=>item.width>=target)||state.variants.at(-1)||{url:state.image.dataset.imageSource,width:target};
 }
+// `src` has no effect while the browser is choosing from `srcset`.
+function useSource(image,url){
+  image.removeAttribute('srcset');image.removeAttribute('sizes');
+  image.src=url;
+}
 function distance(rect){return Math.max(0,rect.top-innerHeight,-rect.bottom);}
 function queue(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;pump();});}
 
@@ -53,7 +58,7 @@ async function load(state,variant,visible){
         if(state.image.classList.contains('is-preview'))previous.style.filter='blur(2px)';
         state.image.after(previous);
       }
-      state.image.src=variant.url;
+      useSource(state.image,variant.url);
       state.image.classList.remove('is-preview');
       state.image.dataset.imageWidth=String(variant.width);
       state.loadedWidth=variant.width;
@@ -78,6 +83,8 @@ function pump(){
     const state=tracked.get(image);
     if(!image.isConnected){observer?.unobserve(image);tracked.delete(image);nearby.delete(image);continue;}
     if(!state||state.loading)continue;
+    // The browser is still fetching, or deferring, its own choice from HTML.
+    if(image.hasAttribute('srcset')&&!image.complete)continue;
     const rect=image.getBoundingClientRect();
     if(!rect.width||!rect.height||rect.right<=0||rect.left>=innerWidth||distance(rect)>margin)continue;
     const variant=desired(state,rect.width);
@@ -121,7 +128,10 @@ export function observeImages(root=document){
       const current=variants.find(variant=>new URL(variant.url,location.href).href===image.currentSrc);
       if(!current)return;
       state.loadedWidth=Math.max(state.loadedWidth,current.width);
+      image.dataset.imageWidth=String(state.loadedWidth);
+      image.style.removeProperty('background');
       if((loadedImages.get(image.dataset.imageSource)?.width||0)<current.width)loadedImages.set(image.dataset.imageSource,current);
+      queue();
     };
     image.addEventListener('load',remember);
     if(image.complete)remember();
@@ -129,7 +139,7 @@ export function observeImages(root=document){
       const failed=()=>{
         // An eager HTML thumbnail must retain the inline preview if it fails.
         if(image.getAttribute('src')!==variants[0]?.url)return;
-        image.src=image.dataset.imagePreview;image.classList.add('is-preview');
+        useSource(image,image.dataset.imagePreview);image.classList.add('is-preview');
         state.loadedWidth=0;queue();
       };
       image.addEventListener('error',failed,{once:true});

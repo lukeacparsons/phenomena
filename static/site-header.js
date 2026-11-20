@@ -1,18 +1,3 @@
-// Give the programme subtitle its own line above the dates on small screens.
-const subtitle = document.querySelector('.logo-subtitle');
-const dateSlider = document.getElementById('dates');
-if (subtitle && dateSlider) {
-  const logoCopy = subtitle.parentElement;
-  const mobile = matchMedia('(max-width: 600px)');
-  const positionSubtitle = () => {
-    subtitle.classList.toggle('programme-subtitle', mobile.matches);
-    if (mobile.matches) dateSlider.before(subtitle);
-    else logoCopy.append(subtitle);
-  };
-  positionSubtitle();
-  mobile.addEventListener('change', positionSubtitle);
-}
-
 // Keep the original language links and buttons inside the mobile disclosure.
 for (const [index, navigation] of [...document.querySelectorAll('.lang-switch')].entries()) {
   const choices = [...navigation.querySelectorAll('a[hreflang], button[data-lang]')];

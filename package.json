@@ -23,6 +23,7 @@
     "test": ".venv/bin/python -m unittest discover -s scripts -p 'test_*.py' && node scripts/test_cinema_search.cjs && node scripts/test_search_dates.cjs && node --test scripts/test_smart_search.mjs scripts/test_webmcp.mjs scripts/test_analytics.mjs scripts/test_public_routing.mjs scripts/test_crawler_watchdog.mjs scripts/test_crawler_heartbeat.mjs scripts/test_provider_source_reader.mjs && npm run test:traffic",
     "site:publish": ".venv/bin/python scripts/publish_vobarna.py",
     "site:test:browser": "node scripts/test_public_browser.cjs",
+    "site:test:loading": "node scripts/test_load_sequence_browser.cjs",
     "crawler:health": ".venv/bin/python scripts/crawler_health.py",
     "crawler:heartbeat": ".venv/bin/python scripts/crawler_monitor.py",
     "crawler:run": ".venv/bin/python scripts/run_crawler.py",

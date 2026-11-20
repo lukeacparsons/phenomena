@@ -90,6 +90,13 @@ if(['vobarna.com','www.vobarna.com'].includes(location.hostname)
       loaded:posthog=>{client=posthog;for(const [event,properties] of queued.splice(0))client.capture(event,properties);}
     });
   };
-  // Analytics availability never gates the programme or booking links.
-  document.head.append(script);
+  // Analytics availability never gates the programme or booking links, and
+  // its download waits until the page's own artwork and scripts have loaded.
+  // Events raised in the meantime stay in the queue above.
+  const start=()=>document.head.append(script);
+  if(document.readyState==='complete')start();
+  else window.addEventListener('load',()=>{
+    if(typeof requestIdleCallback==='function')requestIdleCallback(start,{timeout:3000});
+    else setTimeout(start,200);
+  },{once:true});
 }

@@ -474,11 +474,37 @@ function useProgramme(next,{cached=false}={}){
   startWebMCP();
 }
 
-async function load(){
+// A slow connection that keeps delivering the catalogue must be allowed to
+// finish: a fixed deadline left slow phones without search. Only a stalled
+// download is abandoned.
+const PROGRAMME_STALL=20000;
+async function fetchProgramme(){
+  const controller=new AbortController();
+  let timer=0;
+  const watch=()=>{clearTimeout(timer);timer=setTimeout(()=>controller.abort(),PROGRAMME_STALL);};
+  watch();
   try{
-    const response=await fetch(document.body.dataset.programmeUrl||'/preview-data/programme.json',{cache:'no-cache',signal:AbortSignal.timeout(8000)});
+    const response=await fetch(document.body.dataset.programmeUrl||'/preview-data/programme.json',{cache:'no-cache',signal:controller.signal});
     if(!response.ok)throw new Error('Programme unavailable');
-    const next=await response.json();
+    if(!response.body)return await response.json();
+    const reader=response.body.getReader(),decoder=new TextDecoder();
+    let text='';
+    for(;;){
+      const {done,value}=await reader.read();
+      if(done)break;
+      watch();text+=decoder.decode(value,{stream:true});
+    }
+    return JSON.parse(text+decoder.decode());
+  }finally{clearTimeout(timer);}
+}
+
+let programmeLoad=null;
+// Refresh timers and returning tabs must not stack requests behind a slow one.
+function load(){return programmeLoad||=loadProgramme().finally(()=>{programmeLoad=null;});}
+
+async function loadProgramme(){
+  try{
+    const next=await fetchProgramme();
     if(!Array.isArray(next.films)||!Array.isArray(next.cinemas))throw new Error('Invalid programme');
     programmeFailed=false;
     if(!data||next.generated_at!==data.generated_at)useProgramme(next);
@@ -522,10 +548,16 @@ function startWebMCP(){
   if(webMCPStarted||!data)return;
   webMCPStarted=true;
   const onError=error=>console.warn('VO Barna WebMCP registration failed:',error);
-  try{
-    registerWebMCP(document.modelContext,cinemaService,{signal:lifecycle.signal,onError})
-      .then(cleanup=>{webMCPCleanup=cleanup;}).catch(onError);
-  }catch(error){onError(error);}
+  webMCPTrial().then(()=>registerWebMCP(document.modelContext,cinemaService,{signal:lifecycle.signal,onError}))
+    .then(cleanup=>{webMCPCleanup=cleanup;}).catch(onError);
+}
+
+// The third-party origin-trial script loads without blocking the page. Only
+// tool registration waits for it, and continues if it cannot be fetched.
+function webMCPTrial(){
+  const script=document.querySelector('script[data-webmcp-trial]');
+  if(!script||script.dataset.webmcpTrial)return Promise.resolve();
+  return new Promise(resolve=>{for(const type of ['load','error'])script.addEventListener(type,resolve,{once:true});});
 }
 
 document.addEventListener('click',event=>{
@@ -653,7 +685,8 @@ void readProgrammeCache(PROGRAMME_CACHE).then(cached=>{
 });
 markStartedShowtimes();
 setInterval(()=>{if(!document.hidden)markStartedShowtimes();},15000);
-load();loadAvailability();
+// Deferred decoration (static/theme.js) waits for this first attempt.
+window.vobarnaProgramme=load();loadAvailability();
 setInterval(()=>{if(!document.hidden)load();},5*60*1000);
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden)clearTimeout(availabilityTimer);

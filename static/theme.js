@@ -179,7 +179,12 @@
         // Content can change during capture; retry the latest viewport once
         // the previous capture releases its resources.
         if (!cloth.has()) prepareCloth();
-      } catch { /* The native theme remains usable. */ }
+      } catch (error) {
+        // A scroll or content change cancels the capture in progress, and the
+        // request it made may have joined that cancelled run. Start again;
+        // after any other failure the native theme remains usable.
+        if (error?.name === 'AbortError') prepareCloth();
+      }
     }, 250);
   }
 
@@ -253,34 +258,55 @@
     document.addEventListener('input', changed);
     document.fonts.addEventListener('loadingdone', changed);
 
-    try {
-      await import(`${artwork}cinema-theme-toggle.js`);
-      const curtains = document.createElement('cinema-theme-toggle');
-      curtains.className = 'theme-toggle';
-      curtains.setAttribute('size', '44');
-      await curtains.ready;
-      if (reveal) await reveal.finished;
-      const fallback = toggle;
-      const focused = document.activeElement === fallback;
-      toggle = curtains;
-      sync();
-      curtains.addEventListener('theme-change', ({ detail }) => {
-        if (!syncing) selectTheme(detail.theme);
-      });
-      fallback.replaceWith(curtains);
-      if (focused) curtains.focus({ preventScroll: true });
-      // Install the working control before loading or preparing the 3D effect.
-      // Neither fonts nor a fresh texture may hold up a user's theme change.
-      if (!reducedMotion.matches) {
-        try {
-          const { ScreenCurtains } = await import(`${artwork}cloth.js`);
-          cloth = new ScreenCurtains();
-          prepareCloth();
-        } catch { cloth = null; }
+    const idle = () => new Promise(resolve => {
+      if (window.requestIdleCallback) requestIdleCallback(() => resolve(), { timeout: 4000 });
+      else setTimeout(resolve, 200);
+    });
+    let enhancing;
+    // The resting switch above already works. Its fifteen other frames, Three.js
+    // and the page capture are megabytes of download and seconds of scripting
+    // that no first view needs, so they never compete with it.
+    const enhance = () => enhancing ||= (async () => {
+      try {
+        await import(`${artwork}cinema-theme-toggle.js`);
+        const curtains = document.createElement('cinema-theme-toggle');
+        curtains.className = 'theme-toggle';
+        curtains.setAttribute('size', '44');
+        await curtains.ready;
+        if (reveal) await reveal.finished;
+        const fallback = toggle;
+        const focused = document.activeElement === fallback;
+        toggle = curtains;
+        sync();
+        curtains.addEventListener('theme-change', ({ detail }) => {
+          if (!syncing) selectTheme(detail.theme);
+        });
+        fallback.replaceWith(curtains);
+        if (focused) curtains.focus({ preventScroll: true });
+        // Install the working control before loading or preparing the 3D effect.
+        // Neither fonts nor a fresh texture may hold up a user's theme change.
+        if (!reducedMotion.matches) {
+          try {
+            await idle();
+            const { ScreenCurtains } = await import(`${artwork}cloth.js`);
+            cloth = new ScreenCurtains();
+            prepareCloth();
+          } catch { cloth = null; }
+        }
+      } catch {
+        // Keep the native switch functional even when the animation is offline.
       }
-    } catch {
-      // Keep the native switch functional even when the animation is offline.
-    }
+    })();
+    // Reaching for the switch cannot wait for an idle period.
+    for (const type of ['pointerenter', 'focus', 'click']) toggle.addEventListener(type, enhance, { once: true });
+    const connection = navigator.connection;
+    // As with artwork, a constrained connection fetches the animation on demand.
+    if (connection?.saveData || ['slow-2g', '2g', '3g'].includes(connection?.effectiveType)) return;
+    if (document.readyState !== 'complete') await new Promise(resolve => window.addEventListener('load', resolve, { once: true }));
+    // An interactive listing publishes its first catalogue attempt here.
+    try { await window.vobarnaProgramme; } catch {}
+    await idle();
+    enhance();
   }
 
   system.addEventListener('change', () => transitionTo(selectedTheme()));

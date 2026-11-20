@@ -12,6 +12,8 @@ html{scroll-behavior:smooth;scroll-padding-top:80px;overscroll-behavior-y:none}b
 .clint-animation{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;mix-blend-mode:plus-lighter;pointer-events:none;border-radius:var(--radius)}
 @supports not (mix-blend-mode:plus-lighter){.clint-button .logo-mark,.clint-animation{transition:none}}
 .logo-subtitle{font-family:B612,system-ui,-apple-system,sans-serif;font-size:.8125rem;font-weight:400;line-height:1.35;letter-spacing:normal;white-space:normal;color:var(--tx2)}
+/* Listings repeat the subtitle above the dates and mark the root, so each width shows one copy from the first paint. */
+.programme-subtitle{display:none}
 .header-actions,.lang-switch{flex-shrink:0}
 main{max-width:1160px;margin:auto;padding:0 20px 32px}
 .filters{padding:0}
@@ -157,9 +159,10 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 }
 
 @media(max-width:600px){
- :root:has(.programme-subtitle){--header-height:78px}
- :root:has(.programme-subtitle) .header-wrap::before{height:var(--header-height);-webkit-mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%);mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%)}
+ :root.has-programme-subtitle{--header-height:78px}
+ :root.has-programme-subtitle .header-wrap::before{height:var(--header-height);-webkit-mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%);mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%)}
  main:has(> .sr-only + .filters > .programme-subtitle),.filters:has(> .programme-subtitle){padding-top:0}
+ :root.has-programme-subtitle .logo-copy .logo-subtitle{display:none}
  .programme-subtitle{display:block;margin-bottom:20px;font-size:.875rem;line-height:1.5}
  .grid{grid-template-columns:minmax(0,1fr);gap:20px}
  .card .poster-button{width:calc(100% - 32px);max-width:240px;margin:16px auto 0;border-radius:8px;background:transparent}
@@ -168,7 +171,7 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
  .card .poster-transition{background-size:contain;background-position:center;border-radius:8px}
  .card-body{padding:16px}
 }
-@media(max-width:460px){:root:has(.programme-subtitle){--header-height:68px}}
+@media(max-width:460px){:root.has-programme-subtitle{--header-height:68px}}
 
 .lang-switch .language-toggle,.language-name{display:none}
 .language-options{display:flex;gap:2px}
