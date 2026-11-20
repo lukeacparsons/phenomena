@@ -19,6 +19,10 @@
   --background-size:480px 415.692194px;
 }
 
+/* Reading/skip-link focus targets are not controls. Safari can keep their
+   focus rings after taps; retain focus itself and the rings on their links. */
+#results:focus,.dialog-title:focus{outline:none}
+
 /* Content is grouped with headings and whitespace. Controls may have surfaces. */
 .content-block{
   min-width:0;

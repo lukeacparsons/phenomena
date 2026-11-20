@@ -272,7 +272,7 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 
 /* Give cinema links room for touch and keep selected screening focus visible. */
 .card-cinema-name{display:inline-flex;align-items:center;min-height:32px;padding-block:5px}
-.buyrow:focus-visible,.dialog-title:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
+.buyrow:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
 .buyrow.is-highlighted .seat-age{color:var(--tx2)}
 
 .card[data-open]{cursor:default}
