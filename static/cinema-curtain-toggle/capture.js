@@ -14,6 +14,48 @@ const dataURL = blob => new Promise((resolve, reject) => {
   reader.readAsDataURL(blob);
 });
 
+// Film pages can contain hundreds of screenings. Keep the browser's measured
+// column widths and replace consecutive offscreen rows with one empty spacer.
+// This affects only the snapshot; the live, accessible table stays complete.
+function pruneTable(copy, original, viewportHeight) {
+  const rows = [...original.rows];
+  if (!rows.length || rows.some(row => [...row.cells].some(cell => cell.rowSpan !== 1))) return;
+  const columns = rows.find(row => [...row.cells].every(cell => cell.colSpan === 1));
+  if (!columns) return;
+  const pairs = [...copy.rows].map((row, i) => ({ row, original: rows[i], box: rows[i].getBoundingClientRect() }));
+  const offscreen = box => box.bottom < -1 || box.top > viewportHeight + 1;
+  if (!pairs.some(({ box }) => offscreen(box))) return;
+  copy.querySelectorAll(':scope > colgroup').forEach(group => group.remove());
+  const group = document.createElement('colgroup');
+  for (const cell of columns.cells) {
+    const col = document.createElement('col');
+    col.style.width = `${cell.getBoundingClientRect().width}px`;
+    group.append(col);
+  }
+  copy.prepend(group);
+  Object.assign(copy.style, { tableLayout: 'fixed', width: `${original.getBoundingClientRect().width}px` });
+  for (let i = 0; i < pairs.length; i++) {
+    const first = pairs[i];
+    if (!offscreen(first.box)) continue;
+    let end = i;
+    while (end + 1 < pairs.length && offscreen(pairs[end + 1].box)
+      && pairs[end + 1].row.parentElement === first.row.parentElement) end++;
+    const spacer = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = columns.cells.length;
+    cell.style.cssText = `height:${pairs[end].box.bottom - first.box.top}px;padding:0;border:0`;
+    // Collapsed borders contribute half their width to neighbouring rows.
+    // Keep the run's outer borders so visible text cannot shift at its edges.
+    cell.style.borderTop = getComputedStyle(first.original.cells[0]).borderTop;
+    cell.style.borderBottom = getComputedStyle(pairs[end].original.cells[0]).borderBottom;
+    spacer.style.visibility = 'hidden';
+    spacer.append(cell);
+    first.row.before(spacer);
+    for (; i <= end; i++) pairs[i].row.remove();
+    i--;
+  }
+}
+
 // Render the browser's own text layout, masks and backgrounds into the cloth
 // texture. Reconstructing text with canvas measurements moves font baselines.
 export async function captureDarkPage(signal) {
@@ -63,10 +105,12 @@ export async function captureDarkPage(signal) {
   });
   const inputs = document.querySelectorAll('input');
   copy.querySelectorAll('input').forEach((el, i) => { el.setAttribute('value', inputs[i]?.value || ''); });
-  const blocks = '.card,.dates > :is(button,a),main > .filters,.site-footer,.complete-programme,.complete-programme-content article';
+  const blocks = '.card,.dates > :is(button,a),main > .filters,.site-footer,.complete-programme,.complete-programme-content article,.table-scroll';
   const originals = [...document.querySelectorAll(blocks)];
   // Pair while both trees still have the same disclosure contents.
   const blockPairs = [...copy.querySelectorAll(blocks)].map((card, i) => [card, originals[i]]);
+  const tables = [...document.querySelectorAll('table')];
+  const tablePairs = [...copy.querySelectorAll('table')].map((table, i) => [table, tables[i]]);
   // A closed disclosure paints only its first summary. In particular, the
   // complete programme contains thousands of hidden screenings: styling and
   // embedding those nodes can turn a viewport snapshot into a 100+ MB SVG.
@@ -90,6 +134,9 @@ export async function captureDarkPage(signal) {
       card.replaceChildren(...markers);
       Object.assign(card.style, { height: `${box.height}px`, minHeight: `${box.height}px`, visibility: 'hidden' });
     }
+  });
+  tablePairs.forEach(([table, original]) => {
+    if (copy.contains(table)) pruneTable(table, original, height);
   });
   signal?.throwIfAborted();
   await yieldTask();

@@ -86,6 +86,10 @@
     const theme = selectedTheme();
     if (root.dataset.theme !== theme) root.dataset.theme = theme;
     const focused = document.activeElement === toggle;
+    // Chrome can scroll a focused shadow button into view after moveBefore(),
+    // even when its sticky-header position is unchanged. Restore focus only
+    // after returning to normal layout, explicitly without scrolling.
+    if (focused) (toggle.shadowRoot?.activeElement || toggle).blur();
     moveToggle(state.placeholder.parentElement, state.placeholder);
     state.placeholder.remove();
     if (state.originalStyle === null) toggle.removeAttribute('style');
@@ -264,7 +268,7 @@
         if (!syncing) selectTheme(detail.theme);
       });
       fallback.replaceWith(curtains);
-      if (focused) curtains.focus();
+      if (focused) curtains.focus({ preventScroll: true });
       // Install the working control before loading or preparing the 3D effect.
       // Neither fonts nor a fresh texture may hold up a user's theme change.
       if (!reducedMotion.matches) {
