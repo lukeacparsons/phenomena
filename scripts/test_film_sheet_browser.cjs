@@ -168,6 +168,54 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     await page.keyboard.press('Escape');
     await page.waitForURL(base+'/en/');
 
+    const openShowtimes=async()=>{
+      await more.click();
+      await page.waitForSelector('#filmDialog[open][data-view=showtimes]');
+      await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=0;});
+    };
+    const schedulePoint=async()=>{
+      const surface=await dialog.boundingBox(),header=await dialog.locator('.dialog-head').boundingBox();
+      return {x:surface.x+12,y:header.y+header.height+100,width:1,height:1};
+    };
+    await openShowtimes();
+    await swipe(await schedulePoint(),0,20);await stillOpen();
+    await swipe(await schedulePoint(),0,150,{cancel:true});await stillOpen();
+    await swipe(await schedulePoint(),0,150,{returnToStart:true});await stillOpen();
+    await swipe(await schedulePoint(),100,10);await stillOpen();
+    assert.equal(await dialog.evaluate(node=>node.querySelector('.dialog-surface').scrollTop),0,'Returning a pull does not jump the schedule');
+    assert.equal(await dialog.locator('.dialog-surface').evaluate(node=>getComputedStyle(node).overscrollBehaviorY),'none','Mobile content does not rubber-band');
+    await swipe(await schedulePoint(),0,160);
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    await page.waitForURL(base+'/en/');
+    assert.equal(await more.evaluate(node=>node===document.activeElement),true,'Content pull restores the showtimes opener');
+
+    await openShowtimes();
+    const touchTime=dialog.locator('.card-showtime').first();
+    await swipe(touchTime,0,160);
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    await page.waitForURL(base+'/en/');
+    await openShowtimes();
+    await dialog.locator('.card-showtime').first().tap();
+    await page.waitForSelector('#filmDialog[open][data-view=screening]');
+    await page.keyboard.press('Escape');
+    await page.waitForURL(base+'/en/');
+
+    await openShowtimes();
+    await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=400;});
+    await swipe(await schedulePoint(),0,100);
+    await stillOpen();
+    assert.ok(await dialog.evaluate(node=>node.querySelector('.dialog-surface').scrollTop>1),'Scrolling within the schedule stays native');
+    await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=120;});
+    await swipe(await schedulePoint(),0,120);
+    await page.waitForFunction(()=>document.querySelector('#filmDialog .dialog-surface').scrollTop<=1);
+    await stillOpen();
+    await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=80;});
+    await swipe(await schedulePoint(),0,340);
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    await page.waitForURL(base+'/en/');
+    assert.ok(Math.abs(await page.evaluate(()=>scrollY)-listingScroll)<3,'Scroll-to-dismiss preserves the listing position');
+    console.log('Showtimes content pulls, scroll-to-dismiss handoff, cancellation and link taps passed.');
+
     await page.goto(base+screeningPath,{waitUntil:'domcontentloaded'});
     await page.waitForSelector('#filmDialog[open]');
     assert.equal(await dialog.locator('.buyrow').count(),1,'Shared screening links open just that session');

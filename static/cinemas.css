@@ -87,7 +87,8 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .dialog-close:hover{background:var(--s2);color:var(--tx)}
 .dialog-drag-handle{display:none}
 @media(max-width:600px){
- #filmDialog{overscroll-behavior-y:contain;transform:translateY(var(--sheet-offset,0));transition:transform .18s ease-out}
+ #filmDialog{overscroll-behavior-y:none;transform:translateY(var(--sheet-offset,0));transition:transform .18s ease-out}
+ #filmDialog .dialog-surface{overscroll-behavior-y:none}
  #filmDialog.is-sheet-dragging{transition:none;will-change:transform}
  .dialog-drag-handle{display:block;position:absolute;top:0;left:68px;right:68px;height:22px;pointer-events:auto;touch-action:none}
  .dialog-drag-handle::before{content:"";display:block;width:36px;height:4px;margin:9px auto;background:var(--tx3);border-radius:2px;opacity:.55}

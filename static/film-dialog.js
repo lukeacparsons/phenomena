@@ -94,35 +94,49 @@ function enableSheetDismiss(dialog){
   swipeDialogs.add(dialog);
   const mobile=matchMedia('(max-width:600px)');
   let gesture=null;
-  const reset=()=>{
-    gesture=null;
+  const clearOffset=()=>{
     dialog.classList.remove('is-sheet-dragging');
     dialog.style.removeProperty('--sheet-offset');
   };
+  const reset=()=>{gesture=null;clearOffset();};
   dialog.addEventListener('touchstart',event=>{
     reset();
     if(!mobile.matches||!dialog.open||event.touches.length!==1)return;
     const target=event.target;
-    if(target.closest('a,button,input,select,textarea,[contenteditable]'))return;
+    if(target.closest('input,select,textarea,[contenteditable]:not([contenteditable="false"])'))return;
     const handle=!!target.closest('.dialog-drag-handle');
-    if(!handle&&(!target.closest('.dialog-head')||getDialogScroller(dialog).scrollTop>1))return;
+    if(!handle&&!target.closest('.dialog-surface'))return;
     const touch=event.touches[0];
-    gesture={id:touch.identifier,x:touch.clientX,y:touch.clientY,started:event.timeStamp,distance:0,handle};
+    gesture={id:touch.identifier,x:touch.clientX,y:touch.clientY,pullY:touch.clientY,
+      started:event.timeStamp,distance:0,dragging:false,handle,atTop:handle||getDialogScroller(dialog).scrollTop<=1};
   },{passive:true});
   dialog.addEventListener('touchmove',event=>{
     if(!gesture)return;
-    if(event.touches.length!==1||(!gesture.handle&&getDialogScroller(dialog).scrollTop>1)){reset();return;}
+    if(event.touches.length!==1){reset();return;}
     const touch=[...event.touches].find(touch=>touch.identifier===gesture.id);
     if(!touch){reset();return;}
     const dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
+    // Once claimed, a pull keeps its touch stream through a reversal too;
+    // handing that move back would jump the content instead of snapping back.
+    if(gesture.dragging&&event.cancelable)event.preventDefault();
     // Upward and sideways gestures keep the browser's normal scrolling behavior.
-    if(dy<-4||(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>8)){reset();return;}
-    if(dy<=0){gesture.distance=0;dialog.style.setProperty('--sheet-offset','0px');return;}
-    if(!event.cancelable&&!gesture.handle){reset();return;}
+    if(!gesture.dragging&&(dy<-4||(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>8))){reset();return;}
+    if(!gesture.handle&&getDialogScroller(dialog).scrollTop>1){
+      // Let the browser scroll normally until the finger reaches the top.
+      gesture.atTop=false;gesture.distance=0;clearOffset();return;
+    }
+    if(!gesture.atTop){
+      // Count only the extra pull after scrolling has reached the boundary.
+      gesture.atTop=true;gesture.pullY=touch.clientY;gesture.started=event.timeStamp;
+    }
+    const distance=touch.clientY-gesture.pullY;
+    if(distance<=0){gesture.distance=0;clearOffset();return;}
+    // A native scroll may already own this touch stream. Its overscroll is
+    // disabled in CSS, so the remaining pull can move the sheet either way.
     if(event.cancelable)event.preventDefault();
-    gesture.distance=dy;
+    gesture.dragging=true;gesture.distance=distance;
     dialog.classList.add('is-sheet-dragging');
-    dialog.style.setProperty('--sheet-offset',`${dy}px`);
+    dialog.style.setProperty('--sheet-offset',`${distance}px`);
   },{passive:false});
   dialog.addEventListener('touchend',event=>{
     if(!gesture)return;

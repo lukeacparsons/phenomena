@@ -61,6 +61,7 @@ The pattern is fixed behind scrolling content. Light mode keeps a 65% paper-colo
 - The dialog's outer surface owns the background; only `.dialog-surface` scrolls. The showtimes header remains fixed. Its mask is fully opaque behind the title and poster, fading only through the bottom 20px of padding. It must not dim the first date at rest.
 - Same-film detail/showtime changes animate the title, poster and dialog height over 280ms and crossfade surrounding content. Respect reduced motion. Cancel safely on close, resize and repeated navigation.
 - Returning to showtimes restores its scroll. Closing the dialog restores the originating listing/page position and focus. The floating back-to-top button is intentionally absent.
+- On mobile, pulling down anywhere in the sheet dismisses it once its content is at the top, including a continuous drag that first scrolls to the top. Only the extra pull beyond that boundary counts toward dismissal. Keep native scrolling within the content, suppress boundary bounce, and leave link taps, short/canceled pulls and multi-touch gestures intact. Momentum alone must not dismiss the sheet.
 - Standalone film pages contain the complete schedule in their initial HTML. `#showtimes` scrolls to that schedule; `#screening-…` opens one screening. Without JavaScript, page time links go directly to the operator's booking destination.
 
 ## Verification and extension
