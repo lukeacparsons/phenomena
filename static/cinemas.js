@@ -213,8 +213,8 @@ function renderFilterChips(){
   $('filterChips').innerHTML=chips.map(({field,value,label})=>`<button type="button" class="filter-chip" data-remove-filter="${field}" data-value="${escapeHTML(value)}" aria-label="${escapeHTML(labels.remove+' '+label)}">${escapeHTML(label)} <span aria-hidden="true">×</span></button>`).join('');
   let explanation=$('searchExplanation');
   if(!explanation){explanation=document.createElement('p');explanation.id='searchExplanation';explanation.className='search-explanation';$('filterChips').after(explanation);}
-  explanation.hidden=!state.query.trim();
   explanation.textContent=data&&state.query.trim()?searchExplanation(interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent}),language):'';
+  explanation.hidden=!explanation.textContent;
 }
 
 function updateDateFades(){

@@ -95,7 +95,7 @@ test('country match explanations identify co-productions and use recorded source
   const f=film('coproduction',{details:{countries:['France','Italy'],country_provenance:[{country:'Italy',sources:[{source:'CNC',source_url:'https://example.com/credits'}]}]}});
   const plan=parseIntent('movies from Italy',{programme});
   assert.deepEqual(filmMatchReason(f,plan),{label:'Co-production: France / Italy',sourceURL:'https://example.com/credits',source:'CNC'});
-  assert.equal(searchExplanation(plan),'Includes co-productions · Soonest showing first');
+  assert.equal(searchExplanation(plan),'Includes co-productions');
   assert.equal(filmMatchReason(f,emptyIntent()),null);
 });
 test('release decades use original years, include both boundaries and exclude unknowns',()=>{
@@ -186,7 +186,7 @@ test('regional cinema reaches AI discovery without invented country or language 
   assert.equal(calls,1);assert.equal(result.mode,'semantic');assert.deepEqual(result.intent.unsupported,[]);
   assert.deepEqual(result.intent.conditions,[{field:'rating_rt',op:'gt',value:'80'}]);
   assert.deepEqual(queryFilms(programme,{...emptySearch(),query},{now,intent:result.intent,semanticScores:result.semantic_scores}).map(f=>f.id),['above'],'exact ratings still reject selected films with lower or missing scores');
-  assert.equal(searchExplanation(result.intent),'AI matches · Most relevant first');
+  assert.equal(searchExplanation(result.intent),'AI matches');
   assert.deepEqual(parseIntent('from catalunya in Catalan',{programme}).conditions,[{field:'language',op:'eq',value:'Catalan'}]);
   const offline=createSmartSearch({getProgramme:async()=>programme,apiKey:'',now:()=>now});
   assert.equal((await offline.search({query:'from catalunya'})).mode,'unavailable','only a real provider limitation uses the unavailable state');
