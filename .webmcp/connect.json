@@ -1,0 +1,8 @@
+{
+  "project_key": "git:https://github.com/lukeacparsons/phenomena.git",
+  "domain_id": "d32754ef-c3d4-44a3-b163-5ec1cab89c4f",
+  "display_name": "vobarna.com",
+  "environment": "prod",
+  "dashboard_url": "https://app.nekuda.ai/?domain=d32754ef-c3d4-44a3-b163-5ec1cab89c4f&environment=prod",
+  "dashboard_tools_url": "https://app.nekuda.ai/tools?domain=d32754ef-c3d4-44a3-b163-5ec1cab89c4f&environment=prod"
+}

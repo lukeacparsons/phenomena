@@ -50,7 +50,11 @@ export async function registerWebMCP(registry,service,{signal,onError=()=>{}}={}
     registration=registerTools(tools,{
       modelContext:registry,
       signal:lifecycle.signal,
-      tracking:{builtWith:'webmcp-kit/connect-existing-tools@0.11.1'}
+      tracking:{
+        builtWith:'webmcp-kit/connect-existing-tools@0.11.1',
+        apiKey:"wmk_g4p82XLGKmD_hpVNSbd9PKgvI5vX3xigA4Id1VmHyEI" /* publishable key, safe to commit */,
+        endpoint:"https://ingest.nekuda.ai/v1/collect"
+      }
     });
     const results=await registration.ready;
     if(lifecycle.signal.aborted){cleanup();return null;}
