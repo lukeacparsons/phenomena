@@ -79,7 +79,7 @@ test('an unsupported request cannot expand into unrelated catalogue matches',()=
   assert.deepEqual(search('wheelchair accessible',{}, {intent}),[]);
 });
 test('black-and-white queries use verified colour metadata and exclude colour or unknown films',async()=>{
-  const p={...programme,films:[film('monochrome',{details:{colours:['black-and-white']}}),film('colour',{details:{colours:['color']}}),film('unknown',{details:{}})]};
+  const p={...programme,films:[film('monochrome',{details:{colours:['black-and-white']}}),film('colour',{details:{colours:['color']}}),film('mixed',{details:{colours:['black-and-white','color']}}),film('unknown',{details:{}})]};
   for(const query of ['black and white','black-and-white films','blanco y negro','blanc i negre']){
     assert.deepEqual(queryFilms(p,{...emptySearch(),query},{now}).map(f=>f.id),['monochrome']);
   }

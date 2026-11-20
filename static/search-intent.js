@@ -167,6 +167,8 @@ function textMatch(values,c){
   if(!values.length)return false; // Unknown metadata cannot satisfy a positive or negative condition.
   const actual=values.map(v=>fold(canonical(c.field,v)));
   const wanted=c.value.split('|').map(v=>fold(canonical(c.field,v)));
+  // Mixed formats or contradictory colour claims do not establish a monochrome film.
+  if(c.field==='colour'&&c.op==='eq'&&wanted[0]==='black and white'&&actual.includes('color'))return false;
   return c.op==='ne'?wanted.every(v=>!actual.includes(v)):wanted.some(v=>actual.includes(v));
 }
 export function ratingValue(film,field){
