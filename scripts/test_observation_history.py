@@ -148,9 +148,15 @@ for i in range(20):
 '''
         children = [subprocess.Popen([sys.executable, '-c', code, str(self.root), str(i)],
                                      cwd=Path(__file__).parent, stderr=subprocess.PIPE) for i in range(4)]
-        for child in children:
-            _, stderr = child.communicate(timeout=15)
-            self.assertEqual(child.returncode, 0, stderr.decode())
+        try:
+            results = [(child, child.communicate(timeout=30)[1]) for child in children]
+            for child, stderr in results:
+                self.assertEqual(child.returncode, 0, stderr.decode())
+        finally:
+            for child in children:
+                if child.poll() is None:
+                    child.kill()
+                child.communicate(timeout=5)
         self.assertEqual(len(self.query()), 80)
 
     def test_seat_cache_retains_history_after_expiry_and_failures_are_not_new_counts(self):

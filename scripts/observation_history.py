@@ -1,6 +1,7 @@
 """Compact, append-only acquisition history, separate from replaceable web caches."""
 from contextlib import closing
 from datetime import datetime, timezone
+import fcntl
 import hashlib
 import json
 from pathlib import Path
@@ -84,13 +85,19 @@ class ObservationHistory:
         with self._init_lock:
             if not self._ready:
                 self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-                with closing(sqlite3.connect(self.path, timeout=30)) as db:
-                    version = db.execute('PRAGMA user_version').fetchone()[0]
-                    if version not in (0, 1):
-                        raise ValueError('Unsupported observation history schema')
-                    db.execute('PRAGMA journal_mode=WAL')
-                    db.executescript(SCHEMA)
-                    db.execute('PRAGMA user_version=1')
+                # Switching a new database to WAL needs an exclusive lock;
+                # SQLite's busy timeout does not cover every journal-mode race.
+                # Serialize first-time setup across processes as well as threads.
+                with (self.path.parent / 'schema.lock').open('a') as lock:
+                    fcntl.flock(lock, fcntl.LOCK_EX)
+                    with closing(sqlite3.connect(self.path, timeout=30)) as db:
+                        version = db.execute('PRAGMA user_version').fetchone()[0]
+                        if version not in (0, 1):
+                            raise ValueError('Unsupported observation history schema')
+                        if version == 0:
+                            db.execute('PRAGMA journal_mode=WAL')
+                            db.executescript(SCHEMA)
+                            db.execute('PRAGMA user_version=1')
                 self._ready = True
         db = sqlite3.connect(self.path, timeout=30)
         db.execute('PRAGMA foreign_keys=ON')
