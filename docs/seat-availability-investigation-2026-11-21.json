@@ -1,0 +1,1526 @@
+{
+  "investigated_on": "2026-11-21",
+  "scope": "Upcoming screenings in the local catalogue; public booking sources; Yelmo anonymous fare baskets cancelled without seat allocation; investigation results acquired before production rollout",
+  "providers": [
+    {
+      "provider": "renoir",
+      "successful_screenings": 123,
+      "cinemas": {
+        "renoir-floridablanca": 123
+      },
+      "statuses": {
+        "ok": 123
+      },
+      "checked_at_first": "2026-11-21T09:30:08.792019+00:00",
+      "checked_at_last": "2026-11-21T09:30:57.521205+00:00",
+      "count_range": [
+        0,
+        236
+      ],
+      "zero_count_screenings": 1,
+      "samples": [
+        {
+          "id": "renoir:1097235",
+          "cinema_id": "renoir-floridablanca",
+          "starts_at": "2026-11-21T15:50:00+01:00",
+          "room": "5",
+          "booking_url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/wild-horse-nine/1097235/",
+          "value": {
+            "kind": "ordinary",
+            "available": 152,
+            "checked_at": "2026-11-21T09:30:08.792019+00:00",
+            "wheelchair": 2
+          }
+        },
+        {
+          "id": "renoir:1097199",
+          "cinema_id": "renoir-floridablanca",
+          "starts_at": "2026-11-21T15:50:00+01:00",
+          "room": "4",
+          "booking_url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/el-mal-padre/1097199/",
+          "value": {
+            "kind": "ordinary",
+            "available": 126,
+            "checked_at": "2026-11-21T09:30:09.153818+00:00",
+            "wheelchair": 2
+          }
+        },
+        {
+          "id": "renoir:1097060",
+          "cinema_id": "renoir-floridablanca",
+          "starts_at": "2026-11-26T19:00:00+01:00",
+          "room": "2",
+          "booking_url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/puedes-verlo-todo/1097060/",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:30:57.138925+00:00",
+            "wheelchair": 2
+          }
+        }
+      ],
+      "unavailable": []
+    },
+    {
+      "provider": "texas",
+      "successful_screenings": 35,
+      "cinemas": {
+        "espai-texas": 35
+      },
+      "statuses": {
+        "ok": 35
+      },
+      "checked_at_first": "2026-11-21T09:27:37.330917+00:00",
+      "checked_at_last": "2026-11-21T09:27:50.334992+00:00",
+      "count_range": [
+        42,
+        157
+      ],
+      "zero_count_screenings": 0,
+      "samples": [
+        {
+          "id": "texas:8736",
+          "cinema_id": "espai-texas",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "room": "2",
+          "booking_url": "https://espaitexas.koobin.cat/ca/la-violinista-vo-20261121-1600",
+          "value": {
+            "kind": "reported_total",
+            "available": 82,
+            "checked_at": "2026-11-21T09:27:37.330917+00:00"
+          }
+        },
+        {
+          "id": "texas:8743",
+          "cinema_id": "espai-texas",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "room": "1",
+          "booking_url": "https://espaitexas.koobin.cat/ca/cronos-vo-20261121-1600",
+          "value": {
+            "kind": "reported_total",
+            "available": 157,
+            "checked_at": "2026-11-21T09:27:37.801156+00:00"
+          }
+        }
+      ],
+      "unavailable": []
+    },
+    {
+      "provider": "ocine-magic",
+      "successful_screenings": 15,
+      "cinemas": {
+        "ocine-magic": 15
+      },
+      "statuses": {
+        "ok": 15
+      },
+      "checked_at_first": "2026-11-21T09:27:41.472936+00:00",
+      "checked_at_last": "2026-11-21T09:27:56.837418+00:00",
+      "count_range": [
+        202,
+        395
+      ],
+      "zero_count_screenings": 0,
+      "samples": [
+        {
+          "id": "ocine-magic:178397",
+          "cinema_id": "ocine-magic",
+          "starts_at": "2026-11-26T20:00:00+01:00",
+          "room": "6",
+          "booking_url": "https://tickets.ocinemagic.es/#/DetallPelicula/10874",
+          "value": {
+            "kind": "reported_total",
+            "available": 395,
+            "checked_at": "2026-11-21T09:27:41.472936+00:00",
+            "capacity": 401
+          }
+        },
+        {
+          "id": "ocine-magic:174723",
+          "cinema_id": "ocine-magic",
+          "starts_at": "2026-12-15T19:15:00+01:00",
+          "room": "8",
+          "booking_url": "https://tickets.ocinemagic.es/#/DetallPelicula/10771",
+          "value": {
+            "kind": "reported_total",
+            "available": 278,
+            "checked_at": "2026-11-21T09:27:47.692434+00:00",
+            "capacity": 283
+          }
+        }
+      ],
+      "unavailable": []
+    },
+    {
+      "provider": "institut-francais",
+      "successful_screenings": 10,
+      "cinemas": {
+        "institut-francais": 10
+      },
+      "statuses": {
+        "ok": 10,
+        "unavailable": 1
+      },
+      "checked_at_first": "2026-11-21T09:27:37.598854+00:00",
+      "checked_at_last": "2026-11-21T09:27:40.302216+00:00",
+      "count_range": [
+        9,
+        222
+      ],
+      "zero_count_screenings": 0,
+      "samples": [
+        {
+          "id": "institut-francais:8092eff60392365090cb",
+          "cinema_id": "institut-francais",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "room": null,
+          "booking_url": "https://www.codetickets.com/portal/oh-la-la-festival/online/38154/102662",
+          "value": {
+            "kind": "area_counts",
+            "available": 190,
+            "checked_at": "2026-11-21T09:27:37.598854+00:00",
+            "areas": [
+              {
+                "area_code": "829",
+                "available": 190,
+                "name": "INSTITUT FRANÇAIS"
+              }
+            ]
+          }
+        },
+        {
+          "id": "institut-francais:66dd3cf80a8918b2ee15",
+          "cinema_id": "institut-francais",
+          "starts_at": "2026-11-21T18:00:00+01:00",
+          "room": null,
+          "booking_url": "https://www.codetickets.com/portal/oh-la-la-festival/online/38153/102661",
+          "value": {
+            "kind": "area_counts",
+            "available": 184,
+            "checked_at": "2026-11-21T09:27:38.013158+00:00",
+            "areas": [
+              {
+                "area_code": "829",
+                "available": 184,
+                "name": "INSTITUT FRANÇAIS"
+              }
+            ]
+          }
+        }
+      ],
+      "unavailable": [
+        {
+          "id": "institut-francais:21eec3439c93cc5e630d",
+          "reason": "Unverified festival ticket channel",
+          "booking_url": "https://www.eventbrite.es/e/entradas-wallay-projeccio-nha-fala-taula-rodona-2004244021822?keep_tld=true"
+        }
+      ]
+    },
+    {
+      "provider": "verdi",
+      "successful_screenings": 36,
+      "cinemas": {
+        "verdi-park": 17,
+        "verdi": 19
+      },
+      "statuses": {
+        "ok": 36
+      },
+      "checked_at_first": "2026-11-21T09:33:46.549139+00:00",
+      "checked_at_last": "2026-11-21T09:34:12.173783+00:00",
+      "count_range": [
+        83,
+        302
+      ],
+      "zero_count_screenings": 0,
+      "samples": [
+        {
+          "id": "verdi:46:222827",
+          "cinema_id": "verdi-park",
+          "starts_at": "2026-11-24T11:30:00+01:00",
+          "room": "A V.Park",
+          "booking_url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222827&language=esp",
+          "value": {
+            "kind": "area_counts",
+            "available": 104,
+            "checked_at": "2026-11-21T09:33:46.549139+00:00",
+            "areas": [
+              {
+                "area_code": "0:1",
+                "name": "Normal",
+                "available": 104
+              }
+            ]
+          }
+        },
+        {
+          "id": "verdi:46:222543",
+          "cinema_id": "verdi-park",
+          "starts_at": "2026-11-24T11:30:00+01:00",
+          "room": "B V.Park",
+          "booking_url": "https://verdibcn.admit-one.eu/?p=tickets&s=VERDIBCN&perfCode=222543&language=esp",
+          "value": {
+            "kind": "area_counts",
+            "available": 218,
+            "checked_at": "2026-11-21T09:33:47.509380+00:00",
+            "areas": [
+              {
+                "area_code": "0:1",
+                "name": "Normal",
+                "available": 218
+              }
+            ]
+          }
+        }
+      ],
+      "unavailable": []
+    },
+    {
+      "provider": "yelmo",
+      "successful_screenings": 88,
+      "cinemas": {
+        "yelmo-castelldefels": 24,
+        "yelmo-maquinista": 50,
+        "yelmo-sant-cugat": 14
+      },
+      "statuses": {
+        "ok": 88
+      },
+      "checked_at_first": "2026-11-21T09:56:17.060915+00:00",
+      "checked_at_last": "2026-11-21T10:45:49.465116+00:00",
+      "count_range": [
+        0,
+        472
+      ],
+      "zero_count_screenings": 6,
+      "samples": [
+        {
+          "id": "yelmo:1350:48642",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-11-22T12:45:00+01:00",
+          "room": "10",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=48642",
+          "value": {
+            "kind": "ordinary",
+            "available": 472,
+            "checked_at": "2026-11-21T10:34:36.399007+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30895",
+          "cinema_id": "yelmo-castelldefels",
+          "starts_at": "2026-11-22T12:20:00+01:00",
+          "room": "2",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=814&showtimeVistaId=30895",
+          "value": {
+            "kind": "ordinary",
+            "available": 64,
+            "checked_at": "2026-11-21T10:34:23.381391+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25564",
+          "cinema_id": "yelmo-sant-cugat",
+          "starts_at": "2026-11-24T20:30:00+01:00",
+          "room": "2",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=784&showtimeVistaId=25564",
+          "value": {
+            "kind": "ordinary",
+            "available": 88,
+            "checked_at": "2026-11-21T10:35:01.603676+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47203",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-11-24T20:15:00+01:00",
+          "room": "10",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=47203",
+          "value": {
+            "kind": "ordinary",
+            "available": 117,
+            "checked_at": "2026-11-21T10:34:49.426079+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48725",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-11-25T21:15:00+01:00",
+          "room": "10",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=48725",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:44:20.791952+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:44903",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2027-01-08T19:20:00+01:00",
+          "room": "6",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=44903",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:44:45.955972+00:00"
+          }
+        }
+      ],
+      "unavailable": [],
+      "limitations": [
+        "Counts are time-stamped observations, not booking guarantees or proof that future requests cannot be throttled.",
+        "Only Empty places in reviewed unrestricted public-fare areas count as ordinary seats; special and linked places are excluded.",
+        "Each successful observation requires confirmed order/cancel; no seats selected or payment submitted.",
+        "These investigation results precede production rollout and are not a substitute for fresh collector observations."
+      ],
+      "observations": [
+        {
+          "id": "yelmo:1350:48165",
+          "value": {
+            "kind": "ordinary",
+            "available": 31,
+            "checked_at": "2026-11-21T10:33:46.223550+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25737",
+          "value": {
+            "kind": "ordinary",
+            "available": 44,
+            "checked_at": "2026-11-21T10:33:58.864901+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30870",
+          "value": {
+            "kind": "ordinary",
+            "available": 64,
+            "checked_at": "2026-11-21T09:56:17.060915+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48627",
+          "value": {
+            "kind": "ordinary",
+            "available": 469,
+            "checked_at": "2026-11-21T09:56:24.495572+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30891",
+          "value": {
+            "kind": "ordinary",
+            "available": 55,
+            "checked_at": "2026-11-21T09:56:31.327585+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48620",
+          "value": {
+            "kind": "ordinary",
+            "available": 45,
+            "checked_at": "2026-11-21T09:56:38.542145+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30869",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T09:56:45.688796+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:26043",
+          "value": {
+            "kind": "ordinary",
+            "available": 31,
+            "checked_at": "2026-11-21T09:56:52.304227+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:31000",
+          "value": {
+            "kind": "ordinary",
+            "available": 41,
+            "checked_at": "2026-11-21T09:56:59.627922+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48166",
+          "value": {
+            "kind": "ordinary",
+            "available": 36,
+            "checked_at": "2026-11-21T10:34:10.968166+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48605",
+          "value": {
+            "kind": "ordinary",
+            "available": 76,
+            "checked_at": "2026-11-21T09:57:07.349452+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30895",
+          "value": {
+            "kind": "ordinary",
+            "available": 64,
+            "checked_at": "2026-11-21T10:34:23.381391+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48642",
+          "value": {
+            "kind": "ordinary",
+            "available": 472,
+            "checked_at": "2026-11-21T10:34:36.399007+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30918",
+          "value": {
+            "kind": "ordinary",
+            "available": 53,
+            "checked_at": "2026-11-21T09:57:28.612192+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48639",
+          "value": {
+            "kind": "ordinary",
+            "available": 55,
+            "checked_at": "2026-11-21T09:57:35.449875+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30901",
+          "value": {
+            "kind": "ordinary",
+            "available": 64,
+            "checked_at": "2026-11-21T09:57:42.277945+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48662",
+          "value": {
+            "kind": "ordinary",
+            "available": 116,
+            "checked_at": "2026-11-21T09:57:49.186974+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48771",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T09:57:55.986524+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30956",
+          "value": {
+            "kind": "ordinary",
+            "available": 62,
+            "checked_at": "2026-11-21T09:58:03.023825+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48773",
+          "value": {
+            "kind": "ordinary",
+            "available": 119,
+            "checked_at": "2026-11-21T09:58:10.073289+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47203",
+          "value": {
+            "kind": "ordinary",
+            "available": 117,
+            "checked_at": "2026-11-21T10:34:49.426079+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47861",
+          "value": {
+            "kind": "ordinary",
+            "available": 185,
+            "checked_at": "2026-11-21T09:58:18.068583+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25564",
+          "value": {
+            "kind": "ordinary",
+            "available": 88,
+            "checked_at": "2026-11-21T10:35:01.603676+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30240",
+          "value": {
+            "kind": "ordinary",
+            "available": 82,
+            "checked_at": "2026-11-21T09:58:31.750359+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48725",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:44:20.791952+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48572",
+          "value": {
+            "kind": "ordinary",
+            "available": 28,
+            "checked_at": "2026-11-21T09:58:40.231104+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47204",
+          "value": {
+            "kind": "ordinary",
+            "available": 116,
+            "checked_at": "2026-11-21T10:35:21.084788+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25940",
+          "value": {
+            "kind": "ordinary",
+            "available": 7,
+            "checked_at": "2026-11-21T09:58:47.932401+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48161",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:58:55.156593+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25733",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:02.094413+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48184",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:09.013868+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48162",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:16.366723+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25734",
+          "value": {
+            "kind": "ordinary",
+            "available": 3,
+            "checked_at": "2026-11-21T09:59:23.211618+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48185",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:29.551330+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:26044",
+          "value": {
+            "kind": "ordinary",
+            "available": 56,
+            "checked_at": "2026-11-21T09:59:36.981030+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48163",
+          "value": {
+            "kind": "ordinary",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:44.528717+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25735",
+          "value": {
+            "kind": "ordinary",
+            "available": 11,
+            "checked_at": "2026-11-21T09:59:51.826598+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48516",
+          "value": {
+            "kind": "ordinary",
+            "available": 396,
+            "checked_at": "2026-11-21T09:59:58.882728+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25908",
+          "value": {
+            "kind": "ordinary",
+            "available": 114,
+            "checked_at": "2026-11-21T10:00:05.700540+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30809",
+          "value": {
+            "kind": "ordinary",
+            "available": 128,
+            "checked_at": "2026-11-21T10:00:12.327301+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48553",
+          "value": {
+            "kind": "ordinary",
+            "available": 203,
+            "checked_at": "2026-11-21T10:00:19.310478+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25933",
+          "value": {
+            "kind": "ordinary",
+            "available": 72,
+            "checked_at": "2026-11-21T10:00:26.269930+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:30833",
+          "value": {
+            "kind": "ordinary",
+            "available": 96,
+            "checked_at": "2026-11-21T10:00:33.648554+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48164",
+          "value": {
+            "kind": "ordinary",
+            "available": 4,
+            "checked_at": "2026-11-21T10:00:40.482905+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25736",
+          "value": {
+            "kind": "ordinary",
+            "available": 29,
+            "checked_at": "2026-11-21T10:44:33.593592+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40734",
+          "value": {
+            "kind": "ordinary",
+            "available": 33,
+            "checked_at": "2026-11-21T10:35:41.178714+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25526",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:35:53.565498+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:45218",
+          "value": {
+            "kind": "ordinary",
+            "available": 117,
+            "checked_at": "2026-11-21T10:00:49.883887+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:24237",
+          "value": {
+            "kind": "ordinary",
+            "available": 80,
+            "checked_at": "2026-11-21T10:00:57.171633+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:28759",
+          "value": {
+            "kind": "ordinary",
+            "available": 70,
+            "checked_at": "2026-11-21T10:01:04.381459+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:46581",
+          "value": {
+            "kind": "ordinary",
+            "available": 48,
+            "checked_at": "2026-11-21T10:01:11.303146+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25002",
+          "value": {
+            "kind": "ordinary",
+            "available": 1,
+            "checked_at": "2026-11-21T10:01:17.731455+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:46582",
+          "value": {
+            "kind": "ordinary",
+            "available": 29,
+            "checked_at": "2026-11-21T10:01:25.205863+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:29557",
+          "value": {
+            "kind": "ordinary",
+            "available": 6,
+            "checked_at": "2026-11-21T10:01:32.161549+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:46585",
+          "value": {
+            "kind": "ordinary",
+            "available": 39,
+            "checked_at": "2026-11-21T10:01:39.118613+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:46609",
+          "value": {
+            "kind": "ordinary",
+            "available": 49,
+            "checked_at": "2026-11-21T10:01:45.751307+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:46618",
+          "value": {
+            "kind": "ordinary",
+            "available": 66,
+            "checked_at": "2026-11-21T10:01:52.373088+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:48183",
+          "value": {
+            "kind": "ordinary",
+            "available": 42,
+            "checked_at": "2026-11-21T10:36:06.113025+00:00"
+          }
+        },
+        {
+          "id": "yelmo:784:25739",
+          "value": {
+            "kind": "ordinary",
+            "available": 64,
+            "checked_at": "2026-11-21T10:36:18.509050+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:44903",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:44:45.955972+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:28541",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:44:58.235224+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47205",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:36:43.982579+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47206",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T10:36:56.725348+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40735",
+          "value": {
+            "kind": "ordinary",
+            "available": 50,
+            "checked_at": "2026-11-21T10:37:09.725636+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25527",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:37:22.272525+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47207",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:37:35.112175+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47208",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T10:37:48.425961+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47209",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:38:01.368121+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47210",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T10:38:14.388424+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40736",
+          "value": {
+            "kind": "ordinary",
+            "available": 46,
+            "checked_at": "2026-11-21T10:38:27.375765+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25528",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:38:39.674434+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25529",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:38:52.144987+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40737",
+          "value": {
+            "kind": "ordinary",
+            "available": 42,
+            "checked_at": "2026-11-21T10:39:04.984717+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47211",
+          "value": {
+            "kind": "ordinary",
+            "available": 125,
+            "checked_at": "2026-11-21T10:39:18.037084+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47212",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:39:31.368612+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:44904",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:45:10.369017+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:28542",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:45:22.963702+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40738",
+          "value": {
+            "kind": "ordinary",
+            "available": 39,
+            "checked_at": "2026-11-21T10:39:57.855597+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25530",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:40:11.098177+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40739",
+          "value": {
+            "kind": "ordinary",
+            "available": 62,
+            "checked_at": "2026-11-21T10:40:23.589199+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25531",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:40:36.410387+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25532",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:40:48.997698+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47213",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T10:41:01.433483+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:47214",
+          "value": {
+            "kind": "ordinary",
+            "available": 129,
+            "checked_at": "2026-11-21T10:41:14.805389+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:44905",
+          "value": {
+            "kind": "ordinary",
+            "available": 127,
+            "checked_at": "2026-11-21T10:45:36.349565+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:28543",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:45:49.465116+00:00"
+          }
+        },
+        {
+          "id": "yelmo:1350:40740",
+          "value": {
+            "kind": "ordinary",
+            "available": 49,
+            "checked_at": "2026-11-21T10:41:41.842734+00:00"
+          }
+        },
+        {
+          "id": "yelmo:814:25533",
+          "value": {
+            "kind": "ordinary",
+            "available": 60,
+            "checked_at": "2026-11-21T10:41:54.132410+00:00"
+          }
+        }
+      ],
+      "initial_direct_pass": {
+        "screenings": 88,
+        "statuses": {
+          "ok": 48,
+          "unavailable": 14,
+          "error": 26
+        },
+        "failure": "Ticket-session endpoint returned HTTP 405 with plain-text Service Unavailable; schedule stayed readable.",
+        "resolution": "Private proxy pool restored ticket sessions; reviewed general-evento, miercoles and adulto-evento fares resolved the remaining fare variants."
+      },
+      "proxy_validation": {
+        "location": "Isolated test directory inside the collector server container; no published observations or adapter deployment.",
+        "relays": [
+          {
+            "hostname": "es-mad-wg-101",
+            "country": "Spain",
+            "exit_ip_sha256": "1b07a7d2d1757125a8909fbb3c34e26bdbf520ee7a7bdd517b9a8b177b6ccd58"
+          },
+          {
+            "hostname": "es-mad-wg-102",
+            "country": "Spain",
+            "exit_ip_sha256": "69f252f0f807d18690c51ef8dd9492f2097c11e60fa74ebe34fa799ce0ea26ff"
+          }
+        ],
+        "distinct_exits": true,
+        "passes": [
+          {
+            "screenings_checked": 43,
+            "statuses": {
+              "ok": 35,
+              "unavailable": 8
+            },
+            "finished_at": "2026-11-21T10:41:54.392277+00:00",
+            "confirmed_cancellations": 43,
+            "pending_basket": null
+          },
+          {
+            "screenings_checked": 8,
+            "statuses": {
+              "ok": 8
+            },
+            "finished_at": "2026-11-21T10:45:49.722740+00:00",
+            "confirmed_cancellations": 8,
+            "pending_basket": null
+          }
+        ],
+        "total_checks": 51,
+        "transport_errors": 0,
+        "confirmed_cancellations": 51,
+        "temporary_secondary_tunnel_removed": true,
+        "existing_cinema_tunnel_healthy_after_cleanup": true
+      }
+    },
+    {
+      "provider": "girona",
+      "successful_screenings": 2,
+      "cinemas": {
+        "cinemes-girona": 2
+      },
+      "statuses": {
+        "unavailable": 61,
+        "ok": 2
+      },
+      "checked_at_first": "2026-11-21T09:59:06.573797+00:00",
+      "checked_at_last": "2026-11-21T09:59:06.736619+00:00",
+      "count_range": [
+        0,
+        0
+      ],
+      "zero_count_screenings": 2,
+      "samples": [
+        {
+          "id": "girona:31:41156",
+          "cinema_id": "cinemes-girona",
+          "starts_at": "2026-11-22T17:00:00+01:00",
+          "room": "1",
+          "booking_url": "https://girona.admit-one.eu/?p=tickets&perfCode=41156&language=esp",
+          "value": {
+            "kind": "reported_total",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:06.573797+00:00",
+            "is_sold_out": true
+          }
+        },
+        {
+          "id": "girona:31:41268",
+          "cinema_id": "cinemes-girona",
+          "starts_at": "2026-11-26T20:00:00+01:00",
+          "room": "1",
+          "booking_url": "https://girona.admit-one.eu/?p=tickets&perfCode=41268&language=esp",
+          "value": {
+            "kind": "reported_total",
+            "available": 0,
+            "checked_at": "2026-11-21T09:59:06.736619+00:00",
+            "is_sold_out": true
+          }
+        }
+      ],
+      "unavailable": [
+        {
+          "id": "girona:31:41304",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41251",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41286",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41250",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41278",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41280",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41277",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41281",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41284",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41283",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41285",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41282",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41335",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41291",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41290",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41293",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41303",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41292",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41308",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41344",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41309",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41307",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41306",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41253",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40516",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41315",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41316",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41325",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41319",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41321",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41333",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41331",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41328",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41330",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41332",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41301",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41334",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41337",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41342",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41340",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41339",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41338",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41336",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41341",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41056",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41057",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41279",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41345",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41346",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40518",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40520",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40521",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40519",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40598",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40599",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40723",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40725",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40724",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41254",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:41255",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        },
+        {
+          "id": "girona:31:40726",
+          "reason": "Girona does not publish a remaining count",
+          "status": "unavailable"
+        }
+      ],
+      "limitations": [
+        "Only explicit sold-out flags corroborated by the exact booking page become zero; 61 other performances remain unknown."
+      ]
+    }
+  ],
+  "successful_screenings": 309,
+  "fixture_sha256": {
+    "girona-41155.html": "52742117a7b1c626c5afa64a6e4866e18ddefcfbd9965b9dee3aed61d58c0205",
+    "girona-41156.html": "10e2ea33083a94239a8e0fcef9c02971923bebfc14842361cae9483242df6bcb",
+    "girona-41268.html": "a2494df7b5748013fc43e43dffbc90d893651caa15d09292de9ec66d89e6861c",
+    "girona-programme.json": "c3d03b0c9eee6d1dd18f85d3f7f2147b9af4baadd6e34fa613767fb46999c488",
+    "girona-rows.json": "d7c172e1d6cce5e88102047b42edc610410af8cbb8449529bcd7fa0bb76795d7",
+    "institut-102656.json": "4923a8d0c56d8596db4d522d8abca7448eb5259204319b8acf818cde1b363494",
+    "institut-102663.json": "3c7d3f6c172257f99a5e167cd7751928d9eeba494355f8350f629fe6c0bc4709",
+    "ocine-film.json": "446bdaa2f0e79d28595c493b8c984d0c05831805f78778608798ff06b7b72984",
+    "ocine-film2.json": "cd9269ccc040807ca55502caa699795fb592fde6bd0d71c003677cb9ac382c75",
+    "renoir.html": "b9ff2d21fdf2dbc4a8bc757dd27d67622c03fd27b100aad7c5bc0537b6b1fb97",
+    "rows.json": "149d7db1be3abbfbf9b9d3e16036fcefe02814b4069afe0ecc5aa7947713cec4",
+    "texas-human.json": "be010c98041d3d7a4464e75d1b8a27701fe28ab4a5d20d07cc75bdf78ae85838",
+    "texas-violin.json": "074c3f6ab9079f036c8852a5cd66737493eb72d1488808660d87e828be350d0c",
+    "verdi-222700.json": "7206e77d1ff0efb4a6e5fa4c266de3c4ec92438927cd044fcf1e25d60738ab25",
+    "verdi-222720.json": "0184d44e7e10851dd7218065f2bdcad2ee3c5687197dbe70ec96ec660dcb4ae8",
+    "yelmo-1350-44903.json": "4e21831602a279f8ef4b5602b3ed0faa29c5f7ed69777234782a6cc8b5e967c0",
+    "yelmo-1350-47203.json": "833c0bd08d31a39a1f3f17f1a7cb11eda6a4a32917d158a9b04576546f39a050",
+    "yelmo-1350-48642.json": "7ccc673dbba496d35a3bf19804c6aa91d1d0660aa2a9cc563562be475126108b",
+    "yelmo-1350-48725.json": "bb8b31db2eb33c8ec1fd4b573ffd41310ecca8b8c18edf2f0aa2043b399fc3ec",
+    "yelmo-784-25564.json": "8e045e1bde1149b97d05f39eb343e9bba3302308fe54fa36659e9d27b39622f4",
+    "yelmo-814-30895.json": "14d3b55fe2b32a4d666febb470b872a7105bb4d6d5ed3fc8f0d420c7e8aa2b47",
+    "yelmo-extra-fares.json": "7afafc9c32a3371139089b6ae6b418411ff1dc2daeb269e583aa6fc44e47488c",
+    "yelmo-general-evento.json": "66884eb93c0ec578e204a082079b99d22934f27797e03fdd29d6f22f9163f2f3"
+  },
+  "followup_tests": {
+    "availability_python": 40,
+    "yelmo_transport_python": 12,
+    "observation_history_python": 14,
+    "deployed_collector_python": 9,
+    "webmcp_node": 11
+  }
+}

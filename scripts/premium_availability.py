@@ -1,4 +1,7 @@
-"""Read-only availability adapters for the local preview; no ticket selection."""
+"""Availability adapters; no seat selection or payment.
+
+Yelmo requires a temporary anonymous fare basket, cancelled before return.
+"""
 
 import ast
 from collections import Counter
@@ -7,14 +10,18 @@ import re
 
 from cinesa_showtimes import CinesaClient, ChromeTransport, venue_for_cinema
 from kinepolis_availability import fetch_availability as splau_availability
-
-
-class ScreeningAvailabilityUnavailable(ValueError):
-    """The verified screening explicitly has no public seat availability."""
+from expanded_availability import (ExpandedAvailabilityFetcher, ScreeningAvailabilityUnavailable,
+                                   SUPPORTED as EXPANDED_SUPPORTED, admit_one_unallocated_availability)
 
 
 def fetch_availability(row, *, client=None, layouts=None):
     provider = row["provider"]
+    if provider in EXPANDED_SUPPORTED:
+        fetcher = ExpandedAvailabilityFetcher()
+        try:
+            return fetcher.fetch(row)
+        finally:
+            fetcher.close()
     result = {"kind": "ordinary", "checked_at": datetime.now(timezone.utc).isoformat()}
     if provider == "cinesa":
         transport = None if client else ChromeTransport()
@@ -51,9 +58,7 @@ def fetch_availability(row, *, client=None, layouts=None):
         if str(literal("GlobalPerfID")) != row["id"].split(":")[-1]:
             raise ValueError("Wrong screening")
         if re.search(r"\bvar\s+GlobalUnallocatedPerformance\s*=\s*true\s*;", response.text):
-            # Unnumbered admission supplies no seat map. This is not a zero
-            # count or an outage affecting the provider's other performances.
-            raise ScreeningAvailabilityUnavailable("Unallocated screening has no seat map")
+            return admit_one_unallocated_availability(response.text)
         seats = [seat for line in literal("GlobalColumnData") for seat in line if seat[0] not in (-1, -2)]
         if any(seat[2] not in {"O", "X", "P"} for seat in seats):
             raise ValueError("Unknown seat status")
@@ -81,11 +86,14 @@ class AvailabilityFetcher:
     def __init__(self):
         self.clients = {}
         self.layouts = {}
+        self.expanded = ExpandedAvailabilityFetcher()
 
     def __enter__(self):
         return self
 
     def fetch(self, row):
+        if row['provider'] in EXPANDED_SUPPORTED:
+            return self.expanded.fetch(row)
         if row["provider"] != "cinesa":
             return fetch_availability(row)
         venue = venue_for_cinema(row["cinema_id"])
@@ -95,6 +103,7 @@ class AvailabilityFetcher:
         return fetch_availability(row, client=self.clients[venue], layouts=self.layouts)
 
     def __exit__(self, *_):
+        self.expanded.close()
         for client in self.clients.values():
             client.transport.close()
 

@@ -44,7 +44,7 @@ class CacheTests(unittest.TestCase):
                                  fetcher_factory=lambda: self.fetcher, phenomena_fetcher=self.bulk)
 
     def test_collects_without_visits_and_respects_freshness_across_restart(self):
-        self.write_rows(self.row("one"), self.row("two", "yelmo"),
+        self.write_rows(self.row("one"), self.row("two", "unsupported"),
                         self.row("past", starts_at="2026-11-18T19:00:00+01:00"))
         cache = self.manager()
         cache.refresh()

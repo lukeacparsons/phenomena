@@ -1,0 +1,43 @@
+{
+  "renoir": {
+    "id": "renoir:1097239",
+    "provider": "renoir",
+    "provider_session_id": "1097239",
+    "cinema_id": "renoir-floridablanca",
+    "film_id": "/pelicula/wild-horse-nine/",
+    "starts_at": "2026-11-22T15:50:00+01:00",
+    "room": "5",
+    "booking_url": "https://www.pillalas.com/pase/barcelona/renoir-floridablanca/wild-horse-nine/1097239/"
+  },
+  "texas": {
+    "id": "texas:8737",
+    "provider": "texas",
+    "provider_session_id": "8737",
+    "cinema_id": "espai-texas",
+    "film_id": "8710",
+    "starts_at": "2026-11-22T16:00:00+01:00",
+    "room": "2",
+    "booking_url": "https://espaitexas.koobin.cat/ca/la-violinista-vo-20261122-1600"
+  },
+  "ocine-magic": {
+    "id": "ocine-magic:178397",
+    "provider": "ocine-magic",
+    "provider_session_id": "178397",
+    "cinema_id": "ocine-magic",
+    "film_id": "10874",
+    "starts_at": "2026-11-26T20:00:00+01:00",
+    "room": "6",
+    "booking_url": "https://tickets.ocinemagic.es/#/DetallPelicula/10874",
+    "source_variant_id": 11047
+  },
+  "institut-francais": {
+    "id": "institut-francais:c7703ce29231ed3a9b6b",
+    "provider": "institut-francais",
+    "provider_session_id": "c7703ce29231ed3a9b6b",
+    "cinema_id": "institut-francais",
+    "film_id": "/barcelona/evento/ohlala-festival-adieu-monde-cruel/",
+    "starts_at": "2026-11-26T18:30:00+01:00",
+    "room": null,
+    "booking_url": "https://www.codetickets.com/portal/oh-la-la-festival/online/38148/102656"
+  }
+}

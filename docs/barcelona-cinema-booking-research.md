@@ -1,5 +1,7 @@
 # Screening times and availability: expansion research
 
+**21 November follow-up:** [Deeper availability investigation and implemented collectors](seat-availability-investigation-2026-11-21.md) adds Renoir, Texas, OCINE Màgic, Yelmo, Institut Français festival inventory, Girona sold-out confirmations and the previously missed inventory on Verdi's unallocated pages. Girona's positive remaining counts are still unresolved. The results below remain the dated 19 November research record.
+
 Investigated **19 November 2026**. Scope: the **13 missing permanent Barcelona cinemas**, plus **Filmax Gran Via** and **Ateneu Barcelonès**. This follows the [venue inventory](barcelona-cinema-inventory.md). The [structured research](barcelona-cinema-booking-research.json) contains request methods, parameters, venue IDs, dated samples and source hashes.
 
 **Twelve of these 15 venues expose remaining-place counts or seat states in the sampled booking sources.** Screening times are retrievable for all 14 permanent cinemas. Ateneu has a working event feed, but its film-screening filter returned only past events. These are verified source capabilities, not completed or deployed collectors. Samples include different language versions; the product's VOSE filter is a separate step.

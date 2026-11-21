@@ -1,0 +1,22 @@
+{
+  "detail": {
+    "id": 102663,
+    "eventoId": null,
+    "fechaInicial": "2026-11-26T21:00:00.000+01:00",
+    "recinto": "Institut français",
+    "disponibles": 229
+  },
+  "zones": {
+    "id": 102663,
+    "hayZonas": true,
+    "zonas": [
+      {
+        "id": 829,
+        "nombre": "INSTITUT FRANÇAIS",
+        "estado": "1",
+        "disponibles": 197,
+        "aforoMaximo": 260
+      }
+    ]
+  }
+}

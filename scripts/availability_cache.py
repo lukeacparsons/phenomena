@@ -9,9 +9,9 @@ import threading
 from cinesa_showtimes import atomic_write
 from observation_history import ObservationHistory
 from premium_availability import (AvailabilityFetcher, ScreeningAvailabilityUnavailable,
-                                  fetch_phenomena_availability)
+                                  fetch_phenomena_availability, EXPANDED_SUPPORTED)
 
-SUPPORTED = {"phenomena", "mooby", "cinesa", "kinepolis", "verdi", "filmax"}
+SUPPORTED = {"phenomena", "mooby", "cinesa", "kinepolis", "verdi", "filmax"} | EXPANDED_SUPPORTED
 
 
 def timestamp(value):

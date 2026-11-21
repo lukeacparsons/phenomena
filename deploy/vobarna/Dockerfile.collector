@@ -15,7 +15,7 @@ COPY --chown=node:node data/ ./data/
 COPY --chown=node:node docs/cinema-dossiers.json docs/auditoriums.json docs/cinema-practical-info.json ./docs/
 COPY --chown=node:node barcelona-mascot-point-right-brow-refined.webp barcelona-mascot-poke.webp ./
 RUN python -m compileall -q scripts \
-    && PYTHONPATH=scripts python -m unittest test_deployed_crawler test_cinesa_showtimes test_public_site test_observation_history test_availability_cache
+    && PYTHONPATH=scripts python -m unittest test_deployed_crawler test_cinesa_showtimes test_public_site test_observation_history test_availability_cache test_expanded_availability test_yelmo_availability test_yelmo_transport test_girona_availability
 RUN mkdir -p /app/.site /app/static/preview-data && chown -R node:node /app
 USER node
 HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 CMD ["python", "scripts/run_deployed_crawler.py", "--health"]

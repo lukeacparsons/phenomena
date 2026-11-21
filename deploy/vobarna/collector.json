@@ -12,6 +12,8 @@
   "heartbeat_worker": "vobarna-crawler-heartbeat",
   "vpn_service_uuid": "pxve1z9pcmdmquoscmhmo0j2",
   "vpn_compose": "deploy/vobarna/compose.vpn.yaml",
+  "yelmo_vpn_compose": "deploy/vobarna/compose.yelmo-vpn.yaml",
   "website_input_mount": "/collector-input",
-  "public_endpoints": false
+  "public_endpoints": false,
+  "yelmo_vpn_service_uuid": "2r4syiqrctosndsadopk9odh"
 }

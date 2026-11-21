@@ -1,0 +1,32 @@
+[
+  {
+    "id": "girona:31:41291",
+    "provider": "girona",
+    "provider_session_id": "31:41291",
+    "cinema_id": "cinemes-girona",
+    "film_id": "8885",
+    "starts_at": "2026-11-22T16:40:00+01:00",
+    "room": "2",
+    "booking_url": "https://girona.admit-one.eu/?p=tickets&perfCode=41291&language=esp"
+  },
+  {
+    "id": "girona:31:41156",
+    "provider": "girona",
+    "provider_session_id": "31:41156",
+    "cinema_id": "cinemes-girona",
+    "film_id": "8991",
+    "starts_at": "2026-11-22T17:00:00+01:00",
+    "room": "1",
+    "booking_url": "https://girona.admit-one.eu/?p=tickets&perfCode=41156&language=esp"
+  },
+  {
+    "id": "girona:31:41268",
+    "provider": "girona",
+    "provider_session_id": "31:41268",
+    "cinema_id": "cinemes-girona",
+    "film_id": "9008",
+    "starts_at": "2026-11-26T20:00:00+01:00",
+    "room": "1",
+    "booking_url": "https://girona.admit-one.eu/?p=tickets&perfCode=41268&language=esp"
+  }
+]

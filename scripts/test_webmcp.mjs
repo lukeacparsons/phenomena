@@ -159,6 +159,7 @@ test('availability distinguishes unknown, stale, closed, count kind and source f
   const status=value=>availabilityFor({...s,seat_data:{checked_at:'2026-11-19T17:59:00Z',...value}},{},NOW);
   assert.equal(status({kind:'ordinary',available:0}).status,'sold_out');
   assert.equal(status({kind:'reported_total',available:0}).status,'unknown');
+  assert.equal(status({kind:'reported_total',available:0,is_sold_out:true}).status,'sold_out');
   assert.equal(status({kind:'area_counts',available:0}).status,'unknown');
   assert.equal(status({kind:'ordinary',available:5,purchase_open:false}).status,'booking_closed');
   assert.equal(status({kind:'ordinary',available:5}).stale,false);
