@@ -39,6 +39,37 @@ Internal events and PostHog's test-account filter are excluded from delivery.
 Search text, URL query strings, fragments and full referrer paths remain excluded
 from analytics payloads.
 
+## Browser instrumentation
+
+The November 2026 instrumentation update adds `analytics_version=2` and a
+locale-independent `page_type` (`home`, `film`, `cinema`, `guide`, their indexes,
+`about`, or `other`). All events, including SDK-generated leaves and Web Vitals,
+carry the internal-user and identity-persistence flags.
+
+| Event | Meaning and useful properties |
+| --- | --- |
+| `$pageview` | Initial view or pathname change, including language navigation and back-cache restoration. Filter queries and fragments do not create additional views. Queued events retain their original timestamps. |
+| `$pageleave` | PostHog's native document-leave event, flushed with a beacon on `pagehide`. Includes `$prev_pageview_id`, `$prev_pageview_pathname`, `$prev_pageview_duration` (seconds), and scroll/content-depth properties. |
+| `ticket_click` | Existing handoff to the cinema operator, with film, screening, cinema and placement. It does not prove a purchase. |
+| `screening_open` | Existing screening/detail interaction, with film, screening and placement. |
+| `search_results` | Existing local result counts, now also with `has_query` and `has_results`. These counts can precede asynchronous smart-search/location refinement. |
+| `smart_search_completed` | Smart-search outcome (`success`, `unsupported`, `no_semantic_results`, `unavailable`, `timeout`), duration in milliseconds, query length, semantic candidate count, unsupported count and cache-hit flag. Superseded/cancelled requests are omitted. This is not the final filtered screening count. |
+| `language_switch` | Language-choice click, with `from_language` and `to_language`. Measures intent; the subsequent pageview confirms navigation. |
+| `outbound_click` | Non-ticket HTTP(S) link click, including middle-click, with destination hostname and header/footer/content placement. No link text, destination path or query is sent. |
+
+For in-document navigation, PostHog attaches the previous view's duration and
+scroll data to the next `$pageview`; it does not need an extra `$pageleave`.
+Match `$prev_pageview_id` to the original view's `$pageview_id`. Back-cache
+restores start a new view and discard the SDK's stale previous-view metrics,
+so time spent away is not counted again. Duration is elapsed time, not attention.
+Short visits that end before the deferred SDK loads, blocked analytics and mobile
+process termination can still miss leave events. Existing masked replay and Web
+Vitals capture remain enabled. New search metrics contain no query text, intent,
+address, coordinates or provider error messages.
+
+Lifecycle configuration follows the [PostHog JavaScript configuration](https://posthog.com/docs/libraries/js/config)
+and [SDK pageview accounting](https://github.com/PostHog/posthog-js/blob/main/packages/browser/src/page-view.ts).
+
 ## Operations
 
 Credentials live in ignored `.deploy-secrets/posthog.env` and
@@ -75,7 +106,11 @@ is not an exactly-once guarantee.
 `node --test scripts/test_analytics.mjs` tests event sanitization, internal marking,
 privacy preferences and memory fallback. `scripts/test_visitor_analytics_browser.mjs`
 uses the real SDK with all requests intercepted to test stable identity, session
-expiry, reloads, cleared/blocked storage, preview exclusion and blocked SDK.
+expiry, reloads, cleared/blocked storage, preview exclusion, blocked SDK, leave
+beacon payloads, scroll/duration properties, language/outbound clicks and a simulated
+back-cache lifecycle. SDK bot filtering is disabled only in this intercepted
+fixture because Chromium reveals its automation identity during pagehide. It
+never ingests production events or sends notifications.
 Set `PLAYWRIGHT_MODULE` to an installed Playwright module and download the SDK to
 `output/visitor-notifications/posthog-sdk.js` (or set `POSTHOG_SDK_FILE`).
 `scripts/test_session_replay_browser.mjs` uses the real SDK and recorder with every

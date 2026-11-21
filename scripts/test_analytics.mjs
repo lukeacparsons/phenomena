@@ -26,6 +26,7 @@ test('production analytics queues handoffs and tracks path changes without searc
   assert.equal(app.events[0].properties.visitor_identity_persisted,true);
   assert.equal(app.config.autocapture,false);assert.equal(app.config.disable_session_recording,false);
   assert.equal(app.config.capture_pageleave,true);assert.equal(app.config.capture_pageview,false);
+  assert.equal(app.config.opt_out_useragent_filter,undefined,'Production keeps SDK bot filtering');
   assert.equal(app.config.enable_recording_console_log,false);
   assert.equal(app.config.session_recording.maskAllInputs,true);
   assert(app.config.session_recording.blockSelector.includes('#locationStatus'));
