@@ -13,6 +13,8 @@ for (const [index, navigation] of [...document.querySelectorAll('.lang-switch')]
   options.id = `language-options-${index}`;
   toggle.setAttribute('aria-controls', options.id);
   for (const choice of choices) {
+    // Venue pages use a new-tab base for operator links. Language changes stay here.
+    if (choice.hasAttribute('href')) choice.target = '_self';
     const code = choice.getAttribute('hreflang') || choice.dataset.lang;
     const abbreviation = document.createElement('span');
     abbreviation.className = 'language-code';
@@ -27,7 +29,7 @@ for (const [index, navigation] of [...document.querySelectorAll('.lang-switch')]
   const setOpen = (open, restoreFocus = false) => {
     navigation.classList.toggle('is-language-open', open);
     toggle.setAttribute('aria-expanded', String(open));
-    if (restoreFocus) toggle.focus();
+    if (restoreFocus) toggle.focus({preventScroll: true});
   };
   const sync = () => {
     const language = document.documentElement.lang;
@@ -39,11 +41,6 @@ for (const [index, navigation] of [...document.querySelectorAll('.lang-switch')]
     const choice = event.target.closest('a[hreflang], button[data-lang]');
     if (!choice || !mobile.matches) return;
     setOpen(false, true);
-    // Venue pages can have a new-tab base target; changing language stays here.
-    if (choice.hasAttribute('href') && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
-      event.preventDefault();
-      location.assign(choice.href);
-    }
   });
   navigation.addEventListener('keydown', event => {
     if (!mobile.matches) return;

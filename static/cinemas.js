@@ -10,6 +10,7 @@ import {intentChips,filmMatchReason,searchExplanation} from './search-intent.js'
 import {createSmartSearchUI} from './smart-search-ui.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
 import {registerWebMCP} from './webmcp-registration.js';
+import {installLanguageNavigation} from './language-navigation.js';
 
 const $ = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -19,16 +20,17 @@ try { const saved=localStorage.getItem('barcelona-cinema-language'); language=TE
 const publicLanguage=document.body.dataset.siteLang;
 const listingCinemaId=document.body.dataset.cinemaId;
 if(TEXT[publicLanguage])language=publicLanguage;
-const listingPath=location.pathname;
+let listingPath=location.pathname;
 const listingDate=document.body.dataset.listingDate;
 const dateKind=document.body.dataset.dateKind;
 const relativeDate=dateKind==='today'||dateKind==='tomorrow';
 const dateHeading=document.querySelector('.date-heading');
 const originalDateHeading=dateHeading?.querySelector('h1,h2')?.textContent;
 let restoringHistory=false;
-const listingTitle=document.title;
+let listingTitle=document.title;
 const listingLanguageLinks=[...document.querySelectorAll('.lang-switch a[hreflang]')].map(node=>({node,href:node.getAttribute('href')}));
-const listingMetadata=publicLanguage?[...document.querySelectorAll('link[rel="canonical"],link[hreflang],meta[property="og:url"],meta[property="og:title"]')].map(node=>({node,value:node.getAttribute(node.tagName==='LINK'?'href':'content')})):[];
+const readListingMetadata=()=>[...document.querySelectorAll('link[rel="canonical"],link[hreflang],meta[property="og:url"],meta[property="og:title"]')].map(node=>({node,value:node.getAttribute(node.tagName==='LINK'?'href':'content')}));
+let listingMetadata=publicLanguage?readListingMetadata():[];
 const t = key => TEXT[language][key] || TEXT.en[key] || key;
 const locale = () => ({en:'en-GB',es:'es-ES',ca:'ca-ES'}[language]);
 const dateFormatters=new Map(),dateLabels=new Map();
@@ -132,7 +134,7 @@ function syncURL(push=false){
     }
     for(const {node,href} of listingLanguageLinks){
       const localePath=film?.urls?.[node.hreflang];
-      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:activeView==='showtimes'?'#showtimes':''):listingDate&&!defaultDate?`/${node.hreflang}/`+(query.size?'?'+query.toString():''):href);
+      node.setAttribute('href',localePath?localePath+(session?.urls?.[node.hreflang]?.split('#')[1]?'#'+session.urls[node.hreflang].split('#')[1]:activeView==='showtimes'?'#showtimes':''):listingDate&&!defaultDate?`/${node.hreflang}/`+(query.size?'?'+query.toString():''):href+(query.size?'?'+query.toString():'')+listingHash);
     }
     for(const {node,value} of listingMetadata){
       const attr=node.tagName==='LINK'?'href':'content';
@@ -721,6 +723,27 @@ if('IntersectionObserver' in window){
   },{rootMargin:'600px 0px'});
   observer.observe(moreFilms);
 }
+// Date-scoped pages retain their route-specific navigation.
+if(publicLanguage&&!listingDate)installLanguageNavigation({
+  ready:()=>Boolean(data)&&!$('filmDialog').open,
+  getLanguage:()=>language,
+  commit:(page,historyView)=>{
+    listingPath=page.path;listingTitle=page.title;listingMetadata=readListingMetadata();
+    // Both paths and metadata must belong to the new locale before any render
+    // or dialog can write history again.
+    restoringHistory=true;
+    try{
+      cancelSearchRender();
+      setLanguage(page.language);
+      if(historyView){
+        applySearch(historyView.filters);
+        pendingLink=historyView.filmId||historyView.screeningId?{filmId:historyView.filmId,screeningId:historyView.screeningId,filmView:historyView.filmView}:null;
+        restoreLink(true);
+      }
+    }finally{restoringHistory=false;}
+    syncURL();
+  }
+});
 setLanguage(language);
 try{
   for(const [id,value] of Object.entries(readCache(SEATS_CACHE)||{})){

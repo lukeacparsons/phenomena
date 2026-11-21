@@ -1,7 +1,8 @@
 import './progressive-images.js';
 // Public detail pages remain complete when this small enhancement is unavailable.
+function markPastScreenings(){
 const now=Date.now();
-for(const row of document.querySelectorAll('[data-starts]:not(.buyrow)')){
+for(const row of document.querySelectorAll('[data-starts]:not(.buyrow):not(.past-screening)')){
   if(Date.parse(row.dataset.starts)<now){
     row.classList.add('past-screening');
     const label={en:'This screening has started',es:'Esta sesión ya ha empezado',ca:'Aquesta sessió ja ha començat'}[document.documentElement.lang]||'This screening has started';
@@ -9,6 +10,9 @@ for(const row of document.querySelectorAll('[data-starts]:not(.buyrow)')){
     row.querySelector('th')?.append(note);
   }
 }
+}
+markPastScreenings();
+window.addEventListener('vobarna:languagechange',markPastScreenings);
 import './ticket-events.js';
 import './cinema-directory.js';
 if(document.getElementById('film-dialog-data'))void import('./film-page.js');

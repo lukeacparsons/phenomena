@@ -6,6 +6,8 @@ The generated public site targets **https://vobarna.com**, with readable EN/ES/C
 
 The [visual system and component guide](docs/design-system.md) defines the shared flat styling, typography, poster sizing, modal behavior and page-wide audit. Run `npm run site:test:styles` against the public preview after changing shared presentation.
 
+The homepage and cinema listings switch EN/ES/CA in place once the catalogue is ready. `static/language-navigation.js` fetches the published translation on hover/focus or selection, updates editorial copy and metadata, and reuses the existing listing renderer. Posters, the header/theme control, filters, expanded research and scroll positions survive; Back/Forward restores the translated listing. Modified clicks, pages without JavaScript and failed translation requests retain ordinary HTML navigation. Run `node scripts/test_language_navigation_browser.cjs` against the public preview (`VOBARNA_PUBLIC_URL`, default port 8831; `PLAYWRIGHT_MODULE` when needed) for frame stability, mobile/desktop, history and fallback checks.
+
 ## Local preview
 
 From this checkout, prepare the Python environment once:

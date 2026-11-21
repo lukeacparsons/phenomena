@@ -236,7 +236,7 @@ class Publication:
             navigation = ''
         else:
             footer += f'<details class="site-information"><summary>{text(DISCOVERY_COPY[lang]["footer"])}</summary>{search_guide_link}{discovery_links}</details>'
-        switch = ''.join(link(alternatives[l], l.upper(), f' hreflang="{l}" lang="{l}"' + (' aria-current="page"' if l == lang else '')) for l in LOCALES if l in alternatives)
+        switch = ''.join(link(alternatives[l], l.upper(), f' hreflang="{l}" lang="{l}" target="_self"' + (' aria-current="page"' if l == lang else '')) for l in LOCALES if l in alternatives)
         # The image loader can execute without waiting for the search module graph.
         script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script>'
         if interactive:
@@ -980,7 +980,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
-                         'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
+                         'site-header.js', 'language-navigation.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
