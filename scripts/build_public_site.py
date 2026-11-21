@@ -38,6 +38,7 @@ from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS,
                                    REVIEWED_ON, SOURCES as COLLECTION_SOURCES)
 from date_listings import DAY_PATHS, COPY as DATE_COPY, published_dates, build_date_views
 from complete_programme import LABELS as PROGRAMME_LABELS, paginate_programme, programme_path, render_programme_directory
+from social_previews import SocialPreviews, COPY as SHARE_COPY, film_copy, shared_session_language, metadata as social_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / '.site'
@@ -149,6 +150,7 @@ class Publication:
         self.dest, self.data, self.registry = destination, programme, registry
         self.research, self.previous, self.now, self.origin = research, previous, now, origin
         self.pages = {}
+        self.social = SocialPreviews(destination, destination.parents[2] / 'current/public')
         self.dates = published_dates(programme, now)
         self.translations = ResearchTranslations()
         self.current = {f['id']: f for f in programme['films']}
@@ -186,10 +188,25 @@ class Publication:
                 found.append(link(source['url'], label) + (f' <small>({text(checked)})</small>' if checked else ''))
         return '<span class="citations">' + ' · '.join(found) + '</span>' if found else ''
 
-    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True, film_page=False):
+    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True, film_page=False, social=None):
         t = COPY[lang]
         alternatives = alternatives or {lang: path}
         canonical = self.origin + path
+        share = {'title': title, 'description': description}
+        if date_scope:
+            # The origin fills the date token in HTML at request time. Keep it
+            # out of the raster image, which is shared across daily rollovers.
+            share.update(heading=title.removesuffix(' | VO Barna').split(' · ', 1)[0],
+                         detail=SHARE_COPY[lang]['home_detail'])
+        elif path == f'/{lang}/':
+            share.update(title=SHARE_COPY[lang]['home'] + ' | VO Barna',
+                         description=SHARE_COPY[lang]['intro'], heading=SHARE_COPY[lang]['home'],
+                         detail=SHARE_COPY[lang]['home_detail'])
+        elif f'/{SECTIONS[lang]["guides"]}/' in path:
+            share['kind'] = 'guide'
+        share.update(social or {})
+        card = self.social.create(lang, **share)
+        social_tags = social_metadata(card, self.origin, path, lang, alternatives)
         nodes = [{'@type': 'WebPage', '@id': canonical + '#page', 'url': canonical, 'name': title,
                   'description': description, 'inLanguage': lang, 'isPartOf': {'@id': self.origin + '/#website'},
                   'publisher': {'@id': self.origin + '/#publisher'}},
@@ -241,7 +258,8 @@ class Publication:
 <html lang="{lang}"{root_class}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
 <title>{text(title)}</title><meta name="description" content="{text(description)}"><meta name="robots" content="{'index,follow' if index else 'noindex,follow'}">
-<link rel="canonical" href="{canonical}">{alternate}<meta property="og:type" content="website"><meta property="og:title" content="{text(title)}"><meta property="og:description" content="{text(description)}"><meta property="og:url" content="{canonical}"><meta property="og:site_name" content="VO Barna"><meta property="og:image" content="{self.origin}/clint.png"><meta name="twitter:card" content="summary">
+<link rel="canonical" href="{canonical}">{alternate}
+{social_tags}
 {FAVICON_LINKS}<link rel="preload" href="/fonts/Bungee-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -426,6 +444,9 @@ class Publication:
                     description = CONTEXT_COPY[lang]['film_description'].format(title=display_title, languages=' '.join(language_facts))
                 self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', description, body,
                           alternatives=alternatives, graph=graph, index=substantive, film_page=True,
+                          social=film_copy(film, lang, display_title,
+                                           audio=language_name(value, lang) if (value := shared_session_language(film['sessions'], 'language')) else None,
+                                           subtitles=language_name(value, lang) if (value := shared_session_language(film['sessions'], 'subtitles')) else None),
                           footer_extra=self.screening_context(pairs, lang, title=display_title))
 
     def screening_context(self, pairs, lang, *, title=None, cinema=None):
@@ -581,6 +602,8 @@ class Publication:
                     description = c['venue_description'].format(name=cinema['name'], films=', '.join(selected_titles))
                 self.page(alternatives[lang], lang, title + ' | VO Barna', description, body,
                           alternatives=alternatives, graph=graph, venue=True, interactive=True, cinema_id=cid,
+                          social={'title': cinema['name'] + ' | VO Barna', 'heading': cinema['name'], 'kind': 'cinema',
+                                  'description': SHARE_COPY[lang]['venue_description' if pairs else 'venue_empty']},
                           footer_extra=self.screening_context(pairs, lang, cinema=cinema),
                           crumbs=[(t['cinemas'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
 
@@ -963,7 +986,13 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
                 shutil.copy2(ROOT / 'static' / name, dest / name)
             write_favicons(dest)
             guide = (ROOT / 'static/webmcp.html').read_text().replace('/cinemas.html', '/en/')
-            guide = guide.replace('</head>', f'{FAVICON_LINKS}<link rel="canonical" href="{origin}/webmcp/"><script type="module" src="/analytics.js"></script></head>')
+            # This standalone document shares the same complete crawler metadata.
+            guide = re.sub(r'\s*<meta (?:property="og:[^"]+"|name="twitter:[^"]+")[^>]*>', '', guide)
+            guide_card = site.social.create('en', 'VO Barna WebMCP guide — Cinema tools for AI agents',
+                                             'Find screenings, compare film details and show official ticket links with VO Barna’s six browser agent tools.',
+                                             heading='Cinema with your AI agent', kind='guide')
+            guide_tags = social_metadata(guide_card, origin, '/webmcp/', 'en')
+            guide = guide.replace('</head>', f'{FAVICON_LINKS}<link rel="canonical" href="{origin}/webmcp/">{guide_tags}<script type="module" src="/analytics.js"></script></head>')
             guide_path = dest / 'webmcp/index.html'
             guide_path.parent.mkdir(parents=True, exist_ok=True)
             guide_path.write_text(guide)
@@ -1097,18 +1126,36 @@ def validate_build(root, pages):
         def __init__(self):
             super().__init__()
             self.links, self.h1, self.canonical = [], 0, 0
+            self.social = {}
         def handle_starttag(self, tag, attrs):
             attrs = dict(attrs)
             self.h1 += tag == 'h1'
             self.canonical += tag == 'link' and attrs.get('rel') == 'canonical'
             if tag == 'a':
                 self.links.append(attrs.get('href', ''))
+            key = attrs.get('property') or attrs.get('name') or ''
+            if tag == 'meta' and key.startswith(('og:', 'twitter:')):
+                self.social.setdefault(key, []).append(attrs.get('content', ''))
     for path in pages:
         file = root / (path.lstrip('/') + 'index.html' if path.endswith('/') else path.lstrip('/'))
         parser = Inspect()
         parser.feed(file.read_text())
         if parser.h1 != 1 or parser.canonical != 1:
             raise ValueError('Missing or duplicate heading/canonical: ' + path)
+        required = ('og:title', 'og:description', 'og:url', 'og:image', 'og:image:type',
+                    'og:image:width', 'og:image:height', 'og:image:alt', 'og:locale',
+                    'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image', 'twitter:image:alt')
+        if any(len(parser.social.get(key, [])) != 1 or not parser.social[key][0] for key in required):
+            raise ValueError('Missing or duplicate social metadata: ' + path)
+        share = {key: parser.social[key][0] for key in required}
+        image = urlsplit(share['og:image'])
+        if (len(share['og:description']) > 160 or image.scheme != 'https'
+                or not re.fullmatch(r'/social/[a-f0-9]{64}\.jpg', image.path)
+                or not (root / image.path.lstrip('/')).is_file()
+                or share['twitter:image'] != share['og:image']
+                or share['twitter:description'] != share['og:description']
+                or share['twitter:card'] != 'summary_large_image'):
+            raise ValueError('Invalid sharing preview: ' + path)
         for href in parser.links:
             if not href.startswith('/'):
                 continue

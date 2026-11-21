@@ -546,6 +546,34 @@ class PublicationTests(unittest.TestCase):
                 descriptions.append(re.search(r'<meta name="description" content="([^"]+)"', html).group(1))
             self.assertEqual(len(set(descriptions)), 4)
 
+    def test_share_previews_are_in_raw_html_for_each_page_and_expire_truthfully(self):
+        from html import unescape
+        from PIL import Image
+        import re
+        self.publish()
+        root = self.root / 'site/current/public'
+        def social(path):
+            html = (root / path / 'index.html').read_text()
+            return {key: unescape(value) for key, value in re.findall(r'<meta (?:property|name)="((?:og|twitter):[^"]+)" content="([^"]*)"', html)}
+        images = set()
+        for lang, films, cinemas in [('en', 'films', 'cinemas'), ('es', 'peliculas', 'cines'), ('ca', 'pellicules', 'cinemes')]:
+            for path in (f'{lang}/', f'{lang}/{films}/dune-1984/', f'{lang}/{cinemas}/phenomena-experience/'):
+                tags = social(path)
+                self.assertLessEqual(len(tags['og:description']), 160)
+                self.assertEqual(tags['twitter:description'], tags['og:description'])
+                self.assertEqual(tags['og:url'], 'https://vobarna.com/' + path)
+                images.add(tags['og:image'])
+                with Image.open(root / tags['og:image'].removeprefix('https://vobarna.com/')) as image:
+                    self.assertEqual(image.size, (1200, 630))
+        self.assertEqual(len(images), 9)
+        self.assertEqual(social('webmcp/')['twitter:card'], 'summary_large_image')
+        before = social('en/films/dune-1984/')
+        self.assertNotIn('English', before['og:description'])
+        self.publish(now=NOW + timedelta(days=3))
+        expired = social('en/films/dune-1984/')
+        self.assertIn('No upcoming screenings', expired['og:description'])
+        self.assertNotEqual(before['og:image'], expired['og:image'])
+
     def test_restart_preserves_published_lastmod_and_today_link_is_not_a_content_change(self):
         import os
         self.publish()
