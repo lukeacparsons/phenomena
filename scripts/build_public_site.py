@@ -952,7 +952,7 @@ class Publication:
         return body + '<ul>' + ''.join('<li>' + link(DISCOVERY_PATHS[k][lang], d[k]) + '</li>' for k in related) + '</ul>'
 
     def discount_offers(self, lang):
-        """Where it is cheap, when, and how much: a price list per day, cheapest first."""
+        """Where it is cheap, when, and how much: per day, a list of cinema then price, cheapest first."""
         d = DISCOVERY_COPY[lang]
         body = '<div class="discount-offers reading-wash">'
         anchored = set()
@@ -961,24 +961,24 @@ class Publication:
             for key, days, venues, _, amount in sorted(OFFERS, key=lambda offer: float(offer[4])):
                 if weekday not in days:
                     continue
-                names, shown_brand = [], None
-                for cid in venues:
-                    brand, name, _ = OFFER_VENUES[cid]
-                    prefix = text(brand + ' ') if brand else ''
-                    if brand and brand == shown_brand:
-                        prefix = f'<span class="sr-only">{prefix}</span>'
-                    label = prefix + text(name)
-                    # The tariff stands without a published cinema page; only the link depends on it.
-                    names.append(f'<a href="{text(self.entity_path("cinemas", cid, lang))}">{label}</a>' if cid in self.cinemas else f'<span>{label}</span>')
-                    shown_brand = brand
+                brands = {OFFER_VENUES[cid][0] for cid in venues}
+                if len(venues) > 1 and brands != {''} and len(brands) == 1:
+                    # One brand, several cinemas: the brand names the row and its cinemas sit quietly below.
+                    name = text(brands.pop()) + '<small>' + text(' · '.join(OFFER_VENUES[cid][1] for cid in venues)) + '</small>'
+                else:
+                    name = text(' · '.join(' '.join(filter(None, OFFER_VENUES[cid][:2])) for cid in venues))
                 places = {OFFER_VENUES[cid][2] for cid in venues}
                 note = ' · '.join(filter(None, [places.pop() if len(places) == 1 else '', d[key + '_body']]))
+                # The tariff stands without a published cinema page; only the link depends on it.
+                pages = ' · '.join(link(self.entity_path('cinemas', cid, lang), self.cinemas[cid]['name']) for cid in venues if cid in self.cinemas)
                 price = '€' + amount if lang == 'en' else amount.replace('.', ',') + ' €'
                 anchor = '' if key in anchored else f' id="{key}"'
                 anchored.add(key)
-                body += (f'<li class="discount-offer"{anchor}><div class="discount-venues">{" · ".join(names)}</div> '
-                         f'<strong class="discount-price">{text(price)}</strong>'
-                         + (f' <div class="discount-note">{text(note)}</div>' if note else '') + '</li>')
+                # The row is cinema then price; place, conditions and cinema pages open from the row itself.
+                body += (f'<li class="discount-offer"{anchor}><details><summary><span class="discount-name">{name}</span> '
+                         f'<strong class="discount-price">{text(price)}</strong></summary>'
+                         + (f'<p>{text(note)}</p>' if note else '')
+                         + (f'<p>{text(d["offer_programme"])}: {pages}</p>' if pages else '') + '</details></li>')
             body += '</ul></section>'
         return body + '</div>'
 

@@ -31,7 +31,7 @@ const routes={
     assert.equal(await page.locator('.discount-offers time').count(),0);
     assert.equal(await page.locator('time[datetime="2026-11-21"]').count()>0,true);
     assert.equal(graph.some(n=>n['@type']==='Offer'),false);
-    assert.equal(await page.locator('#verdi-monday .discount-venues a').count(),2);
+    assert.equal(await page.locator('#verdi-monday details a').count(),2);
    }
   }
   await plain.close();console.log('Nine localized collections passed no-JS, metadata, counts, and tariff separation checks.');

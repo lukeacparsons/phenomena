@@ -136,21 +136,21 @@ def discount_offer(session, day):
 
 for _offer in OFFERS:
     SOURCES[_offer[3]]['checked_on'] = OFFERS_REVIEWED_ON
-# (brand, name, place). A brand shared by neighbouring venues in a row is shown
-# once; the place is shown when every venue in the row shares it.
+# (brand, name, place). A row of several cinemas under one brand is named by the
+# brand; the place is shown when every venue in the row shares it.
 OFFER_VENUES = {
     'verdi': ('', 'Verdi', 'Gràcia'), 'verdi-park': ('', 'Verdi Park', 'Gràcia'),
     'renoir-floridablanca': ('', 'Renoir Floridablanca', 'Eixample'),
     'mooby-aribau': ('Mooby', 'Aribau', 'Eixample'), 'mooby-balmes': ('Mooby', 'Balmes', 'Sant Gervasi'),
     'mooby-bosque': ('Mooby', 'Bosque', 'Gràcia'), 'mooby-arenas': ('Mooby', 'Arenas', 'Eixample'),
-    'mooby-glories': ('Mooby', 'Glòries', 'Sant Martí'), 'mooby-sarria': ('Mooby', 'Gran Sarrià Club', 'Sarrià'),
+    'mooby-glories': ('Mooby', 'Glòries', 'Sant Martí'), 'mooby-sarria': ('Mooby', 'Gran Sarrià', 'Sarrià'),
     'espai-texas': ('', 'Espai Texas', 'Gràcia'), 'cinema-malda': ('', 'Cinema Maldà', 'Ciutat Vella'),
     'cinemes-girona': ('', 'Cinemes Girona', 'Eixample'), 'zumzeig': ('', 'Zumzeig', 'Sants'),
-    'filmoteca-catalunya': ('', 'Filmoteca de Catalunya', 'El Raval'),
+    'filmoteca-catalunya': ('', 'Filmoteca', 'El Raval'),
     'cinebaix': ('', 'CineBaix', 'Sant Feliu de Llobregat'), 'can-castellet': ('', 'Can Castellet', 'Sant Boi de Llobregat'),
     'cinemes-montcada': ('', 'Cinemes Montcada', 'Montcada i Reixac'),
     'filmax-gran-via': ('', 'Filmax Gran Via', 'L’Hospitalet de Llobregat'),
-    'ocine-magic': ('', 'OCINE Màgic', 'Badalona'), 'kinepolis-mataro': ('', 'Kinépolis Mataró Parc', 'Mataró'),
+    'ocine-magic': ('', 'OCINE Màgic', 'Badalona'), 'kinepolis-mataro': ('', 'Kinépolis Mataró', 'Mataró'),
 }
 
 COPY = {
@@ -185,7 +185,7 @@ COPY = {
     'discounts_heading': 'Cinema discount days',
     'discounts_intro': 'Monday, Wednesday and Thursday are the cheap days: tickets from €4.00.',
     'discounts_description': 'Compare Barcelona cinema discount days, booking fees, membership conditions and selected original-language programmes with dated operator sources.',
-    'offers_reviewed': 'Reviewed', 'offer_sources': 'Sources',
+    'offers_reviewed': 'Reviewed', 'offer_sources': 'Sources', 'offer_programme': 'Showtimes',
     'offer_days': ('Every day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
     'offer_months': ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
     'cinebaix-monday_body': 'Not on public holidays or their eves.',
@@ -241,7 +241,7 @@ COPY = {
     'discounts_heading': 'Días de descuento en el cine',
     'discounts_intro': 'Lunes, miércoles y jueves son los días baratos: entradas desde 4,00 €.',
     'discounts_description': 'Compara días de descuento, gastos de gestión y condiciones de socio en cines de Barcelona, con fuentes oficiales fechadas y programación en versión original.',
-    'offers_reviewed': 'Revisado el', 'offer_sources': 'Fuentes',
+    'offers_reviewed': 'Revisado el', 'offer_sources': 'Fuentes', 'offer_programme': 'Cartelera',
     'offer_days': ('Todos los días', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'),
     'offer_months': ('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'),
     'cinebaix-monday_body': 'No festivos ni vísperas.',
@@ -297,7 +297,7 @@ COPY = {
     'discounts_heading': 'Dies de descompte al cinema',
     'discounts_intro': 'Dilluns, dimecres i dijous són els dies barats: entrades des de 4,00 €.',
     'discounts_description': 'Compara dies de descompte, despeses de gestió i condicions de soci als cinemes de Barcelona, amb fonts oficials datades i programació en versió original.',
-    'offers_reviewed': 'Revisat el', 'offer_sources': 'Fonts',
+    'offers_reviewed': 'Revisat el', 'offer_sources': 'Fonts', 'offer_programme': 'Cartellera',
     'offer_days': ('Cada dia', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge'),
     'offer_months': ('gen', 'febr', 'març', 'abr', 'maig', 'juny', 'jul', 'ag', 'set', 'oct', 'nov', 'des'),
     'cinebaix-monday_body': 'No festius ni vigílies.',
