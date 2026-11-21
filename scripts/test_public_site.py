@@ -93,6 +93,66 @@ class IdentityTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
+    def test_session_context_is_in_the_closed_footer_with_evidence_backed_metadata(self):
+        from html.parser import HTMLParser
+        from discovery_content import PATHS
+
+        class Context(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.footer = False
+                self.closed = False
+                self.inside = False
+                self.in_closed_footer = False
+                self.links = []
+                self.ids = []
+                self.description = ''
+            def handle_starttag(self, tag, attrs):
+                a = dict(attrs)
+                if 'id' in a: self.ids.append(a['id'])
+                if tag == 'meta' and a.get('name') == 'description': self.description = a['content']
+                if tag == 'footer': self.footer = True
+                if tag == 'details' and self.footer: self.closed = 'open' not in a
+                if tag == 'section' and a.get('class') == 'screening-context':
+                    self.inside = True
+                    self.in_closed_footer = self.footer and self.closed
+                if tag == 'a' and self.inside: self.links.append(a.get('href'))
+            def handle_endtag(self, tag):
+                if tag == 'section': self.inside = False
+                if tag == 'footer': self.footer = False
+
+        self.data['films'][0]['sessions'][0].update(language='EN', formats=['IMAX'])
+        self.write_input(); self.publish()
+        root = self.root / 'site/current/public'
+        for lang, films, cinemas, audio in [('en', 'films', 'cinemas', 'English'),
+                                           ('es', 'peliculas', 'cines', 'Inglés'),
+                                           ('ca', 'pellicules', 'cinemes', 'Anglès')]:
+            for path in [f'{lang}/{films}/dune-1984/index.html', f'{lang}/{cinemas}/phenomena-experience/index.html']:
+                html = (root / path).read_text()
+                p = Context(); p.feed(html)
+                self.assertTrue(p.in_closed_footer)
+                self.assertEqual(len(p.ids), len(set(p.ids)))
+                self.assertIn(PATHS['english'][lang], p.links)
+                self.assertIn(PATHS['imax'][lang], p.links)
+                self.assertNotIn(PATHS['subtitles'][lang], p.links)
+                self.assertTrue(any('#screening-' in href for href in p.links))
+                self.assertLess(html.index('</main>'), html.index('class="screening-context"'))
+                if '/dune-' in path: self.assertIn(audio, p.description)
+
+        # Film metadata does not turn missing session audio into English from the film's facts.
+        del self.data['films'][0]['sessions'][0]['language']
+        self.write_input(); self.publish()
+        p = Context(); p.feed((root / 'en/films/dune-1984/index.html').read_text())
+        self.assertNotIn('English', p.description)
+        self.assertNotIn(PATHS['english']['en'], p.links)
+
+        self.publish(now=NOW + timedelta(days=3))
+        p = Context(); p.feed((root / 'en/films/dune-1984/index.html').read_text())
+        self.assertIn('No upcoming screenings', p.description)
+        self.assertEqual(p.links, [])
+        html = (root / 'en/cinemas/phenomena-experience/index.html').read_text()
+        self.assertIn('Phenomena Experience: venue information and programme | VO Barna', html)
+
     def test_date_pages_keep_exact_sessions_and_complete_html_with_localized_metadata(self):
         from date_listings import DAY_PATHS, date_view, render_date_view
         import re
@@ -278,7 +338,10 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('class="card-showtime"', film)
         self.assertIn('href="https://cinema.example/tickets"', film)
         self.assertIn('class="dialog-section showtimes-summary reading-wash" id="showtimes"', film)
-        self.assertNotIn('Not confirmed', film)
+        # Missing facts stay out of the primary layout; the closed explanation
+        # can explicitly distinguish unknown session audio from film metadata.
+        self.assertNotIn('Not confirmed', film.split('</main>')[0])
+        self.assertIn('Screening audio: Not confirmed', film.split('</main>')[1])
         self.assertNotIn('class="screenings"', film)
         payload = json.loads(film.split('<script type="application/json" id="film-dialog-data">')[1].split('</script>')[0])
         self.assertIsNone(payload['film']['sessions'][0]['language'])

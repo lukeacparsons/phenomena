@@ -36,6 +36,8 @@ Every VO Barna entry point loads `cinemas.css`, `theme.css`, then `ui-components
 
 The homepage has no introductory prose above the filters. Navigation and explanatory material remain in the footer and relevant information pages. Film pages have no extra “Films” breadcrumb above the poster.
 
+Film and cinema screening summaries, contextual guide links and supporting search copy belong inside the existing closed `details.site-information` at the bottom. The `.screening-context` section uses readable type when expanded, but adds no visible paragraphs, headings or panels to the primary film, cinema or home layout. Its content is rendered in HTML and opens with native keyboard-accessible disclosure behavior, including without JavaScript.
+
 ## Posters and surfaces
 
 All poster artwork has the same 6px corner radius, provided by `--poster-radius`. Keep the entire image visible. Round the actual image bounds, including posters whose proportions differ from the frame. The `--poster-ratio` emitted by both renderers lets CSS size the image without depending on a tiny preview's natural dimensions.
@@ -73,11 +75,14 @@ npm run site:build
 npm run site:check
 npm run site:test:styles
 node scripts/test_film_sheet_browser.cjs
+node scripts/test_screening_context_browser.cjs
 npm run site:test:browser
 npm run images:test:browser
 ```
 
 Browser commands accept `VOBARNA_PUBLIC_URL`; set it to the running preview. `PLAYWRIGHT_MODULE` can point to an existing Playwright installation. The style audit defaults to port 8811 and writes screenshots plus `report.json` under ignored `output/style-audit/`.
+
+The screening-context check defaults to port 8815. It verifies the closed footer, keyboard expansion, responsive layout and exact-screening links in EN/ES/CA with JavaScript enabled and disabled. Its evidence is written under `output/seo-content-2026-11-21/browser/`.
 
 The style audit checks every generated document for the shared stylesheet, then visits representative homepage, today/tomorrow, archive, film, cinema, directory, guide, discovery, discounts, programme, about, agent-guide and 404 pages. It covers desktop/mobile, light/dark and additional localized routes. It checks overflow, poster radii, flat surfaces, component adoption and mobile action sizes. Review the screenshots as well as the assertions.
 

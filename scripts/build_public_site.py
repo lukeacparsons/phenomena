@@ -22,6 +22,8 @@ from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
 from site_content import COPY, GUIDES, PUBLISHER, VENUE_COPY
+from screening_context import (COPY as CONTEXT_COPY, upcoming, shared_language, shared_version,
+                               examples as screening_examples, related_guides)
 from site_research import ResearchTranslations
 from site_identity import LOCALES, SECTIONS, new_registry, path_for, resolve, update_registry
 from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images
@@ -405,8 +407,54 @@ class Publication:
                     if s.get('subtitles'):
                         event['subtitleLanguage'] = {'@type': 'Language', 'name': s['subtitles']}
                     graph.append(event)
-                self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', t['film_description'].format(title=display_title), body,
-                          alternatives=alternatives, graph=graph, index=substantive, film_page=True)
+                pairs = upcoming([(film, s) for s in film['sessions']], self.now)
+                description = t['film_description'].format(title=display_title)
+                language_facts = [t[label] + ': ' + language_name(value, lang) + '.'
+                                  for field, label in [('language', 'audio'), ('subtitles', 'subtitles')]
+                                  if (value := shared_language(pairs, field))]
+                if version := shared_version(pairs):
+                    language_facts.insert(0, t['version'] + ': ' + version + '.')
+                if not pairs:
+                    description = CONTEXT_COPY[lang]['film_empty_description'].format(title=display_title)
+                elif language_facts:
+                    description = CONTEXT_COPY[lang]['film_description'].format(title=display_title, languages=' '.join(language_facts))
+                self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', description, body,
+                          alternatives=alternatives, graph=graph, index=substantive, film_page=True,
+                          footer_extra=self.screening_context(pairs, lang, title=display_title))
+
+    def screening_context(self, pairs, lang, *, title=None, cinema=None):
+        """Readable source-backed content inside the existing closed footer only."""
+        t, c = COPY[lang], CONTEXT_COPY[lang]
+        kind = 'film' if title is not None else 'venue'
+        values = {'title': title, 'name': cinema['name'] if cinema else None,
+                  'sessions': len(pairs), 'cinemas': len({s['cinema_id'] for _, s in pairs}),
+                  'films': len({f['id'] for f, _ in pairs})}
+        body = f'<section class="screening-context" aria-labelledby="screening-context-heading"><h2 id="screening-context-heading">{text(c[kind + "_heading"].format(**values))}</h2>'
+        if not pairs:
+            return body + f'<p>{text(t["none"])}</p></section>'
+        body += f'<p>{text(c[kind + "_intro"].format(**values))}</p><p>{text(c[kind + "_count"].format(**values))}</p>'
+        body += f'<p>{text(c["next"])}: {stamp(pairs[0][1]["starts_at"])}</p><p>{text(c[kind + "_selection"])}</p><ul class="screening-context-list">'
+        for film, session in screening_examples(pairs, film_page=title is not None):
+            venue = self.cinemas[session['cinema_id']]
+            film_path = self.entity_path('films', film['id'], lang)
+            label = (link(self.entity_path('cinemas', venue['id'], lang), venue['name']) if title is not None
+                     else link(film_path, film['title']))
+            anchor = 'screening-' + hashlib.sha256(session['id'].encode()).hexdigest()[:16]
+            # No duplicate IDs: the destination is the existing full film schedule.
+            action = link(film_path + '#' + anchor, t['select_screening'], ' class="screening-action" target="_self"')
+            facts = [(t['version'], session.get('version') or t['unknown']),
+                     (t['audio'], language_name(session.get('language'), lang)),
+                     (t['subtitles'], language_name(session.get('subtitles'), lang))]
+            if session.get('formats'):
+                facts.append((t['formats'], ', '.join(session['formats'])))
+            body += f'<li><p>{label} · {stamp(session["starts_at"])}</p><p>' + ' · '.join(text(k + ': ' + v) for k, v in facts) + '</p>'
+            body += f'<p>{action}</p><p class="source-note">{link(session.get("source_url"), t["source"])} · {text(t["checked"])}: {stamp(session.get("schedule_fetched_at"))}</p></li>'
+        body += '</ul>'
+        guides = [(f'/{lang}/{SECTIONS[lang]["guides"]}/{GUIDES["versions"][lang]}/', t['version_title'])]
+        guides += [(DISCOVERY_PATHS[key][lang], DISCOVERY_COPY[lang][key]) for key in related_guides(pairs, self.now)]
+        body += f'<h3>{text(c["related"])}</h3><ul>' + ''.join('<li>' + link(path, label) + '</li>' for path, label in guides) + '</ul>'
+        body += f'<p class="source-note">{text(c["snapshot"])}: {stamp(self.data["generated_at"])}</p><p>{text(t["stale"])}</p></section>'
+        return body
 
     def programme_listing(self, lang, *, cinema_id='', date=None):
         """Paint the full listing before the search catalogue or JavaScript arrives."""
@@ -518,8 +566,17 @@ class Publication:
                     graph[0]['address'] = address
                 if location.get('latitude') is not None and location.get('longitude') is not None:
                     graph[0]['geo'] = {'@type': 'GeoCoordinates', 'latitude': location['latitude'], 'longitude': location['longitude']}
-                self.page(alternatives[lang], lang, cinema['name'] + ' | VO Barna', t['venue_description'].format(name=cinema['name']), body,
-                          alternatives=alternatives, graph=graph, venue=True, interactive=True, cinema_id=cid, crumbs=[(t['cinemas'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
+                pairs = upcoming(self.by_cinema.get(cid, []), self.now)
+                c = CONTEXT_COPY[lang]
+                title = c['venue_title' if pairs else 'venue_empty_title'].format(name=cinema['name'])
+                description = t['venue_description'].format(name=cinema['name'])
+                selected_titles = [f['title'] for f, _ in screening_examples(pairs, film_page=False)][:2]
+                if selected_titles and len(', '.join(selected_titles)) <= 100:
+                    description = c['venue_description'].format(name=cinema['name'], films=', '.join(selected_titles))
+                self.page(alternatives[lang], lang, title + ' | VO Barna', description, body,
+                          alternatives=alternatives, graph=graph, venue=True, interactive=True, cinema_id=cid,
+                          footer_extra=self.screening_context(pairs, lang, cinema=cinema),
+                          crumbs=[(t['cinemas'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
 
     def indexes(self):
         films = [self.film_data(k, r) for k, r in self.registry['entities'].items() if r['kind'] == 'films']
