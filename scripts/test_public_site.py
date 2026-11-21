@@ -273,8 +273,10 @@ class PublicationTests(unittest.TestCase):
                 self.assertIn(paths[lang], (root / 'sitemap.xml').read_text())
                 self.assertIn('index,follow', html)
                 if kind == 'discounts':
-                    self.assertEqual(html.count('class="comparison-room discount-offer content-block"'), 6)
-                    self.assertIn('datetime="2026-11-19"', html)
+                    from discovery_collections import OFFERS, OFFERS_REVIEWED_ON
+                    self.assertEqual(html.count('<li class="discount-offer"'), sum(len(offer[1]) for offer in OFFERS))
+                    self.assertEqual(html.count('class="discount-day"'), 4)
+                    self.assertIn(f'datetime="{OFFERS_REVIEWED_ON}"', html)
                     self.assertNotIn('data-discovery-film=', html)
                     self.assertNotIn('"@type": "Offer"', html)
                     self.assertIn('https://www.cinesrenoir.com/precios/barcelona/', html)

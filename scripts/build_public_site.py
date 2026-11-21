@@ -36,7 +36,7 @@ from language_names import LANGUAGE_NAMES
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
-from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS,
+from discovery_collections import (EIXAMPLE_VENUES, repertory_match, OFFERS, OFFER_VENUES, OFFERS_REVIEWED_ON,
                                    REVIEWED_ON, SOURCES as COLLECTION_SOURCES)
 from date_listings import DAY_PATHS, COPY as DATE_COPY, published_dates, build_date_views
 from complete_programme import LABELS as PROGRAMME_LABELS, paginate_programme, programme_path, render_programme_directory
@@ -741,7 +741,7 @@ class Publication:
                 intro = d[kind + '_intro'].format(**values)
                 description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
-                body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
+                body = f'<h1>{text(d.get(kind + "_heading", dated_title))}</h1><p class="editorial">{text(intro)}</p>'
                 if kind == 'subtitles':
                     body += '<p>' + link(f'/{lang}/?q=' + quote(d['subtitle_search_query']), d['subtitle_search']) + '</p>'
                 if kind == 'discounts':
@@ -802,13 +802,15 @@ class Publication:
                 if kind in DISCOVERY_SECTIONS:
                     body += '<div id="guide-information">' + self.discovery_explanation(kind, lang) + '</div>'
                 body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
+                if kind == 'discounts':
+                    body += f'<details class="discount-sources"><summary>{text(d["offer_sources"])}</summary><p class="source-note">{self.discount_sources(lang)}</p></details>'
                 graph = [{'@type': 'ItemList', '@id': self.origin + paths[lang] + '#screenings',
                           'numberOfItems': len(pairs), 'itemListElement': [
                               {'@type': 'ListItem', 'position': i + 1, 'url': self.origin + self.entity_path('films', film['id'], lang) + '#screening-' + hashlib.sha256(s['id'].encode()).hexdigest()[:16],
                                'name': film['title'] + ' · ' + s['date'] + ' ' + s['time'] + ' · ' + self.cinemas[s['cinema_id']]['name']}
                               for i, (film, s) in enumerate(pairs)]}]
                 self.page(paths[lang], lang, dated_title + ' | VO Barna', description, body,
-                          alternatives=paths, graph=graph, crumbs=[(d[kind], paths[lang])])
+                          alternatives=paths, graph=graph, crumbs=[(d.get(kind + '_heading', d[kind]), paths[lang])])
 
     def discovery_explanation(self, kind, lang):
         d = DISCOVERY_COPY[lang]
@@ -852,22 +854,43 @@ class Publication:
         return body + '<ul>' + ''.join('<li>' + link(DISCOVERY_PATHS[k][lang], d[k]) + '</li>' for k in related) + '</ul>'
 
     def discount_offers(self, lang):
+        """Where it is cheap, when, and how much: a price list per day, cheapest first."""
         d = DISCOVERY_COPY[lang]
-        body = f'<p class="freshness">{text(d["offers_reviewed"])}: <time datetime="{REVIEWED_ON}">{REVIEWED_ON}</time></p><div class="comparison-rooms discount-offers">'
-        for key, venues, source, amount in OFFERS:
-            price = ('€' + amount if lang == 'en' else amount.replace('.', ',') + ' €') if amount else d[key + '_price']
-            cinemas = [cid for cid in venues if cid in self.cinemas]
-            body += f'<article class="comparison-room discount-offer content-block" id="{key}"><h2>{text(d[key])}</h2><dl><dt>{text(d["published_price"])}</dt><dd>{text(price)}</dd><dt>{text(d["offer_conditions"])}</dt><dd>{text(d[key + "_body"])}</dd></dl><p class="source-note">{self.citations([source], COLLECTION_SOURCES, lang)}</p>'
-            if cinemas:
-                body += '<details><summary>' + text(d['venue_programme']) + '</summary><ul>' + ''.join('<li>' + link(self.entity_path('cinemas', cid, lang), self.cinemas[cid]['name']) + '</li>' for cid in cinemas) + '</ul></details>'
-            body += '</article>'
-        body += '</div><p class="editorial">' + text(d['mooby_fees']) + ' ' + self.citations(['mooby-prices'], COLLECTION_SOURCES, lang) + '</p>'
-        for key in ('memberships', 'price_check'):
-            body += f'<section class="editorial"><h2>{text(d[key + "_title"])}</h2><p>{text(d[key + "_body"])}</p>'
-            if key == 'memberships':
-                body += '<p class="source-note">' + self.citations(['verdi-prices', 'renoir-prices'], COLLECTION_SOURCES, lang) + '</p>'
-            body += '</section>'
-        return body
+        body = '<div class="discount-offers reading-wash">'
+        anchored = set()
+        for weekday in sorted({day for _, days, *_ in OFFERS for day in days}, key=lambda day: day or 8):
+            body += f'<section class="discount-day"><h2>{text(d["offer_days"][weekday])}</h2><ul>'
+            for key, days, venues, _, amount in sorted(OFFERS, key=lambda offer: float(offer[4])):
+                if weekday not in days:
+                    continue
+                names, shown_brand = [], None
+                for cid in venues:
+                    brand, name, _ = OFFER_VENUES[cid]
+                    prefix = text(brand + ' ') if brand else ''
+                    if brand and brand == shown_brand:
+                        prefix = f'<span class="sr-only">{prefix}</span>'
+                    label = prefix + text(name)
+                    # The tariff stands without a published cinema page; only the link depends on it.
+                    names.append(f'<a href="{text(self.entity_path("cinemas", cid, lang))}">{label}</a>' if cid in self.cinemas else f'<span>{label}</span>')
+                    shown_brand = brand
+                places = {OFFER_VENUES[cid][2] for cid in venues}
+                note = ' · '.join(filter(None, [places.pop() if len(places) == 1 else '', d[key + '_body']]))
+                price = '€' + amount if lang == 'en' else amount.replace('.', ',') + ' €'
+                anchor = '' if key in anchored else f' id="{key}"'
+                anchored.add(key)
+                body += (f'<li class="discount-offer"{anchor}><div class="discount-venues">{" · ".join(names)}</div> '
+                         f'<strong class="discount-price">{text(price)}</strong>'
+                         + (f' <div class="discount-note">{text(note)}</div>' if note else '') + '</li>')
+            body += '</ul></section>'
+        return body + '</div>'
+
+    def discount_sources(self, lang):
+        """Price pages behind the board and their review date; shown inside a closed disclosure."""
+        d = DISCOVERY_COPY[lang]
+        sources = [COLLECTION_SOURCES[sid] for sid in dict.fromkeys(offer[3] for offer in OFFERS)]
+        year, month, date = map(int, OFFERS_REVIEWED_ON.split('-'))
+        return (' · '.join(link(source['url'], source['title'].split(' — ')[0]) for source in sources)
+                + f'. {text(d["offers_reviewed"])} <time datetime="{OFFERS_REVIEWED_ON}">{date} {text(d["offer_months"][month - 1])} {year}</time>.')
 
     def gracia_guide(self, lang):
         d = DISCOVERY_COPY[lang]
@@ -1096,7 +1119,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 - [Original-language cinema in Gràcia]({origin}{DISCOVERY_PATHS['gracia']['en']}): four reviewed venues, seven calendar days, English from 20:00, separate multilingual results and entrance guidance.
 - [Classics and repertory]({origin}{DISCOVERY_PATHS['classics']['en']}): reviewed returning editions and director seasons with current sessions; old release years and 4K labels alone do not qualify a film.
 - [Original-language cinema in Eixample]({origin}{DISCOVERY_PATHS['eixample']['en']}): five city-verified venues grouped by neighbourhood, with seven days of screenings.
-- [Cinema discount days]({origin}{DISCOVERY_PATHS['discounts']['en']}): dated operator tariffs with fees and conditions; linked programme examples are not verified discounted tickets.
+- [Cinema discount days]({origin}{DISCOVERY_PATHS['discounts']['en']}): discount-day tariffs from each operator's price page, by day and cinema, with the screenings that fall on those days.
 - [Compare screens, sound and seating]({origin}/en/{SECTIONS['en']['guides']}/{GUIDES['formats']['en']}/): six individual rooms with sourced dimensions, projection, sound and seating facts; missing measurements remain unknown.
 - [Film information]({origin}/en/films/): film facts, original audio, subtitles and official booking links.
 - [Cinema directory]({origin}/en/cinemas/): addresses and source-linked auditorium, seating and access research.

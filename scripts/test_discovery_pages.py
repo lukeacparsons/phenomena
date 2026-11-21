@@ -41,15 +41,41 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(select(sessions, 'eixample'), {'sagrada-familia': ['phenomena'], 'dreta': ['inside'],
                          'antiga-esquerra': [], 'sant-antoni': [], 'nova-esquerra': ['arenas']})
 
-    def test_discount_examples_are_limited_per_venue_without_price_assignment(self):
+    def test_discount_screenings_fall_under_each_cinemas_published_offer(self):
         import copy
-        sessions = [session('later', '2026-11-21T20:00:00+01:00', cinema_id='verdi'),
-                    session('first', cinema_id='verdi'), session('second', '2026-11-20T21:00:00+01:00', cinema_id='verdi'),
-                    session('texas', cinema_id='espai-texas'), session('unreviewed', cinema_id='phenomena'),
-                    session('outside', '2026-11-25T23:00:00Z', cinema_id='espai-texas')]
+        thursday, friday, monday, wednesday = ('2026-11-19T20:00:00+01:00', '2026-11-20T20:00:00+01:00',
+                                               '2026-11-23T20:00:00+01:00', '2026-11-25T20:00:00+01:00')
+        sessions = [session('verdi-monday', monday, cinema_id='verdi'), session('verdi-friday', friday, cinema_id='verdi'),
+                    session('texas-thursday', thursday, cinema_id='espai-texas'),
+                    session('filmoteca-friday', friday, cinema_id='filmoteca-catalunya'),
+                    session('bosque-vose', friday, cinema_id='mooby-bosque', version='VOSE'),
+                    session('bosque-vo', friday, cinema_id='mooby-bosque', version='VO'),
+                    session('girona-event', wednesday, cinema_id='cinemes-girona', price_data={'minimum': 17, 'maximum': 17}),
+                    session('girona-wednesday', wednesday, cinema_id='cinemes-girona', price_data={'minimum': 5, 'maximum': 5}),
+                    session('unreviewed', monday, cinema_id='phenomena'),
+                    session('outside', '2026-11-26T20:00:00+01:00', cinema_id='espai-texas')]
         before = copy.deepcopy(sessions)
-        self.assertEqual(select(sessions, 'discounts'), {'discount-screenings': ['first', 'texas', 'second']})
+        self.assertEqual(select(sessions, 'discounts'), {'discount-screenings': [
+            'texas-thursday', 'bosque-vose', 'filmoteca-friday', 'verdi-monday', 'girona-wednesday']})
         self.assertEqual(sessions, before)
+
+    def test_discount_screenings_skip_holidays_and_stated_eves(self):
+        eve, kings = '2026-12-07T20:00:00+01:00', '2027-01-06T20:00:00+01:00'
+        self.assertEqual(select([session('cinebaix', eve, cinema_id='cinebaix'), session('renoir', eve, cinema_id='renoir-floridablanca')],
+                                'discounts', '2026-12-06T12:00:00+00:00'), {'discount-screenings': ['renoir']})
+        self.assertEqual(select([session('girona', kings, cinema_id='cinemes-girona'), session('filmoteca', kings, cinema_id='filmoteca-catalunya')],
+                                'discounts', '2027-01-04T12:00:00+00:00'), {'discount-screenings': ['filmoteca']})
+
+    def test_discount_summary_matches_the_published_offers(self):
+        from discovery_collections import COPY, OFFERS, OFFER_VENUES
+        amounts = sorted(float(offer[4]) for offer in OFFERS)
+        for lang, copy in COPY.items():
+            money = (lambda value: f'€{value:.2f}') if lang == 'en' else (lambda value: f'{value:.2f} €'.replace('.', ','))
+            self.assertIn(money(amounts[0]), copy['discounts_intro'])
+            for key, days, venues, _, _ in OFFERS:
+                self.assertIn(key + '_body', copy)
+                self.assertTrue(all(0 <= day < len(copy['offer_days']) for day in days))
+                self.assertTrue(set(venues) <= set(OFFER_VENUES))
 
     def test_vosc_requires_catalan_subtitles_independently_of_audio_and_version(self):
         sessions = [session('french', language='French', subtitles='Català'),

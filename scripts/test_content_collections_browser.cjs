@@ -26,13 +26,12 @@ const routes={
    const graph=JSON.parse(await page.locator('script[type="application/ld+json"]').first().textContent())['@graph'];
    assert.equal(graph.find(n=>n['@type']==='ItemList').numberOfItems,cards);
    if(i===2){
-    assert.equal(await page.locator('.discount-offer').count(),6);
+    assert.equal(await page.locator('.discount-offer').count(),20);
     assert.equal(await page.locator('.discount-offers ~ section').count()>0,true);
     assert.equal(await page.locator('.discount-offers time').count(),0);
-    assert.equal(await page.locator('time[datetime="2026-11-19"]').count()>0,true);
+    assert.equal(await page.locator('time[datetime="2026-11-21"]').count()>0,true);
     assert.equal(graph.some(n=>n['@type']==='Offer'),false);
-    await page.locator('.discount-offer details summary').first().click();
-    assert.equal(await page.locator('.discount-offer details[open] a').count(),2);
+    assert.equal(await page.locator('#verdi-monday .discount-venues a').count(),2);
    }
   }
   await plain.close();console.log('Nine localized collections passed no-JS, metadata, counts, and tariff separation checks.');

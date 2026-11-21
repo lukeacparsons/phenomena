@@ -3,6 +3,7 @@
 Repertory matches use cinema + provider film ID + original year. A source
 category never supplies a session's projection format, language or price.
 """
+from datetime import timedelta
 
 REVIEWED_ON = '2026-11-19'
 REPERTORY_UNTIL = '2026-12-31'
@@ -25,6 +26,16 @@ SOURCES = {
     'renoir-prices': {'title': 'Renoir — precios Barcelona', 'url': 'https://www.cinesrenoir.com/precios/barcelona/'},
     'mooby-prices': {'title': 'Mooby — preus', 'url': 'https://www.moobycinemas.com/preus'},
     'texas-prices': {'title': 'Espai Texas — informació pràctica', 'url': 'https://espaitexas.cat/informacio-practica/'},
+    'malda-prices': {'title': 'Maldà — precios', 'url': 'https://www.cinemamalda.com/precios-cine-malda-barcelona-preus/'},
+    'girona-prices': {'title': 'Girona — preus', 'url': 'https://www.cinemesgirona.cat/preus'},
+    'zumzeig-prices': {'title': 'Zumzeig — tarifas', 'url': 'https://zumzeigcine.coop/es/mas-informacion/tarifes/'},
+    'filmoteca-prices': {'title': 'Filmoteca — informació pràctica', 'url': 'https://www.filmoteca.cat/web/ca/informacio-practica'},
+    'filmax-prices': {'title': 'Filmax — precios', 'url': 'https://cinesfilmax.com/precios'},
+    'castellet-prices': {'title': 'Can Castellet — tarifas', 'url': 'https://www.cinemescancastellet.com/precios'},
+    'cinebaix-prices': {'title': 'CineBaix — preus', 'url': 'https://www.cinebaix.cat/'},
+    'montcada-prices': {'title': 'Montcada — preus', 'url': 'https://www.cinemesmontcada.com/preus'},
+    'ocine-prices': {'title': 'OCINE Màgic — precios', 'url': 'https://ocinemagic.es/precios-y-promociones'},
+    'kinepolis-mataro-prices': {'title': 'Kinépolis Mataró — tarifas', 'url': 'https://kinepolis.es/cines/kinepolis-mataro-parc/info/'},
 }
 for _source in SOURCES.values():
     _source['checked_on'] = REVIEWED_ON
@@ -67,15 +78,80 @@ def repertory_match(film, session):
     return record if record and year == record[0] else None
 
 
+# (key, ISO weekdays, venues, source, amount). Weekday 0 means every day.
+# Every row is a general-admission tariff read on the operator's own price page.
+# A dated tariff says when an offer is published; it never prices a session.
+OFFERS_REVIEWED_ON = '2026-11-21'
 OFFERS = (
-    ('verdi-monday', ('verdi', 'verdi-park'), 'verdi-prices', '5.90'),
-    ('renoir-days', ('renoir-floridablanca',), 'renoir-prices', None),
-    ('mooby-wednesday', ('mooby-aribau', 'mooby-balmes', 'mooby-bosque', 'mooby-arenas', 'mooby-glories'), 'mooby-prices', '6.50'),
-    ('mooby-thursday', ('mooby-arenas', 'mooby-glories'), 'mooby-prices', '6.50'),
-    ('bosque-vose', ('mooby-bosque',), 'mooby-prices', '6.50'),
-    ('texas-thursday', ('espai-texas',), 'texas-prices', '4.00'),
+    ('cinebaix-monday', (1,), ('cinebaix',), 'cinebaix-prices', '5.00'),
+    ('renoir-days', (1, 3), ('renoir-floridablanca',), 'renoir-prices', '5.50'),
+    ('verdi-monday', (1,), ('verdi', 'verdi-park'), 'verdi-prices', '5.90'),
+    ('malda-days', (1, 3), ('cinema-malda',), 'malda-prices', '5.90'),
+    ('girona-wednesday', (3,), ('cinemes-girona',), 'girona-prices', '5.00'),
+    ('zumzeig-wednesday', (3,), ('zumzeig',), 'zumzeig-prices', '5.50'),
+    ('castellet-wednesday', (3,), ('can-castellet',), 'castellet-prices', '5.50'),
+    ('montcada-wednesday', (3,), ('cinemes-montcada',), 'montcada-prices', '5.90'),
+    ('mooby-wednesday', (3,), ('mooby-aribau', 'mooby-balmes', 'mooby-bosque', 'mooby-arenas', 'mooby-glories'), 'mooby-prices', '6.50'),
+    ('filmax-wednesday', (3,), ('filmax-gran-via',), 'filmax-prices', '6.70'),
+    ('ocine-wednesday', (3,), ('ocine-magic',), 'ocine-prices', '6.90'),
+    ('mataro-wednesday', (3,), ('kinepolis-mataro',), 'kinepolis-mataro-prices', '6.99'),
+    ('sarria-wednesday', (3,), ('mooby-sarria',), 'mooby-prices', '8.00'),
+    ('texas-thursday', (4,), ('espai-texas',), 'texas-prices', '4.00'),
+    ('filmax-thursday', (4,), ('filmax-gran-via',), 'filmax-prices', '4.90'),
+    ('mooby-thursday', (4,), ('mooby-arenas', 'mooby-glories'), 'mooby-prices', '6.50'),
+    ('filmoteca-daily', (0,), ('filmoteca-catalunya',), 'filmoteca-prices', '4.00'),
+    ('bosque-vose', (0,), ('mooby-bosque',), 'mooby-prices', '6.50'),
 )
-DISCOUNT_VENUES = frozenset(cid for _, venues, _, _ in OFFERS for cid in venues)
+# Catalonia-wide and Barcelona public holidays. Review every year: a weekday
+# offer is never listed on a holiday, nor on its eve where the tariff says so.
+HOLIDAYS = frozenset({
+    '2026-12-08', '2026-12-25', '2026-12-26', '2027-01-01', '2027-01-06', '2027-03-26', '2027-03-29',
+    '2027-05-01', '2027-05-17', '2027-06-24', '2027-08-15', '2027-09-11', '2027-09-24', '2027-10-12',
+    '2027-11-01', '2027-12-06', '2027-12-08', '2027-12-25', '2027-12-26',
+})
+EVE_EXCLUDED = frozenset({'cinebaix-monday', 'girona-wednesday', 'montcada-wednesday', 'ocine-wednesday', 'mataro-wednesday'})
+SUBTITLED_ONLY = frozenset({'bosque-vose'})
+
+
+def discount_offer(session, day):
+    """The published offer a session falls under on its local date, or None."""
+    price = session.get('price_data') or {}
+    lowest = price.get('amount', price.get('minimum'))
+    for key, days, venues, _, amount in OFFERS:
+        if session.get('cinema_id') not in venues:
+            continue
+        if 0 not in days:
+            if day.isoweekday() not in days or day.isoformat() in HOLIDAYS:
+                continue
+            if key in EVE_EXCLUDED and (day + timedelta(days=1)).isoformat() in HOLIDAYS:
+                continue
+        if key in SUBTITLED_ONLY and not str(session.get('version') or '').upper().startswith('VOS'):
+            continue
+        # A collected price well above the tariff marks an event or premium format outside the offer.
+        if lowest is not None and float(lowest) > float(amount) + 3:
+            continue
+        return key
+    return None
+
+
+for _offer in OFFERS:
+    SOURCES[_offer[3]]['checked_on'] = OFFERS_REVIEWED_ON
+# (brand, name, place). A brand shared by neighbouring venues in a row is shown
+# once; the place is shown when every venue in the row shares it.
+OFFER_VENUES = {
+    'verdi': ('', 'Verdi', 'Gràcia'), 'verdi-park': ('', 'Verdi Park', 'Gràcia'),
+    'renoir-floridablanca': ('', 'Renoir Floridablanca', 'Eixample'),
+    'mooby-aribau': ('Mooby', 'Aribau', 'Eixample'), 'mooby-balmes': ('Mooby', 'Balmes', 'Sant Gervasi'),
+    'mooby-bosque': ('Mooby', 'Bosque', 'Gràcia'), 'mooby-arenas': ('Mooby', 'Arenas', 'Eixample'),
+    'mooby-glories': ('Mooby', 'Glòries', 'Sant Martí'), 'mooby-sarria': ('Mooby', 'Gran Sarrià Club', 'Sarrià'),
+    'espai-texas': ('', 'Espai Texas', 'Gràcia'), 'cinema-malda': ('', 'Cinema Maldà', 'Ciutat Vella'),
+    'cinemes-girona': ('', 'Cinemes Girona', 'Eixample'), 'zumzeig': ('', 'Zumzeig', 'Sants'),
+    'filmoteca-catalunya': ('', 'Filmoteca de Catalunya', 'El Raval'),
+    'cinebaix': ('', 'CineBaix', 'Sant Feliu de Llobregat'), 'can-castellet': ('', 'Can Castellet', 'Sant Boi de Llobregat'),
+    'cinemes-montcada': ('', 'Cinemes Montcada', 'Montcada i Reixac'),
+    'filmax-gran-via': ('', 'Filmax Gran Via', 'L’Hospitalet de Llobregat'),
+    'ocine-magic': ('', 'OCINE Màgic', 'Badalona'), 'kinepolis-mataro': ('', 'Kinépolis Mataró Parc', 'Mataró'),
+}
 
 COPY = {
  'en': {
@@ -106,31 +182,33 @@ COPY = {
     'eixample_aribau': 'Aribau Cinema is Sala 5 within Mooby Aribau. A screening elsewhere in the complex does not inherit Sala 5’s equipment.',
     'eixample_method': 'Venue membership and neighbourhood names are checked against Barcelona City Council listings. This page selects seven local calendar days at those five venues from our original-audio catalogue. A nearby landmark or an address containing “Barcelona” does not qualify another cinema. Unknown audio remains unknown; VOSE does not mean English.',
     'discounts': 'Cinema discount days in Barcelona: offers, fees and conditions',
-    'discounts_intro': 'Compare selected published offers at Verdi, Renoir, Mooby and Espai Texas. These are dated tariffs, not live quotes for the screenings below. Check the cinema, day, ticket category, fees and format supplements before paying. The final booking price controls.',
+    'discounts_heading': 'Cinema discount days',
+    'discounts_intro': 'Monday, Wednesday and Thursday are the cheap days: tickets from €4.00.',
     'discounts_description': 'Compare Barcelona cinema discount days, booking fees, membership conditions and selected original-language programmes with dated operator sources.',
-    'offers_reviewed': 'Tariffs reviewed', 'published_price': 'Published admission',
-    'offer_conditions': 'Conditions and fees', 'venue_programme': 'Cinema details and programme',
-    'verdi-monday': 'Monday · Verdi and Verdi Park',
-    'verdi-monday_body': 'General Monday tariff. Confirm the checkout total: the operator’s fee-inclusive footnote marks other rates, but not this Monday amount. Distributor exceptions may apply.',
-    'renoir-days': 'Monday and Wednesday · Renoir Floridablanca',
-    'renoir-days_price': '€5.50 box office · €5.40 online',
-    'renoir-days_body': 'Non-holiday spectator days. The online tariff includes booking fees and VAT. Special screenings may have separate prices.',
-    'mooby-wednesday': 'Wednesday · selected Mooby cinemas',
-    'mooby-wednesday_body': 'Non-holidays, excluding Gran Sarrià Club. Check supplements and special-event prices.',
-    'mooby-thursday': 'Thursday · Mooby Arenas and Glòries',
-    'mooby-thursday_body': 'Non-holidays; applies only at these two cinemas.',
-    'bosque-vose': 'Every day · VOSE at Mooby Bosque',
-    'bosque-vose_body': 'Published specifically for VOSE sessions at Bosque; do not apply it to every version or Mooby venue.',
-    'mooby_fees': 'Mooby publishes €2 for 3D and €1 each for Atmos and Infinity Vision. Check the applicable supplements and total in the selected session.',
-    'texas-thursday': 'Thursday · Espai Texas',
-    'texas-thursday_body': 'Published spectator-day admission. The FAQ applies the €1 fee only online; another paragraph also mentions printed tickets. Confirm the fee before paying.',
-    'memberships_title': 'Membership and age-based offers',
-    'memberships_body': 'Verdi lists a €5.40 Monday rate for Amics del Verdi members. Renoir publishes separate member tariffs. Compare membership costs and eligibility against your likely visits; a members’ price is not available to everyone. Age-based offers require the stated age, identification and any programme quota.',
-    'price_check_title': 'Compare the total for the same screening',
-    'price_check_body': 'Use the same date, version and ticket type when comparing prices. Include compulsory fees and applicable format supplements. Public holidays, special events and membership rules can change the offer. Missing prices are unknown, not free. This guide covers selected published offers and does not establish the cheapest cinema in the city.',
-    'discount-screenings': 'Upcoming screenings at featured cinemas',
-    'discount-screenings_note': 'These are up to two upcoming original-language sessions per cinema over the next seven calendar days. They are programme examples, not verified discounted tickets. Their dates, eligibility and checkout totals must be checked separately against the offers above.',
-    'discounts_method': 'Tariff sources have their own review date, separate from programme collection and page generation. The session list uses venue membership and future start times only; no offer amount is assigned to a screening or published as its ticket price.',
+    'offers_reviewed': 'Reviewed', 'offer_sources': 'Sources',
+    'offer_days': ('Every day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+    'offer_months': ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
+    'cinebaix-monday_body': 'Not on public holidays or their eves.',
+    'renoir-days_body': '€5.40 online. Not on public holidays.',
+    'verdi-monday_body': 'Amics del Verdi members: €5.40.',
+    'malda-days_body': 'Valid for every film that day. Box office only.',
+    'girona-wednesday_body': 'Not on public holidays or their eves.',
+    'zumzeig-wednesday_body': 'Not on public holidays.',
+    'castellet-wednesday_body': '',
+    'montcada-wednesday_body': '',
+    'mooby-wednesday_body': 'Not on public holidays. 3D +€2; Atmos and Infinity Vision +€1.',
+    'filmax-wednesday_body': '',
+    'ocine-wednesday_body': '',
+    'mataro-wednesday_body': 'Online; €7.99 at the box office. Not on public holidays or their eves.',
+    'sarria-wednesday_body': 'Not on public holidays.',
+    'texas-thursday_body': '+€1 booking fee.',
+    'filmax-thursday_body': 'Not on public holidays, 4DX or ScreenX.',
+    'mooby-thursday_body': 'Not on public holidays.',
+    'filmoteca-daily_body': '',
+    'bosque-vose_body': 'VOSE screenings only.',
+    'discount-screenings': 'Screenings on discount days',
+    'discount-screenings_note': 'The next seven days, at the cinemas and days above.',
+    'discounts_method': 'Tariffs come from each cinema’s price page. We list each cinema’s screenings on its discount day, leaving out public holidays and their eves.',
  },
  'es': {
     'classics': 'Cine clásico y de repertorio en Barcelona: próximas sesiones',
@@ -160,31 +238,33 @@ COPY = {
     'eixample_aribau': 'Aribau Cinema es la sala 5 de Mooby Aribau. Una sesión en otra sala del complejo no hereda el equipamiento de la sala 5.',
     'eixample_method': 'La pertenencia al distrito y los nombres de los barrios se verifican en las fichas del Ayuntamiento de Barcelona. Seleccionamos siete días naturales locales en estos cinco cines a partir del catálogo de audio original. Un monumento cercano o una dirección con «Barcelona» no permiten incluir otro cine. El audio desconocido sigue sin confirmar; VOSE no significa inglés.',
     'discounts': 'Días de descuento en los cines de Barcelona: ofertas y condiciones',
-    'discounts_intro': 'Compara ofertas publicadas de Verdi, Renoir, Mooby y Espai Texas. Son tarifas con fecha de revisión, no presupuestos en tiempo real para las sesiones de abajo. Comprueba cine, día, categoría de entrada, gastos y suplementos antes de pagar. Prevalece el precio final de compra.',
+    'discounts_heading': 'Días de descuento en el cine',
+    'discounts_intro': 'Lunes, miércoles y jueves son los días baratos: entradas desde 4,00 €.',
     'discounts_description': 'Compara días de descuento, gastos de gestión y condiciones de socio en cines de Barcelona, con fuentes oficiales fechadas y programación en versión original.',
-    'offers_reviewed': 'Tarifas revisadas', 'published_price': 'Entrada publicada',
-    'offer_conditions': 'Condiciones y gastos', 'venue_programme': 'Ficha del cine y cartelera',
-    'verdi-monday': 'Lunes · Verdi y Verdi Park',
-    'verdi-monday_body': 'Tarifa general del lunes. Confirma el total: la nota sobre gastos incluidos marca otras tarifas, pero no este importe del lunes. Puede haber excepciones por distribuidora.',
-    'renoir-days': 'Lunes y miércoles · Renoir Floridablanca',
-    'renoir-days_price': '5,50 € en taquilla · 5,40 € online',
-    'renoir-days_body': 'Días del espectador no festivos. La tarifa online incluye gestión e IVA. Las sesiones especiales pueden tener otros precios.',
-    'mooby-wednesday': 'Miércoles · cines Mooby seleccionados',
-    'mooby-wednesday_body': 'No festivos, excepto Gran Sarrià Club. Consulta suplementos y precios de eventos especiales.',
-    'mooby-thursday': 'Jueves · Mooby Arenas y Glòries',
-    'mooby-thursday_body': 'No festivos; solo en estos dos cines.',
-    'bosque-vose': 'Todos los días · VOSE en Mooby Bosque',
-    'bosque-vose_body': 'Tarifa específica para sesiones VOSE de Bosque; no se aplica a todas las versiones ni a todos los cines Mooby.',
-    'mooby_fees': 'Mooby publica suplementos de 2 € por 3D y de 1 € por Atmos e Infinity Vision, respectivamente. Comprueba cuáles corresponden y el total de la sesión.',
-    'texas-thursday': 'Jueves · Espai Texas',
-    'texas-thursday_body': 'Entrada publicada del día del espectador. Las preguntas frecuentes aplican 1 € de gestión solo online; otro párrafo menciona también entradas impresas. Confirma el cargo antes de pagar.',
-    'memberships_title': 'Ofertas para socios y por edad',
-    'memberships_body': 'Verdi publica 5,40 € los lunes para socios de Amics del Verdi. Renoir tiene tarifas de socio separadas. Compara cuota y requisitos con las visitas previstas; una tarifa de socio no está disponible para todo el mundo. Las ofertas por edad exigen la edad indicada, acreditación y cualquier cupo del programa.',
-    'price_check_title': 'Compara el total de la misma sesión',
-    'price_check_body': 'Compara la misma fecha, versión y categoría de entrada. Incluye los gastos obligatorios y los suplementos aplicables. Festivos, eventos especiales y condiciones de socio pueden modificar la oferta. Un precio ausente es desconocido, no gratuito. Esta selección no determina cuál es el cine más barato de la ciudad.',
-    'discount-screenings': 'Próximas sesiones en los cines destacados',
-    'discount-screenings_note': 'Hasta dos próximas sesiones en versión original por cine en los siguientes siete días naturales. Son ejemplos de programación, no entradas con descuento verificado. Comprueba fechas, requisitos y precio final por separado frente a las ofertas anteriores.',
-    'discounts_method': 'Las fuentes de tarifas tienen su propia fecha de revisión, independiente de la consulta de la cartelera y la generación de la página. La lista solo utiliza el cine y la hora futura; no asignamos el importe de una oferta a una sesión ni lo publicamos como su precio.',
+    'offers_reviewed': 'Revisado el', 'offer_sources': 'Fuentes',
+    'offer_days': ('Todos los días', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'),
+    'offer_months': ('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'),
+    'cinebaix-monday_body': 'No festivos ni vísperas.',
+    'renoir-days_body': '5,40 € online. No festivos.',
+    'verdi-monday_body': 'Socios de Amics del Verdi: 5,40 €.',
+    'malda-days_body': 'Vale para todas las películas del día. Solo en taquilla.',
+    'girona-wednesday_body': 'No festivos ni vísperas.',
+    'zumzeig-wednesday_body': 'No festivos.',
+    'castellet-wednesday_body': '',
+    'montcada-wednesday_body': '',
+    'mooby-wednesday_body': 'No festivos. 3D +2 €; Atmos e Infinity Vision +1 €.',
+    'filmax-wednesday_body': '',
+    'ocine-wednesday_body': '',
+    'mataro-wednesday_body': 'Online; 7,99 € en taquilla. No festivos ni vísperas.',
+    'sarria-wednesday_body': 'No festivos.',
+    'texas-thursday_body': '+1 € de gestión.',
+    'filmax-thursday_body': 'No festivos, 4DX ni ScreenX.',
+    'mooby-thursday_body': 'No festivos.',
+    'filmoteca-daily_body': '',
+    'bosque-vose_body': 'Solo sesiones VOSE.',
+    'discount-screenings': 'Sesiones en día de descuento',
+    'discount-screenings_note': 'Los próximos siete días, en los cines y días de arriba.',
+    'discounts_method': 'Las tarifas salen de la página de precios de cada cine. Mostramos las sesiones de cada cine en su día de descuento, sin festivos ni vísperas.',
  },
  'ca': {
     'classics': 'Cinema clàssic i de repertori a Barcelona: pròximes sessions',
@@ -214,30 +294,32 @@ COPY = {
     'eixample_aribau': 'Aribau Cinema és la sala 5 de Mooby Aribau. Una sessió en una altra sala del complex no hereta l’equipament de la sala 5.',
     'eixample_method': 'La pertinença al districte i els noms dels barris es verifiquen a les fitxes de l’Ajuntament de Barcelona. Seleccionem set dies naturals locals en aquests cinc cinemes a partir del catàleg d’àudio original. Un monument proper o una adreça amb «Barcelona» no permeten incloure un altre cinema. L’àudio desconegut continua sense confirmar; VOSE no vol dir anglès.',
     'discounts': 'Dies de descompte als cinemes de Barcelona: ofertes i condicions',
-    'discounts_intro': 'Compara ofertes publicades de Verdi, Renoir, Mooby i Espai Texas. Són tarifes amb data de revisió, no pressupostos en temps real per a les sessions de sota. Comprova cinema, dia, categoria d’entrada, despeses i suplements abans de pagar. Preval el preu final de compra.',
+    'discounts_heading': 'Dies de descompte al cinema',
+    'discounts_intro': 'Dilluns, dimecres i dijous són els dies barats: entrades des de 4,00 €.',
     'discounts_description': 'Compara dies de descompte, despeses de gestió i condicions de soci als cinemes de Barcelona, amb fonts oficials datades i programació en versió original.',
-    'offers_reviewed': 'Tarifes revisades', 'published_price': 'Entrada publicada',
-    'offer_conditions': 'Condicions i despeses', 'venue_programme': 'Fitxa del cinema i cartellera',
-    'verdi-monday': 'Dilluns · Verdi i Verdi Park',
-    'verdi-monday_body': 'Tarifa general del dilluns. Confirma el total: la nota sobre despeses incloses marca altres tarifes, però no aquest import del dilluns. Hi pot haver excepcions per distribuïdora.',
-    'renoir-days': 'Dilluns i dimecres · Renoir Floridablanca',
-    'renoir-days_price': '5,50 € a taquilla · 5,40 € en línia',
-    'renoir-days_body': 'Dies de l’espectador no festius. La tarifa en línia inclou gestió i IVA. Les sessions especials poden tenir altres preus.',
-    'mooby-wednesday': 'Dimecres · cinemes Mooby seleccionats',
-    'mooby-wednesday_body': 'No festius, excepte Gran Sarrià Club. Consulta suplements i preus d’esdeveniments especials.',
-    'mooby-thursday': 'Dijous · Mooby Arenas i Glòries',
-    'mooby-thursday_body': 'No festius; només en aquests dos cinemes.',
-    'bosque-vose': 'Cada dia · VOSE a Mooby Bosque',
-    'bosque-vose_body': 'Tarifa específica per a sessions VOSE de Bosque; no s’aplica a totes les versions ni a tots els cinemes Mooby.',
-    'mooby_fees': 'Mooby publica suplements de 2 € per 3D i d’1 € per Atmos i Infinity Vision, respectivament. Comprova quins corresponen i el total de la sessió.',
-    'texas-thursday': 'Dijous · Espai Texas',
-    'texas-thursday_body': 'Entrada publicada del dia de l’espectador. Les preguntes freqüents apliquen 1 € de gestió només en línia; un altre paràgraf també esmenta entrades impreses. Confirma el càrrec abans de pagar.',
-    'memberships_title': 'Ofertes per a socis i per edat',
-    'memberships_body': 'Verdi publica 5,40 € els dilluns per a socis d’Amics del Verdi. Renoir té tarifes de soci separades. Compara quota i requisits amb les visites previstes; una tarifa de soci no està disponible per a tothom. Les ofertes per edat exigeixen l’edat indicada, acreditació i qualsevol quota de places del programa.',
-    'price_check_title': 'Compara el total de la mateixa sessió',
-    'price_check_body': 'Compara la mateixa data, versió i categoria d’entrada. Inclou les despeses obligatòries i els suplements aplicables. Festius, esdeveniments especials i condicions de soci poden modificar l’oferta. Un preu absent és desconegut, no gratuït. Aquesta selecció no determina quin és el cinema més barat de la ciutat.',
-    'discount-screenings': 'Pròximes sessions als cinemes destacats',
-    'discount-screenings_note': 'Fins a dues pròximes sessions en versió original per cinema en els set dies naturals següents. Són exemples de programació, no entrades amb descompte verificat. Comprova dates, requisits i preu final per separat respecte de les ofertes anteriors.',
-    'discounts_method': 'Les fonts de tarifes tenen la seva pròpia data de revisió, independent de la consulta de la cartellera i la generació de la pàgina. La llista només utilitza el cinema i l’hora futura; no assignem l’import d’una oferta a una sessió ni el publiquem com el seu preu.',
+    'offers_reviewed': 'Revisat el', 'offer_sources': 'Fonts',
+    'offer_days': ('Cada dia', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge'),
+    'offer_months': ('gen', 'febr', 'març', 'abr', 'maig', 'juny', 'jul', 'ag', 'set', 'oct', 'nov', 'des'),
+    'cinebaix-monday_body': 'No festius ni vigílies.',
+    'renoir-days_body': '5,40 € en línia. No festius.',
+    'verdi-monday_body': 'Socis d’Amics del Verdi: 5,40 €.',
+    'malda-days_body': 'Val per a totes les pel·lícules del dia. Només a taquilla.',
+    'girona-wednesday_body': 'No festius ni vigílies.',
+    'zumzeig-wednesday_body': 'No festius.',
+    'castellet-wednesday_body': '',
+    'montcada-wednesday_body': '',
+    'mooby-wednesday_body': 'No festius. 3D +2 €; Atmos i Infinity Vision +1 €.',
+    'filmax-wednesday_body': '',
+    'ocine-wednesday_body': '',
+    'mataro-wednesday_body': 'En línia; 7,99 € a taquilla. No festius ni vigílies.',
+    'sarria-wednesday_body': 'No festius.',
+    'texas-thursday_body': '+1 € de gestió.',
+    'filmax-thursday_body': 'No festius, 4DX ni ScreenX.',
+    'mooby-thursday_body': 'No festius.',
+    'filmoteca-daily_body': '',
+    'bosque-vose_body': 'Només sessions VOSE.',
+    'discount-screenings': 'Sessions en dia de descompte',
+    'discount-screenings_note': 'Els pròxims set dies, als cinemes i dies de dalt.',
+    'discounts_method': 'Les tarifes surten de la pàgina de preus de cada cinema. Mostrem les sessions de cada cinema en el seu dia de descompte, sense festius ni vigílies.',
  },
 }

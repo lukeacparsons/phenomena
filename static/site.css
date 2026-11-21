@@ -110,6 +110,20 @@
 .comparison-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,27rem),1fr));gap:var(--space-section)}
 .comparison-room{min-width:0}
 .comparison-room h3{margin-top:0}.comparison-room dt{font-weight:700;margin-top:1rem}.comparison-room dd{margin:.35rem 0;overflow-wrap:anywhere}.comparison-room ul{padding-left:1.25rem;margin:.25rem 0}
+/* Discount days: where it is cheap, when and how much. Days stack; each day's offers run across columns, cheapest first. */
+.discount-offers{margin:var(--space-group) 0}
+.discount-day+.discount-day{margin-top:var(--space-section)}
+.public-site main .discount-day h2{margin:0;padding-bottom:8px;border-bottom:2px solid var(--tx);font-size:1.125rem;line-height:1.3}
+.public-site main .discount-day ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16.5rem),1fr));column-gap:var(--space-section);list-style:none;margin:0;padding:0}
+.public-site main .discount-offer{display:grid;grid-template-columns:4.75rem minmax(0,1fr);align-content:start;column-gap:12px;margin:0;padding:6px 0 12px;border-bottom:1px solid var(--border);line-height:22px;scroll-margin-top:calc(var(--header-height) + 36px)}
+.discount-price{grid-area:1/1/span 2;font-size:1.375rem;line-height:32px;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* Wrapped cinema names keep a 32px pitch while each link keeps a 44px target. */
+.discount-venues{grid-column:2}
+.discount-venues a{display:inline-block;padding:11px 0;margin:-6px 0}
+.discount-note{grid-column:2;font-size:.875rem;line-height:1.45;color:var(--tx2)}
+.discount-sources>summary{width:fit-content;min-height:var(--touch-target);align-content:center;cursor:pointer;font-size:.875rem;color:var(--tx2)}
+.discount-sources>summary:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+@media(max-width:460px){.discount-offers.reading-wash{--reading-wash-spread:14px}}
 
 /* Date-page context belongs inside the collapsed information footer. */
 .site-information .date-heading{max-width:760px;margin:20px 0}

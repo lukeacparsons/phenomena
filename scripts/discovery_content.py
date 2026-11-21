@@ -13,7 +13,7 @@ from discovery_guides import COPY as GUIDE_COPY
 from discovery_local import COPY as LOCAL_COPY, GRACIA_VENUES
 from discovery_collections import (COPY as COLLECTION_COPY, EIXAMPLE_VENUES,
                                    REPERTORY_GROUPS, REPERTORY_UNTIL, REVIEWED_ON,
-                                   repertory_match, DISCOUNT_VENUES)
+                                   repertory_match, discount_offer)
 
 MADRID = ZoneInfo('Europe/Madrid')
 TODAY_PATHS = {'en': '/en/showtimes/today/', 'es': '/es/cartelera/hoy/', 'ca': '/ca/cartellera/avui/'}
@@ -81,7 +81,7 @@ def select_sessions(programme, kind, now):
                 if venue and starts.date() < end:
                     groups[venue[0]].append((film, session))
             elif kind == 'discounts':
-                if session.get('cinema_id') in DISCOUNT_VENUES and starts.date() < end:
+                if starts.date() < end and discount_offer(session, starts.date()):
                     groups['discount-screenings'].append((film, session))
             elif kind == 'gracia':
                 if session.get('cinema_id') not in GRACIA_VENUES or starts.date() >= end:
@@ -114,15 +114,6 @@ def select_sessions(programme, kind, now):
                     group = kind
                 groups[group].append((film, session))
     groups = {key: sorted(pairs, key=lambda pair: (datetime.fromisoformat(pair[1]['starts_at']).timestamp(), pair[1]['id'])) for key, pairs in groups.items()}
-    if kind == 'discounts':
-        # Programme examples only: these are not price/offer eligibility matches.
-        per_venue, selected = {}, []
-        for pair in groups['discount-screenings']:
-            cid = pair[1]['cinema_id']
-            if per_venue.get(cid, 0) < 2:
-                selected.append(pair)
-                per_venue[cid] = per_venue.get(cid, 0) + 1
-        groups['discount-screenings'] = selected
     return groups
 
 
