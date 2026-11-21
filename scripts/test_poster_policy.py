@@ -2,7 +2,7 @@
 
 import unittest
 
-from poster_policy import is_portrait, meets_target, prefer_poster
+from poster_policy import is_portrait, meets_target, usable_poster, prefer_poster
 
 
 class PosterPolicyTests(unittest.TestCase):
@@ -23,6 +23,16 @@ class PosterPolicyTests(unittest.TestCase):
         poster = dict(poster_url='/poster.jpg', poster_width=600, poster_height=900)
         short = dict(poster_url='/short.jpg', poster_width=2000, poster_height=2500)
         self.assertTrue(prefer_poster(poster, short))
+
+    def test_wider_festival_poster_replaces_still_but_not_standard_poster(self):
+        festival = dict(poster_url='/festival.jpg', poster_width=2650, poster_height=3001)
+        still = dict(poster_url='/still.jpg', poster_width=2560, poster_height=1085)
+        standard = dict(poster_url='/standard.jpg', poster_width=600, poster_height=900)
+        self.assertTrue(usable_poster(2650, 3001))
+        self.assertTrue(prefer_poster(festival, still))
+        self.assertTrue(prefer_poster(standard, festival))
+        for size in ((900, 1000), (901, 1000), (1000, 1000), (1920, 1080)):
+            self.assertEqual(usable_poster(*size), size == (900, 1000), size)
 
 
 if __name__ == '__main__':

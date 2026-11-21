@@ -120,7 +120,7 @@ def enrich_sources(data, output, fetch_image, now, minimum, sources):
     return upgraded
 
 
-def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), reviewed=None, sources=None):
+def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), reviewed=None, sources=None, *, force=False):
     output.mkdir(parents=True, exist_ok=True)
     reviewed = json.loads(IDENTITIES.read_text()) if reviewed is None else reviewed
     sources = json.loads(SOURCES.read_text()) if sources is None else sources
@@ -154,7 +154,7 @@ def enrich(data, output, fetch_json, fetch_image, now, minimum=(600, 900), revie
             query = imdb_id or film.get("english_title") or film.get("original_title") or film["title"].strip()
             prior = previous.get(film["id"], {})
             elapsed = now - datetime.fromisoformat(prior.get("checked_at", "1970-01-01T00:00:00+00:00"))
-            fresh = (prior.get("query") == query and timedelta(0) <= elapsed < timedelta(days=7 if prior.get("status") == "ok" else 1)
+            fresh = (not force and prior.get("query") == query and timedelta(0) <= elapsed < timedelta(days=7 if prior.get("status") == "ok" else 1)
                      and (prior.get("status") == "ok" or prior.get("image_policy_version") == IMAGE_POLICY_VERSION))
             if fresh and prior.get("status") == "ok" and cached_file(output, prior) and usable_poster(prior["width"], prior["height"]):
                 record = {**prior, "reused_from_cache": True}
@@ -232,6 +232,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=ROOT / "static/preview-data/screenings.json")
     parser.add_argument('--film', action='append', help='Refresh only these film IDs (repeatable)')
+    parser.add_argument('--force', action='store_true', help='Recheck inadequate posters even when a previous lookup is cached')
     args = parser.parse_args()
     from curl_cffi import requests
     data = json.loads(args.input.read_text())
@@ -248,7 +249,7 @@ def main():
             response.raise_for_status()
             return response.content
         result = enrich(data, args.input.parent / "posters", lambda url: json_fetch(client, url), image_fetch, now,
-                        minimum=(target["min_width"], target["min_height"]))
+                        minimum=(target["min_width"], target["min_height"]), force=args.force)
     from programme_store import update_programme
     enriched = {film['id']: film for film in data['films']}
     def merge_posters(latest):

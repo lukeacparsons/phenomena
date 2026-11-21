@@ -1,6 +1,6 @@
 """One poster policy for collection, fallback, grouping and refresh merges."""
 
-IMAGE_POLICY_VERSION = 4
+IMAGE_POLICY_VERSION = 5
 MINIMUM = (600, 900)
 
 
@@ -14,10 +14,11 @@ def meets_target(width, height, minimum=MINIMUM):
 
 
 def usable_poster(width, height):
-    # Smaller or 4:5 theatrical posters can still replace landscape thumbnails
-    # when no target-sized artwork exists. The card contains the full image.
+    # Smaller and wider theatrical posters (including festival artwork) can
+    # replace landscape thumbnails. Standard portrait proportions still rank
+    # above these alternatives; square artwork remains unsuitable.
     return bool(width and height and width >= 240 and height >= 320
-                and .60 <= width / height <= .82)
+                and .60 <= width / height <= .90)
 
 
 def poster_quality(width, height, minimum=MINIMUM):

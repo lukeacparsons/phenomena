@@ -39,9 +39,9 @@ class FallbackTests(unittest.TestCase):
         Image.new("RGB", size).save(stream, "PNG")
         return stream.getvalue()
 
-    def run_fallback(self, movie=None, now=NOW):
+    def run_fallback(self, movie=None, now=NOW, **kwargs):
         data = {"films": [movie or film()]}
-        result = enrich(data, self.output, self.lookup, self.download, now, reviewed={})
+        result = enrich(data, self.output, self.lookup, self.download, now, reviewed={}, **kwargs)
         return data["films"][0], result
 
     def test_decoded_dimensions_and_exact_id_determine_replacement(self):
@@ -136,6 +136,30 @@ class FallbackTests(unittest.TestCase):
         (self.output/'fallbacks.json').write_text(json.dumps({'films':{'other':other}}))
         _,result=self.run_fallback()
         self.assertEqual(result['films']['other'],other)
+
+    def test_wider_imdb_festival_poster_retries_old_shape_rejection(self):
+        movie = film()
+        movie.update(poster_width=2560, poster_height=1085)
+        previous = {'films': {movie['id']: {'status': 'below_target', 'image_policy_version': 4,
+                    'query': 'tt123', 'checked_at': NOW.isoformat(), 'width': 2650, 'height': 3001}}}
+        (self.output / 'fallbacks.json').write_text(json.dumps(previous))
+        self.download.return_value = self.image((2650, 3001))
+        updated, result = self.run_fallback(movie, NOW + timedelta(minutes=1))
+        self.assertEqual((updated['poster_width'], updated['poster_height']), (2650, 3001))
+        self.assertEqual(result['upgraded'], 1)
+        self.assertEqual(updated['poster_provenance']['imdb_id'], 'tt123')
+
+    def test_force_retries_fresh_rejection_and_keeps_existing_artwork_on_failure(self):
+        self.download.return_value = self.image((1500, 1500))
+        self.run_fallback()
+        self.download.return_value = self.image()
+        updated, result = self.run_fallback(now=NOW + timedelta(minutes=1), force=True)
+        self.assertEqual(result['upgraded'], 1)
+        self.assertEqual(self.lookup.call_count, 2)
+        self.lookup.side_effect = ValueError('offline')
+        retained, _ = self.run_fallback(now=NOW + timedelta(minutes=2), force=True)
+        self.assertEqual(retained['poster_url'], updated['poster_url'])
+        self.assertTrue(retained['poster_provenance']['stale'])
 
     def test_oversized_original_uses_same_imdb_artwork_at_bounded_resolution(self):
         row = candidate()
