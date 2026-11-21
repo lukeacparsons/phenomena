@@ -22,6 +22,7 @@ from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
 from site_content import COPY, GUIDES, PUBLISHER, VENUE_COPY
+from search_guide import COPY as SEARCH_GUIDE_COPY, PATHS as SEARCH_GUIDE_PATHS, render as render_search_guide
 from screening_context import (COPY as CONTEXT_COPY, upcoming, shared_language, shared_version,
                                examples as screening_examples, related_guides)
 from site_research import ResearchTranslations
@@ -212,11 +213,12 @@ class Publication:
         tomorrow_link = link(DAY_PATHS['tomorrow'][lang], DATE_COPY[lang]['tomorrow_link'])
         discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li><li>{tomorrow_link}</li>' + ''.join(
             '<li>' + link(paths[lang], DISCOVERY_COPY[lang][kind]) + '</li>' for kind, paths in DISCOVERY_PATHS.items()) + '</ul></nav>'
+        search_guide_link = '<p class="search-guide-link">' + link(SEARCH_GUIDE_PATHS[lang], SEARCH_GUIDE_COPY[lang]['label'], ' class="text-action"') + '</p>'
         if interactive or venue or film_page:
-            footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{navigation}{footer_extra}{discovery_links}{footer}</details>'
+            footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{search_guide_link}{navigation}{footer_extra}{discovery_links}{footer}</details>'
             navigation = ''
         else:
-            footer += f'<details class="site-information"><summary>{text(DISCOVERY_COPY[lang]["footer"])}</summary>{discovery_links}</details>'
+            footer += f'<details class="site-information"><summary>{text(DISCOVERY_COPY[lang]["footer"])}</summary>{search_guide_link}{discovery_links}</details>'
         switch = ''.join(link(alternatives[l], l.upper(), f' hreflang="{l}" lang="{l}"' + (' aria-current="page"' if l == lang else '')) for l in LOCALES if l in alternatives)
         # The image loader can execute without waiting for the search module graph.
         script = '<script type="module" src="/progressive-images.js"></script><script type="module" src="/site-header.js"></script>'
@@ -658,7 +660,10 @@ class Publication:
     def editorial(self):
         for lang in LOCALES:
             t = COPY[lang]
-            links = []
+            guide = SEARCH_GUIDE_COPY[lang]
+            self.page(SEARCH_GUIDE_PATHS[lang], lang, guide['label'] + ' | VO Barna', guide['description'],
+                      render_search_guide(lang), alternatives=SEARCH_GUIDE_PATHS)
+            links = ['<li>' + link(SEARCH_GUIDE_PATHS[lang], guide['label']) + '</li>']
             for key, prefix in [('versions', 'version'), ('formats', 'format')]:
                 paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/{GUIDES[key][l]}/' for l in LOCALES}
                 body = f'<h1>{t[prefix+"_title"]}</h1><p class="editorial">{t[prefix+"_body"]}</p><p>{link(f"/{lang}/{SECTIONS[lang]["cinemas"]}/", t["cinemas"])} · {link(f"/{lang}/", t["current"])}</p>'

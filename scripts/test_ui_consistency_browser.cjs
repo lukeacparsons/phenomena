@@ -11,6 +11,7 @@ const routes=[
   ['directory','/en/cinemas/'],['cinema','/en/cinemas/phenomena-experience/'],
   ['guides','/en/guides/'],['formats','/en/guides/cinema-screen-sound-formats/'],
   ['versions','/en/guides/vose-vosc-original-version/'],['discovery','/en/showtimes/english-language/'],
+  ['search-guide','/en/guides/how-to-search/'],
   ['discounts','/en/guides/cinema-discount-days-barcelona/'],['programme','/en/programme/'],
   ['about','/en/about/'],['agents','/webmcp/'],['missing','/a-page-that-does-not-exist/'],
   ['spanish','/es/guias/cine-subtitulos-ingles-barcelona/'],['catalan','/ca/cinemes/']
