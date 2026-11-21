@@ -261,7 +261,14 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .filter-row:has(#search){margin-top:8px}
 #search{font-size:16px;padding-block:11px}
 .search-composer{position:relative;z-index:4;flex:1;min-width:0}
-.search-composer>.search{height:100%;min-height:48px}
+.search-composer>.search{height:100%;min-height:48px;padding-inline-end:48px}
+.search-composer #search::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;display:none}
+.search-clear{position:absolute;inset-inline-end:2px;top:2px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;border-radius:var(--radius);background:transparent;color:var(--tx2);cursor:pointer;touch-action:manipulation}
+.search-clear[hidden]{display:none}
+.search-clear svg{pointer-events:none}
+.search-clear:is(:active,:focus-visible){background:var(--s2);color:var(--tx)}
+.search-clear:focus-visible{outline-offset:-3px}
+@media(hover:hover){.search-clear:hover{background:var(--s2);color:var(--tx)}}
 .search.is-searching{position:relative}
 .search.is-searching>svg{visibility:hidden}
 .search.is-searching::before{content:'';position:absolute;inset-inline-start:13px;top:50%;width:19px;height:19px;margin-top:-9.5px;border:2px solid var(--border);border-top-color:var(--tx);border-radius:50%;pointer-events:none;animation:search-loading-spin .8s linear infinite}

@@ -3,9 +3,9 @@ import {chooseChips} from './search-chip-selection.js';
 import {suggestionLanguage,preferredAudioLanguages} from './search-localization.js';
 import {madridDate,normalise} from './cinema-search.js';
 
-const COPY={en:{shuffle:'Show other suggested searches',search:'Search for',suggestions:'Search suggestions',available:'suggestions available. Use the arrow keys to choose.'},
-  es:{shuffle:'Mostrar otras búsquedas sugeridas',search:'Buscar',suggestions:'Sugerencias de búsqueda',available:'sugerencias disponibles. Usa las flechas para elegir.'},
-  ca:{shuffle:'Mostra altres cerques suggerides',search:'Cerca',suggestions:'Suggeriments de cerca',available:'suggeriments disponibles. Fes servir les fletxes per triar.'}};
+const COPY={en:{clear:'Clear search',shuffle:'Show other suggested searches',search:'Search for',suggestions:'Search suggestions',available:'suggestions available. Use the arrow keys to choose.'},
+  es:{clear:'Borrar búsqueda',shuffle:'Mostrar otras búsquedas sugeridas',search:'Buscar',suggestions:'Sugerencias de búsqueda',available:'sugerencias disponibles. Usa las flechas para elegir.'},
+  ca:{clear:'Esborra la cerca',shuffle:'Mostra altres cerques suggerides',search:'Cerca',suggestions:'Suggeriments de cerca',available:'suggeriments disponibles. Fes servir les fletxes per triar.'}};
 const svg=paths=>`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">${paths}</svg>`;
 const searchIcon=svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/>');
 const shuffleIcon=svg('<path d="m18 3 3 3-3 3M18 15l3 3-3 3M3 6h3c5 0 7 12 12 12h3M3 18h3c2 0 3-2 5-5m2-2c2-3 3-5 5-5h3"/>');
@@ -26,6 +26,7 @@ function onSelection(button,select){
 export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQuery,onSubmit,onDraft=()=>{},scoped=false,fetchImpl=fetch}){
   const label=input.closest('.search'),row=label.parentElement,composer=el('div','search-composer');
   label.before(composer);composer.append(label);
+  const clear=el('button','search-clear');clear.type='button';clear.hidden=true;clear.innerHTML=svg('<path d="m6 6 12 12M18 6 6 18"/>');composer.append(clear);
   input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-controls','searchCompletionOptions');input.setAttribute('aria-expanded','false');
   const menu=el('div','search-completions'),options=el('div','search-options');options.id='searchCompletionOptions';options.setAttribute('role','listbox');menu.hidden=true;menu.append(options);composer.append(menu);
   const area=el('div','search-suggestions'),shuffle=el('button','search-shuffle'),chips=el('div','search-ideas'),announcement=el('div','sr-only');
@@ -46,7 +47,9 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
   const cancelSubmission=()=>{clearTimeout(searchTimer);searchTimer=null;pendingSubmission=null;};
   const local=()=>instantCompletions(catalogue?.entities||[],catalogue?.precomputed||[],draft);
   const isVerified=query=>programme===getProgramme()&&isVerifiedSuggestion([...(catalogue?.precomputed||[]),...(catalogue?.idea_details||[])],query);
+  function renderClear(){clear.hidden=!input.value;clear.setAttribute('aria-label',copy().clear);clear.title=copy().clear;}
   function renderChips(){
+    renderClear();
     const rows=catalogue?.idea_details||[];area.hidden=Boolean(draft)||!slots.some(i=>rows[i]);if(draft)return;
     if(catalogue?.language!==currentLanguage()){area.hidden=true;return;}
     shuffle.setAttribute('aria-label',copy().shuffle);shuffle.title=copy().shuffle;chips.replaceChildren();
@@ -112,7 +115,7 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
     open=false;cancel();renderMenu();
   }
   function changed(){
-    cancelSubmission();cancelMenu();cancel();draft=input.value;active=-1;open=true;candidates=[];onDraft(draft);
+    cancelSubmission();cancelMenu();cancel();draft=input.value;active=-1;open=true;candidates=[];renderClear();onDraft(draft);
     // Let the native text/caret paint before matching or touching the menu DOM.
     menuFrame=requestAnimationFrame(()=>{menuTask=setTimeout(()=>{
       if(composing||!open||options.contains(document.activeElement))return;
@@ -149,7 +152,11 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
     })().finally(()=>{refreshing=null;if((p!==getProgramme()||language!==currentLanguage())&&!destroyed)void refresh();});
     return refreshing;
   }
-  on(input,'input',()=>{if(!composing)changed();});on(input,'search',()=>{if(input.value!==draft)changed();});
+  on(input,'input',()=>{if(composing)renderClear();else changed();});on(input,'search',()=>{if(input.value!==draft)changed();});
+  // Preserve input focus without cancelling touch pointerdown: WebKit would
+  // suppress the following click, including taps inside the larger target.
+  on(clear,'mousedown',event=>{if(event.button===0)event.preventDefault();});
+  on(clear,'click',()=>{composing=false;input.value='';changed();submit('');input.focus({preventScroll:true});});
   on(input,'compositionstart',()=>{cancelSubmission();composing=true;cancelMenu();cancel();onDraft(input.value);open=false;renderMenu();});on(input,'compositionend',()=>{composing=false;changed();});
   on(input,'focus',()=>{open=true;active=-1;candidates=local();renderMenu();enrich();if(catalogue?.day!==madridDate())void refresh();});
   on(input,'keydown',event=>{
@@ -167,6 +174,7 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
   on(shuffle,'click',()=>{slots=choose(slots);renderChips();announcement.textContent=slots.map(i=>catalogue.idea_details[i]?.query).join(', ');});
   on(document,'visibilitychange',()=>{if(!document.hidden)void refresh();});
   const interval=setInterval(()=>{if(!document.hidden)void refresh();},300000);
+  renderClear();
   requestAnimationFrame(()=>{if(matchMedia('(pointer:fine)').matches&&!input.value&&document.activeElement===document.body&&!location.hash)input.focus({preventScroll:true});});
   return {sync,refresh,isVerified,ready(){if(pendingSubmission){const {value,...options}=pendingSubmission;submit(value,options);}},destroy(){destroyed=true;cancelSubmission();cancelMenu();cancel();clearInterval(interval);events.abort();}};
 }

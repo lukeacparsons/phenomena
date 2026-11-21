@@ -16,7 +16,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:8791';
    const requests=[],held=new Map();
    await context.route('**/api/search',async route=>{
     const {query}=route.request().postDataJSON();requests.push(query);
-    if(query==='a seaside memory')await new Promise(resolve=>held.set(query,resolve));
+    if(['a seaside memory','a forgotten shoreline'].includes(query))await new Promise(resolve=>held.set(query,resolve));
     await route.fulfill({json:{query,mode:'interpreted',intent:{text:query==='a seaside memory'?'bright':'paris',conditions:[],semantic_query:'',sort:'relevance',unsupported:[]},semantic_scores:null}});
    });
    const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
@@ -65,8 +65,35 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:8791';
 
    await input.fill('Bright Afternoon');await input.press('Tab');await waitQuery('Bright Afternoon');
    assert.equal(await input.evaluate(el=>el===document.activeElement),false,'Automatic submission does not pull focus back after tabbing away');
+
+   const clear=page.getByRole('button',{name:'Clear search',exact:true});
+   await page.locator('#dates [data-date="2099-01-01"]').click();
+   for(const position of [{x:4,y:4},{x:40,y:40}]){
+    await input.fill('Bright Afternoon');await input.press('Enter');
+    const target=await clear.boundingBox(),bar=await page.locator('.search').boundingBox();
+    assert.equal(target.width,44);assert.equal(target.height,44);assert.equal(bar.height,48);
+    assert.ok(target.x>=bar.x&&target.x+target.width<=bar.x+bar.width&&target.y>=bar.y&&target.y+target.height<=bar.y+bar.height,'Clear target stays inside the search bar');
+    await input.evaluate(el=>{window.clearBlurCount=0;el.addEventListener('blur',()=>window.clearBlurCount++,{once:true});});
+    if(mobile)await page.touchscreen.tap(target.x+position.x,target.y+position.y);else await page.mouse.click(target.x+position.x,target.y+position.y);
+    assert.equal(await input.inputValue(),'');assert.equal(query(),null,'The entire clear target clears immediately');
+    assert.equal(new URL(page.url()).searchParams.get('date'),'2099-01-01','Clear search preserves separately selected dates');
+    assert.deepEqual(await ids(),['bright','paris']);assert.ok(await input.evaluate(el=>el===document.activeElement));
+    assert.equal(await page.evaluate(()=>window.clearBlurCount),0,'Pointer clearing never blurs the input');
+    assert.equal(await clear.isVisible(),false);assert.equal(await input.getAttribute('aria-expanded'),'false');
+   }
+   await input.fill('Paris Nights');await input.press('Tab');
+   assert.ok(await clear.evaluate(el=>el===document.activeElement),'Clear search is keyboard accessible');
+   await page.keyboard.press('Space');await page.waitForTimeout(500);
+   assert.equal(query(),null,'Keyboard clearing cancels an automatic search that has not submitted yet');
+   assert.equal(await input.inputValue(),'');assert.ok(await input.evaluate(el=>el===document.activeElement));
+   await input.fill('a forgotten shoreline');
+   for(let i=0;i<200&&!held.has('a forgotten shoreline');i++)await page.waitForTimeout(10);
+   assert.ok(held.has('a forgotten shoreline'));await clear.click();
+   assert.equal(await page.locator('#grid').getAttribute('aria-busy'),'false');
+   held.get('a forgotten shoreline')();await page.waitForTimeout(250);
+   assert.equal(query(),null);assert.deepEqual(await ids(),['bright','paris'],'Clearing prevents an in-flight result from returning');
    assert.deepEqual(errors,[]);await context.close();
-   console.log(name+' '+(mobile?'mobile':'desktop')+': automatic search, debounce, caret, menu, clear/reset, Enter, IME and stale responses passed');
+   console.log(name+' '+(mobile?'mobile':'desktop')+': automatic search, debounce, caret/menu, 44px pointer and keyboard clearing, retained dates, clear/reset cancellation, Enter, IME and stale responses passed');
   }}finally{await browser.close();}
  }
 })().catch(error=>{console.error(error);process.exitCode=1;});

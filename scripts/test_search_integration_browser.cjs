@@ -47,7 +47,7 @@ const chipStyle=el=>{const style=getComputedStyle(el);return Object.fromEntries(
    assert.equal(await input.inputValue(),'Hunger Games in English');assert.ok(await page.locator('[data-remove-filter="intent"]').count()>0);
    await page.locator('[data-remove-filter="intent"]').first().tap();assert.ok(new URL(page.url()).searchParams.has('skip'));await reset.tap();
    await input.fill('pheno');const first=await page.locator('.search-option-title').first().textContent();await input.press('ArrowDown');await input.press('Enter');assert.equal(await input.inputValue(),first);assert.ok(await input.evaluate(el=>el===document.activeElement),'Keyboard selection retains focus');await reset.tap();
-   await input.fill('pheno');await page.locator('.search-option').first().waitFor();await input.press('Tab');await page.keyboard.press('Enter');assert.equal(await input.inputValue(),first);await reset.tap();
+   await input.fill('pheno');await page.locator('.search-option').first().waitFor();await input.press('Tab');assert.ok(await page.locator('.search-clear').evaluate(el=>el===document.activeElement));await page.keyboard.press('Tab');await page.keyboard.press('Enter');assert.equal(await input.inputValue(),first);await reset.tap();
    await page.waitForTimeout(500);assert.deepEqual(calls,[],'Verified chips, menu and filters make no model-capable requests');
    const layout=()=>page.evaluate(()=>{
     const box=selector=>document.querySelector(selector).getBoundingClientRect();
@@ -92,6 +92,7 @@ const chipStyle=el=>{const style=getComputedStyle(el);return Object.fromEntries(
     assert.equal(await input.getAttribute('placeholder'),placeholder);
     await page.setViewportSize({width:320,height:844});
     await input.fill('French films under 120 minutes with English subtitles');await input.press('Enter');
+    assert.equal(await page.locator('.search-clear').getAttribute('aria-label'),locale==='es'?'Borrar búsqueda':'Esborra la cerca');
     assert.ok(await page.locator('.filter-chip').count()>=2);
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Long filters and translated Reset fit at 320px');
     assert.equal(await page.locator('#searchFeedback').evaluate(el=>el.parentElement.className),'filters','Feedback remains below the controls');
