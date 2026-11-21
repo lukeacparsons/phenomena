@@ -7,6 +7,7 @@ import json
 from zoneinfo import ZoneInfo
 
 from site_content import COPY
+from guide_layout import LABELS as GUIDE_LABELS
 
 MADRID = ZoneInfo('Europe/Madrid')
 LABELS = {
@@ -29,7 +30,7 @@ def render_complete_programme(programme, lang, now, *, language_name, disclosure
     t = COPY[lang]
     title, introduction, updated, count_label, sold_out_label = LABELS[lang]
     cinemas = {cinema['id']: cinema for cinema in programme['cinemas']}
-    articles, total = [], 0
+    articles, total, index_links, dates = [], 0, [], set()
     for film in sorted(programme['films'], key=lambda f: (f['title'].casefold(), f['id'])):
         sessions = sorted((s for s in film['sessions'] if datetime.fromisoformat(s['starts_at']) >= now),
                           key=lambda s: (s['starts_at'], s['cinema_id'], s['id']))
@@ -46,6 +47,7 @@ def render_complete_programme(programme, lang, now, *, language_name, disclosure
             groups[key].append((session, local))
         rows = []
         for (date, cinema_id, room, audio, subtitles, version, formats), group in groups.items():
+            dates.add(date)
             cinema = cinemas[cinema_id]
             facts = [f'{t["audio"]}: {audio}', f'{t["subtitles"]}: {subtitles}']
             if room:
@@ -65,15 +67,23 @@ def render_complete_programme(programme, lang, now, *, language_name, disclosure
             rows.append(f'<li><a href="{escape(cinema["urls"][lang], quote=True)}">{escape(cinema["name"])}</a> · '
                         f'<time datetime="{date}">{date}</time> · {escape(" · ".join(facts))}: '
                         f'<span class="programme-times">{", ".join(times)}</span></li>')
-        articles.append(f'<article data-programme-film="{escape(film["id"], quote=True)}"><h3><a href="{escape(film_url, quote=True)}" data-open="{escape(film["id"], quote=True)}">'
+        anchor = 'programme-film-' + hashlib.sha256(sessions[0]['id'].encode()).hexdigest()[:16]
+        index_links.append(f'<li><a class="text-action" href="#{anchor}">{escape(film["title"])}</a></li>')
+        articles.append(f'<article id="{anchor}" data-programme-film="{escape(film["id"], quote=True)}"><h3><a href="{escape(film_url, quote=True)}" data-open="{escape(film["id"], quote=True)}">'
                         f'{escape(film["title"])}</a></h3><ul>{"".join(rows)}</ul></article>')
     generated = datetime.fromisoformat(programme['generated_at']).astimezone(MADRID)
     counts = count_label.format(films=len(articles), sessions=total)
     content = ''.join(articles) if articles else f'<p>{escape(t["none"])}</p>'
     tag = 'details' if disclosure else 'section'
     heading = f'<summary>{title}</summary>' if disclosure else ''
+    labels = GUIDE_LABELS[lang]
+    navigation = '' if disclosure else (f'<nav class="programme-navigation" aria-label="{escape(title)}">'
+        f'<a class="text-action" href="/{lang}/">{labels["browse"]} →</a>'
+        f'<details class="programme-index"><summary>{labels["film_index"]}</summary><ul>{"".join(index_links)}</ul></details>'
+        f'<details class="programme-index"><summary>{labels["dates"]}</summary><ul>' + ''.join(
+            f'<li><a class="text-action" href="/{lang}/?date={date}">{date}</a></li>' for date in sorted(dates)) + '</ul></details></nav>')
     return (f'<{tag} class="complete-programme" id="complete-programme" data-films="{len(articles)}" data-sessions="{total}">'
-            f'{heading}<div class="complete-programme-content"><h2>{title}</h2>'
+            f'{heading}<div class="complete-programme-content"><h2>{title}</h2>{navigation}'
             f'<p>{escape(counts)}. {introduction}</p><p class="fineprint">{updated}: '
             f'<time datetime="{escape(programme["generated_at"], quote=True)}">{generated:%Y-%m-%d %H:%M} Europe/Madrid</time>. '
             f'{escape(t["stale"])}</p><div data-programme-entries>{content}</div></div></{tag}>')

@@ -8,6 +8,10 @@ from language_names import LANGUAGE_NAMES, parse_languages, without_language_pla
 COPY = {
     'en': {
         'film_heading': '{title}: cinemas and screening details',
+        'subtitle_heading': '{title}: English subtitles{version} in Barcelona',
+        'subtitle_description': '{title} in Barcelona: confirmed English-subtitled screenings{version}. Find cinemas, showtimes and official tickets.',
+        'subtitle_empty': 'No upcoming screenings with English subtitles are currently listed.',
+        'subtitle_empty_description': '{title} in Barcelona: no upcoming English-subtitled screenings currently listed. Check the film programme for new dates and other versions.',
         'venue_heading': 'Original-version films at {name}',
         'film_intro': 'Compare the collected screenings of {title} in Barcelona and nearby towns. Audio, subtitles and formats below belong to the particular screening shown.',
         'venue_intro': 'Explore the collected original-version programme at {name}. Each film below links to a specific screening, with its own audio, subtitles and advertised format.',
@@ -26,6 +30,10 @@ COPY = {
     },
     'es': {
         'film_heading': '{title}: cines y detalles de las sesiones',
+        'subtitle_heading': '{title}: subtítulos en inglés{version} en Barcelona',
+        'subtitle_description': '{title} en Barcelona: sesiones confirmadas con subtítulos en inglés{version}. Cines, horarios y entradas oficiales.',
+        'subtitle_empty': 'No hay próximas sesiones con subtítulos en inglés anunciadas.',
+        'subtitle_empty_description': '{title} en Barcelona: no hay próximas sesiones con subtítulos en inglés anunciadas. Consulta nuevas fechas y otras versiones.',
         'venue_heading': 'Películas en versión original en {name}',
         'film_intro': 'Compara las sesiones recopiladas de {title} en Barcelona y localidades cercanas. El audio, los subtítulos y los formatos indicados corresponden a la sesión concreta.',
         'venue_intro': 'Consulta la programación en versión original recopilada de {name}. Cada película enlaza a una sesión concreta, con su audio, subtítulos y formato anunciado.',
@@ -44,6 +52,10 @@ COPY = {
     },
     'ca': {
         'film_heading': '{title}: cinemes i detalls de les sessions',
+        'subtitle_heading': '{title}: subtítols en anglès{version} a Barcelona',
+        'subtitle_description': '{title} a Barcelona: sessions confirmades amb subtítols en anglès{version}. Cinemes, horaris i entrades oficials.',
+        'subtitle_empty': 'No hi ha pròximes sessions amb subtítols en anglès anunciades.',
+        'subtitle_empty_description': '{title} a Barcelona: no hi ha pròximes sessions amb subtítols en anglès anunciades. Consulta noves dates i altres versions.',
         'venue_heading': 'Pel·lícules en versió original a {name}',
         'film_intro': 'Compara les sessions recopilades de {title} a Barcelona i rodalia. L’àudio, els subtítols i els formats indicats corresponen a la sessió concreta.',
         'venue_intro': 'Consulta la programació en versió original recopilada de {name}. Cada pel·lícula enllaça a una sessió concreta, amb el seu àudio, subtítols i format anunciat.',

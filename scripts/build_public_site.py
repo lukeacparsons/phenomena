@@ -23,6 +23,7 @@ from zoneinfo import ZoneInfo
 
 from site_content import COPY, GUIDES, PUBLISHER, VENUE_COPY
 from search_guide import COPY as SEARCH_GUIDE_COPY, PATHS as SEARCH_GUIDE_PATHS, render as render_search_guide
+from guide_layout import LABELS as GUIDE_LABELS, title as guide_title, description as guide_description
 from screening_context import (COPY as CONTEXT_COPY, upcoming, shared_language, shared_version,
                                examples as screening_examples, related_guides)
 from site_research import ResearchTranslations
@@ -31,7 +32,7 @@ from optimize_images import optimize_logo, optimize_mascot_animation, prepare_im
 from browser_programme import browser_programme
 from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
-from screening_languages import screening_audio
+from screening_languages import screening_audio, has_english_subtitles
 from language_names import LANGUAGE_NAMES
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
@@ -196,7 +197,7 @@ class Publication:
                 found.append(link(source['url'], label) + (f' <small>({text(checked)})</small>' if checked else ''))
         return '<span class="citations">' + ' · '.join(found) + '</span>' if found else ''
 
-    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True, film_page=False, social=None):
+    def page(self, path, lang, title, description, body, *, alternatives=None, graph=None, interactive=False, crumbs=None, index=True, footer_extra='', venue=False, cinema_id=None, date_scope=None, write=True, film_page=False, social=None, discovery=False):
         t = COPY[lang]
         alternatives = alternatives or {lang: path}
         canonical = self.origin + path
@@ -239,7 +240,7 @@ class Publication:
         discovery_links = f'<nav class="discovery-links" aria-label="{text(DISCOVERY_COPY[lang]["footer"])}"><ul><li>{today_link}</li><li>{tomorrow_link}</li>' + ''.join(
             '<li>' + link(paths[lang], DISCOVERY_COPY[lang][kind]) + '</li>' for kind, paths in DISCOVERY_PATHS.items()) + '</ul></nav>'
         search_guide_link = '<p class="search-guide-link">' + link(SEARCH_GUIDE_PATHS[lang], SEARCH_GUIDE_COPY[lang]['label'], ' class="text-action"') + '</p>'
-        if interactive or venue or film_page:
+        if interactive or venue or film_page or discovery:
             footer = f'<details class="site-information"><summary>{t["more_info"]}</summary>{search_guide_link}{navigation}{footer_extra}{discovery_links}{footer}</details>'
             navigation = ''
         else:
@@ -277,9 +278,9 @@ class Publication:
 <script src="/theme.js"></script>
 <link rel="stylesheet" href="/cinemas.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/ui-components.css"><link rel="stylesheet" href="/site.css">{programme_style}<script type="application/ld+json">{ld}</script>{script}
 </head>
-<body class="public-site{' venue-page' if venue else ''}{' film-page' if film_page else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
+<body class="public-site{' venue-page' if venue else ''}{' film-page' if film_page else ''}{' discovery-page' if discovery else ''}" data-site-lang="{lang}" data-programme-heading="{text(t["home"])}"{cinema_scope}{date_attrs} data-programme-url="/programme.json" data-availability-url="/availability.json"><a class="skip" href="#main" target="_self">{t['skip']}</a>
 <div class="header-wrap"><header><div class="logo"><button class="clint-button" type="button" aria-label="{t['poke_clint']}"><img class="logo-mark" src="/clint-idle.webp" width="60" height="60" alt="{text(t['mascot_alt'])}"></button><a class="logo-copy" href="/{lang}/"><span class="logo-name">VO Barna</span><span class="logo-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span></a></div><nav class="lang-switch" aria-label="{t['language_navigation']}">{switch}</nav></header></div>
-<main id="main">{navigation}{breadcrumb}{body}</main>
+<main id="main">{navigation}{'' if discovery else breadcrumb}{body}</main>
 <footer class="site-footer">{footer}</footer>
 {'<dialog id="filmDialog" aria-labelledby="dialogTitle"></dialog>' if interactive else ''}</body></html>'''
         if not write:
@@ -387,6 +388,7 @@ class Publication:
         dialog_films = {}
         for entity_id, record in records:
             film = browser_programme({'films': [film_data[entity_id]]})['films'][0]
+            film['english_subtitles_seen'] = record.get('english_subtitles_seen', False)
             past = [s for s in record.get('screenings', []) if datetime.fromisoformat(s['starts_at']) < self.now]
             if past:
                 last = max(past, key=lambda s: datetime.fromisoformat(s['starts_at']))
@@ -461,14 +463,23 @@ class Publication:
                     description = CONTEXT_COPY[lang]['film_empty_description'].format(title=display_title)
                 elif language_facts:
                     description = CONTEXT_COPY[lang]['film_description'].format(title=display_title, languages=' '.join(language_facts))
-                self.page(alternatives[lang], lang, t['film_title'].format(title=display_title) + ' | VO Barna', description, body,
+                subtitle_pairs = [(f, s) for f, s in pairs if has_english_subtitles(s)]
+                subtitle_seen = record.get('english_subtitles_seen', False)
+                page_title = t['film_title'].format(title=display_title)
+                if subtitle_pairs:
+                    version = ' (VOSI)' if any(s.get('version') == 'VOSI' for _, s in subtitle_pairs) else ''
+                    page_title = CONTEXT_COPY[lang]['subtitle_heading'].format(title=display_title, version=version)
+                    description = CONTEXT_COPY[lang]['subtitle_description'].format(title=display_title, version=version)
+                elif subtitle_seen:
+                    description = CONTEXT_COPY[lang]['subtitle_empty_description'].format(title=display_title)
+                self.page(alternatives[lang], lang, page_title + ' | VO Barna', description, body,
                           alternatives=alternatives, graph=graph, index=substantive, film_page=True,
                           social=film_copy(film, lang, display_title,
                                            audio=language_name(value, lang) if (value := shared_session_language(film['sessions'], 'language')) else None,
                                            subtitles=language_name(value, lang) if (value := shared_session_language(film['sessions'], 'subtitles')) else None),
-                          footer_extra=self.screening_context(pairs, lang, title=display_title))
+                          footer_extra=self.screening_context(pairs, lang, title=display_title, subtitle_seen=subtitle_seen))
 
-    def screening_context(self, pairs, lang, *, title=None, cinema=None):
+    def screening_context(self, pairs, lang, *, title=None, cinema=None, subtitle_seen=False):
         """Readable source-backed content inside the existing closed footer only."""
         t, c = COPY[lang], CONTEXT_COPY[lang]
         kind = 'film' if title is not None else 'venue'
@@ -476,6 +487,19 @@ class Publication:
                   'sessions': len(pairs), 'cinemas': len({s['cinema_id'] for _, s in pairs}),
                   'films': len({f['id'] for f, _ in pairs})}
         body = f'<section class="screening-context" aria-labelledby="screening-context-heading"><h2 id="screening-context-heading">{text(c[kind + "_heading"].format(**values))}</h2>'
+        if title and subtitle_seen:
+            matching = [(f, s) for f, s in pairs if has_english_subtitles(s)]
+            version = ' (VOSI)' if any(s.get('version') == 'VOSI' for _, s in matching) else ''
+            body += f'<section id="english-subtitles"><h3>{text(c["subtitle_heading"].format(title=title, version=version))}</h3>'
+            body += f'<p data-subtitle-empty{" hidden" if matching else ""}>{text(c["subtitle_empty"])}</p>'
+            if matching:
+                body += '<ul class="subtitle-screenings">'
+                for f, s in screening_examples(matching, film_page=True):
+                    anchor = 'screening-' + hashlib.sha256(s['id'].encode()).hexdigest()[:16]
+                    label = self.cinemas[s['cinema_id']]['name'] + ' · ' + s['date'] + ' ' + s['time']
+                    body += f'<li data-starts="{text(s["starts_at"])}">' + link(self.entity_path('films', f['id'], lang) + '?subtitles=en#' + anchor, label, ' class="screening-action"') + '</li>'
+                body += '</ul>'
+            body += '</section>'
         if not pairs:
             return body + f'<p>{text(t["none"])}</p></section>'
         body += f'<p>{text(c[kind + "_intro"].format(**values))}</p><p>{text(c[kind + "_count"].format(**values))}</p>'
@@ -697,26 +721,52 @@ class Publication:
             body = f'<h1>{t["directory"]}</h1><p>{t["regional"]}</p>{search}<p id="cinemaCount" class="sr-only" role="status" aria-atomic="true"></p><p id="cinemaEmpty" hidden>{t["cinema_empty"]}</p><ul class="venue-list" id="cinemaList">' + ''.join(rows) + '</ul>'
             self.page(paths[lang], lang, t['directory'] + ' | VO Barna', t['regional'], body, alternatives=paths)
 
+    def guide_directory(self, lang):
+        t, labels = COPY[lang], GUIDE_LABELS[lang]
+        categories = [('languages', ('english', 'subtitles', 'vosc')), ('when', ('weekend', 'discounts')),
+                      ('places', ('gracia', 'eixample')), ('formats', ('imax', 'film', 'classics')),
+                      ('help', ('search', 'versions', 'formats'))]
+        body = f'<h1>{text(t["guides"])}</h1><div class="guide-directory">'
+        for category, kinds in categories:
+            body += f'<section><h2>{text(labels[category])}</h2><div class="guide-links">'
+            for kind in kinds:
+                artwork = ''
+                if kind in DISCOVERY_PATHS:
+                    path, title, description = DISCOVERY_PATHS[kind][lang], guide_title(kind, lang), guide_description(kind, lang)
+                    if kind == 'discounts':
+                        description = DISCOVERY_COPY[lang]['discounts_intro']
+                    pairs = [pair for group in select_sessions(self.data, kind, self.now).values() for pair in group]
+                    films = list({f['id']: f for f, _ in pairs if f.get('poster_url')}.values())[:2]
+                    artwork = ''.join(self.poster(f, sizes='64px') for f in films)
+                elif kind == 'search':
+                    path, title, description = SEARCH_GUIDE_PATHS[lang], SEARCH_GUIDE_COPY[lang]['label'], SEARCH_GUIDE_COPY[lang]['description']
+                else:
+                    path = f'/{lang}/{SECTIONS[lang]["guides"]}/{GUIDES[kind][lang]}/'
+                    title = t[('version' if kind == 'versions' else 'format') + '_title']
+                    description = 'VO · VOSE · VOSC · VOSI' if kind == 'versions' else 'IMAX · 35mm · 70mm · Dolby Atmos'
+                preview = f'<span class="guide-preview" aria-hidden="true">{artwork}</span>' if artwork else ''
+                body += f'<article class="guide-directory-item reading-wash"><a class="guide-directory-link" href="{path}">{preview}<span><span class="guide-directory-title">{text(title)}</span><span class="guide-directory-description">{text(description)}</span></span></a></article>'
+            body += '</div></section>'
+        return body + '</div>'
+
     def editorial(self):
         for lang in LOCALES:
             t = COPY[lang]
             guide = SEARCH_GUIDE_COPY[lang]
             self.page(SEARCH_GUIDE_PATHS[lang], lang, guide['label'] + ' | VO Barna', guide['description'],
                       render_search_guide(lang), alternatives=SEARCH_GUIDE_PATHS)
-            links = ['<li>' + link(SEARCH_GUIDE_PATHS[lang], guide['label']) + '</li>']
             for key, prefix in [('versions', 'version'), ('formats', 'format')]:
                 paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/{GUIDES[key][l]}/' for l in LOCALES}
-                body = f'<h1>{t[prefix+"_title"]}</h1><p class="editorial">{t[prefix+"_body"]}</p><p>{link(f"/{lang}/{SECTIONS[lang]["cinemas"]}/", t["cinemas"])} · {link(f"/{lang}/", t["current"])}</p>'
+                body = f'<h1>{t[prefix+"_title"]}</h1>'
                 if key == 'formats':
                     body += self.room_comparison(lang)
                 else:
                     body += self.version_explanation(lang)
+                body += f'<details class="guide-information reading-wash"><summary>{text(GUIDE_LABELS[lang]["details"])}</summary><p class="editorial">{t[prefix+"_body"]}</p></details>'
+                body += '<p>' + link(f'/{lang}/', GUIDE_LABELS[lang]['browse'], ' class="text-action"') + ' · ' + link(f'/{lang}/{SECTIONS[lang]["cinemas"]}/', t['cinemas'], ' class="text-action"') + '</p>'
                 self.page(paths[lang], lang, t[prefix+'_title'] + ' | VO Barna', t[prefix+'_body'][:220], body, alternatives=paths)
-                links.append('<li>' + link(paths[lang], t[prefix+'_title']) + '</li>')
-            links.extend('<li>' + link(paths[lang], DISCOVERY_COPY[lang][key]) + '</li>'
-                         for key, paths in DISCOVERY_PATHS.items() if key not in ('english', 'weekend'))
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
-            self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
+            self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], self.guide_directory(lang), alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
             body = f'<h1>{t["about"]}</h1><p class="site-intro">{text(t["intro"])}</p><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><p>{text(t["commitment"])}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
             body += (f'<h2>{text(t["refresh_question"])}</h2><p>{text(t["refresh_answer"])}</p>'
@@ -729,8 +779,8 @@ class Publication:
         t, d = COPY[lang], DISCOVERY_COPY[lang]
         rows = ''.join(f'<tr><th scope="row">{label}</th><td>{text(d["version_audio"])}</td><td>{text(d[sub])}</td></tr>'
                        for label, sub in [('VO', 'version_unknown'), ('VOSE', 'spanish'), ('VOSC', 'catalan'), ('VOSI', 'english_language')])
-        return (f'<section class="editorial"><h2>{text(d["version_question"])}</h2><p>{text(d["version_answer"])}</p>'
-                f'<div class="table-scroll"><table class="screenings"><thead><tr><th scope="col">{t["version"]}</th><th scope="col">{t["audio"]}</th><th scope="col">{t["subtitles"]}</th></tr></thead><tbody>{rows}</tbody></table></div><p>{text(d["examples"])}</p></section>')
+        return (f'<section class="editorial reading-wash version-comparison"><h2 class="sr-only">{text(d["version_question"])}</h2>'
+                f'<div class="table-scroll"><table class="screenings"><thead><tr><th scope="col">{t["version"]}</th><th scope="col">{t["audio"]}</th><th scope="col">{t["subtitles"]}</th></tr></thead><tbody>{rows}</tbody></table></div><p>{text(d["version_answer"])}</p><p>{text(d["examples"])}</p></section>')
 
     def discovery_pages(self):
         today = self.now.astimezone(MADRID).date()
@@ -738,75 +788,118 @@ class Publication:
         dates = dict(zip(('friday', 'saturday', 'sunday'), weekend))
         values = dict(date=today.isoformat(), end=(today + timedelta(days=6)).isoformat(),
                       friday=weekend[0].isoformat(), sunday=weekend[-1].isoformat())
+        selections = {kind: select_sessions(self.data, kind, self.now) for kind in DISCOVERY_PATHS}
+        collections = {}
+        for kind, groups in selections.items():
+            ids = {session['id'] for pairs in groups.values() for _, session in pairs}
+            films = [{**film, 'sessions': [s for s in film['sessions'] if s['id'] in ids]}
+                     for film in self.browser_programme['films'] if any(s['id'] in ids for s in film['sessions'])]
+            entries = {}
+            for group, pairs in groups.items():
+                by_film = {}
+                for film, session in pairs:
+                    entry = by_film.setdefault(film['id'], {'id': film['id'], 'sessions': []})
+                    entry['sessions'].append(session['id'])
+                    if kind == 'classics':
+                        year = repertory_match(film, session)[0]
+                        entry['title'] = film['title'] if re.search(r'\(' + str(year) + r'\)$', film['title']) else f'{film["title"]} ({year})'
+                entries[group] = list(by_film.values())
+            collections[kind] = {'films': films, 'cinemas': self.browser_programme['cinemas'], 'groups': entries}
+        rendered = subprocess.run(['node', str(ROOT / 'scripts/render_discovery_views.mjs')],
+                                  input=json.dumps({'collections': collections, 'now': self.now.isoformat(), 'today': str(today)}),
+                                  text=True, capture_output=True, check=True)
+        views = json.loads(rendered.stdout)
         for kind, paths in DISCOVERY_PATHS.items():
-            groups = select_sessions(self.data, kind, self.now)
-            pairs = [pair for values in groups.values() for pair in values]
+            groups = selections[kind]
+            pairs = [pair for selected in groups.values() for pair in selected]
+            # Expired weekend days follow remaining days instead of pushing films down.
+            group_order = sorted(groups, key=lambda key: not bool(groups[key])) if kind == 'weekend' else list(groups)
             for lang in LOCALES:
-                d = DISCOVERY_COPY[lang]
+                d, t, labels = DISCOVERY_COPY[lang], COPY[lang], GUIDE_LABELS[lang]
+                view = views[kind][lang]
                 intro = d[kind + '_intro'].format(**values)
                 description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
-                body = f'<h1>{text(d.get(kind + "_heading", dated_title))}</h1><p class="editorial">{text(intro)}</p>'
-                if kind == 'subtitles':
-                    body += '<p>' + link(f'/{lang}/?q=' + quote(d['subtitle_search_query']), d['subtitle_search']) + '</p>'
+                body = '<header class="guide-heading reading-wash">' + link(f'/{lang}/{SECTIONS[lang]["guides"]}/', t['guides'], ' class="text-action"')
+                body += f'<h1>{text(d.get(kind + "_heading", guide_title(kind, lang)))}</h1><p>{text(intro if kind == "discounts" else guide_description(kind, lang))}</p></header>'
                 if kind == 'discounts':
+                    body += '<p>' + link(paths[lang] + '#discount-programme', d['discount-screenings'], ' class="text-action"') + '</p>'
                     body += self.discount_offers(lang)
                     body += f'<h2 id="discount-programme">{text(d["discount-screenings"])}</h2><p class="editorial">{text(d["discount-screenings_note"])}</p>'
-                body += f'<p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])}</p>'
-                if kind in ('weekend', 'film', 'imax', 'gracia', 'classics', 'eixample'):
-                    jumps = [(group, d.get(group + '_group', d.get(group))) for group, selected in groups.items()
-                             if selected or kind == 'weekend' or group in ('35mm', '70mm')]
-                    jumps.append(('guide-information', d['guide_information']))
-                    body += f'<nav class="discovery-sections" aria-label="{text(d["on_this_page"])}"><ul>' + ''.join(
-                        '<li>' + link(paths[lang] + '#' + anchor, label) + '</li>' for anchor, label in jumps) + '</ul></nav>'
-                count = d['count'].format(films=len({f['id'] for f, _ in pairs}), sessions=len(pairs))
                 body += f'<div class="discovery" data-discovery-kind="{kind}" data-discovery-date="{today}" data-count-template="{text(d["count"])}">'
                 body += f'<p class="discovery-stale" role="status" hidden>{text(d["stale"].format(date=today))} <button type="button" class="discovery-reload">{text(d["reload"])}</button></p>'
-                body += f'<div class="discovery-results"><p class="discovery-count" role="status" aria-atomic="true">{text(count)}</p><p class="discovery-empty"{" hidden" if pairs else ""}>{text(d.get(kind + "_none", d["none"]))}</p>'
-                for group, selected in groups.items():
-                    keep_empty = kind == 'weekend' or group in ('35mm', '70mm', 'subtitles-foreign')
-                    if not selected and not keep_empty:
-                        continue
+                body += f'<div class="guide-controls" hidden><nav class="dates" aria-label="{t["screening_dates"]}">{view["dates"]}</nav>'
+                cinema_ids = {s['cinema_id'] for _, s in pairs}
+                shown_groups = [key for key in group_order if groups[key] or kind == 'weekend' or key in ('35mm', '70mm', 'subtitles-foreign')]
+                if kind != 'english':
+                    body += f'<div class="guide-selects"><label><span class="sr-only">{t["cinemas"]}</span><select data-guide-cinema><option value="">{text(labels["all_cinemas"])}</option>'
+                    body += ''.join(f'<option value="{text(cid)}">{text(self.cinemas[cid]["name"])}</option>' for cid in sorted(cinema_ids, key=lambda cid: self.cinemas[cid]['name'])) + '</select></label>'
+                    if len(shown_groups) > 1:
+                        body += f'<label><span class="sr-only">{text(labels["sections"])}</span><select data-guide-group><option value="">{text(labels["all_groups"])}</option>'
+                        body += ''.join(f'<option value="{text(key)}">{text(d.get(key + "_group", d.get(key)))}</option>' for key in shown_groups) + '</select></label>'
+                    body += '</div>'
+                body += '</div>'
+                count = d['count'].format(films=len({f['id'] for f, _ in pairs}), sessions=len(pairs))
+                body += '<div class="discovery-results">'
+                if kind != 'english':
+                    body += f'<p class="discovery-count" role="status" aria-atomic="true">{text(count)}</p>'
+                body += f'<p class="discovery-empty"{ " hidden" if pairs else ""}>{text(d.get(kind + "_none", d["none"]))}</p>'
+                first_poster = True
+                source_notes = ''
+                for group in shown_groups:
+                    selected = groups[group]
                     heading = d.get(group + '_group', d.get(group))
                     if kind == 'weekend':
                         heading += f' · {dates[group]}'
-                    body += f'<section class="discovery-group" id="{group}"' + (' aria-labelledby="discount-programme">' if kind == 'discounts' else f'><h2>{text(heading)}</h2>')
-                    if keep_empty:
+                    body += f'<section class="discovery-group" id="{group}"><h2>{text(heading)}</h2>'
+                    if not selected or kind == 'weekend' or group in ('35mm', '70mm', 'subtitles-foreign'):
                         body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d.get(group + "_none", d["day_none" if kind == "weekend" else "format_none"]))}</p>'
                     if group + '_note' in d and kind != 'discounts':
-                        body += f'<p class="editorial">{text(d[group + "_note"])}</p>'
+                        body += f'<p class="editorial guide-group-note reading-wash">{text(d[group + "_note"])}</p>'
                     if kind == 'classics':
-                        ids = [repertory_match(f, s)[2] for f, s in selected]
-                        body += '<p class="source-note">' + self.citations(ids, COLLECTION_SOURCES, lang) + '</p>'
-                    if kind in ('english', 'subtitles', 'weekend', 'imax', 'vosc', 'gracia', 'classics', 'eixample', 'discounts'):
-                        # Group by film so a long programme is navigable and each
-                        # title is one recommendation, with its exact sessions inside.
-                        films = {}
-                        for film, session in selected:
-                            films.setdefault(film['id'], []).append((film, session))
-                        for film_pairs in films.values():
-                            film = film_pairs[0][0]
-                            title = film['title']
-                            if kind == 'classics':
-                                year = repertory_match(film, film_pairs[0][1])[0]
-                                if not re.search(r'\(' + str(year) + r'\)$', title):
-                                    title += f' ({year})'
-                            body += f'<article class="discovery-film"><h3>{link(self.entity_path("films", film["id"], lang), title)}</h3><details><summary>{text(d["show_sessions"])} <span class="discovery-film-count">({len(film_pairs)})</span></summary>{self.session_table(film_pairs, lang, discovery=True)}</details></article>'
-                    elif selected:
-                        body += self.session_table(selected, lang, include_film=True, discovery=True)
-                    body += '</section>'
-                body += '</div></div><script type="module" src="/discovery-page.js"></script>'
+                        source_notes += f'<h3>{text(heading)}</h3><p class="source-note">' + self.citations([repertory_match(f, s)[2] for f, s in selected], COLLECTION_SOURCES, lang) + '</p>'
+                    body += '<div class="grid">'
+                    for card in view['groups'][group]:
+                        film = self.current[card['id']]
+                        path = self.entity_path('films', film['id'], lang)
+                        poster = self.poster(film, eager=first_poster, sizes=LISTING_POSTER_SIZES if first_poster else '').replace('class="public-poster', 'class="poster')
+                        if not film.get('poster_url'):
+                            poster = f'<div class="poster-placeholder">{text(film["title"])}</div>'
+                        body += f'<article class="card" data-film="{text(film["id"])}"><a class="poster-button" href="{path}" data-open="{text(film["id"])}" aria-label="{text(film["title"])}">{poster}</a><div class="card-body">{card["body"]}</div></article>'
+                        first_poster = False
+                    body += '</div></section>'
+                body += '</div></div>'
+                info = f'<p class="editorial">{text(intro)}</p><p class="freshness">{text(d["snapshot"])}: {stamp(self.data["generated_at"])}</p>'
+                info += source_notes
                 if kind in ('subtitles', 'vosc'):
-                    body += self.version_explanation(lang)
+                    info += self.version_explanation(lang)
                     topic = 'vosc' if kind == 'vosc' else 'subtitle'
-                    body += f'<section class="editorial"><h2>{text(d[topic + "_question"])}</h2><p>{text(d[topic + "_answer"])}</p></section>'
+                    info += f'<section class="editorial"><h2>{text(d[topic + "_question"])}</h2><p>{text(d[topic + "_answer"])}</p></section>'
+                if kind == 'subtitles':
+                    info += '<p>' + link(f'/{lang}/?q=' + quote(d['subtitle_search_query']), d['subtitle_search'], ' class="text-action"') + '</p>'
                 if kind == 'gracia':
-                    body += '<div id="guide-information">' + self.gracia_guide(lang) + '</div>'
+                    info += self.gracia_guide(lang)
                 if kind in ('classics', 'eixample'):
-                    body += '<div id="guide-information">' + self.collection_guide(kind, lang) + '</div>'
+                    info += self.collection_guide(kind, lang)
                 if kind in DISCOVERY_SECTIONS:
-                    body += '<div id="guide-information">' + self.discovery_explanation(kind, lang) + '</div>'
-                body += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
+                    info += self.discovery_explanation(kind, lang)
+                info += f'<section class="editorial"><h2>{text(d["booking_question"])}</h2><p>{text(d["booking_answer"])}</p><h2>{text(d["method_title"])}</h2><p>{text(d.get(kind + "_method", d["method"]))}</p></section>'
+                body += f'<details class="guide-information reading-wash" id="guide-information"><summary>{text(labels["information"])}</summary>{info}</details>'
+                if pairs:
+                    body += f'<details class="guide-information guide-sources reading-wash"><summary>{text(labels["full_schedule"])}</summary>' + self.session_table(pairs, lang, include_film=True, discovery=True) + '</details>'
+                payload = copy.deepcopy(collections[kind])
+                payload['labels'] = {**labels, 'derived_audio': d.get('derived_audio', labels['source'])}
+                for film in payload['films']:
+                    original = self.current[film['id']]
+                    for session in film['sessions']:
+                        audio = screening_audio(original, session)
+                        audio_label = ', '.join(LANGUAGE_NAMES[c] for c in audio['codes']) if audio['derived'] else session.get('language')
+                        session['guide_audio'] = language_name(audio_label or t['unknown'], lang)
+                        session['guide_subtitles'] = language_name(session.get('subtitles') or t['unknown'], lang)
+                        if audio['derived']:
+                            session['guide_audio_source'] = audio['source_url']
+                data_json = json.dumps(payload, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
+                body += f'<script type="application/json" id="discovery-data">{data_json}</script><script type="module" src="/guide-page.js"></script>'
                 if kind == 'discounts':
                     body += f'<details class="discount-sources"><summary>{text(d["offer_sources"])}</summary><p class="source-note">{self.discount_sources(lang)}</p></details>'
                 graph = [{'@type': 'ItemList', '@id': self.origin + paths[lang] + '#screenings',
@@ -815,7 +908,7 @@ class Publication:
                                'name': film['title'] + ' · ' + s['date'] + ' ' + s['time'] + ' · ' + self.cinemas[s['cinema_id']]['name']}
                               for i, (film, s) in enumerate(pairs)]}]
                 self.page(paths[lang], lang, dated_title + ' | VO Barna', description, body,
-                          alternatives=paths, graph=graph, crumbs=[(d.get(kind + '_heading', d[kind]), paths[lang])])
+                          alternatives=paths, graph=graph, crumbs=[(d.get(kind + "_heading", d[kind]), paths[lang])], discovery=True)
 
     def discovery_explanation(self, kind, lang):
         d = DISCOVERY_COPY[lang]
@@ -915,7 +1008,7 @@ class Publication:
             sources = {s['id']: s for s in sources}
         selected = {'phenomena:1', 'mooby-balmes:9', 'cinesa-diagonal-mar:9', 'cinesa-diagonal-mar:10',
                     'kinepolis-splau:18', 'cinesa-parc-valles:imax'}
-        cards, navigation = [], []
+        cards = []
         for room in self.research['rooms'].get('rooms', []):
             if room['id'] not in selected or room['cinema_id'] not in self.cinemas:
                 continue
@@ -930,8 +1023,6 @@ class Publication:
             if brand:
                 label += ' · ' + brand
             anchor = 'compare-' + cid + '-' + rid.lower()
-            path = f'/{lang}/{SECTIONS[lang]["guides"]}/{GUIDES["formats"][lang]}/'
-            navigation.append('<li>' + link(path + '#' + anchor, label) + '</li>')
             screen = room.get('screen') or {}
             dimensions = text(t['unknown'])
             if screen.get('width_m') and screen.get('height_m'):
@@ -952,11 +1043,11 @@ class Publication:
                     if policy:
                         value = self.research_text(policy['value'], lang) + ' ' + self.citations(policy['source_ids'], practical.get('sources', {}), lang)
                 facts.append((d['seating'] if key == 'seating' else t[key], value))
-            cards.append(f'<article class="comparison-room content-block" id="{text(anchor)}"><h3>{text(label)}</h3><dl>' + ''.join(f'<dt>{text(k)}</dt><dd>{v}</dd>' for k, v in facts) + f'</dl><p>{link(url, d["comparison_more"])}</p></article>')
+            cards.append(f'<article class="comparison-room content-block reading-wash" id="{text(anchor)}"><h3>{text(label)}</h3><dl>' + ''.join(f'<dt>{text(k)}</dt><dd>{v}</dd>' for k, v in facts) + f'</dl><p>{link(url, d["comparison_more"], " class=\"text-action\"")}</p></article>')
         if not cards:
             return ''
-        body = f'<section><h2>{text(d["comparison_title"])}</h2><p class="editorial">{text(d["comparison_intro"])}</p><p class="editorial">{text(t["size_note"])}</p>'
-        body += f'<nav class="discovery-sections" aria-label="{text(d["on_this_page"])}"><ul>{"".join(navigation)}</ul></nav><div class="comparison-rooms">{"".join(cards)}</div></section>'
+        body = f'<section><h2>{text(d["comparison_title"])}</h2><div class="comparison-rooms">{"".join(cards)}</div></section>'
+        body += f'<details class="guide-information reading-wash"><summary>{text(GUIDE_LABELS[lang]["details"])}</summary><p class="editorial">{text(d["comparison_intro"])}</p><p class="editorial">{text(t["size_note"])}</p></details>'
         for key in ('comparison_size', 'comparison_seats'):
             body += f'<section class="editorial"><h2>{text(d[key + "_title"])}</h2><p>{text(d[key + "_body"])}</p></section>'
         body += '<ul>' + ''.join('<li>' + link(DISCOVERY_PATHS[key][lang], d[key]) + '</li>' for key in ('imax', 'film', 'english')) + '</ul>'
@@ -1023,7 +1114,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'location-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'language-navigation.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
-                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
+                         'listing-view.js', 'discovery-view.js', 'guide-page.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
             write_favicons(dest)

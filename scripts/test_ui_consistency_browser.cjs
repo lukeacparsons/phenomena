@@ -46,7 +46,11 @@ for(const file of documents){
         assert.equal(response.status(),name==='missing'?404:200,name);
         await page.evaluate(()=>document.fonts.ready);
         if(name==='cinema')await page.locator('.venue-disclosure').first().evaluate(node=>node.open=true);
-        if(name==='discovery')await page.locator('.discovery-film details').first().evaluate(node=>node.open=true);
+        if(name==='discovery'){
+          await page.waitForSelector('.discovery .card .poster');
+          assert.ok(await page.locator('.discovery .card-showtime:visible').count(),'guides must preview showtimes');
+          assert.equal(await page.locator('.discovery .card details').count(),0,'no unbounded inline screening disclosures');
+        }
         if(name==='cinema')await page.locator('.room').first().scrollIntoViewIfNeeded();
         if(name==='formats')await page.locator('.comparison-room').first().scrollIntoViewIfNeeded();
         if(name==='agents')await page.locator('.guide-tool').first().scrollIntoViewIfNeeded();
@@ -61,7 +65,7 @@ for(const file of documents){
             });
             const components=all('.room,.comparison-room,.guide-tool').every(node=>node.classList.contains('content-block'));
             const rounded=all('img.poster,img.public-poster,img.dialog-poster').filter(visible).every(node=>getComputedStyle(node).borderRadius==='6px');
-            const targets=all('.programme-times a,.venue-list li>a,.guide-contents a,.schedule-cinema-name,.card-showtime,.text-action,.ticket-link').filter(visible);
+            const targets=all('.programme-times a,.venue-list li>a,.guide-contents a,.guide-directory-link,.title-button,.programme-index>summary,.guide-information>summary,.guide-selects select,.schedule-cinema-name,.card-showtime,.text-action,.ticket-link').filter(visible);
             return {overflow:document.documentElement.scrollWidth>innerWidth+1,mainWidth:document.querySelector('main').getBoundingClientRect().width,
               flat,components,rounded,touchTargets:innerWidth>600||targets.every(node=>node.getBoundingClientRect().height>=44),
               stylesheet:all('link[rel=stylesheet]').some(node=>node.href.endsWith('/ui-components.css')),

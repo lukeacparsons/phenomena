@@ -14,6 +14,7 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
       await context.route(base+'/'+asset,route=>route.fulfill({path:require('node:path').resolve(__dirname,'../static',asset)}));
     await context.route(base+'/cinemas.css',route=>route.fulfill({path:require('node:path').resolve(__dirname,'../static/cinemas.css')}));
     const page = await context.newPage(), errors = [];
+    await page.clock.setFixedTime(new Date());
     page.on('pageerror', error => {errors.push(error.message);console.error('Page error:',error.message);});
     const input = await context.newCDPSession(page);
     const dialog = page.locator('#filmDialog');
@@ -92,8 +93,12 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     assert.equal(await cinemaMore.evaluate(node=>node===document.activeElement),true);
     assert.ok(Math.abs(await page.evaluate(()=>scrollY)-cinemaMoreScroll)<3);
     console.log('Per-cinema extra counts reveal the correct day and cinema, with keyboard booking and focus restoration.');
-    const opener = page.locator('.card:has(.card-more) .title-button').first();
-    const card = page.locator('.card:has(.card-more)').first();
+    // Pin a long schedule: the first live card can change as screenings expire,
+    // and a short schedule cannot exercise a 400px native-scroll gesture.
+    const longFilm=await page.locator('.card:has(.card-more)').evaluateAll(cards=>cards
+      .sort((a,b)=>Number(b.querySelector('.card-more').textContent.match(/\d+/)?.[0]||0)-Number(a.querySelector('.card-more').textContent.match(/\d+/)?.[0]||0))[0].dataset.film);
+    const card = page.locator(`.card[data-film="${longFilm}"]`);
+    const opener = card.locator('.title-button');
     const filmPath = await opener.getAttribute('href');
     const more=card.locator('.card-more');
     await more.scrollIntoViewIfNeeded();
@@ -195,7 +200,10 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     await page.keyboard.press('Escape');
     await page.waitForURL(base+'/en/');
 
+    let showtimesListingScroll;
     const openShowtimes=async()=>{
+      await more.scrollIntoViewIfNeeded();
+      showtimesListingScroll=await page.evaluate(()=>scrollY);
       await more.click();
       await page.waitForSelector('#filmDialog[open][data-view=showtimes]');
       await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=0;});
@@ -244,7 +252,7 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     await swipe(await schedulePoint(),0,340);
     await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
     await page.waitForURL(base+'/en/');
-    assert.ok(Math.abs(await page.evaluate(()=>scrollY)-listingScroll)<3,'Scroll-to-dismiss preserves the listing position');
+    assert.ok(Math.abs(await page.evaluate(()=>scrollY)-showtimesListingScroll)<3,'Scroll-to-dismiss preserves the listing position');
     console.log('Showtimes content pulls, scroll-to-dismiss handoff, cancellation and link taps passed.');
 
     await page.goto(base+screeningPath,{waitUntil:'domcontentloaded'});

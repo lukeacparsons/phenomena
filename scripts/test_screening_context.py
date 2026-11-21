@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import unittest
 
 from screening_context import upcoming, shared_language, shared_version, examples, related_guides
+from screening_languages import has_english_subtitles
 
 
 NOW = datetime(2026, 11, 21, 12, tzinfo=timezone.utc)
@@ -15,6 +16,12 @@ def pair(**overrides):
 
 
 class ScreeningContextTests(unittest.TestCase):
+    def test_english_subtitle_qualification_uses_session_subtitles_only(self):
+        for value in ('English', 'EN', 'Anglès', 'English, Spanish'):
+            self.assertTrue(has_english_subtitles({'subtitles': value}))
+        for session in ({'language': 'English'}, {'version': 'VOSI'}, {'version': 'VOSI', 'subtitles': 'Español'}, {'subtitles': 'Unknown'}):
+            self.assertFalse(has_english_subtitles(session))
+
     def test_language_claims_require_all_sessions_and_keep_audio_separate(self):
         self.assertIsNone(shared_language([pair(subtitles='English')], 'language'))
         self.assertIsNone(shared_language([pair(language='Other languages')], 'language'))

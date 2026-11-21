@@ -7,3 +7,9 @@
 .complete-programme-content ul{padding-left:20px;margin:0}
 .complete-programme-content li{margin:0 0 12px;line-height:1.7}
 .complete-programme .programme-times a{display:inline-flex;align-items:center;min-height:var(--touch-target);padding:8px 2px;white-space:nowrap;font-variant-numeric:tabular-nums;text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}
+.programme-navigation{margin:12px 0 20px}
+.programme-index>summary{min-height:var(--touch-target);align-content:center;cursor:pointer;color:var(--tx2)}
+.programme-index>summary:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.programme-index ul{columns:3 220px;column-gap:32px}
+.programme-index li{break-inside:avoid}
+.complete-programme-content h3>a{min-height:var(--touch-target);display:flex;align-items:center}

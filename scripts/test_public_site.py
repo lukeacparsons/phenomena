@@ -26,6 +26,20 @@ def programme():
 
 
 class IdentityTests(unittest.TestCase):
+    def test_subtitle_history_survives_retention_and_identity_merges(self):
+        data = programme()
+        data['films'][0]['sessions'][0]['subtitles'] = 'English'
+        registry = update_registry(new_registry(), data, [], NOW.isoformat())
+        record = resolve(registry, 'films', 'source:1984')
+        record['screenings'] = []  # History retention must not erase qualification.
+        data['films'][0]['sessions'] = []
+        data['films'].append({'id': 'later', 'title': 'Later identity', 'sessions': []})
+        registry = update_registry(registry, data, [], NOW.isoformat())
+        resolve(registry, 'films', 'later')['created_at'] = (NOW - timedelta(days=1)).isoformat()
+        data['films'] = [{**data['films'][0], 'merged_ids': ['later']}]
+        merged = update_registry(registry, data, [], NOW.isoformat())
+        self.assertTrue(resolve(merged, 'films', 'later')['english_subtitles_seen'])
+
     def test_exact_provider_imdb_evidence_merges_published_aliases(self):
         old = {'id': 'sant-cugat-cinemas:103892', 'title': 'Dos fiscales (VOSE)', 'sessions': []}
         current = {'id': 'imdb:tt35521200', 'imdb_id': 'tt35521200', 'title': old['title'], 'sessions': []}
@@ -93,6 +107,35 @@ class IdentityTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
+    def test_english_subtitle_discovery_uses_permanent_film_page_without_extra_prose(self):
+        from screening_context import COPY as CONTEXT
+        self.publish()
+        path = self.root / 'site/current/public/en/films/dune-1984/index.html'
+        self.assertNotIn('id="english-subtitles"', path.read_text())
+        english = {**self.data['films'][0]['sessions'][0], 'id': 'english', 'version': 'VOSI', 'subtitles': 'English'}
+        self.data['films'][0]['sessions'].append(english)
+        self.write_input(); self.publish()
+        for lang, section in [('en', 'films'), ('es', 'peliculas'), ('ca', 'pellicules')]:
+            html = (self.root / f'site/current/public/{lang}/{section}/dune-1984/index.html').read_text()
+            self.assertIn(CONTEXT[lang]['subtitle_description'].format(title='Dune (1984)', version=' (VOSI)'), html)
+            self.assertIn('data-subtitle-filter href="#english-subtitles">', html)
+            self.assertIn('id="english-subtitles"', html.split('<footer')[1])
+            self.assertNotIn('id="english-subtitles"', html.split('<footer')[0])
+            self.assertIn('index,follow', html)
+        self.data['films'][0]['sessions'] = []
+        self.write_input(); self.publish(NOW + timedelta(days=3))
+        html = path.read_text()
+        self.assertIn(CONTEXT['en']['subtitle_empty_description'].format(title='Dune (1984)'), html)
+        self.assertIn('href="#english-subtitles" hidden', html)
+        self.assertNotIn('confirmed English-subtitled screenings', html)
+        english.update(date='2026-11-25', starts_at='2026-11-25T19:00:00+01:00')
+        self.data['films'][0]['sessions'] = [english]
+        self.write_input(); self.publish(NOW + timedelta(days=4))
+        html = path.read_text()
+        self.assertIn('href="#english-subtitles" hidden', html)  # All screenings qualify: no visible filter.
+        self.assertIn('data-all-label="Showtimes">English subtitles</h2>', html)
+        self.assertIn('<link rel="canonical" href="https://vobarna.com/en/films/dune-1984/">', html)
+
     def test_homepage_covers_quiet_cinemas_and_separates_directory_only_venues(self):
         from html import escape
         from site_content import COPY, PUBLISHER
@@ -291,7 +334,12 @@ class PublicationTests(unittest.TestCase):
                 self.assertIn('https://cinema.example/programme', html)
                 self.assertIn('https://cinema.example/tickets', html)
                 self.assertIn('Phenomena Experience', html)
-                self.assertIn(DISCOVERY_COPY[lang]['count'].format(films=1, sessions=1), html)
+                if kind == 'english':
+                    self.assertNotIn('class="discovery-count"', html)
+                    self.assertNotIn('data-guide-cinema', html)
+                    self.assertNotIn('data-guide-group', html)
+                else:
+                    self.assertIn(DISCOVERY_COPY[lang]['count'].format(films=1, sessions=1), html)
                 if kind == 'weekend':
                     for date in ('2026-11-20', '2026-11-21', '2026-11-22'):
                         self.assertIn(date, html)
@@ -300,7 +348,7 @@ class PublicationTests(unittest.TestCase):
                     self.assertIn('id="70mm"', html)
                     self.assertIn(DISCOVERY_COPY[lang]['format_none'], html)
                     self.assertIn(DISCOVERY_COPY[lang]['film_edition_body'], html)
-                    self.assertIn(f'href="{paths[lang]}#70mm"', html)
+                    self.assertIn('<option value="70mm">', html)
                 if kind == 'classics':
                     self.assertIn('Dune (1984)', html)
                     self.assertIn('https://phenomena-experience.com/index?pag=cartelera', html)
@@ -459,7 +507,7 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('https://vobarna.com/es/peliculas/dune-1984/', en)
         es = (root / 'es/peliculas/dune-1984/index.html').read_text()
         self.assertRegex(es, r'<html\b[^>]*\blang="es"(?:\s|>)')
-        self.assertIn('<h2 class="film-showtimes-heading">Sesiones</h2>', es)
+        self.assertIn('<h2 class="film-showtimes-heading" data-all-label="Sesiones">Sesiones</h2>', es)
         self.assertIn('href="/en/films/dune-1984/"', es)
         self.assertIn('dune-1984', (root / 'en/index.html').read_text())
 

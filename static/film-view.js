@@ -1,5 +1,11 @@
 import {availabilityFor} from './cinema-service.js';
 import {TEXT} from './cinema-copy.js';
+import {hasEnglishSubtitles} from './screening-language.js';
+export const SUBTITLE_LABELS={
+  en:{label:'English subtitles',all:'All showtimes',empty:'No upcoming screenings with English subtitles are currently listed.'},
+  es:{label:'Subtítulos en inglés',all:'Todas las sesiones',empty:'No hay próximas sesiones con subtítulos en inglés anunciadas.'},
+  ca:{label:'Subtítols en anglès',all:'Totes les sessions',empty:'No hi ha pròximes sessions amb subtítols en anglès anunciades.'}
+};
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL=value=>typeof value==='string'&&(/^(https:\/\/|\/(?!\/))/.test(value))?escapeHTML(value):'';
 const RATING_LABELS = {en:{critics:'RT · Critics',audience:'RT · Audience'},es:{critics:'RT · Crítica',audience:'RT · Público'},ca:{critics:'RT · Crítica',audience:'RT · Públic'}};
@@ -104,7 +110,9 @@ function scheduleShowtime(session){
 
 function scheduleMarkup(){
   const last=page?lastScreeningMarkup(film,{language,cinemas,now}):'';
-  return `<div class="dialog-section showtimes-summary reading-wash"${page?' id="showtimes"':''}>${page?`<h2 class="film-showtimes-heading">${t('showtimes')}</h2>`:`<h3 class="sr-only">${t('showtimes')}</h3>`}
+  const subtitles=SUBTITLE_LABELS[language],matching=film.sessions.filter(hasEnglishSubtitles);
+  const allEnglish=matching.length>0&&matching.length===film.sessions.length;
+  return `<div class="dialog-section showtimes-summary reading-wash"${page?' id="showtimes"':''}>${page?`<div class="film-showtimes-tools"><h2 class="film-showtimes-heading" data-all-label="${t('showtimes')}">${allEnglish?subtitles.label:t('showtimes')}</h2>${matching.length||film.english_subtitles_seen?`<a class="text-action film-subtitle-filter" data-subtitle-filter href="#english-subtitles"${allEnglish||!matching.length?' hidden':''}>${subtitles.label}</a>`:''}</div>`:`<h3 class="sr-only">${t('showtimes')}</h3>`}
     <p class="film-empty"${film.sessions.length?' hidden':''}>${DETAIL_LABELS[language].empty}</p>
     ${page?`<p class="film-last-screening"${film.sessions.length||!last?' hidden':''}>${last}</p>`:''}
     ${[...groupShowtimes(film.sessions)].map(([date,venues])=>`

@@ -35,3 +35,4 @@ export function screeningAudio(film,session){
   return empty;
 }
 export const hasNonEnglishAudio=audio=>audio.codes.some(code=>!['en','zxx'].includes(code));
+export const hasEnglishSubtitles=session=>parseLanguages(session.subtitles).codes.includes('en');

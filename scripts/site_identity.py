@@ -3,6 +3,7 @@ import copy
 import hashlib
 import re
 import unicodedata
+from screening_languages import has_english_subtitles
 
 LOCALES = ('en', 'es', 'ca')
 SECTIONS = {'en': {'films': 'films', 'cinemas': 'cinemas', 'guides': 'guides', 'about': 'about'},
@@ -69,6 +70,8 @@ def update_registry(previous, programme, cinemas, checked_at, overrides=None):
                 # Known merges permanently redirect the former published pages.
                 for losing_id in found[1:]:
                     losing = entities[losing_id]
+                    if losing.get('english_subtitles_seen') or any(has_english_subtitles(s) for s in losing.get('screenings', [])):
+                        record['english_subtitles_seen'] = True
                     for lang in LOCALES:
                         registry['redirects'][path_for(losing, lang)] = path_for(record, lang)
                     for alias, owner in list(aliases.items()):
@@ -96,6 +99,8 @@ def update_registry(previous, programme, cinemas, checked_at, overrides=None):
                 aliases[key] = entity_id
             record['source_id'] = item['id']
             if kind == 'films':
+                if any(has_english_subtitles(s) for s in [*item.get('sessions', []), *record.get('screenings', [])]):
+                    record['english_subtitles_seen'] = True
                 record['film'] = {key: copy.deepcopy(item[key]) for key in FILM_FIELDS if key in item}
                 # Keep collected screening facts when films leave the programme.
                 from browser_programme import browser_programme

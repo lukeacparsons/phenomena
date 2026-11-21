@@ -164,3 +164,63 @@
 /* Reading copy stays comfortably short even beside a wide programme. */
 .public-site main>p,.public-site .content-block p{max-width:76ch}
 .public-site main>.site-nav a,.public-site main>.pagination a{min-height:var(--touch-target);display:inline-flex;align-items:center}
+
+/* Guides compose the same cards and dialogs as the programme. */
+.film-showtimes-tools{display:flex;align-items:center;justify-content:space-between;gap:8px 20px;flex-wrap:wrap;margin-bottom:16px}
+.public-site .film-showtimes-tools .film-showtimes-heading{margin:0}
+.film-subtitle-filter{font-size:.875rem}
+.discovery-page main{max-width:var(--listing-width);padding-top:0}
+.guide-heading{display:block;max-width:760px;margin:0 0 20px;padding:0}
+.public-site .guide-heading h1{margin:4px 0 10px}
+.public-site .guide-heading p{font-size:1rem;line-height:1.5;margin:0}
+.guide-controls{margin:24px 0 16px}
+.guide-controls .dates{--date-gutter:0px;width:100%;margin:0;padding-inline:0;scroll-padding-inline:0}
+.guide-selects{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+.guide-selects label{max-width:100%;min-width:0}
+.guide-selects select{font:inherit;font-size:.875rem;min-height:var(--touch-target);max-width:100%;padding:8px 32px 8px 12px;color:var(--tx);background:var(--bg);border:1px solid var(--border);border-radius:var(--radius)}
+.guide-selects select:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.discovery-count{font-size:.875rem;color:var(--tx2)}
+.public-site .discovery-group{margin:28px 0 48px}
+.public-site .discovery-group>h2{font-size:1.125rem;margin:0 0 24px;max-width:70ch}
+.public-site .discovery-group .card-day{margin-bottom:0}
+.public-site .guide-group-note{font-size:.875rem;max-width:70ch;margin:0 0 28px}
+.guide-information{margin:24px 0;max-width:var(--guide-width)}
+.guide-information>summary,.offer-conditions>summary{min-height:var(--touch-target);align-content:center;cursor:pointer;color:var(--tx2);font-size:.875rem;padding:10px 0}
+.guide-information[open]>summary{margin-bottom:20px}
+.guide-information>summary:focus-visible,.offer-conditions>summary:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.guide-sources .discovery-session{display:grid;grid-template-columns:160px minmax(0,1fr) 150px;gap:24px;padding:24px 0;border-bottom:1px solid var(--border)}
+.guide-sources .session-facts{font-size:.875rem}
+.guide-sources .source-note{overflow-wrap:anywhere}
+.guide-session-facts{margin-top:20px;font-size:.875rem}
+.guide-session-facts p{margin:6px 0;line-height:1.5}
+.guide-session-facts .text-action{display:flex}
+.guide-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 48px}
+.guide-directory-link{display:flex;align-items:flex-start;gap:20px;min-height:var(--touch-target);padding:12px 0;text-decoration:none!important}
+.guide-directory-title{display:block;font-size:1.125rem;font-weight:700;text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}
+.guide-directory-description{display:block;color:var(--tx2);font-size:.875rem;line-height:1.6;margin-top:8px}
+.guide-preview{display:flex;align-items:flex-end;gap:8px;flex:none}
+.guide-preview .public-poster{width:64px;max-height:100px;object-fit:contain;border-radius:var(--poster-radius);aspect-ratio:auto}
+.guide-preview .progressive-overlay{display:none}
+.public-site .guide-directory>section{margin-bottom:40px}
+.public-site .offer-price{font-size:1.5rem;font-weight:700;line-height:1.4}
+.public-site .discount-offer h2{font-size:1.25rem;margin-top:0}
+.discount-offer details>summary{min-height:var(--touch-target);align-content:center;cursor:pointer}
+.version-comparison .screenings tbody th{min-width:0;font-weight:700}
+.version-comparison .screenings{font-size:1rem}
+@media(max-width:600px){
+ .guide-links{grid-template-columns:1fr;gap:24px}
+ .guide-preview .public-poster{width:54px;max-height:84px}
+ .guide-preview{gap:5px}
+ .guide-directory-link{gap:16px}
+ .guide-selects{gap:8px}
+ .guide-selects label{flex:1 1 140px}
+ .guide-selects select{width:100%}
+ .guide-heading{margin-bottom:16px}
+ .guide-controls{margin-top:20px}
+ .guide-sources .discovery-session{grid-template-columns:minmax(0,1fr);gap:12px}
+ .guide-sources .discovery-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+ .guide-information .reading-wash{--reading-wash-spread:14px}
+}
+@media(max-width:460px){
+ .public-site main :is(.guide-heading,.guide-information,.guide-group-note,.guide-directory-item,.comparison-room,.version-comparison){--reading-wash-spread:14px}
+}

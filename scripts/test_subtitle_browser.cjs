@@ -13,7 +13,7 @@ const paths=['/en/guides/english-subtitles-barcelona/','/es/guias/cine-subtitulo
       assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://vobarna.com'+path);
       assert.equal(await page.locator('link[hreflang]').count(),4);
       assert.equal(await page.locator('#subtitles-foreign').count(),1);
-      const film=page.locator('.discovery-film summary').first();
+      const film=page.locator('.guide-sources>summary').first();
       if(await film.count()){
         await film.click();
         const action=page.locator('.screening-action:visible').first();
@@ -28,12 +28,10 @@ const paths=['/en/guides/english-subtitles-barcelona/','/es/guias/cine-subtitulo
     const live=await context.newPage(),errors=[];
     live.on('pageerror',e=>errors.push(e.message));
     await live.goto(base+paths[0],{waitUntil:'networkidle'});
-    const summary=live.locator('.discovery-film:visible summary').first();
-    if(await summary.count()){
-      await summary.click();
-      await live.screenshot({path:'/private/tmp/vobarna-english-subtitles-mobile.png',fullPage:true});
-      const action=live.locator('.screening-action:visible').first();
-      const expected=await action.locator('xpath=ancestor::li').locator('.ticket-link').getAttribute('data-ticket-screening');
+    const action=live.locator('.discovery .card-showtime:visible').first();
+    if(await action.count()){
+      await live.screenshot({path:'/private/tmp/vobarna-english-subtitles-mobile.png'});
+      const expected=await action.getAttribute('data-session');
       await action.click();
       await live.waitForSelector('dialog[open] .buyrow.is-highlighted');
       assert.equal(await live.locator('.buyrow.is-highlighted').getAttribute('data-session'),expected);
@@ -41,7 +39,7 @@ const paths=['/en/guides/english-subtitles-barcelona/','/es/guias/cine-subtitulo
     // An open page must expire every row, including events, without losing its empty state.
     await live.clock.setFixedTime(new Date('2199-01-01T12:00:00Z'));
     await live.goto(base+paths[0],{waitUntil:'networkidle'});
-    assert.equal(await live.locator('.discovery [data-discovery-film]:visible').count(),0);
+    assert.equal(await live.locator('.discovery .card:visible').count(),0);
     assert.equal(await live.locator('.discovery-empty').isVisible(),true);
     assert.equal(await live.locator('#subtitles-foreign .discovery-group-empty').isVisible(),true);
     assert.deepEqual(errors,[]);

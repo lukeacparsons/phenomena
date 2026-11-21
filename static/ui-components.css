@@ -42,6 +42,9 @@
 }
 .text-action:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
 
+/* Standalone titles are navigation targets, including short one-line titles. */
+.card .title-button,.complete-programme-content h3>a{min-height:var(--touch-target);display:flex;align-items:center}
+
 /* Programme and information disclosures share the same label and hit area. */
 :is(.complete-programme,.site-information)>summary{
   width:fit-content;min-height:var(--touch-target);align-content:center;

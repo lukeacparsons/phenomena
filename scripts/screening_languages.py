@@ -2,6 +2,10 @@
 from language_names import parse_languages, without_language_placeholder
 
 
+def has_english_subtitles(session):
+    return 'en' in parse_languages(session.get('subtitles'))['codes']
+
+
 def screening_audio(film, session):
     raw = without_language_placeholder(session.get('language'))
     if raw:
