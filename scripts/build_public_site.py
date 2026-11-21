@@ -251,9 +251,10 @@ class Publication:
         programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if date_scope or path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
         if path == f'/{lang}/':
             script += '<script type="module" src="/complete-programme.js"></script>'
-        # Listings and film pages repeat the subtitle in the content. Small screens show that
-        # copy and drop the header's, so the header never changes height after first paint.
-        root_class = ' class="has-programme-subtitle"' if date_scope or 'class="logo-subtitle programme-subtitle"' in body else ''
+        # Cinema pages use the directory link as their mobile subtitle. Other pages
+        # retain the subtitle in their content, without repeating it in the header.
+        root_class = (' class="has-venue-subtitle"' if venue else
+                      ' class="has-programme-subtitle"' if date_scope or 'class="logo-subtitle programme-subtitle"' in body else '')
         html = f'''<!doctype html>
 <html lang="{lang}"{root_class}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base target="_blank">' if venue else ''}
@@ -488,7 +489,8 @@ class Publication:
         """Paint the full listing before the search catalogue or JavaScript arrives."""
         t = COPY[lang]
         view = self.listing_views[lang + ':' + ('date:' + date if date else cinema_id)]
-        filters = f'''<section class="filters" aria-label="{t['films']}"><span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span><nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
+        subtitle = '' if cinema_id else f'<span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span>'
+        filters = f'''<section class="filters" aria-label="{t['films']}">{subtitle}<nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
         cards = []
         for position, card in enumerate(view['cards']):
             film = self.current[card['id']]
@@ -521,18 +523,15 @@ class Publication:
                 address = location.get('formatted_address') or cinema.get('address')
                 maps = location.get('google_maps_place_url') or location.get('google_maps_url')
                 official = cinema.get('official_url') or cinema.get('url')
-                body = f'<div class="venue-heading"><div><h1>{text(cinema["name"])}</h1>'
+                body = f'<div class="venue-heading"><h1>{text(cinema["name"])}</h1><div class="venue-details">'
                 if address:
                     short_address = address
                     if ',' in address and address.casefold().startswith(cinema['name'].casefold()):
                         short_address = address.split(',', 1)[1].strip()
                     short_address = re.sub(r'\b\d{5}\s*', '', short_address)
                     body += f'<p class="venue-address"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>{link(maps, short_address)}</p>'
-                body += '</div><div class="venue-actions">'
-                if safe_url(maps):
-                    body += link(maps, v['directions'], ' class="venue-action venue-action-primary"')
                 if safe_url(official):
-                    body += link(official, v['website'], ' class="venue-action text-action"')
+                    body += f'<a class="venue-website text-action" href="{text(safe_url(official))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span>{text(v["website"])}</span></a>'
                 body += '</div></div>'
                 body += self.programme_listing(lang, cinema_id=cid)
                 if cinema.get('programme_url'):
@@ -606,7 +605,7 @@ class Publication:
                           social={'title': cinema['name'] + ' | VO Barna', 'heading': cinema['name'], 'kind': 'cinema',
                                   'description': SHARE_COPY[lang]['venue_description' if pairs else 'venue_empty']},
                           footer_extra=self.screening_context(pairs, lang, cinema=cinema),
-                          crumbs=[(t['cinemas'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
+                          crumbs=[(v['directory'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
 
     def homepage_information(self, lang):
         t = COPY[lang]

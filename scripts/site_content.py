@@ -129,9 +129,9 @@ COPY = {
  'format_body':'Compara la sala i la sessió concretes, a més de la marca del cinema. IMAX, iSense, Dolby Atmos, Laser ULTRA, 35mm i 70mm descriuen aspectes diferents de la projecció. Un cinema amb Atmos pot tenir sales sense Atmos. La cerca «Només pantalles grans» és una selecció de sales prèmium que també inclou espais centrats en la comoditat; no és una classificació de pantalles mesurades. Consulta el format anunciat per a la sessió juntament amb la informació documentada de la sala.',
 }}
 VENUE_COPY = {
- 'en': {'directions': 'Directions', 'website': 'Website', 'visit': 'About the cinema', 'policies': 'Cinema policies'},
- 'es': {'directions': 'Cómo llegar', 'website': 'Web oficial', 'visit': 'Sobre el cine', 'policies': 'Normas del cine'},
- 'ca': {'directions': 'Com arribar-hi', 'website': 'Web oficial', 'visit': 'Sobre el cinema', 'policies': 'Normes del cinema'},
+ 'en': {'directory': 'Original version cinemas in Barcelona', 'website': 'Website', 'visit': 'About the cinema', 'policies': 'Cinema policies'},
+ 'es': {'directory': 'Cines en versión original en Barcelona', 'website': 'Web oficial', 'visit': 'Sobre el cine', 'policies': 'Normas del cine'},
+ 'ca': {'directory': 'Cinemes en versió original a Barcelona', 'website': 'Web oficial', 'visit': 'Sobre el cinema', 'policies': 'Normes del cinema'},
 }
 
 GUIDES = {'versions': {'en': 'vose-vosc-original-version', 'es': 'vose-vosc-version-original', 'ca': 'vose-vosc-versio-original'},

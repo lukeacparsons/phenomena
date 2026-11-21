@@ -55,20 +55,27 @@
 
 /* Cinema profiles: the programme is the page; supporting research is opt-in. */
 .venue-page main{padding-top:16px}
-.venue-page .breadcrumbs{font-size:.875rem;color:var(--tx2);margin:0 0 24px}
+.venue-page .breadcrumbs{display:none;font-size:.875rem;color:var(--tx2);margin:0 0 24px}
 .venue-page .breadcrumbs a{text-decoration:none}
 .venue-page .breadcrumbs a:hover{text-decoration:underline}
-.venue-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 0 28px;border-bottom:1px solid var(--border)}
+@media(max-width:600px){
+ :root.has-venue-subtitle{--header-height:78px}
+ :root.has-venue-subtitle .header-wrap::before{height:var(--header-height);-webkit-mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%);mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent 100%)}
+ .venue-page .logo-copy .logo-subtitle{display:none}
+ .venue-page .breadcrumbs{display:block}
+}
+@media(max-width:460px){:root.has-venue-subtitle{--header-height:68px}}
+.venue-heading{padding:0 0 28px;border-bottom:1px solid var(--border)}
 .venue-page main .venue-heading h1{font-size:clamp(1.75rem,3vw,2rem);letter-spacing:-.045em;margin:0 0 12px;line-height:1.12}
-.venue-heading>div:first-child{min-width:0}
+.venue-details{display:flex;flex-wrap:wrap;align-items:center;gap:0 24px}
 .venue-page .venue-address{display:flex;gap:8px;align-items:flex-start;max-width:70ch;margin:0;font-size:.875rem;line-height:1.6;color:var(--tx2)}
-.venue-address svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;margin-top:2px}
-.venue-address a:hover{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset)}
-.venue-actions{display:flex;gap:8px;flex-shrink:0}
-.venue-action{font-size:.875rem}
+.venue-details svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
+.venue-address svg{margin-top:2px}
+.venue-address a{min-width:0;overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:var(--link-underline,color-mix(in srgb,currentColor 40%,transparent));text-underline-offset:var(--link-offset,4px)}
+.venue-address a:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
+.venue-website{display:inline-flex;align-items:center;gap:8px;min-height:var(--touch-target,44px);padding:8px 0;font-size:.875rem;line-height:1.6;white-space:nowrap;color:var(--tx2);text-decoration:underline;text-decoration-color:var(--link-underline,color-mix(in srgb,currentColor 40%,transparent));text-underline-offset:var(--link-offset,4px)}
+.venue-website:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
 
-.venue-action-primary{display:inline-flex;align-items:center;justify-content:center;min-height:var(--touch-target);padding:10px 16px;border:0;border-radius:var(--radius);background:var(--tx);color:var(--s1)}
-.venue-action-primary:hover{background:var(--primary-hover)}
 .venue-page .venue-programme-link a{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);font-size:.875rem}
 .venue-page main .venue-information{margin:48px 0 0;padding-top:24px;border-top:1px solid var(--border)}
 .venue-page main .venue-information>h2{margin:0 0 16px;font-size:1.25rem}
@@ -85,12 +92,11 @@
 .venue-page .venue-disclosure-body .table-scroll{overflow-x:auto}
 .venue-page .venue-disclosure-body .screenings{min-width:640px}
 .venue-page .site-footer{display:block}
-@media(max-width:1000px){.venue-heading{align-items:flex-start}.venue-actions{flex-direction:column}}
 @media(max-width:730px){
  .venue-page main{padding-top:8px}
  .venue-page .breadcrumbs{margin-bottom:12px}
- .venue-heading{display:block;padding-bottom:16px}
- .venue-actions{flex-direction:row;margin-top:14px}
+ .venue-heading{padding-bottom:16px}
+ .venue-details{flex-direction:column;align-items:flex-start}
  .venue-page main .venue-heading h1{font-size:2rem;letter-spacing:-.035em;margin-bottom:8px}
  .venue-page main .venue-information{margin-top:36px}
 }
