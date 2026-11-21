@@ -251,8 +251,8 @@ class Publication:
         programme_style = '<style>' + (ROOT / 'static/complete-programme.css').read_text() + '</style>' if date_scope or path == f'/{lang}/' or path.startswith(programme_path(lang)) else ''
         if path == f'/{lang}/':
             script += '<script type="module" src="/complete-programme.js"></script>'
-        # A listing repeats the subtitle above its dates. Small screens show that copy and drop
-        # the header's, decided here so the header never changes height after first paint.
+        # Listings and film pages repeat the subtitle in the content. Small screens show that
+        # copy and drop the header's, so the header never changes height after first paint.
         root_class = ' class="has-programme-subtitle"' if date_scope or 'class="logo-subtitle programme-subtitle"' in body else ''
         html = f'''<!doctype html>
 <html lang="{lang}"{root_class}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -396,7 +396,8 @@ class Publication:
                 t, details = COPY[lang], film.get('details', {})
                 poster = (self.poster(film, eager=True).replace('class="public-poster', 'class="dialog-poster')
                           .replace('.film-facts>noscript', '.film-sheet .dialog-head>noscript'))
-                body = '<article class="film-sheet" id="filmPage" aria-labelledby="filmTitle">'
+                body = f'<span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span>'
+                body += '<article class="film-sheet" id="filmPage" aria-labelledby="filmTitle">'
                 notice = f'<p id="screeningNotice" role="status" tabindex="-1" hidden>{t["expired_screening"]}</p>'
                 body += (views[film['id']][lang].replace('<!--film-poster-->', poster)
                          .replace('<div class="dialog-section showtimes-summary reading-wash" id="showtimes">', '<div class="dialog-section showtimes-summary reading-wash" id="showtimes">' + notice))

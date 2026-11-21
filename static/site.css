@@ -125,7 +125,7 @@
  .film-sheet .film-ratings{--rating-columns:2}
 }
 @media(max-width:600px){
- .film-page main{padding:36px 24px 24px}
+ .film-page main{padding:0 24px 24px}
  .film-sheet{max-width:320px;margin-inline:auto}
  .film-sheet .dialog-head{display:flex;flex-direction:column;gap:20px;padding-bottom:32px}
  .film-sheet .dialog-poster{width:100%;align-self:center}

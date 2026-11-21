@@ -419,7 +419,7 @@ class PublicationTests(unittest.TestCase):
         self.assertNotIn('AggregateRating', en)
         self.assertIn('https://vobarna.com/es/peliculas/dune-1984/', en)
         es = (root / 'es/peliculas/dune-1984/index.html').read_text()
-        self.assertIn('<html lang="es">', es)
+        self.assertRegex(es, r'<html\b[^>]*\blang="es"(?:\s|>)')
         self.assertIn('<h2 class="film-showtimes-heading">Sesiones</h2>', es)
         self.assertIn('href="/en/films/dune-1984/"', es)
         self.assertIn('dune-1984', (root / 'en/index.html').read_text())
