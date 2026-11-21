@@ -355,3 +355,14 @@ test('semantic responses tolerate films outside a scoped or older browser catalo
   ui.update();await new Promise(resolve=>setTimeout(resolve,20));
   assert.deepEqual(ui.current().semanticScores,[{film_id:'above',score:.8}]);ui.cancel();
 });
+test('cancel clears progress and allows the same interrupted query to be submitted again',async()=>{
+  const responses=[],statuses=[];let updates=0;
+  const ui=createSmartSearchUI({getProgramme:()=>programme,getIndex:()=>createSearchIndex(programme),getFilters:()=>({...emptySearch(),query:'something uplifting'}),getLanguage:()=> 'en',onResult:()=>updates++,onStatus:status=>statuses.push(status),delay:0,
+    fetchImpl:()=>new Promise(resolve=>responses.push(resolve))});
+  ui.update();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(statuses.at(-1),'loading');
+  ui.cancel();assert.equal(statuses.at(-1),'');
+  ui.update();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(responses.length,2);assert.equal(statuses.at(-1),'loading');
+  const response={ok:true,json:async()=>({query:'something uplifting',intent:emptyIntent(),semantic_scores:null,mode:'interpreted'})};
+  responses[0](response);await new Promise(resolve=>setTimeout(resolve,10));assert.equal(statuses.at(-1),'loading');assert.equal(updates,0);
+  responses[1](response);await new Promise(resolve=>setTimeout(resolve,10));assert.equal(statuses.at(-1),'');assert.equal(updates,1);ui.cancel();
+});

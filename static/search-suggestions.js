@@ -1,5 +1,6 @@
 import {instantCompletions,needsEnrichment,isVerifiedSuggestion,prepareCompletionIndex} from './search-catalogue.js';
 import {chooseChips} from './search-chip-selection.js';
+import {suggestionLanguage,preferredAudioLanguages} from './search-localization.js';
 import {madridDate,normalise} from './cinema-search.js';
 
 const COPY={en:{shuffle:'Show other suggested searches',search:'Search for',suggestions:'Search suggestions',available:'suggestions available. Use the arrow keys to choose.'},
@@ -21,7 +22,7 @@ function onSelection(button,select){
 }
 
 // The same accepted search box drives the full site's search, URL and results.
-// Typing edits the menu; Enter or selecting a suggestion submits one search.
+// Typing searches after a pause; Enter or selecting a suggestion submits immediately.
 export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQuery,onSubmit,onDraft=()=>{},scoped=false,fetchImpl=fetch}){
   const label=input.closest('.search'),row=label.parentElement,composer=el('div','search-composer');
   label.before(composer);composer.append(label);
@@ -29,22 +30,25 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
   const menu=el('div','search-completions'),options=el('div','search-options');options.id='searchCompletionOptions';options.setAttribute('role','listbox');menu.hidden=true;menu.append(options);composer.append(menu);
   const area=el('div','search-suggestions'),shuffle=el('button','search-shuffle'),chips=el('div','search-ideas'),announcement=el('div','sr-only');
   shuffle.type='button';shuffle.innerHTML=shuffleIcon;area.append(chips,shuffle);area.hidden=true;row.after(area);announcement.setAttribute('aria-live','polite');area.after(announcement);
-  let catalogue,programme,refreshing,draft=getQuery()||input.value,open=false,active=-1,candidates=[],slots=[],composing=false,timer,controller,version=0,destroyed=false,menuFrame,menuTask,clearTimer,pendingSubmission;
+  let catalogue,programme,refreshing,draft=getQuery()||input.value,open=false,active=-1,candidates=[],slots=[],composing=false,timer,controller,version=0,destroyed=false,menuFrame,menuTask,searchTimer,pendingSubmission;
   input.value=draft;
   const cache=new Map(),events=new AbortController(),on=(target,type,fn)=>target.addEventListener(type,fn,{signal:events.signal});
   const seen=new Set();try{for(const query of JSON.parse(sessionStorage.getItem('vobarna-suggestion-rotation')||'[]'))if(typeof query==='string')seen.add(query);}catch{}
   function choose(previous=[],initial=false){
-    const result=chooseChips(catalogue.idea_details,{previous,initial,seen});
+    const result=chooseChips(catalogue.idea_details,{previous,initial,seen,preferredLanguages:preferredAudioLanguages(currentLanguage(),navigator.languages||[navigator.language])});
     try{sessionStorage.setItem('vobarna-suggestion-rotation',JSON.stringify([...seen].slice(-2000)));}catch{}
     return result;
   }
-  const copy=()=>COPY[getLanguage()]||COPY.en;
+  const currentLanguage=()=>suggestionLanguage(getLanguage(),navigator.languages||[navigator.language]);
+  const copy=()=>COPY[currentLanguage()];
   const cancel=()=>{clearTimeout(timer);controller?.abort();controller=null;version++;};
-  const cancelMenu=()=>{cancelAnimationFrame(menuFrame);clearTimeout(menuTask);clearTimeout(clearTimer);};
+  const cancelMenu=()=>{cancelAnimationFrame(menuFrame);clearTimeout(menuTask);};
+  const cancelSubmission=()=>{clearTimeout(searchTimer);searchTimer=null;pendingSubmission=null;};
   const local=()=>instantCompletions(catalogue?.entities||[],catalogue?.precomputed||[],draft);
   const isVerified=query=>programme===getProgramme()&&isVerifiedSuggestion([...(catalogue?.precomputed||[]),...(catalogue?.idea_details||[])],query);
   function renderChips(){
     const rows=catalogue?.idea_details||[];area.hidden=Boolean(draft)||!slots.some(i=>rows[i]);if(draft)return;
+    if(catalogue?.language!==currentLanguage()){area.hidden=true;return;}
     shuffle.setAttribute('aria-label',copy().shuffle);shuffle.title=copy().shuffle;chips.replaceChildren();
     for(const i of slots){const idea=rows[i];if(!idea)continue;const b=el('button','search-idea');b.type='button';b.textContent=idea.query;b.setAttribute('aria-label',copy().search+' '+idea.query);onSelection(b,touch=>submit(idea.query,{touch}));chips.append(b);}
     chips.scrollLeft=0;
@@ -76,7 +80,7 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
     announcement.textContent=candidates.length+' '+copy().available;
   }
   function enrich(immediate=candidates){
-    cancel();const query=draft.trim(),language=getLanguage();if(!catalogue||query.length<2||!needsEnrichment(immediate,query))return;
+    cancel();const query=draft.trim(),language=currentLanguage();if(!catalogue||query.length<2||!needsEnrichment(immediate,query))return;
     const key=catalogue.version+':'+madridDate()+':'+language+':'+query;
     const apply=body=>{
       if(query!==draft.trim()||!open||active!==-1||options.contains(document.activeElement))return;
@@ -93,57 +97,60 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
       }catch{}finally{clearTimeout(deadline);if(controller===current)controller=null;}
     },180);
   }
-  function sync(){pendingSubmission=null;cancelMenu();cancel();draft=getQuery()||'';input.value=draft;open=false;active=-1;candidates=[];renderChips();renderMenu();}
-  function submit(query,{touch=false}={}){
+  function sync(){cancelSubmission();cancelMenu();cancel();draft=getQuery()||'';input.value=draft;open=false;active=-1;candidates=[];renderChips();renderMenu();if(catalogue?.language!==currentLanguage())void refresh();}
+  function submit(query,{touch=false,automatic=false}={}){
     const value=(query??(active>=0?candidates[active]?.query:input.value)??'').trim();
-    cancelMenu();cancel();draft=value;input.value=value;open=false;active=-1;renderMenu();renderChips();
-    if(!getProgramme()){pendingSubmission={value,touch};return;}
-    pendingSubmission=null;onSubmit(value);
+    cancelSubmission();
+    if(!automatic){cancelMenu();cancel();draft=value;input.value=value;open=false;active=-1;renderMenu();renderChips();}
+    if(!getProgramme()){pendingSubmission={value,touch,automatic};return;}
+    onSubmit(value,{automatic});
+    // Background searches must not change the draft, caret, menu or keyboard focus.
+    if(automatic)return;
     // Touch selections show the results without reopening the software keyboard.
     // Keyboard and mouse selections retain the combobox focus for further edits.
     if(touch)input.blur();else input.focus({preventScroll:true});
     open=false;cancel();renderMenu();
   }
   function changed(){
-    pendingSubmission=null;cancelMenu();cancel();draft=input.value;active=-1;open=true;candidates=[];onDraft(draft);
+    cancelSubmission();cancelMenu();cancel();draft=input.value;active=-1;open=true;candidates=[];onDraft(draft);
     // Let the native text/caret paint before matching or touching the menu DOM.
     menuFrame=requestAnimationFrame(()=>{menuTask=setTimeout(()=>{
       if(composing||!open||options.contains(document.activeElement))return;
       candidates=local();renderChips();renderMenu();if(draft)enrich();
     },0);});
-    // Clearing an already-empty committed search needs no catalogue rendering.
-    // A new keystroke cancels a pending reset of the previous submitted search.
-    if(!draft&&getQuery())clearTimer=setTimeout(()=>{if(!draft)onSubmit('');},80);
+    // Keep filtering off the keystroke path. Clear promptly; otherwise wait for
+    // a short pause, and submit the typed draft rather than an arrow-key preview.
+    if(draft.trim()||getQuery())searchTimer=setTimeout(()=>submit(draft,{automatic:true}),draft.trim()?400:80);
   }
-  async function fallbackCatalogue(){
+  async function fallbackCatalogue(language){
     return new Promise((resolve,reject)=>{
       const worker=new Worker(new URL('./search-catalogue-worker.js',import.meta.url),{type:'module'});
       const finish=(error,value)=>{clearTimeout(deadline);worker.terminate();error?reject(Error('Catalogue unavailable')):resolve(value);};
       const deadline=setTimeout(()=>finish(true),20000);
       worker.onerror=()=>finish(true);worker.onmessage=({data})=>finish(data.error,data);
-      worker.postMessage({url:document.body.dataset.siteLang?'/programme.json':'/preview-data/screenings.json',cinemaId:scoped||null,now:Date.now()});
+      worker.postMessage({url:document.body.dataset.siteLang?'/programme.json':'/preview-data/screenings.json',cinemaId:scoped||null,now:Date.now(),language});
     });
   }
   async function refresh(){
     if(refreshing||!getProgramme()||destroyed)return refreshing;
-    const p=getProgramme();
+    const p=getProgramme(),language=currentLanguage();
     refreshing=(async()=>{
       let next;
-      try{if(scoped)throw Error('Scoped catalogue');const response=await fetchImpl('/api/search-suggestions');if(!response.ok)throw Error('Unavailable');next=await response.json();if(next.generated_at!==p.generated_at)throw Error('Publication changed');}
-      catch{try{next=await fallbackCatalogue();}catch{return;}}
-      if(destroyed||p!==getProgramme())return;
+      try{if(scoped)throw Error('Scoped catalogue');const response=await fetchImpl('/api/search-suggestions?language='+language);if(!response.ok)throw Error('Unavailable');next=await response.json();if(next.generated_at!==p.generated_at||next.language!==language)throw Error('Publication changed');}
+      catch{try{next=await fallbackCatalogue(language);}catch{return;}}
+      if(destroyed||p!==getProgramme()||language!==currentLanguage())return;
       if(catalogue?.version===next.version&&programme===p){if(slots.some(i=>next.idea_details[i]?.valid_until<Date.now())){slots=choose([],true);renderChips();}return;}
       await prepareCompletionIndex(next.entities,next.precomputed);
-      if(destroyed||p!==getProgramme())return;
+      if(destroyed||p!==getProgramme()||language!==currentLanguage())return;
       const queries=slots.map(i=>catalogue?.idea_details?.[i]?.query);catalogue=next;programme=p;cancel();cache.clear();
       const keep=queries.map(q=>next.idea_details.findIndex(r=>r.query===q&&r.valid_until>Date.now()));
       slots=keep.length===3&&keep.every(i=>i>=0)?keep:choose([],true);renderChips();
       if(open&&active===-1&&!options.contains(document.activeElement))changed();
-    })().finally(()=>{refreshing=null;if(p!==getProgramme()&&!destroyed)void refresh();});
+    })().finally(()=>{refreshing=null;if((p!==getProgramme()||language!==currentLanguage())&&!destroyed)void refresh();});
     return refreshing;
   }
   on(input,'input',()=>{if(!composing)changed();});on(input,'search',()=>{if(input.value!==draft)changed();});
-  on(input,'compositionstart',()=>{pendingSubmission=null;composing=true;cancelMenu();cancel();open=false;renderMenu();});on(input,'compositionend',()=>{composing=false;changed();});
+  on(input,'compositionstart',()=>{cancelSubmission();composing=true;cancelMenu();cancel();onDraft(input.value);open=false;renderMenu();});on(input,'compositionend',()=>{composing=false;changed();});
   on(input,'focus',()=>{open=true;active=-1;candidates=local();renderMenu();enrich();if(catalogue?.day!==madridDate())void refresh();});
   on(input,'keydown',event=>{
     if(composing||event.isComposing)return;
@@ -161,5 +168,5 @@ export function createSearchSuggestionsUI({input,getProgramme,getLanguage,getQue
   on(document,'visibilitychange',()=>{if(!document.hidden)void refresh();});
   const interval=setInterval(()=>{if(!document.hidden)void refresh();},300000);
   requestAnimationFrame(()=>{if(matchMedia('(pointer:fine)').matches&&!input.value&&document.activeElement===document.body&&!location.hash)input.focus({preventScroll:true});});
-  return {sync,refresh,isVerified,ready(){if(pendingSubmission){const {value,touch}=pendingSubmission;submit(value,{touch});}},destroy(){destroyed=true;cancelMenu();cancel();clearInterval(interval);events.abort();}};
+  return {sync,refresh,isVerified,ready(){if(pendingSubmission){const {value,...options}=pendingSubmission;submit(value,options);}},destroy(){destroyed=true;cancelSubmission();cancelMenu();cancel();clearInterval(interval);events.abort();}};
 }

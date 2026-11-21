@@ -6,14 +6,14 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
   const cache=new Map();
   let timer=null,controller=null,key='',result=null,request=0;
   function current(){return result;}
-  function cancel(){clearTimeout(timer);timer=null;controller?.abort();controller=null;request++;}
+  function cancel(){clearTimeout(timer);timer=null;controller?.abort();controller=null;request++;key='';onStatus('');}
   function update(){
     const programme=getProgramme(),index=getIndex(),filters=getFilters(),language=getLanguage();
     const query=parseLocationQuery(filters.query,{titles:index?.titles}).text;
     const precomputed=Boolean(programme&&isPrecomputedQuery(filters.query,programme));
     const nextKey=JSON.stringify([query,language,programme?.generated_at,madridDate(),precomputed]);
     if(nextKey===key)return;
-    cancel();key=nextKey;result=null;onStatus('');
+    cancel();key=nextKey;result=null;
     if(!programme||!query||query.length<3)return;
     const local=interpretSearch(programme,filters,{index});
     if(local.unsupported.length){onStatus('unsupported',local.unsupported);return;}
@@ -24,9 +24,10 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
     if(index.people.includes(normalise(local.text)))return;
     if(cache.has(key)){result=cache.get(key);onStatus(result.intent.unsupported.length?'unsupported':'',result.intent.unsupported);onResult();return;}
     const version=request;
+    onStatus('loading');
     timer=setTimeout(async()=>{
       timer=null;controller=new AbortController();const activeController=controller;
-      const deadline=setTimeout(()=>activeController.abort(),6000);onStatus('loading');
+      const deadline=setTimeout(()=>activeController.abort(),6000);
       try{
         const response=await fetchImpl('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,language}),signal:activeController.signal});
         if(!response.ok)throw new Error('Search unavailable');
@@ -46,5 +47,5 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
       }finally{clearTimeout(deadline);if(controller===activeController)controller=null;}
     },delay);
   }
-  return {current,update,cancel,reset(){cancel();key='';result=null;onStatus('');}};
+  return {current,update,cancel,reset(){cancel();key='';result=null;}};
 }

@@ -1,5 +1,6 @@
 """Audio evidence for one original-version screening, independently of subtitles."""
 from language_names import parse_languages, without_language_placeholder
+from language_evidence import invalid_legacy_cinema_report
 
 
 def has_english_subtitles(session):
@@ -17,7 +18,7 @@ def screening_audio(film, session):
     # The cinema's own film page can resolve this screening even when another
     # publisher reports a different subset of a multilingual original.
     reports = [r for r in details.get('language_reports', [])
-               if r.get('status') == 'ok' and r.get('evidence') == 'explicit_original_language'
+               if not invalid_legacy_cinema_report(r) and r.get('status') == 'ok' and r.get('evidence') == 'explicit_original_language'
                and r.get('source_url') and r['source_url'] == session.get('source_url')]
     if reports:
         parsed = [parse_languages(r.get('languages') or r.get('raw')) for r in reports]
@@ -25,7 +26,7 @@ def screening_audio(film, session):
             return {**parsed[0], 'source_url': session['source_url'], 'derived': True}
         return empty
     selection = details.get('language_selection') or {}
-    if details.get('language_status', {}).get('state') != 'conflict' and selection.get('evidence') == 'explicit_original_language' and selection.get('source_url'):
+    if not invalid_legacy_cinema_report(selection) and details.get('language_status', {}).get('state') != 'conflict' and selection.get('evidence') == 'explicit_original_language' and selection.get('source_url'):
         return {**parse_languages(details.get('original_languages') or details.get('languages')),
                 'source_url': selection['source_url'], 'derived': True}
     return empty

@@ -9,6 +9,8 @@ from unittest.mock import Mock
 
 from cinema_languages import enrich, refresh, page_facts
 from film_identity import parse_source
+from language_evidence import repair_legacy_cinema_languages, resolve
+from screening_languages import screening_audio
 
 NOW=datetime(2026,11,19,tzinfo=timezone.utc)
 MALDA='https://www.cinemamalda.com/la-carn/'
@@ -28,6 +30,46 @@ def film():
 
 
 class LanguageTests(unittest.TestCase):
+    def test_version_legend_does_not_establish_film_audio(self):
+        legend='''<div class="cb-verR3"><h3>Tipus de versions</h3>
+          <div><span>VOC</span><span>Versió original en català</span></div>
+          <div><span>VOE</span><span>Versió original en espanyol</span></div></div>'''
+        self.assertEqual(parse_source('<h1>Wild Horse Nine</h1>'+legend)['languages'],[])
+        self.assertEqual(parse_source('<p>Idioma original: Anglès</p>'+legend)['languages'],['en'])
+
+    def test_cached_legend_claim_is_withdrawn_but_explicit_screening_audio_survives(self):
+        url='https://www.cinebaix.cat/pellicula/wild-horse-nine'
+        bad={'source':'cinema','source_url':url,'languages':['Catalan','Spanish'],
+             'raw':['català','espanyol'],'status':'ok','evidence':'explicit_original_language'}
+        good={'source':'rotten_tomatoes','source_url':'https://rottentomatoes.com/m/wild_horse_nine',
+              'raw':['English'],'languages':['English'],'status':'ok','evidence':'explicit_original_language'}
+        f={'details':{'languages':['English'],'language_reports':[bad,good],
+                     'language_status':{'state':'conflict'},'search_aliases':['Catalan','Spanish','English']}}
+        session={'source_url':url,'version':'VOSE'}
+        self.assertEqual(screening_audio(f,session)['codes'],[])
+        self.assertTrue(repair_legacy_cinema_languages(f,NOW))
+        self.assertEqual(screening_audio(f,session)['codes'],['en'])
+        self.assertEqual(f['details']['search_aliases'],['English'])
+        self.assertEqual(screening_audio(f,{**session,'language':'Catalan'})['codes'],['ca'])
+        self.assertFalse(repair_legacy_cinema_languages(f,NOW))
+        # An updated parser can still verify a genuinely Catalan film.
+        f['details']=resolve({},[{**bad,'raw':['català'],'parser_version':5}],NOW)
+        self.assertEqual(screening_audio(f,session)['codes'],['ca'])
+
+    def test_parser_upgrade_does_not_revive_bad_claim_during_source_outage(self):
+        url='https://www.cinebaix.cat/pellicula/la-carn'
+        f=film();f['sessions'][0]['source_url']=url
+        bad={'source':'cinema','source_url':url,'languages':['Catalan','Spanish'],
+             'raw':['català','espanyol'],'status':'ok','evidence':'explicit_original_language'}
+        f['details'].update(languages=bad['languages'],language_reports=[bad],language_selection=bad)
+        facts={'page_titles':['La carn'],'languages':['ca','es'],'language_raw':bad['raw']}
+        old={'version':4,'pages':{url:{'facts':facts,'status':'ok','checked_at':NOW.isoformat()}},'films':{f['id']:deepcopy(f['details'])}}
+        with tempfile.TemporaryDirectory() as folder:
+            Path(folder,'cinema-languages.json').write_text(json.dumps(old))
+            enrich({'films':[f]},Path(folder),Mock(side_effect=OSError()),NOW,reviewed={})
+        self.assertEqual(f['details']['languages'],[])
+        self.assertEqual(screening_audio(f,f['sessions'][0])['codes'],[])
+
     def test_malda_comma_subtitles_and_multiple_audio_languages(self):
         self.assertEqual(parse_source(HTML)['languages'],['ca','es'])
         self.assertEqual(parse_source(HTML.replace('subtitulos en castellano','subtítulos en inglés'))['languages'],['ca','es'])

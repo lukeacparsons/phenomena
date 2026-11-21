@@ -34,6 +34,7 @@ from search_evidence import public_venue_answers
 from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
 from screening_languages import screening_audio, has_english_subtitles
+from language_evidence import repair_legacy_cinema_languages
 from language_names import LANGUAGE_NAMES
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
@@ -1094,6 +1095,8 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
         fcntl.flock(lock, fcntl.LOCK_EX)
         programme = read_json(programme_path)
         validate_programme(programme)
+        for film in programme['films']:
+            repair_legacy_cinema_languages(film, now)
         programme = validate_publication_films(programme, output / 'film-duplicates.json', apply_confirmed_merges=True)
         prepare_images(programme['films'])
         optimize_logo()
@@ -1110,6 +1113,9 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             if published.get('origin') == origin:
                 previous = published
         registry = read_json(output / 'current/registry.json', read_json(registry_path, new_registry()))
+        for record in registry.get('entities', {}).values():
+            if record.get('kind') == 'films':
+                repair_legacy_cinema_languages(record['film'], now)
         registry = update_registry(registry, programme, list(venues.values()), now.isoformat(), read_json(ROOT / 'data/site-slug-overrides.json', {}))
         prepare_images([record['film'] for record in registry['entities'].values() if record['kind'] == 'films'])
         releases = output / 'releases'
@@ -1126,7 +1132,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.discovery_pages()
             date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
-            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-catalogue.js', 'search-catalogue-worker.js', 'search-chip-selection.js', 'search-suggestions.js', 'outing-search.js', 'search-feedback.js', 'location-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
+            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-catalogue.js', 'search-catalogue-worker.js', 'search-localization.js', 'search-chip-selection.js', 'search-suggestions.js', 'outing-search.js', 'search-feedback.js', 'location-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'language-navigation.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'discovery-view.js', 'guide-page.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'programme-loader.js', 'programme-worker.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):

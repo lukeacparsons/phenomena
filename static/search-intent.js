@@ -5,7 +5,7 @@ import {OUTING_FIELDS,OUTING_NUMERIC,OUTING_BOOLEAN,OUTING_SORTS,outingDefaults,
 export const fold=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const dictionaries={
   colour:[['black-and-white','black and white','monochrome','blanco y negro','blanc i negre'],['color','colour','color film']],
-  genre:[['Comedy','comedia','comèdia','funny','humorous','divertidas','divertida','divertides','divertit'],['Drama'],['Horror','terror','scary'],['Science fiction','sci fi','scifi','ciencia ficción','ciència ficció'],['Thriller','suspense','suspens','Mystery & Thriller'],['Mystery','misterio','misteri'],['Romance','romantic','romántica','romàntica'],['Action','acción','acció'],['Adventure','aventura','aventuras','aventures'],['Animation','animated','animación','animació'],['Documentary','documentaries','documental','documentales','documentals'],['Fantasy','fantasía','fantasia'],['Family','familiar'],['Musical'],['War','bélico','bèl·lic'],['Western'],['Anime']],
+  genre:[['Comedy','comedia','comèdia','funny','humorous','divertidas','divertida','divertides','divertit'],['Drama','dramas','drames'],['Horror','terror','scary'],['Science fiction','sci fi','scifi','ciencia ficción','ciència ficció'],['Thriller','suspense','suspens','Mystery & Thriller'],['Mystery','misterio','misteri'],['Romance','romantic','romántica','romàntica','románticas','romàntiques'],['Action','acción','acció'],['Adventure','aventura','aventuras','aventures'],['Animation','animated','animación','animació'],['Documentary','documentaries','documental','documentales','documentals'],['Fantasy','fantasía','fantasia'],['Family','familiar'],['Musical','musicales','musicals'],['War','bélico','bèl·lic'],['Western'],['Anime']],
   country:[['France','Francia','França'],['Spain','España','Espanya'],['United States','USA','US','Estados Unidos','Estats Units'],['United Kingdom','UK','Reino Unido','Regne Unit'],['Italy','Italia','Itàlia'],['Germany','Alemania','Alemanya'],['Japan','Japón','Japó'],['South Korea','Corea del Sur','Corea del Sud'],['China','Xina'],['Portugal'],['Mexico','México','Mèxic'],['Argentina'],['Canada','Canadá','Canadà'],['Brazil','Brasil'],['India','Índia'],['Iran','Irán'],['Belgium','Bélgica','Bèlgica'],['Australia','Austràlia'],['Ireland','Irlanda'],['Sweden','Suecia','Suècia']],
   language:languageRows
 };
@@ -92,10 +92,12 @@ function parseBasicIntent(text,{programme,exactTitle=false,protectedNames=[],tod
   const companies=[...new Set(programme?.films.flatMap(f=>[...(f.details?.studios||[]),...(f.details?.distributors||[])])||[])].sort((a,b)=>b.length-a.length);
   const producers=[...new Set(programme?.films.flatMap(f=>[...(f.details?.producers||[]),...(f.details?.studios||[])])||[])].sort((a,b)=>b.length-a.length);
   for(const name of /\b(?:or|o)\b/.test(rest)?[]:producers){
+    if(!rest.includes(fold(name)))continue;
     rest=rest.replace(new RegExp('\\b(?:produced by|producer|producid[ao]s? por|produid[ae]s? per)\\s+'+esc(fold(name))+'\\b','g'),()=>{add('producer','eq',name);return ' ';});
   }
   const venuesAndChains=new Set([...(programme?.films.flatMap(f=>f.sessions.map(s=>fold(s.provider)))||[]),...(programme?.cinemas.flatMap(c=>[fold(c.short),fold(c.name)])||[])]);
   for(const name of companies){
+    if(!rest.includes(fold(name)))continue;
     const company=esc(fold(name));
     rest=rest.replace(new RegExp('\\b(?:distributed by|distribuid[ao]s? por|distribuid[ae]s? per)\\s+'+company+'\\b','g'),()=>{add('distributor','eq',name);return ' ';});
     // A bare company is a catalogue association, not a person's producer credit.
@@ -188,7 +190,7 @@ function parseBasicIntent(text,{programme,exactTitle=false,protectedNames=[],tod
     const formats=[...new Set(programme.films.flatMap(f=>f.sessions.flatMap(s=>s.formats||[])))];
     for(const format of formats)consume(new RegExp('\\b'+esc(fold(format))+'\\b','g'),()=>add('format','eq',format));
   }
-  const filler=/\b(?:show me|find me|looking for|i want|i d like|quiero ver|quiero|busco|vull veure|vull|busca|recomiendame|recomana m|movies?|films?|peliculas?|pelis|pel licules|cinema|with|and|or|at|the|a|an|some|con|y|o|en|el|la|los|las|un|una|unes|uns|amb|i|al|a les|a las)\b/g;
+  const filler=/\b(?:show me|find me|looking for|i want|i d like|quiero ver|quiero|busco|vull veure|vull|busca|recomiendame|recomana m|movies?|films?|peliculas?|pelis|pel licules|cinema|cine|de|d|with|and|or|at|the|a|an|some|con|y|o|en|el|la|los|las|un|una|unes|uns|amb|i|al|a les|a las)\b/g;
   const genrePatterns=dictionaries.genre.map(row=>({genre:row[0],pattern:new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?(?:'+row.map(fold).sort((a,b)=>b.length-a.length).map(esc).join('|')+')\\b','g')}));
   // A genre word inside a topic (civil war, family secrets, action against
   // injustice) is ambiguous. Let the interpreter consider the complete phrase.
@@ -337,7 +339,7 @@ export function intentChips(plan,language='en',programme){
   if(plan.preferences?.length)chips.push({id:'preferences',label:extraWords.preferences+': '+plan.preferences.map(p=>groupLabel(p.conditions)).join(' / ')});
   if(plan.itinerary)chips.push({id:'itinerary',label:extraWords.itinerary+': '+plan.itinerary.count+' · '+plan.itinerary.min_gap+' min'});
   if(plan.scope&&plan.scope!=='upcoming')chips.push({id:'scope',label:extraWords.scope+': '+({en:{past:'past screenings',catalogue:'known films'},es:{past:'sesiones pasadas',catalogue:'películas conocidas'},ca:{past:'sessions passades',catalogue:'pel·lícules conegudes'}}[language]?.[plan.scope]||plan.scope)});
-  if(OUTING_SORTS.includes(plan.sort))chips.push({id:'sort',label:extraWords.sort+': '+({en:{price:'lowest admission',duration:'shortest',seats:'most places',finish:'earliest finish',distance:'nearest'},es:{price:'menor precio',duration:'menor duración',seats:'más plazas',finish:'final más temprano',distance:'más cerca'},ca:{price:'menor preu',duration:'menor durada',seats:'més places',finish:'final més aviat',distance:'més a prop'}}[language]?.[plan.sort]||plan.sort)});
+  if(OUTING_SORTS.includes(plan.sort))chips.push({id:'sort',label:extraWords.sort+': '+({en:{price:'lowest admission',duration:'shortest',duration_desc:'longest',seats:'most places',finish:'earliest finish',distance:'nearest'},es:{price:'menor precio',duration:'menor duración',duration_desc:'mayor duración',seats:'más plazas',finish:'final más temprano',distance:'más cerca'},ca:{price:'menor preu',duration:'menor durada',duration_desc:'major durada',seats:'més places',finish:'final més aviat',distance:'més a prop'}}[language]?.[plan.sort]||plan.sort)});
   if(plan.semantic_query)chips.push({id:'semantic',label:words.semantic+': '+plan.semantic_query});
   return chips;
 }

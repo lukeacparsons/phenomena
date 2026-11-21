@@ -136,3 +136,34 @@ test('semantic historical searches can retrieve retained films outside the curre
  assert.deepEqual(result.semantic_scores.map(r=>r.film_id),['archived']);
  assert.deepEqual(run(p,'something uplifting yesterday',{intent:result.intent,semanticScores:result.semantic_scores}).map(f=>f.id),['archived']);
 });
+
+
+test('duration sorting keeps longest and shortest distinct, with unknown runtimes last',async()=>{
+ const p=programme([film('short','18:00',{details:{runtime_minutes:45}}),film('long','18:00',{details:{runtime_minutes:180}}),film('unknown','18:00',{details:{}}),film('middle','18:00',{details:{runtime_minutes:90}}),film('zero','18:00',{details:{runtime_minutes:0}})]);
+ const api=createSmartSearch({getProgramme:async()=>p,apiKey:'fixture',now:()=>now,fetchImpl:()=>assert.fail('Sorting needs no model')});
+ for(const query of ['long films first','longest films first','longest runtime first','películas más largas primero','pel·lícules més llargues primer']){
+  const plan=interpretSearch(p,{...emptySearch(),query},{now});
+  assert.equal(plan.sort,'duration_desc',query);assert.equal(plan.text,'',query);
+  assert.deepEqual(run(p,query).slice(0,3).map(f=>f.id),['long','middle','short'],query);
+  assert.equal((await api.search({query})).mode,'local',query);
+ }
+ for(const query of ['shortest','short films first','películas más cortas primero','pel·lícules més curtes primer']){
+  assert.deepEqual(run(p,query).slice(0,3).map(f=>f.id),['short','middle','long'],query);
+ }
+ for(const [language,label] of [['en','longest'],['es','mayor duración'],['ca','major durada']]){
+  const plan=interpretSearch(p,{...emptySearch(),query:'long films first'},{now});
+  assert(intentChips(plan,language).some(c=>c.id==='sort'&&c.label.includes(label)));
+ }
+});
+
+test('a semantic interpretation cannot reverse a locally specified runtime order',async()=>{
+ const p=programme([film('short','18:00',{details:{runtime_minutes:60}}),film('long','18:00',{details:{runtime_minutes:180}})]);
+ const api=createSmartSearch({getProgramme:async()=>p,apiKey:'fixture',dimensions:2,now:()=>now,fetchImpl:async(url,request)=>{
+  const body=JSON.parse(request.body);
+  if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:[1,0]}))})};
+  const input=JSON.parse(body.input[1].content[0].text);
+  return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),text:'',semantic_query:'uplifting',sort:'duration',film_matches:input.catalogue.map(row=>row[0])})}]}]})};
+ }});
+ const result=await api.search({query:'long films first about friendship'});
+ assert.equal(result.intent.sort,'duration_desc');
+});

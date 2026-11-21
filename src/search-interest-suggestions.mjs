@@ -1,10 +1,13 @@
 import {emptySearch,interpretSearch,queryFilms,normalise,madridDate} from '../static/cinema-search.js';
 import {parseLocationQuery,coordinates} from '../static/location-search.js';
+import {suggestionPhrases} from '../static/search-localization.js';
+import {parseLanguages} from '../static/screening-language.js';
 
 const score=row=>Number(row.sessions||0)+Number(row.recent_sessions||0)*0.5+Number(row.ticket_sessions||0)*2+Number(row.screening_sessions||0)*0.5;
 const lastShowing=rows=>Math.max(0,...rows.flatMap(f=>f.sessions.map(s=>Date.parse(s.starts_at))).filter(Number.isFinite));
 
 export async function buildInterestSuggestions(cat,snapshot,now=Date.now()){
+  const phrasing=suggestionPhrases(cat.language);
   const {programme,index}=cat,day=madridDate(now),entries=[],audit=[],seen=new Set();
   const films=new Map(programme.films.map(f=>[f.id,f])),cinemas=new Map(programme.cinemas.map(c=>[c.id,c]));
   const ranked=(key,known)=>(snapshot?.dimensions?.[key]||[]).filter(r=>known.has(r.entity_id)&&r.sessions>=2)
@@ -27,11 +30,11 @@ export async function buildInterestSuggestions(cat,snapshot,now=Date.now()){
     if(requiresLocation){rows=rows.map(f=>({...f,sessions:f.sessions.filter(s=>coordinates(cinemas.get(s.cinema_id)?.location))})).filter(f=>f.sessions.length);if(!rows.length)return null;}
     return {valid_until:lastShowing(rows),film_count:rows.length,requires_location:requiresLocation};
   }
-  function add(query,subject,{filmId,cinemaId,requiresLocation=false}={}){
+  function add(query,subject,{filmId,cinemaId,requiresLocation=false,audioLanguage=null}={}){
     const key=normalise(query);if(seen.has(key)||query.length>64)return false;
     const evidence=validate(query,filmId,cinemaId,requiresLocation);if(!evidence)return false;
     const kind=filmId?'film':'cinema',group=kind+':'+subject.entity_id;
-    const row={query,label:query,source:'interest',kind,group,day,...evidence};
+    const row={query,label:query,source:'interest',kind,group,day,...evidence,...(audioLanguage?{audio_language:parseLanguages(audioLanguage).codes[0]}:{})};
     entries.push(row);seen.add(key);
     audit.push({...row,score:subject.score,signals:{sessions:subject.sessions,recent_sessions:subject.recent_sessions,ticket_sessions:subject.ticket_sessions,screening_sessions:subject.screening_sessions},derived:true});
     return true;
@@ -41,18 +44,18 @@ export async function buildInterestSuggestions(cat,snapshot,now=Date.now()){
     const short=full.split(':')[0].replace(/^The /,'');
     // Shorten only if the actual search engine resolves exclusively to this film.
     const title=short.length>=4&&validate(short,film.id)?short:full;
-    add(title+' in English',subject,{filmId:film.id});
+    for(const audio of [...new Set(['English',...(film.details?.languages||[])])])add(phrasing.audio(audio,title),subject,{filmId:film.id,audioLanguage:audio});
     add(title,subject,{filmId:film.id});
-    add(title+' with English subtitles',subject,{filmId:film.id});
-    add(title+' near me',subject,{filmId:film.id,requiresLocation:true});
+    add(phrasing.withSubtitles(title,'English'),subject,{filmId:film.id});
+    add(phrasing.near(title),subject,{filmId:film.id,requiresLocation:true});
     for(const venue of popularCinemas.slice(0,2)){
-      const cinema=cinemas.get(venue.entity_id);add(`${title} at ${cinema.short||cinema.name}`,subject,{filmId:film.id,cinemaId:cinema.id});
+      const cinema=cinemas.get(venue.entity_id);add(phrasing.at(title,cinema.short||cinema.name),subject,{filmId:film.id,cinemaId:cinema.id});
     }
     await new Promise(resolve=>setTimeout(resolve,0));
   }
   for(const subject of popularCinemas){
     const cinema=cinemas.get(subject.entity_id),name=cinema.short||cinema.name;
-    for(const query of [`Films at ${name}`,`Films in English at ${name}`])add(query,subject,{cinemaId:cinema.id});
+    for(const query of [phrasing.at(phrasing.films,name),phrasing.at(phrasing.audio('English'),name)])add(query,subject,{cinemaId:cinema.id});
   }
   // Interleave subjects so a franchise does not monopolise the pool. Preserve
   // a broad selection alongside the early, small-sample popularity signals.
@@ -66,5 +69,7 @@ export async function buildInterestSuggestions(cat,snapshot,now=Date.now()){
     return {...row,source:'catalogue',group:venue?'cinema:'+venue.value:film?'film:'+film.id:subject?subject.field+':'+subject.value:'general:'+row.query};
   });
   for(const row of fallback)if(!seen.has(normalise(row.query)))ordered.push(row);
+  const nearby=phrasing.near(phrasing.films),evidence=validate(nearby,null,null,true);
+  if(evidence)ordered.push({query:nearby,label:nearby,source:'catalogue',kind:'query',group:'location',day,...evidence});
   return {entries:ordered,audit};
 }

@@ -8,12 +8,14 @@ const searchModule=await import('../static/cinema-search.js');
 const serviceModule=await import('../static/cinema-service.js');
 const webMCPModule=await import('../static/webmcp.js');
 const programmeModule=await import('../static/programme-data.js');
+const loaderModule=await import('../static/programme-loader.js');
 const copyModule=await import('../static/cinema-copy.js');
 const listingModule=await import('../static/listing-view.js');
+const localizationModule=await import('../static/search-localization.js');
 const {filmMarkup}=await import('../static/film-view.js');
 const appSource = fs.readFileSync(path.join(__dirname, '../static/cinemas.js'), 'utf8').split('let pressedPoster=null;')[0];
 const context = vm.createContext({
-  ...searchModule,...serviceModule,...webMCPModule,...programmeModule,...copyModule,...listingModule,observeImages:()=>{},posterMarkup:()=>'',AbortController,URLSearchParams, Intl, Date, location: {search: ''}, document: {body:{dataset:{}},querySelector:()=>null,getElementById: id => id==='grid'?{dataset:{},querySelectorAll:()=>[]}:null,querySelectorAll: () => []},
+  ...searchModule,...serviceModule,...webMCPModule,...programmeModule,...copyModule,...listingModule,...localizationModule,...loaderModule,observeImages:()=>{},posterMarkup:()=>'',AbortController,URLSearchParams, Intl, Date, location: {search: ''}, document: {body:{dataset:{}},querySelector:()=>null,getElementById: id => id==='grid'?{dataset:{},querySelectorAll:()=>[]}:null,querySelectorAll: () => []},
   navigator: {language: 'en'}, localStorage: {getItem: () => null}
 });
 const source=appSource.replace(/^import[^\n]*\n/gm,'');
@@ -264,12 +266,12 @@ context.document.getElementById=()=>({value:''});
 vm.runInContext(`
   setLanguage=()=>{};restoreLink=()=>{};syncURL=()=>{};startWebMCP=()=>{};
   Object.assign(state,emptySearch(),{cinema_ids:['cinebaix']});
-  useProgramme({cinemas:[],films:[]},{cached:true});
+  useProgramme(prepareProgramme({cinemas:[],films:[]}),{cached:true});
 `,context);
 assert.equal(vm.runInContext('state.cinema_ids[0]',context),'cinebaix');
-vm.runInContext("useProgramme({cinemas:[{id:'cinebaix'}],films:[]})",context);
+vm.runInContext("useProgramme(prepareProgramme({cinemas:[{id:'cinebaix'}],films:[]}))",context);
 assert.equal(vm.runInContext('state.cinema_ids[0]',context),'cinebaix');
-vm.runInContext("useProgramme({cinemas:[],films:[]})",context);
+vm.runInContext("useProgramme(prepareProgramme({cinemas:[],films:[]}))",context);
 assert.equal(vm.runInContext('state.cinema_ids.length',context),0);
 console.log('Film search: credits, language/country aliases, audio vs subtitles, dates, session formats and safe rendering passed.');
 

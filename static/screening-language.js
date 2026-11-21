@@ -4,6 +4,8 @@ const fold=value=>String(value??'').normalize('NFKD').replace(/[\u0300-\u036f]/g
 const aliases=new Map(Object.entries(LANGUAGE_LABELS).flatMap(([code,labels])=>[code,...labels.split('|')].map(label=>[fold(label),code])));
 const code=value=>aliases.get(fold(value).replace(/^[ ,.;]+|[ ,.;]+$/g,''));
 const placeholder=value=>['','otras lenguas','otros idiomas','altres llengues','altres idiomes','other languages','unknown','und'].includes(fold(value));
+// Old CineBaix reports captured the site's version-code legend as film audio.
+const invalidLegacyReport=r=>r.source==='cinema'&&/^https?:\/\/(?:www\.)?cinebaix\.cat(?:\/|$)/i.test(r.source_url||'')&&!(r.parser_version>=5);
 export const languageRows=Object.entries(LANGUAGE_LABELS).map(([code,labels])=>[labels.split('|')[0],code,...labels.split('|').slice(1)]);
 export function parseLanguages(value){
   const codes=[],unknown=[];
@@ -23,14 +25,14 @@ export function screeningAudio(film,session){
   const empty={...parseLanguages(null),source_url:null,derived:false};
   if(session.original_audio===false||!['VO','VOSE','VOSC','VOSI','VOSA'].includes(String(session.version||'').toUpperCase()))return empty;
   const d=film.details||{};
-  const reports=(d.language_reports||[]).filter(r=>r.status==='ok'&&r.evidence==='explicit_original_language'&&r.source_url&&r.source_url===session.source_url);
+  const reports=(d.language_reports||[]).filter(r=>!invalidLegacyReport(r)&&r.status==='ok'&&r.evidence==='explicit_original_language'&&r.source_url&&r.source_url===session.source_url);
   if(reports.length){
     const parsed=reports.map(r=>parseLanguages(r.languages?.length?r.languages:r.raw));
     if(parsed.every(p=>p.complete&&p.codes.length===parsed[0].codes.length&&p.codes.every(c=>parsed[0].codes.includes(c))))return {...parsed[0],source_url:session.source_url,derived:true};
     return empty;
   }
   const selection=d.language_selection||{};
-  if(d.language_status?.state!=='conflict'&&selection.evidence==='explicit_original_language'&&selection.source_url)
+  if(!invalidLegacyReport(selection)&&d.language_status?.state!=='conflict'&&selection.evidence==='explicit_original_language'&&selection.source_url)
     return {...parseLanguages(d.original_languages?.length?d.original_languages:d.languages),source_url:selection.source_url,derived:true};
   return empty;
 }

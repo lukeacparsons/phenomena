@@ -1,5 +1,6 @@
 import {createSearchIndex,emptySearch,interpretSearch,queryFilms,normalise,madridDate} from './cinema-search.js';
 import {languageRows,parseLanguages} from './screening-language.js';
+import {suggestionPhrases} from './search-localization.js';
 
 const dates=['tonight','this weekend','today','tomorrow'];
 // Only exact, still-valid factual suggestions may bypass semantic search.
@@ -9,9 +10,7 @@ export function isVerifiedSuggestion(rows,query,{now=Date.now()}={}){
   const text=query.trim(),day=madridDate(now);
   return rows.some(row=>row.query===text&&row.day===day&&row.valid_until>now);
 }
-const genreLabels={Comedy:'Comedy films',Documentary:'Documentaries',Thriller:'Thriller films',Drama:'Drama films',Horror:'Horror films',Romance:'Romantic films',Animation:'Animated films','Science fiction':'Science fiction films',Family:'Family films'};
 const genreAliases={Comedy:['Comedies'],Drama:['Dramas'],Thriller:['Thrillers']};
-const countryLabels={France:'French films',Japan:'Japanese films',Spain:'Spanish films',Italy:'Italian films',Germany:'German films','South Korea':'Korean films','United States':'American films','United Kingdom':'British films'};
 const lastShowing=films=>Math.max(0,...films.flatMap(f=>f.sessions.map(s=>Date.parse(s.starts_at))).filter(Number.isFinite));
 const rankedValues=(films,key)=>{
   const counts=new Map();for(const film of films)for(const value of new Set(film.details?.[key]||[]))counts.set(value,(counts.get(value)||0)+1);
@@ -19,7 +18,8 @@ const rankedValues=(films,key)=>{
 };
 
 // Rebuilt on programme changes and Madrid-day changes, outside the typing path.
-export async function buildCatalogue(programme,now=Date.now()) {
+export async function buildCatalogue(programme,now=Date.now(),{language='en'}={}) {
+  const phrasing=suggestionPhrases(language);language=phrasing.locale;
   const index=createSearchIndex(programme),today=madridDate(now);
   const upcoming=queryFilms(programme,emptySearch(),{index,now});
   const people=new Map();
@@ -27,18 +27,18 @@ export async function buildCatalogue(programme,now=Date.now()) {
     for(const name of film.details?.[key]||[]){
       const id=role.toLowerCase()+':'+name,until=lastShowing([film]);
       if(people.has(id)){people.get(id).valid_until=Math.max(people.get(id).valid_until,until);continue;}
-      people.set(id,{kind:'person',entity_id:id,label:name,query:`Films ${phrase} ${name}`,detail:role,valid_until:until,
+      people.set(id,{kind:'person',entity_id:id,label:name,query:role==='Director'?phrasing.director(name):phrasing.actor(name),detail:role==='Director'?phrasing.directorRole:phrasing.actorRole,valid_until:until,
         aliases:role==='Director'?[`Films by ${name}`,`Directed by ${name}`,`By ${name}`]:[`Films with ${name}`,`With ${name}`,`Starring ${name}`]});
     }
   }
   const entities=[
     ...upcoming.map(f=>({kind:'film',entity_id:f.id,label:f.title,query:f.title,valid_until:lastShowing([f]),
       aliases:[f.original_title,f.english_title,...f.titles||[]].filter(Boolean),
-      detail:['Film',f.release_year,f.details?.directors?.[0]].filter(Boolean).join(' · '),
+      detail:[phrasing.film,f.release_year,f.details?.directors?.[0]].filter(Boolean).join(' · '),
       poster:f.poster_image?.variants?.[0]?.url||f.poster_url})),
     ...programme.cinemas.flatMap(c=>{
       const films=upcoming.map(f=>({...f,sessions:f.sessions.filter(s=>s.cinema_id===c.id)})).filter(f=>f.sessions.length);
-      return films.length?[{kind:'cinema',entity_id:c.id,label:c.short||c.name,query:c.short||c.name,aliases:[c.name],detail:'Cinema · '+c.area,valid_until:lastShowing(films)}]:[];
+      return films.length?[{kind:'cinema',entity_id:c.id,label:c.short||c.name,query:c.short||c.name,aliases:[c.name],detail:phrasing.cinema+' · '+c.area,valid_until:lastShowing(films)}]:[];
     }),
     ...people.values()
   ];
@@ -52,50 +52,49 @@ export async function buildCatalogue(programme,now=Date.now()) {
     validation.set(query,result);return result;
   };
   const proposals=new Map();
-  const add=(query,category,aliases=[])=>{
+  const add=(query,category,aliases=[],audioLanguage=null)=>{
     const key=normalise(query);if(!key||query.length>80)return;
-    const old=proposals.get(key);if(old){old.aliases=[...new Set([...old.aliases,...aliases])];return;}
-    proposals.set(key,{kind:'query',entity_id:null,query,label:query,category,aliases,source:'precomputed',day:today});
+    const old=proposals.get(key);if(old){old.aliases=[...new Set([...old.aliases,...aliases])];if(audioLanguage)old.audio_language=parseLanguages(audioLanguage).codes[0];return;}
+    proposals.set(key,{kind:'query',entity_id:null,query,label:query,category,aliases,source:'precomputed',day:today,...(audioLanguage?{audio_language:parseLanguages(audioLanguage).codes[0]}:{})});
   };
   const languages=rankedValues(upcoming,'languages'),genres=rankedValues(upcoming,'genres'),countries=rankedValues(upcoming,'countries');
   const subtitleCodes=new Set(upcoming.flatMap(f=>f.sessions.flatMap(s=>parseLanguages(s.subtitles).codes)));
   const subtitles=languageRows.filter(row=>subtitleCodes.has(row[1])).map(row=>row[0]);
   const venues=entities.filter(e=>e.kind==='cinema');
   // Empty-input chips leave dates open; typed completions can still add dates.
-  for(const query of ['Films in English','Films at Verdi','Japanese films','French films','Films directed by David Lynch','Comedy films','Films at Phenomena','Documentaries','English subtitles','Under 90 minutes'])add(query,'idea');
-  for(const date of dates)add('Films '+date,'date',[date,`Movies ${date}`]);
+  for(const query of [phrasing.audio('English'),phrasing.at(phrasing.films,'Verdi'),phrasing.country('Japan'),phrasing.country('France'),phrasing.director('David Lynch'),phrasing.genre('Comedy'),phrasing.at(phrasing.films,'Phenomena'),phrasing.genre('Documentary'),phrasing.subtitles('English'),phrasing.under(90)])add(query,'idea');
+  for(const date of dates)add(phrasing.films+' '+phrasing.date(date),'date',[date,phrasing.date(date)]);
   for(const language of languages){
-    const base=`Films in ${language}`;
-    add(base,'audio',[`In ${language}`,`${language} audio`,`Movies in ${language}`]);
-    for(const date of dates)add(`${base} ${date}`,'audio-date',[`In ${language} ${date}`,`${language} audio ${date}`]);
+    const base=phrasing.audio(language);
+    add(base,'audio',[`In ${language}`,`${language} audio`,`Movies in ${language}`],language);
+    for(const date of dates)add(`${base} ${phrasing.date(date)}`,'audio-date',[`In ${language} ${date}`,`${language} audio ${date}`],language);
   }
   for(const language of subtitles){
-    const base=`${language} subtitles`;
-    add(base,'subtitles',[`Films with ${base}`,`Subtitles in ${language}`]);
-    for(const date of dates)add(`${base} ${date}`,'subtitles-date',[`Films with ${base} ${date}`,`Subtitles in ${language} ${date}`]);
+    const base=phrasing.subtitles(language);
+    add(base,'subtitles',[`Films with ${language} subtitles`,`Subtitles in ${language}`]);
+    for(const date of dates)add(`${base} ${phrasing.date(date)}`,'subtitles-date',[`Films with ${language} subtitles ${date}`,`Subtitles in ${language} ${date}`]);
   }
   for(const genre of genres){
-    const base=genreLabels[genre]||genre+' films';
+    const base=phrasing.genre(genre);if(!base)continue;
     add(base,'genre',[genre+' films',...genreAliases[genre]||[]]);
-    for(const date of dates)add(`${base} ${date}`,'genre-date',[`${genre} films ${date}`,...(genreAliases[genre]||[]).map(alias=>`${alias} ${date}`)]);
+    for(const date of dates)add(`${base} ${phrasing.date(date)}`,'genre-date',[`${genre} films ${date}`,...(genreAliases[genre]||[]).map(alias=>`${alias} ${date}`)]);
   }
-  for(const country of countries){const base=countryLabels[country]||`Films from ${country}`;add(base,'country',[`Films from ${country}`,`From ${country}`]);}
+  for(const country of countries)add(phrasing.country(country),'country',[`Films from ${country}`,`From ${country}`]);
   for(const venue of venues){
-    add(`Films at ${venue.label}`,'cinema');
-    for(const date of dates)add(`${venue.label} ${date}`,'cinema-date',[`${date} at ${venue.label}`,`Films at ${venue.label} ${date}`]);
-    // A bounded set of common two-filter combinations, not every permutation.
-    for(const language of languages.slice(0,8))add(`Films in ${language} at ${venue.label}`,'audio-cinema',[`${language} audio at ${venue.label}`,`In ${language} at ${venue.label}`]);
+    add(phrasing.at(phrasing.films,venue.label),'cinema');
+    for(const date of dates)add(`${venue.label} ${phrasing.date(date)}`,'cinema-date',[`${date} at ${venue.label}`,`Films at ${venue.label} ${date}`]);
+    for(const language of languages.slice(0,8))add(phrasing.at(phrasing.audio(language),venue.label),'audio-cinema',[`${language} audio at ${venue.label}`,`In ${language} at ${venue.label}`],language);
   }
-  for(const genre of genres.slice(0,12))for(const language of languages.slice(0,5))add(`${genreLabels[genre]||genre+' films'} in ${language}`,'genre-audio',[`${genre} films in ${language}`]);
-  for(const name of rankedValues(upcoming,'directors').slice(0,30))add(`Films directed by ${name}`,'director');
-  for(const name of rankedValues(upcoming,'cast').slice(0,24))add(`Films starring ${name}`,'actor');
+  for(const genre of genres.slice(0,12).filter(g=>phrasing.genre(g)))for(const language of languages.slice(0,5))add(phrasing.audio(language,phrasing.genre(genre)),'genre-audio',[`${genre} films in ${language}`],language);
+  for(const name of rankedValues(upcoming,'directors').slice(0,30))add(phrasing.director(name),'director');
+  for(const name of rankedValues(upcoming,'cast').slice(0,24))add(phrasing.actor(name),'actor');
   for(const film of upcoming.slice(0,30)){
     add(film.title,'film');
-    add(`${film.title} in English`,'film-audio');
-    add(`${film.title} with English subtitles`,'film-subtitles');
+    for(const audio of film.details?.languages||[])add(phrasing.audio(audio,film.title),'film-audio',[],audio);
+    add(phrasing.withSubtitles(film.title,'English'),'film-subtitles');
   }
-  for(const query of ['Under 90 minutes','Under 2 hours','IMDb above 8','IMDb above 7','Rotten Tomatoes above 80','Films after 20:00','Films before 18:00'])add(query,'limit');
-  for(const format of new Set(upcoming.flatMap(f=>f.sessions.flatMap(s=>s.formats||[]))))add(`${format} films`,'format');
+  for(const query of [phrasing.under(90),phrasing.under(2,true),phrasing.rating('IMDb',8),phrasing.rating('IMDb',7),phrasing.rating('Rotten Tomatoes',80),phrasing.time('20:00'),phrasing.time('18:00',true)])add(query,'limit');
+  for(const format of new Set(upcoming.flatMap(f=>f.sessions.flatMap(s=>s.formats||[]))))add(phrasing.format(format),'format');
   const precomputed=[];let processed=0;
   for(const row of proposals.values()){
     const evidence=validate(row.query);if(evidence)precomputed.push({...row,...evidence});
@@ -103,7 +102,7 @@ export async function buildCatalogue(programme,now=Date.now()) {
     if(++processed%16===0)await new Promise(resolve=>setTimeout(resolve,0));
   }
   const verified=precomputed.map(r=>r.query);
-  const semantic=[...new Set(upcoming.flatMap(f=>(f.details?.topics||[]).slice(0,5)).filter(t=>typeof t==='string'&&t.length>3&&t.length<55).map(t=>'Films about '+t))];
+  const semantic=language!=='en'?[]:[...new Set(upcoming.flatMap(f=>(f.details?.topics||[]).slice(0,5)).filter(t=>typeof t==='string'&&t.length>3&&t.length<55).map(t=>'Films about '+t))];
   // The menu includes relative dates when typed; the discovery pool leaves
   // dates open and uses every verified kind, not just ten evergreen phrases.
   const ideas=precomputed.filter(r=>!r.category.includes('date')).map(r=>r.query);
@@ -111,7 +110,7 @@ export async function buildCatalogue(programme,now=Date.now()) {
     catalogue:upcoming.map(f=>[f.id,f.title,f.release_year,(f.details?.directors||[]).join(', '),(f.details?.genres||[]).join(', ')]),
     entities:entities.filter(e=>e.kind!=='film').map(({kind,entity_id,label,query})=>({kind,entity_id,label,query})),
     verified_searches:verified,semantic_searches:semantic};
-  return {programme,index,entities,precomputed,ideas,context,matches:(query,at=Date.now())=>today===madridDate(at)&&Boolean(validate(query)?.valid_until>=at),semantic:new Set(semantic)};
+  return {programme,index,language,entities,precomputed,ideas,context,matches:(query,at=Date.now())=>today===madridDate(at)&&Boolean(validate(query)?.valid_until>=at),semantic:new Set(semantic)};
 }
 
 // Match every typed word, in order. In particular, never discard "subtitles",
@@ -121,7 +120,9 @@ export function suggestionScore(value,draft){
 }
 function normalizedScore(text,words,q,typed){
   if(!q)return Infinity;
-  if(text===q)return 0;if(text.startsWith(q))return 1;if(text.includes(q))return 2;
+  if(text===q)return 0;if(text.startsWith(q))return 1;
+  // For an embedded phrase, prefer concise completions over long title variants.
+  if(text.includes(q))return 2+Math.min(0.5,Math.max(0,words.length-typed.length)/100);
   let start=0,gaps=0;
   for(const word of typed){const at=words.findIndex((candidate,i)=>i>=start&&candidate.startsWith(word));if(at<0)return Infinity;gaps+=at-start;start=at+1;}
   return 3+gaps/100;

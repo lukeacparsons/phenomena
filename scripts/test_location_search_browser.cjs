@@ -35,7 +35,7 @@ const engine=process.env.BROWSER||'chromium';
       return route.fulfill({json:{places}});
     });
     await context.route('**/api/completions',r=>r.fulfill({json:{query:r.request().postDataJSON().query,suggestions:[]}}));
-    await context.route('**/api/search-suggestions',r=>r.fulfill({status:503,json:{error:'fixture'}}));
+    await context.route('**/api/search-suggestions*',r=>r.fulfill({status:503,json:{error:'fixture'}}));
     const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.clock.setFixedTime(new Date('2099-01-01T10:00:00Z'));
     await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});await page.waitForSelector('#grid[data-enhanced]');

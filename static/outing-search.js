@@ -10,7 +10,7 @@ const condition=(field,op,value)=>({field,op,value:String(value)});
 export const OUTING_NUMERIC={finish_time:1439,starts_within:10080,distance_km:500,price_eur:10000,seats_available:100000,seats_together:100,wheelchair_seats:1000,occupancy_percent:100,age_max:21};
 export const OUTING_BOOLEAN=['has_subtitles','booking_open','adaptation','sequel','remake','silent'];
 export const OUTING_FIELDS=[...Object.keys(OUTING_NUMERIC),...OUTING_BOOLEAN,'adaptation_kind','audio_only','director','actor','writer','composer','cinematographer','film_id','keyword','event','edition','award','nomination','content_warning','venue_feature'];
-export const OUTING_SORTS=['distance','price','duration','seats','finish'];
+export const OUTING_SORTS=['distance','price','duration','duration_desc','seats','finish'];
 export const outingDefaults=()=>({alternatives:[],preferences:[],notices:[],scope:'upcoming',venue_query:'',itinerary:null});
 const words={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,un:1,una:1,uno:1,dos:2,dues:2,tres:3,cuatro:4,quatre:4,cinco:5,cinc:5,seis:6,sis:6,siete:7,set:7,ocho:8,vuit:8};
 const count=v=>words[v]||Number(v.replace(',','.'));
@@ -95,7 +95,8 @@ export function parseOuting(text,options,parseBasic){
     extra.notices.push('itinerary_estimate');
   }
   consume(/\b(?:cheapest|lowest price|mas baratas?|mes barates?)\b/g,()=>extra.sort='price');
-  consume(/\b(?:shortest|mas cortas?|mes curtes?)\b/g,()=>extra.sort='duration');
+  consume(/\b(?:longest(?:\s+(?:films?|movies?|runtime))?(?:\s+first)?|long\s+(?:films?|movies?|runtime)\s+first|(?:peliculas?\s+)?mas largas?(?:\s+primero)?|(?:pel licules\s+)?mes llarg(?:a|ues)(?:\s+primer)?)\b/g,()=>extra.sort='duration_desc');
+  consume(/\b(?:shortest(?:\s+(?:films?|movies?|runtime))?(?:\s+first)?|short\s+(?:films?|movies?|runtime)\s+first|(?:peliculas?\s+)?mas cortas?(?:\s+primero)?|(?:pel licules\s+)?mes curt(?:a|es)(?:\s+primer)?)\b/g,()=>extra.sort='duration');
   consume(/\b(?:most seats|mas asientos|mes seients)\b/g,()=>extra.sort='seats');
   consume(/\b(?:earliest finish|finishes earliest)\b/g,()=>extra.sort='finish');
   // Venue questions return sourced passages, never convert broad building
@@ -228,9 +229,12 @@ export function matchesOuting(film,session,c,cinema,context={}){
 }
 
 export function outingSortValue(film,sort,context){
-  if(!['price','seats','finish','duration'].includes(sort))return 0;
+  if(!['price','seats','finish','duration','duration_desc'].includes(sort))return 0;
+  if(sort==='duration'||sort==='duration_desc'){
+    const runtime=film.details?.runtime_minutes??film.runtime_minutes;
+    return Number.isFinite(runtime)&&runtime>0?(sort==='duration_desc'?-runtime:runtime):Infinity;
+  }
   const values=film.sessions.map(s=>sort==='price'?admissionPrice(s):sort==='seats'?observedSeats(s,context)?.available:sort==='finish'?estimatedEnd(film,s):null).filter(v=>typeof v==='number'&&Number.isFinite(v));
-  if(sort==='duration')return film.details?.runtime_minutes??film.runtime_minutes??Infinity;
   return values.length?(sort==='seats'?-Math.max(...values):Math.min(...values)):Infinity;
 }
 

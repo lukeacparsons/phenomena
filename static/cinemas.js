@@ -8,6 +8,7 @@ import {emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,search
 import {intentChips,filmMatchReason,searchExplanation} from './search-intent.js';
 import {createSmartSearchUI} from './smart-search-ui.js';
 import {createSearchSuggestionsUI} from './search-suggestions.js';
+import {suggestionLanguage} from './search-localization.js';
 import {searchFeedback,feedbackMarkup,searchCopy} from './search-feedback.js';
 import {createLocationSearchUI,LOCATION_COPY} from './location-search.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
@@ -17,8 +18,8 @@ import {installLanguageNavigation} from './language-navigation.js';
 const $ = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL = value => typeof value === 'string' && (/^https:\/\//.test(value) || /^\/(?!\/)/.test(value)) ? escapeHTML(value) : '';
-let language = 'en';
-try { const saved=localStorage.getItem('barcelona-cinema-language'); language=TEXT[saved] ? saved : (navigator.language?.startsWith('ca')?'ca':navigator.language?.startsWith('es')?'es':'en'); } catch {}
+let language=suggestionLanguage(null,navigator.languages||[navigator.language]);
+try { language=suggestionLanguage(localStorage.getItem('barcelona-cinema-language'),navigator.languages||[navigator.language]); } catch {}
 const publicLanguage=document.body.dataset.siteLang;
 const listingCinemaId=document.body.dataset.cinemaId;
 if(TEXT[publicLanguage])language=publicLanguage;
@@ -62,17 +63,22 @@ let pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('
 let legacyCinema=params.get('cinema');
 let data=null,visible=[],activeFilm=null,activeSession=null;
 let activeView='film',showtimesScroll=0,showtimesSession=null;
-let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0,suggestionsUI=null,updatingControllers=false,resultsPending=false;
+let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0,suggestionsUI=null,updatingControllers=false,resultsPending=false,searchPending=false;
 const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
   getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
   isPrecomputedQuery:query=>suggestionsUI?.isVerified(query),
   onResult:()=>{locationSearchUI?.update();refreshResults();if($('filmDialog')?.open)renderDialog();},
   onStatus:(kind,unsupported=[])=>{
+    searchPending=kind==='loading';
+    $('grid')?.setAttribute('aria-busy',String(searchPending));
     let status=$('searchStatus');
     if(!status){status=document.createElement('p');status.id='searchStatus';status.className='search-status';status.setAttribute('role','status');$('searchActiveControls')?.after(status);}
     const messages={en:{loading:'Thinking about your search…',unavailable:'Smart search is temporarily unavailable. Showing keyword matches.',noSemantic:'No close matches for this description.',unsupported:'Could not apply: '},es:{loading:'Pensando en tu búsqueda…',unavailable:'La búsqueda inteligente no está disponible. Mostramos coincidencias por palabras.',noSemantic:'No hay coincidencias cercanas para esta descripción.',unsupported:'No se pudo aplicar: '},ca:{loading:'Pensant en la teva cerca…',unavailable:'La cerca intel·ligent no està disponible. Mostrem coincidències per paraules.',noSemantic:'No hi ha coincidències properes per a aquesta descripció.',unsupported:'No s’ha pogut aplicar: '}};
     const regional={en:'The catalogue does not yet identify films produced in Catalunya.',es:'El catálogo todavía no identifica las películas producidas en Catalunya.',ca:'El catàleg encara no identifica les pel·lícules produïdes a Catalunya.'};
     status.textContent=(messages[language][kind]||'')+(kind==='unsupported'?unsupported.map(item=>item==='origin:Catalunya'?regional[language]:item).join(' · '):'');status.hidden=!kind;
+    // Transient progress uses the icon's existing space; durable notices remain visible.
+    status.classList.toggle('sr-only',searchPending);
+    $('search')?.closest('.search')?.classList.toggle('is-searching',searchPending);
   }
 });
 const locationSearchUI=typeof window==='undefined'?null:createLocationSearchUI({
@@ -183,21 +189,37 @@ function closeFilm({animate=false}={}){
 }
 
 function editingSearch(){
-  return $('search').value!==state.query&&document.activeElement?.closest('.search-composer');
+  return $('search').value.trim()!==state.query&&document.activeElement?.closest('.search-composer');
 }
 function updateSearchControllers(){
   updatingControllers=true;
   try{smartSearchUI?.update();locationSearchUI?.update();}finally{updatingControllers=false;}
 }
-function refreshResults(){
+function scheduleSearchWork(work){
+  searchFrame=requestAnimationFrame(()=>{
+    searchFrame=0;searchTimer=setTimeout(()=>{searchTimer=0;work();},0);
+  });
+}
+function refreshResults({cooperative=document.activeElement===$('search'),onRendered=()=>{}}={}){
   if(updatingControllers)return;
   // Catalogue/availability updates must not rebuild results beneath an active
   // draft. The existing results stay usable; submit or leaving the box flushes.
   if(editingSearch()){resultsPending=true;return;}
   resultsPending=false;
   const matches=filteredFilms(true);
+  if(cooperative){
+    $('grid').setAttribute('aria-busy','true');
+    // Automatic searches yield between matching, date controls and cards so
+    // another keystroke can cancel the remaining work before it blocks paint.
+    scheduleSearchWork(()=>{
+      buildDates(matches);
+      scheduleSearchWork(()=>{render(state.date_from||state.date_to?filteredFilms():matches);onRendered();});
+    });
+    return;
+  }
   buildDates(matches);
   render(state.date_from||state.date_to?filteredFilms():matches);
+  onRendered();
 }
 
 function cancelSearchRender(){
@@ -205,7 +227,7 @@ function cancelSearchRender(){
   if(searchFrame){cancelAnimationFrame(searchFrame);searchFrame=0;}
 }
 
-function applySearch(filters){
+function applySearch(filters,{automatic=false}={}){
   initialViewTime=null;
   cancelSearchRender();
   const next=validateSearch(filters,data,searchIndex);
@@ -214,13 +236,22 @@ function applySearch(filters){
   Object.assign(state,next);
   $('linkNotice').hidden=true;
   closeFilm();
-  if($('search').value!==state.query)$('search').value=state.query;
-  suggestionsUI?.sync();
-  updateSearchControllers();
-  refreshResults();
-  window.dispatchEvent(new CustomEvent('vobarna:search',{detail:{scope:'films',query_length:state.query.length,
+  if(!automatic){
+    if($('search').value!==state.query)$('search').value=state.query;
+    suggestionsUI?.sync();
+  }
+  const onRendered=()=>window.dispatchEvent(new CustomEvent('vobarna:search',{detail:{scope:'films',query_length:state.query.length,
     result_count:visible.length,screening_count:visible.reduce((sum,film)=>sum+film.sessions.length,0),
     cinema_count:state.cinema_ids.length,has_date_filter:Boolean(state.date_from||state.date_to)}}));
+  if(automatic){
+    scheduleSearchWork(()=>{
+      updateSearchControllers();
+      scheduleSearchWork(()=>refreshResults({cooperative:true,onRendered}));
+    });
+  }else{
+    updateSearchControllers();
+    refreshResults({cooperative:false,onRendered});
+  }
 }
 
 function renderFilterChips(){
@@ -311,20 +342,21 @@ function render(films=filteredFilms()){
   visible=films;
   const total=visible.reduce((n,film)=>n+film.sessions.length,0);
   clearTimeout(resultAnnouncement);
-  resultAnnouncement=setTimeout(()=>{$('resultCount').textContent=plural(visible.length,'film','films')+' · '+plural(total,'screening','screenings');},250);
+  if(searchPending)$('resultCount').textContent='';
+  else resultAnnouncement=setTimeout(()=>{$('resultCount').textContent=plural(visible.length,'film','films')+' · '+plural(total,'screening','screenings');},250);
   $('clearFilters').hidden=!$('search').value&&!state.query&&!state.date_from&&!state.date_to&&!state.cinema_ids.length&&!state.formats.length&&!state.big_screens_only;
   renderFilterChips();
   const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
   let feedback=$('searchFeedback');
   if(!feedback){feedback=document.createElement('section');feedback.id='searchFeedback';feedback.className='search-feedback';feedback.setAttribute('aria-live','polite');$('searchActiveControls').after(feedback);}
   const locationUnresolved=locationSearchUI?.current().location&&!locationSearchUI.current().origin;
-  const feedbackHTML=state.query.trim()&&!locationUnresolved?feedbackMarkup(searchFeedback(data,state,visible,{index:searchIndex,intent:plan,language,origin:locationSearchUI?.current().origin,availability:availabilitySnapshot()}),{language,programme:data,listingPath}):'';
+  const feedbackHTML=state.query.trim()&&!locationUnresolved&&!(searchPending&&!visible.length)?feedbackMarkup(searchFeedback(data,state,visible,{index:searchIndex,intent:plan,language,origin:locationSearchUI?.current().origin,availability:availabilitySnapshot()}),{language,programme:data,listingPath}):'';
   if(feedback.innerHTML!==feedbackHTML)feedback.innerHTML=feedbackHTML;
   feedback.hidden=!feedbackHTML;
   $('moreFilms').hidden=visible.length<=cardLimit;
-  $('grid').setAttribute('aria-busy','false');
+  $('grid').setAttribute('aria-busy',String(searchPending));
   $('grid').dataset.enhanced='true';
-  if(locationUnresolved){$('grid').replaceChildren();return;}
+  if(locationUnresolved||(searchPending&&!visible.length)){$('grid').replaceChildren();return;}
   if(plan.venue_query){$('grid').replaceChildren();return;}
   if(plan.scope==='past'&&visible.length){
     $('grid').innerHTML=visible.slice(0,cardLimit).map(film=>`<article class="search-history"><h2><a href="${safeURL(film.urls?.[language])}">${escapeHTML(film.title)}</a></h2><p>${escapeHTML(searchCopy(language).past)}</p><ul>${film.sessions.map(s=>`<li>${escapeHTML(s.date+' · '+s.time+' · '+(cinema(s.cinema_id)?.short||s.cinema_id))}</li>`).join('')}</ul></article>`).join('');return;
@@ -704,11 +736,13 @@ document.addEventListener('click',event=>{
   else if(button.hasAttribute('data-retry'))load();
 });
 suggestionsUI=createSearchSuggestionsUI({input:$('search'),getProgramme:()=>data,getLanguage:()=>language,getQuery:()=>state.query,scoped:listingCinemaId||null,
-  onDraft:draft=>{smartSearchUI?.cancel();if(draft)$('clearFilters').hidden=false;},
-  onSubmit:query=>{
-    const next={...state,query};
+  onDraft:draft=>{if(searchTimer||searchFrame)resultsPending=true;cancelSearchRender();smartSearchUI?.cancel();if(draft)$('clearFilters').hidden=false;},
+  onSubmit:(query,options)=>{
+    // Submitting the phrase again reapplies every named constraint, including
+    // ones removed as chips during the previous search.
+    const next={...state,query,ignored_filters:[]};
     if(parseFilmQuery(data,query,todayISO(),searchIndex).range){next.date_from=null;next.date_to=null;}
-    applySearch(next);
+    applySearch(next,options);
   }
 });
 document.addEventListener('focusout',()=>{

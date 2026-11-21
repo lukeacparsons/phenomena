@@ -7,6 +7,29 @@ FIELDS = ('languages', 'original_languages', 'spoken_languages', 'language_repor
           'language_selection', 'language_provenance', 'language_status', 'language_identity')
 
 
+def invalid_legacy_cinema_report(report):
+    """Pre-v5 CineBaix extraction mistook the site-wide code legend for audio."""
+    return (report.get('source') == 'cinema'
+            and (urlsplit(report.get('source_url') or '').hostname or '').removeprefix('www.') == 'cinebaix.cat'
+            and report.get('parser_version', 0) < 5)
+
+
+def repair_legacy_cinema_languages(film, now):
+    """Withdraw bad cached evidence on publication, without requiring a crawl."""
+    details = film.get('details') or {}
+    reports = details.get('language_reports', [])
+    if not any(invalid_legacy_cinema_report(r) for r in reports): return False
+    from film_details import filter_language_aliases
+    aliases = filter_language_aliases(details, details.get('search_aliases', []))
+    # Remove aliases from the withdrawn claim as well as its derived selection.
+    bad_names = {v.casefold() for r in reports if invalid_legacy_cinema_report(r) for v in r.get('languages', [])}
+    aliases = [v for v in aliases if v.casefold() not in bad_names]
+    resolve(details, reports, now)
+    details['language_provenance'] = [r for r in details.get('language_provenance', []) if not invalid_legacy_cinema_report(r)]
+    details['search_aliases'] = filter_language_aliases(details, [*aliases, *details['languages']])
+    return True
+
+
 def normalise(report):
     raw = report.get('raw', report.get('languages', []))
     parsed = parse_languages(raw)
@@ -60,6 +83,7 @@ def source_family(report):
 def resolve(details, reports, now):
     unique = {}
     for report in reports:
+        if invalid_legacy_cinema_report(report): continue
         item = normalise(report)
         key = (item.get('source'), item.get('source_url'), item.get('evidence'), tuple(item['codes']), tuple(item['unknown']))
         unique[key] = item
@@ -81,7 +105,7 @@ def resolve(details, reports, now):
             prior = next((r for r in valid if set(r['codes']) == previous and r.get('source') == old_source), None)
             if prior and priority(prior) <= priority(chosen): chosen = prior
         details['languages'] = chosen['languages']
-        details['language_selection'] = {k: chosen[k] for k in ('source', 'source_url', 'evidence') if k in chosen}
+        details['language_selection'] = {k: chosen[k] for k in ('source', 'source_url', 'evidence', 'parser_version') if k in chosen}
         state = 'conflict' if 'sources_disagree' in issues else (
             'catalogue_only' if priority(chosen) >= 80 else
             'no_spoken_language' if chosen['codes'] == ['zxx'] else

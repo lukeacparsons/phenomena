@@ -16,9 +16,9 @@ from cinesa_showtimes import atomic_write
 from film_identity import parse_source, source_urls, keys, titles
 from film_details import Document, filter_language_aliases
 from original_audio import LANGUAGE_NAMES
-from language_evidence import FIELDS, session_reports, resolve, review_report, normalise
+from language_evidence import FIELDS, session_reports, resolve, review_report, normalise, invalid_legacy_cinema_report, repair_legacy_cinema_languages
 
-VERSION=4
+VERSION=5
 ROOT=Path(__file__).resolve().parents[1]
 
 
@@ -78,8 +78,14 @@ def enrich(data,output,fetch,now,*,force=False,reviewed=None,discover_sources=Fa
     except (OSError,ValueError):previous={}
     # Retain successful facts on a parser upgrade if the refresh is unavailable.
     records=dict(previous.get('pages',{}))
+    # A failed refresh may retain valid older sources, but never known-bad
+    # CineBaix legend claims from an earlier parser.
+    records={url:record for url,record in records.items()
+             if not invalid_legacy_cinema_report({'source':'cinema','source_url':url,
+                                                  'parser_version':record.get('parser_version',0)})}
     previous_films=previous.get('films',{})
     for film in data['films']:
+        repair_legacy_cinema_languages(film,now)
         if film.get('details',{}).get('languages'):
             previous_films.setdefault(film['id'],{k:deepcopy(film['details'][k]) for k in FIELDS if k in film['details']})
     native={}
@@ -100,7 +106,7 @@ def enrich(data,output,fetch,now,*,force=False,reviewed=None,discover_sources=Fa
         try:
             body=fetch(url)
             facts=page_facts(body.decode('utf-8','replace') if isinstance(body,bytes) else body)
-            return url,{'facts':facts,'status':'ok' if facts['page_titles'] else 'unmatched','checked_at':now.isoformat()}
+            return url,{'facts':facts,'status':'ok' if facts['page_titles'] else 'unmatched','checked_at':now.isoformat(),'parser_version':VERSION}
         except Exception as error:
             return url,{**old,'status':'stale' if old.get('facts') else 'unavailable',
                         'attempted_at':now.isoformat(),'error':type(error).__name__}
@@ -140,6 +146,7 @@ def enrich(data,output,fetch,now,*,force=False,reviewed=None,discover_sources=Fa
             if not facts.get('languages') and not facts.get('language_raw'):continue
             names=[LANGUAGE_NAMES[code] for code in facts.get('languages',[]) if code in LANGUAGE_NAMES]
             report={'source':'cinema','source_url':url,'languages':names,
+                    'parser_version':record.get('parser_version',0),
                     'raw':facts.get('language_raw') or names,'unknown':facts.get('language_unknown',[]),
                     'checked_at':record['checked_at'],'status':record['status'],
                     'evidence':'original_version_audio' if facts.get('language_evidence')==['original_version_audio'] else 'explicit_original_language'}

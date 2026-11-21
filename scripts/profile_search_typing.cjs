@@ -1,7 +1,7 @@
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const {writeFileSync,mkdirSync}=require('node:fs');
 const assert=require('node:assert/strict');
-const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:8791',phase=process.argv[2]||'after';
+const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:8791',phase=process.argv[2]||'after',language=process.env.SEARCH_LANGUAGE||'en';
 const output='/private/tmp/vobarna-typing';mkdirSync(output,{recursive:true});
 const percentile=(values,p)=>[...values].sort((a,b)=>a-b)[Math.min(values.length-1,Math.floor(values.length*p))]??0;
 (async()=>{
@@ -29,7 +29,7 @@ const percentile=(values,p)=>[...values].sort((a,b)=>a-b)[Math.min(values.length
   if(process.argv.includes('--cpu-profile')){await cdp.send('Profiler.enable');await cdp.send('Profiler.start');}
   const cold=process.argv.includes('--cold');
   if(cold)await page.route('**/programme.json',async route=>{await new Promise(resolve=>setTimeout(resolve,800));await route.continue();});
-  await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
+  await page.goto(base+'/'+language+'/',{waitUntil:'domcontentloaded'});
   if(cold)await page.waitForSelector('.search-composer');else{await page.waitForSelector('.search-idea',{timeout:60000});await page.waitForTimeout(500);}
   await page.evaluate(()=>{window.typingMetrics.active=true;let last=performance.now();function frame(t){if(!window.typingMetrics.active)return;window.typingMetrics.frames.push(t-last);last=t;requestAnimationFrame(frame);}requestAnimationFrame(frame);});
   if(process.argv.includes('--refresh')){
@@ -38,8 +38,9 @@ const percentile=(values,p)=>[...values].sort((a,b)=>a-b)[Math.min(values.length
    await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
   }
   const input=page.locator('#search');await input.focus();
-  for(const query of ['films in english','english subtitles','hunger games','films about friendship']){
-   await input.press('ControlOrMeta+A');await input.press('Backspace');await input.pressSequentially(query,{delay:55});await page.waitForTimeout(220);
+  const queries=language==='es'?['películas en inglés','subtítulos en inglés','cerca de mi','hunger games']:language==='ca'?['pel·lícules en anglès','subtítols en anglès','a prop meu','hunger games']:['films in english','english subtitles','hunger games','films about friendship'];
+  for(const query of queries){
+   await input.press('ControlOrMeta+A');await input.press('Backspace');await input.pressSequentially(query,{delay:55});await page.waitForTimeout(process.argv.includes('--pause-search')?450:220);
    if(await input.inputValue()!==query)throw Error('Loading or refresh overwrote typed text');
   }
   await input.press('ControlOrMeta+A');await input.press('Backspace');await page.waitForTimeout(250);
@@ -50,6 +51,7 @@ const percentile=(values,p)=>[...values].sort((a,b)=>a-b)[Math.min(values.length
   if(process.argv.includes('--check')){
    assert.ok(row.handlerMax<8,'Input callbacks must stay below half a 60 Hz frame: '+JSON.stringify(row));
    assert.ok(row.eventMax<=80,'Typing must not wait behind a long catalogue task: '+JSON.stringify(row));
+   if(process.argv.includes('--pause-search'))assert.ok(row.longTaskMax<=80,'Automatic searches must yield instead of hiding input stalls between test keystrokes: '+JSON.stringify(row));
   }
   report.push(row);writeFileSync(output+'/'+phase+'-'+rate+'x-raw.json',JSON.stringify(metrics,null,2));await context.close();
  }}finally{await browser.close();}

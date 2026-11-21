@@ -17,6 +17,13 @@ test('combined suggestion endpoints keep analytics private, validate requests an
   assert.ok(cat.ideas.includes('Hunger Games in English'));
   for(const key of ['dimensions','context','programme','signals','sessions','recent_sessions','score'])assert.ok(!JSON.stringify(cat).includes('"'+key+'":'),'No private field '+key);
   const result=await post('/api/search',{query:'Hunger Games in English',language:'en'});assert.equal(result.status,200);assert.equal((await result.json()).mode,'local');assert.equal(providerCalls,0);
+  for(const [language,query] of [['es','Hunger Games en inglés'],['ca','Hunger Games en anglès']]){
+    const localized=await (await fetch(base+'/api/search-suggestions?language='+language,{headers:{'Accept-Language':'en'}})).json();
+    assert.equal(localized.language,language);assert.ok(localized.ideas.includes(query));
+    const result=await post('/api/search',{query,language});assert.equal((await result.json()).mode,'local');
+  }
+  const browserDefault=await (await fetch(base+'/api/search-suggestions',{headers:{'Accept-Language':'fr-FR, ca-ES;q=0.9, en;q=0.5'}})).json();
+  assert.equal(browserDefault.language,'ca');assert.equal(providerCalls,0,'Localized chips also bypass model calls');
   assert.equal((await fetch(base+'/api/completions')).status,405);
   assert.equal((await post('/api/completions',{query:'unfamiliar'},{Origin:'https://elsewhere.example'})).status,403);
   assert.equal((await post('/api/completions',{query:'unfamiliar',extra:true})).status,400);

@@ -77,6 +77,15 @@ def source_urls(film):
 def parse_source(html):
     """Read explicitly labelled film facts, never infer year from a screening."""
     doc = Document(html).root
+    # CineBaix repeats a version-code legend on every film page. Its examples
+    # "Versió original en català/espanyol" describe codes, not this film.
+    for node in doc.find():
+        if node.tag not in ('div', 'section', 'aside'): continue
+        legend = any(isinstance(child, Node) and child.tag in ('h2', 'h3', 'h4')
+                     and title_key(child.text()) in ('tipus de versions', 'tipos de versiones', 'version guide')
+                     for child in node.children)
+        if legend and node.parent:
+            node.parent.children.remove(node)
     facts = {"titles": [], "directors": [], "cast": [], "years": [], "runtimes": [], "languages": [],
              "language_raw": [], "language_unknown": [], "language_evidence": []}
     movies = []

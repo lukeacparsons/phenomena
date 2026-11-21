@@ -1,9 +1,10 @@
 const assert=require('node:assert/strict');
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {chromium,webkit}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
 
 (async()=>{
-  const browser=await chromium.launch({headless:true,channel:'chrome'});
+  const browserType=process.env.BROWSER==='webkit'?webkit:chromium;
+  const browser=await browserType.launch({headless:true});
   try{
     const context=await browser.newContext({viewport:{width:1280,height:900}});
     await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
@@ -22,24 +23,28 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     programme.films[0].details.countries=['France','Italy'];
     programme.films[0].details.country_provenance=[{country:'Italy',sources:[{source:'CNC',source_url:'https://example.com/credits'}]}];
     await context.route('**/programme.json',route=>route.fulfill({json:programme}));
-    let apiCalls=0;
+    let apiCalls=0,releaseProgress;
     await context.route('**/api/search',async route=>{
       apiCalls++;const {query}=route.request().postDataJSON();
+      if(query.startsWith('bright af')||query==='paris ni'||query==='a hidden lighthouse'||query==='a missing lighthouse'){
+        await new Promise(resolve=>{releaseProgress=resolve;});
+        return route.fulfill({json:{query,mode:'interpreted',intent:{text:query==='a hidden lighthouse'?'bright':query,conditions:[],semantic_query:'',sort:'relevance',unsupported:[]},semantic_scores:null}});
+      }
       if(query==='highly rated on imdb')return route.fulfill({json:{query,mode:'interpreted',intent:{text:'',conditions:[{field:'rating_imdb',op:'gte',value:'7.5'}],semantic_query:'',sort:'rating',unsupported:[]},semantic_scores:null}});
       if(query==='something unavailable')return route.fulfill({status:503,json:{error:'search_unavailable'}});
       if(query==='from catalunya')return route.fulfill({json:{query,mode:'semantic',intent:{text:'',conditions:[],semantic_query:'Catalan cinema',sort:'relevance',unsupported:[]},semantic_scores:[{film_id:'bright',score:.9}]}});
       return route.fulfill({json:{query,mode:'semantic',intent:{text:'',conditions:[{field:'country',op:'eq',value:'France'}],semantic_query:'uplifting',sort:'relevance',unsupported:[]},semantic_scores:[{film_id:'funny',score:.9},{film_id:'bright',score:.8},{film_id:'paris',score:.7}]}});
     });
     await context.route('**/api/completions',r=>r.fulfill({json:{query:r.request().postDataJSON().query,suggestions:[]}}));
-    await context.route('**/api/search-suggestions',r=>r.fulfill({status:503,json:{error:'fixture'}}));
+    await context.route('**/api/search-suggestions*',r=>r.fulfill({status:503,json:{error:'fixture'}}));
     const page=await context.newPage(),errors=[];
     page.on('pageerror',error=>errors.push(error.message));
     await page.clock.setFixedTime(new Date('2099-01-01T10:00:00Z'));
     await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
     await page.waitForSelector('#grid[data-enhanced]');
-    const search=async query=>{
+    const search=async (query,{pending=false}={})=>{
       await page.locator('#search').fill(query);await page.locator('#search').press('Enter');
-      await page.waitForFunction(query=>document.getElementById('grid').getAttribute('aria-busy')==='false'&&(new URLSearchParams(location.search).get('q')||'')===query,query);
+      await page.waitForFunction(({query,pending})=>(pending||document.getElementById('grid').getAttribute('aria-busy')==='false')&&(new URLSearchParams(location.search).get('q')||'')===query,{query,pending});
     };
     const ids=()=>page.locator('#grid .card[data-film]').evaluateAll(nodes=>nodes.map(n=>n.dataset.film).sort());
     for(const [query,expected] of [['funny movies',['bright','paris']],['rt >80%',['bright','funny']],['certified fresh',['bright','funny']],['from France',['bright','paris']],['Funny Games',['funny']],['mooby',['bright','funny','paris','unknown']]]){
@@ -98,9 +103,56 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     assert.deepEqual(await ids(),['bright','paris']);
     await search('something unavailable');
     await page.waitForFunction(()=>document.getElementById('searchStatus').textContent.includes('temporarily unavailable'));
+    assert.equal(await page.locator('.search.is-searching').count(),0);
+    assert.equal(await page.locator('#searchStatus.sr-only').count(),0,'Failure notice remains readable');
     await search('rt >=80');assert.deepEqual(await ids(),['bright','funny','paris']);
     assert.equal(await page.locator('#searchStatus').isVisible(),false);
+    const waitForProgress=async()=>{for(let i=0;i<200&&!releaseProgress;i++)await page.waitForTimeout(10);assert.equal(typeof releaseProgress,'function','The delayed request has started');};
+    const geometry=()=>page.evaluate(()=>Object.fromEntries(['.search','#searchActiveControls','#results'].map(selector=>{
+      const r=document.querySelector(selector).getBoundingClientRect();return [selector,{top:r.top+scrollY,width:r.width,height:selector==='#results'?0:r.height}];
+    })));
+    for(const [width,query] of [[320,'bright af'],[390,'bright aft'],[1280,'bright afte']]){
+      await page.setViewportSize({width,height:844});
+      await page.emulateMedia({colorScheme:width===390?'dark':'light',reducedMotion:width===320?'reduce':'no-preference'});
+      releaseProgress=null;await search(query,{pending:true});const before=await geometry();
+      await page.waitForSelector('.search.is-searching');
+      assert.equal(await page.locator('#searchStatus').getAttribute('role'),'status');
+      assert.match(await page.locator('#searchStatus').textContent(),/Thinking about/);
+      assert.equal(await page.locator('#searchStatus').evaluate(el=>getComputedStyle(el).position),'absolute');
+      assert.deepEqual(await geometry(),before,'Showing progress does not move the controls or films');
+      if(width===320)assert.equal(await page.locator('.search').evaluate(el=>getComputedStyle(el,'::before').animationName),'none','Reduced motion leaves a static progress indicator');
+      await page.screenshot({path:'/private/tmp/vobarna-search-progress-'+(process.env.BROWSER||'chromium')+'-'+width+'.png'});
+      await waitForProgress();
+      releaseProgress();await page.waitForSelector('.search.is-searching',{state:'detached'});
+      await page.waitForFunction(()=>document.querySelector('#searchStatus').hidden);
+      assert.deepEqual(await geometry(),before,'Completing progress does not move the controls or films');
+      assert.deepEqual(await ids(),['bright']);
+    }
+    releaseProgress=null;await search('paris ni',{pending:true});await page.waitForSelector('.search.is-searching');
+    await waitForProgress();
+    await page.locator('#search').fill('paris nig');
+    assert.equal(await page.locator('.search.is-searching').count(),0,'Editing cancels the progress indicator');
+    assert.equal(await page.locator('#searchStatus').isVisible(),false);
+    releaseProgress();await page.waitForTimeout(50);assert.equal(await page.locator('#search').inputValue(),'paris nig','Late results cannot replace a new draft');
+    await page.locator('#search').press('Escape');await page.locator('#clearFilters').click();assert.equal(await page.locator('.search.is-searching').count(),0);
+    await page.goto(base+'/es/',{waitUntil:'domcontentloaded'});await page.waitForSelector('#grid[data-enhanced]');await page.setViewportSize({width:390,height:844});
+    for(const query of ['a hidden lighthouse','a missing lighthouse']){
+      releaseProgress=null;await search(query,{pending:true});
+      assert.equal(await page.locator('#grid .empty').count(),0,'No empty state during the pre-request delay');
+      assert.equal(await page.locator('#searchFeedback').isVisible(),false,'No premature no-match feedback');
+      assert.equal(await page.locator('#grid').getAttribute('aria-busy'),'true');
+      await waitForProgress();
+      assert.equal(await page.locator('#grid .empty').count(),0,'No empty state while the request is pending');
+      assert.equal(await page.locator('#resultCount').textContent(),'','Do not announce zero results while searching');
+      releaseProgress();await page.waitForFunction(()=>document.getElementById('grid').getAttribute('aria-busy')==='false');
+      if(query==='a hidden lighthouse'){
+        assert.deepEqual(await ids(),['bright']);assert.equal(await page.locator('#searchFeedback').isVisible(),false);
+      }else{
+        assert.equal(await page.locator('#grid .empty').count(),1,'Show the empty state after a completed no-match search');
+        assert.match(await page.locator('#searchFeedback').textContent(),/Ninguna sesión recopilada/);
+      }
+    }
     assert.deepEqual(errors,[]);
-    console.log('Smart search browser: instant filters, badges, title protection, shareable chips, semantic constraints, caching, mobile and provider failure passed.');
+    console.log('Smart search browser: filters, semantic constraints, caching, failure notices, stable progress layout at 320/390/1280px, reduced motion and cancellation passed.');
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

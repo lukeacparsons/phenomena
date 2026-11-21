@@ -15,7 +15,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18941';
    film('tomorrow','Tomorrow Film','18:00',{sessions:[session('tomorrow','18:00',{cinema_id:'phenomena',date:'2099-01-02',starts_at:'2099-01-02T18:00:00+01:00'})]})
   ],search:{films:[film('past','Past Film','18:00',{sessions:[session('past','18:00',{date:'2098-12-31',starts_at:'2098-12-31T18:00:00+01:00'})]})],venues:[{id:'verdi',name:'Verdi',official_url:'https://cinema.example',answers:[{topic:'food_belongings',passages:[{text:'Water is permitted. Ask about bag storage.',scope:'Published policy; check the screening room.',checked_at:'2099-01-01',sources:[{title:'Cinema FAQ',url:'https://cinema.example/faq'}]}],unresolved:['Bag storage is not established.']}]}]}};
   await context.route('**/programme.json',r=>r.fulfill({json:programme}));
-  await context.route('**/api/search-suggestions',r=>r.fulfill({status:503,json:{error:'fixture'}}));
+  await context.route('**/api/search-suggestions*',r=>r.fulfill({status:503,json:{error:'fixture'}}));
   await context.route('**/api/completions',r=>r.fulfill({json:{query:r.request().postDataJSON().query,suggestions:[]}}));
   await context.route('**/availability.json',r=>r.fulfill({json:{sessions:{},errors:{},refresh_interval_seconds:900}}));
   let apiCalls=0;await context.route('**/api/search',r=>{apiCalls++;return r.fulfill({status:503,json:{error:'unavailable'}});});

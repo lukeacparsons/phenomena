@@ -13,6 +13,7 @@ import {isProgrammePath, resolvePublicURL} from './public-routing.mjs';
 import {createSmartSearch} from './smart-search.mjs';
 import {createGeocoder} from './geocode.mjs';
 import {createSearchSuggestions} from './search-suggestions.mjs';
+import {suggestionLanguage} from '../static/search-localization.js';
 
 const types={'.html':'text/html; charset=utf-8','.json':'application/json; charset=utf-8',
   '.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8',
@@ -62,7 +63,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       if(url.pathname==='/api/search-suggestions'){
         const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};
         if(!['GET','HEAD'].includes(req.method))return reply(405,JSON.stringify({error:'method_not_allowed'}),{...headers,Allow:'GET, HEAD'});
-        return reply(200,JSON.stringify(await suggestions.catalogue()),headers);
+        return reply(200,JSON.stringify(await suggestions.catalogue(suggestionLanguage(url.searchParams.get('language'),String(req.headers['accept-language']||'').split(',').filter(v=>! /;\s*q=0(?:\.0*)?$/.test(v))))),headers);
       }
       if(['/api/search','/api/geocode','/api/completions'].includes(url.pathname)){
         const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};

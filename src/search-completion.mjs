@@ -22,7 +22,7 @@ export function createCompletionService({getCatalogue,apiKey=process.env.OPENAI_
   async function complete({query,language='en'}={}) {
     if(typeof query!=='string'||query.trim().length<2||query.length>200||!['en','es','ca'].includes(language))throw Object.assign(new Error('Invalid input'),{status:400});
     if(!apiKey)throw Object.assign(new Error('Autocomplete unavailable'),{status:503});
-    query=query.trim();const cat=await getCatalogue();
+    query=query.trim();const cat=await getCatalogue(language);
     const key=JSON.stringify([cat.version||cat.programme.generated_at,cat.context.today,query,language]);
     if(cache.has(key)){
       const saved=cache.get(key),now=Date.now();
