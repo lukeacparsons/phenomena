@@ -205,8 +205,12 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     await swipe(await schedulePoint(),0,100);
     await stillOpen();
     assert.ok(await dialog.evaluate(node=>node.querySelector('.dialog-surface').scrollTop>1),'Scrolling within the schedule stays native');
+    await page.keyboard.press('Escape');
+    await page.waitForURL(base+'/en/');
+    await openShowtimes();
     await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=120;});
-    await swipe(await schedulePoint(),0,120);
+    // Include the browser's touch slop, but no extra pull large enough to dismiss.
+    await swipe(await schedulePoint(),0,140);
     await page.waitForFunction(()=>document.querySelector('#filmDialog .dialog-surface').scrollTop<=1);
     await stillOpen();
     await dialog.evaluate(node=>{node.querySelector('.dialog-surface').scrollTop=80;});
