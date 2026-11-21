@@ -529,9 +529,9 @@ class Publication:
                     if ',' in address and address.casefold().startswith(cinema['name'].casefold()):
                         short_address = address.split(',', 1)[1].strip()
                     short_address = re.sub(r'\b\d{5}\s*', '', short_address)
-                    body += f'<p class="venue-address"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>{link(maps, short_address)}</p>'
+                    body += f'<p class="venue-address"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>{link(maps, short_address)}</p>'
                 if safe_url(official):
-                    body += f'<a class="venue-website text-action" href="{text(safe_url(official))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span>{text(v["website"])}</span></a>'
+                    body += f'<a class="venue-website text-action" href="{text(safe_url(official))}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span>{text(v["website"])}</span></a>'
                 body += '</div></div>'
                 body += self.programme_listing(lang, cinema_id=cid)
                 if cinema.get('programme_url'):

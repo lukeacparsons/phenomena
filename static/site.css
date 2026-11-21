@@ -69,12 +69,16 @@
 .venue-page main .venue-heading h1{font-size:clamp(1.75rem,3vw,2rem);letter-spacing:-.045em;margin:0 0 12px;line-height:1.12}
 .venue-details{display:flex;flex-wrap:wrap;align-items:center;gap:0 24px}
 .venue-page .venue-address{display:flex;gap:8px;align-items:flex-start;max-width:70ch;margin:0;font-size:.875rem;line-height:1.6;color:var(--tx2)}
-.venue-details svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
+/* Cached cinema HTML can outlive a deployment; do not require the new wrapper. */
+.venue-address svg,.venue-website svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
 .venue-address svg{margin-top:2px}
 .venue-address a{min-width:0;overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:var(--link-underline,color-mix(in srgb,currentColor 40%,transparent));text-underline-offset:var(--link-offset,4px)}
 .venue-address a:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
 .venue-website{display:inline-flex;align-items:center;gap:8px;min-height:var(--touch-target,44px);padding:8px 0;font-size:.875rem;line-height:1.6;white-space:nowrap;color:var(--tx2);text-decoration:underline;text-decoration-color:var(--link-underline,color-mix(in srgb,currentColor 40%,transparent));text-underline-offset:var(--link-offset,4px)}
 .venue-website:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
+/* Keep the preceding header markup usable while its cached HTML expires. */
+.venue-actions{display:flex;align-items:center;gap:16px;margin-top:8px;font-size:.875rem}
+.venue-actions .venue-action-primary{display:none}
 
 .venue-page .venue-programme-link a{text-decoration:underline;text-decoration-color:var(--link-underline);text-underline-offset:var(--link-offset);font-size:.875rem}
 .venue-page main .venue-information{margin:48px 0 0;padding-top:24px;border-top:1px solid var(--border)}
