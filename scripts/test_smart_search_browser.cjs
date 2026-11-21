@@ -16,6 +16,8 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     programme.films[0].release_year=1970;programme.films[1].release_year=1979;programme.films[2].release_year=1980;
     programme.films[0].details.colours=['black-and-white'];programme.films[1].details.colours=['color'];
     programme.films[3].release_year=2099;
+    programme.films[0].sessions[0].subtitles='English';
+    programme.films[1].sessions[0].subtitles='Spanish';
     programme.films[0].details.distributors=['A24'];programme.films[1].details.studios=['A24'];
     programme.films[0].details.countries=['France','Italy'];
     programme.films[0].details.country_provenance=[{country:'Italy',sources:[{source:'CNC',source_url:'https://example.com/credits'}]}];
@@ -57,6 +59,15 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     await page.locator('[data-remove-filter="intent"][data-value="country:eq:italy"]').click();
     assert.equal(await page.locator('.search-match').count(),0,'removed country filter removes match explanation');
     assert.equal(apiCalls,0,'standard searches must not wait for the model');
+    for(const query of ['English subtitles','foreign language films with English subtitles','VOSI','subtítulos en inglés','subtítols en anglès']){
+      await search(query);assert.deepEqual(await ids(),['bright']);
+      assert.match(await page.locator('#filterChips').textContent(),/Subtitles English/);
+    }
+    await page.reload({waitUntil:'domcontentloaded'});await page.waitForSelector('#grid[data-enhanced]');
+    assert.deepEqual(await ids(),['bright'],'subtitle constraints survive sharing/reload');
+    await page.locator('[data-remove-filter="intent"][data-value="subtitles:eq:english"]').click();
+    assert.equal((await ids()).length,4,'the subtitle chip can be removed');
+    assert.equal(apiCalls,0,'subtitle searches never go to the model');
     await search('from catalunya');
     await page.waitForSelector('[data-remove-filter="intent"][data-value="semantic"]');
     assert.deepEqual(await ids(),['bright']);

@@ -1,3 +1,4 @@
+import {languageRows,parseLanguages,screeningAudio,hasNonEnglishAudio} from './screening-language.js';
 // Shared, deterministic search semantics. Models may propose these conditions;
 // only this code decides whether a film or an individual screening satisfies them.
 export const fold=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
@@ -5,11 +6,11 @@ const dictionaries={
   colour:[['black-and-white','black and white','monochrome','blanco y negro','blanc i negre'],['color','colour','color film']],
   genre:[['Comedy','comedia','comèdia','funny','humorous','divertidas','divertida','divertides','divertit'],['Drama'],['Horror','terror','scary'],['Science fiction','sci fi','scifi','ciencia ficción','ciència ficció'],['Thriller','suspense','suspens','Mystery & Thriller'],['Mystery','misterio','misteri'],['Romance','romantic','romántica','romàntica'],['Action','acción','acció'],['Adventure','aventura','aventuras','aventures'],['Animation','animated','animación','animació'],['Documentary','documentaries','documental','documentales','documentals'],['Fantasy','fantasía','fantasia'],['Family','familiar'],['Musical'],['War','bélico','bèl·lic'],['Western'],['Anime']],
   country:[['France','Francia','França'],['Spain','España','Espanya'],['United States','USA','US','Estados Unidos','Estats Units'],['United Kingdom','UK','Reino Unido','Regne Unit'],['Italy','Italia','Itàlia'],['Germany','Alemania','Alemanya'],['Japan','Japón','Japó'],['South Korea','Corea del Sur','Corea del Sud'],['China','Xina'],['Portugal'],['Mexico','México','Mèxic'],['Argentina'],['Canada','Canadá','Canadà'],['Brazil','Brasil'],['India','Índia'],['Iran','Irán'],['Belgium','Bélgica','Bèlgica'],['Australia','Austràlia'],['Ireland','Irlanda'],['Sweden','Suecia','Suècia']],
-  language:[['English','en','eng','inglés','anglès'],['French','fr','fra','fre','français','francés','francès'],['Spanish','es','spa','castellano','castellà','español','espanyol'],['Catalan','ca','cat','catalán','català'],['Italian','it','ita','italiano','italià'],['German','de','deu','alemán','alemany'],['Japanese','ja','jpn','japonés','japonès'],['Korean','ko','kor','coreano','coreà'],['Portuguese','pt','por','portugués','portuguès'],['Mandarin','cmn','mandarín','mandarí'],['Chinese','zh','zho','chino','xinès'],['Arabic','ar','ara','árabe','àrab'],['Hindi','hi','hin'],['Russian','ru','rus','ruso','rus'],['Basque','eu','eus','vasco','basc','euskera'],['Galician','gl','glg','gallego','gallec']]
+  language:languageRows
 };
 const lookups=Object.fromEntries(Object.entries(dictionaries).map(([field,rows])=>[field,new Map(rows.flatMap(row=>row.map(alias=>[fold(alias),row[0]])))]));
-export const canonical=(field,value)=>lookups[field]?.get(fold(value))||String(value).trim();
-export const fields=['genre','country','language','colour','producer','company','distributor','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
+export const canonical=(field,value)=>lookups[field==='subtitles'?'language':field]?.get(fold(value))||String(value).trim();
+export const fields=['genre','country','language','subtitles','non_english_audio','city','colour','producer','company','distributor','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
 const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,release_year:2999,duration:1440,start_time:1439};
 const ops=['eq','ne','gt','gte','lt','lte','in'];
 export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',sort:'soonest',unsupported:[]});
@@ -32,7 +33,7 @@ export function validateIntent(value,programme){
       if(c.field==='release_year'&&(!/^\d{4}$/.test(c.value)||Number(c.value)<1800))throw new Error('Invalid release year');
     }else if(c.field==='date'){
       if(!/^\d{4}-\d{2}-\d{2}$/.test(c.value)||!Number.isFinite(Date.parse(c.value))||new Date(c.value+'T12:00Z').toISOString().slice(0,10)!==c.value||c.op==='in')throw new Error('Invalid date condition');
-    }else if(c.field==='certified_fresh'){
+    }else if(['certified_fresh','non_english_audio'].includes(c.field)){
       if(!['true','false'].includes(c.value)||!['eq','ne'].includes(c.op))throw new Error('Invalid badge condition');
     }else{
       if(!['eq','ne','in'].includes(c.op))throw new Error('Invalid text condition');
@@ -123,11 +124,21 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],t
     if(hour>23||Number(m||0)>59){plan.unsupported.push('Invalid screening time');changed=true;return;}
     add('start_time',/before|antes|abans/.test(op)?'lt':/a partir/.test(op)?'gte':'gt',hour*60+Number(m||0));
   });
+  // Consume subtitle phrases before audio: "subtitles in English" is not English audio.
+  const subtitleWord='(?:subtitles?|subs|subtitulos?|subtitols?|subtitled|subtitulad[ao]s?|subtitulad[ae]s?)';
+  for(const row of /\b(?:subtitles?|subs|subtitulos?|subtitols?|subtitled|subtitulad[ao]s?|subtitulad[ae]s?)\b/.test(rest)?languageRows:[]){
+    if(!row.some(name=>fold(name).length>=3&&rest.includes(fold(name))))continue;
+    const names=row.filter(name=>fold(name).length>=3).map(name=>esc(fold(name))).sort((a,b)=>b.length-a.length).join('|');
+    consume(new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?(?:('+names+')[- ]+'+subtitleWord+'|'+subtitleWord+'\\s+(?:(?:in|en)\\s+)?('+names+'))\\b','g'),(_,negative)=>add('subtitles',negative?'ne':'eq',row[0]));
+  }
+  consume(/\b(?:(not|no|without|sin|sense)\s+)?(vosi|vosa|vose|vosc)\b/g,(_,negative,tag)=>add('subtitles',negative?'ne':'eq',{vosi:'English',vosa:'English',vose:'Spanish',vosc:'Catalan'}[tag]));
+  consume(/\b(?:(not|no)\s+)?(?:foreign[- ]language|non[- ]english(?:[- ]language)?|idiomas? distintos? del ingles|idiomes? diferents? de l angles)\b/g,(_,negative)=>add('non_english_audio','eq',negative?'false':'true'));
+  consume(/\b(?:in|en|a)\s+barcelona\b/g,()=>add('city','eq','Barcelona'));
   // Specific origin/audio phrases avoid the old "French" language/origin ambiguity.
   for(const field of ['country','language']){
     const values=new Set([...(dictionaries[field]||[]).flat(),...(programme?.films.flatMap(f=>f.details?.[field==='country'?'countries':'languages']||[])||[])]);
     for(const name of [...values].sort((a,b)=>b.length-a.length)){
-      if(fold(name).length<3)continue;
+      if(fold(name).length<3||!rest.includes(fold(name)))continue;
       const prefix=field==='country'?'(?:from|made in|produced in|de|producidas? en|producides? a)':'(?:in|spoken in|audio in|en|audio en)';
       consume(new RegExp('\\b(?:(not|no|without|sin|sense)\\s+)?'+prefix+'\\s+'+esc(fold(name))+'\\b','g'),(_,negative)=>add(field,negative?'ne':'eq',canonical(field,name)));
     }
@@ -212,24 +223,37 @@ export function ratingValue(film,field){
   const value=field==='reviews_rt'?rating?.count:rating?.score;
   return typeof value==='number'&&Number.isFinite(value)?value:null;
 }
-export function matchesConditions(film,session,conditions){
+export function matchesConditions(film,session,conditions,cinema){
   return conditions.every(c=>{
     let value;
     if(c.field.startsWith('rating_')||c.field==='reviews_rt')value=ratingValue(film,c.field);
+    else if(c.field==='city')return textMatch(cinema?.area?[cinema.area.split('·')[0].trim()]:[],c);
     else if(c.field==='release_year')value=film.release_year??film.details?.release_year;
     else if(c.field==='duration')value=film.details?.runtime_minutes??film.runtime_minutes;
     else if(c.field==='start_time'){
       const time=session.time||session.starts_at?.match(/T(\d\d:\d\d)/)?.[1];
       value=/^\d\d:\d\d$/.test(time||'')?Number(time.slice(0,2))*60+Number(time.slice(3,5)):null;
     }else if(c.field==='date')return Boolean(session.date)&&compare(session.date,c.op,c.value);
-    else if(c.field==='certified_fresh'){
+    else if(c.field==='non_english_audio'){
+      const audio=screeningAudio(film,session);
+      const wanted=(c.value==='true')!==(c.op==='ne');
+      return wanted?hasNonEnglishAudio(audio):audio.complete&&audio.codes.every(code=>code==='en');
+    }else if(c.field==='language'){
+      const audio=screeningAudio(film,session);
+      if(audio.codes.length||session.language||audio.derived)
+        return (c.op!=='ne'||audio.complete)&&textMatch(audio.codes,c);
+      return textMatch(film.details?.language_status?.state==='conflict'?[]:film.details?.languages||[],c);
+    }else if(c.field==='subtitles'){
+      const subtitles=parseLanguages(session.subtitles);
+      if(c.op==='ne'&&!subtitles.complete)return false;
+      return textMatch(subtitles.codes,c);
+    }else if(c.field==='certified_fresh'){
       value=film.ratings?.rotten_tomatoes?.certified_fresh;
       return typeof value==='boolean'&&compare(value,c.op,c.value==='true');
     }else{
       const values=c.field==='genre'?film.details?.genres:c.field==='country'?film.details?.countries:c.field==='colour'?film.details?.colours:
         c.field==='producer'?[...(film.details?.producers||[]),...(film.details?.studios||[])]:
         c.field==='company'?[...(film.details?.studios||[]),...(film.details?.distributors||[])]:c.field==='distributor'?film.details?.distributors:
-        c.field==='language'?(session.language?String(session.language).split(/[,;|/]+/).map(x=>x.trim()).filter(Boolean):film.details?.language_status?.state==='conflict'?[]:film.details?.languages):
         c.field==='provider'?[session.provider].filter(Boolean):c.field==='cinema'?[session.cinema_id]:session.formats;
       return textMatch(values||[],c);
     }
@@ -238,7 +262,7 @@ export function matchesConditions(film,session,conditions){
 }
 
 export function intentChips(plan,language='en',programme){
-  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Language',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Idioma',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Audio',city:'City',subtitles:'Subtitles',non_english_audio:'Non-English dialogue',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Audio',city:'Ciudad',subtitles:'Subtítulos',non_english_audio:'Diálogo en otros idiomas',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Àudio',city:'Ciutat',subtitles:'Subtítols',non_english_audio:'Diàleg en altres idiomes',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');
@@ -246,8 +270,9 @@ export function intentChips(plan,language='en',programme){
     if(c.field==='start_time')value=String(Math.floor(Number(c.value)/60)).padStart(2,'0')+':'+String(Number(c.value)%60).padStart(2,'0');
     if(c.field==='duration')value+=' min';
     if(['rating_rt','rating_audience'].includes(c.field))value+='%';
+    if(c.field==='non_english_audio')return {id:conditionId(c),label:((c.value==='false')!==(c.op==='ne')?words.not+' ':'')+words.non_english_audio};
     if(c.field==='certified_fresh')return {id:conditionId(c),label:((c.value==='false')!==(c.op==='ne')?words.not+' ':'')+'Certified Fresh'};
-    if(['genre','country','language'].includes(c.field)&&typeof Intl.DisplayNames==='function'&&c.field==='language'){
+    if(['language','subtitles'].includes(c.field)&&typeof Intl.DisplayNames==='function'){
       const row=dictionaries.language.find(r=>r[0]===canonical('language',c.value));
       if(row?.[1]?.length===2)value=new Intl.DisplayNames([language],{type:'language'}).of(row[1]);
     }

@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {emptySearch,createSearchIndex,interpretSearch,queryFilms,searchParams,searchFromURL} from '../static/cinema-search.js';
-import {emptyIntent,validateIntent,conditionId,parseIntent,filmMatchReason,searchExplanation} from '../static/search-intent.js';
+import {emptyIntent,validateIntent,conditionId,parseIntent,filmMatchReason,searchExplanation,intentChips} from '../static/search-intent.js';
+import {parseLanguages,screeningAudio} from '../static/screening-language.js';
 import {createSmartSearch,rankSemantic,semanticDocument,filmDocument} from '../src/smart-search.mjs';
 import {createSmartSearchUI} from '../static/smart-search-ui.js';
+import {execFileSync} from 'node:child_process';
+import {LANGUAGE_LABELS} from '../static/language-labels.js';
 
 const now=Date.parse('2099-01-01T10:00:00Z');
 const session=(id,provider='mooby',time='21:00')=>({id,provider,cinema_id:provider,starts_at:'2099-01-01T'+time+':00+01:00',date:'2099-01-01',time,language:'English',formats:['IMAX']});
@@ -18,6 +21,61 @@ const programme={generated_at:'2099-01-01T08:00:00Z',cinemas:[{id:'mooby',name:'
 ]};
 const search=(query,extra={},options={})=>queryFilms(programme,{...emptySearch(),query,...extra},{now,index:createSearchIndex(programme),...options});
 const ids=(query,extra)=>search(query,extra).map(f=>f.id).sort();
+test('English subtitle searches run locally in all locales and match the same screening',async()=>{
+  const p={...programme,cinemas:[{id:'mooby',area:'Barcelona · Eixample'},{id:'cinesa',area:'Sant Cugat del Vallès'}],films:[
+    film('spanish',{sessions:[{...session('spanish'),language:'Espanyol,',subtitles:'English'}]}),
+    film('mixed',{sessions:[{...session('mixed'),language:'Swedish, French, English',subtitles:'Anglès,'}]}),
+    film('english',{sessions:[{...session('english'),language:'English',subtitles:'EN'}]}),
+    film('unknown-audio',{details:{},sessions:[{...session('unknown-audio'),language:null,subtitles:'Inglés'}]}),
+    film('unknown-subs',{sessions:[{...session('unknown-subs'),language:'French',version:'VOSI',subtitles:null}]}),
+    film('partial-subs',{sessions:[{...session('partial-subs'),language:'French',subtitles:'Catalan, unclear'}]}),
+    film('split',{sessions:[{...session('french'),language:'French',subtitles:'Spanish'},
+      {...session('english-subs','cinesa'),language:'English',subtitles:'English'}]})
+  ]};
+  const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',now:()=>now,fetchImpl:()=>assert.fail('Subtitle searches need no model')});
+  const results=query=>queryFilms(p,{...emptySearch(),query},{now}).map(f=>f.id).sort();
+  for(const query of ['English subtitles','with subtitles in English','VOSI','VOSA','películas con subtítulos en inglés','pel·lícules amb subtítols en anglès']){
+    assert.equal((await api.search({query})).mode,'local',query);
+    assert.deepEqual(results(query),['english','mixed','spanish','split','unknown-audio'],query);
+    assert(!parseIntent(query,{programme:p}).conditions.some(c=>c.field==='language'),query);
+  }
+  assert.deepEqual(results('foreign language films with English subtitles'),['mixed','spanish']);
+  assert.deepEqual(results('in French with English subtitles'),['mixed']);
+  assert.deepEqual(results('English subtitles in Barcelona'),['english','mixed','spanish','unknown-audio']);
+  assert.deepEqual(results('without English subtitles'),['split']);
+  assert.deepEqual(results('in English with Spanish subtitles'),[],'Never join facts across versions');
+  const filters={...emptySearch(),query:'in French with English subtitles',ignored_filters:['subtitles:eq:english']};
+  assert(queryFilms(p,filters,{now}).some(f=>f.id==='split'),'The subtitle chip is removable');
+  const query='foreign language films with English subtitles in Barcelona';
+  assert.equal((await api.search({query})).mode,'local');
+  assert.deepEqual(results(query),['mixed','spanish']);
+  assert.match(intentChips(parseIntent('subtítols en anglès'),'ca')[0].label,/Subtítols anglès/);
+});
+test('audio derives only from verified original-language evidence for that screening',()=>{
+  const f=film('belle',{details:{language_status:{state:'conflict'},language_reports:[{
+    status:'ok',evidence:'explicit_original_language',source_url:'https://cinema.example/belle',languages:['Swedish','French','English']}]}});
+  const s={...session('belle'),version:'VOSI',language:null,subtitles:'English',source_url:'https://cinema.example/belle'};
+  assert.deepEqual(screeningAudio(f,s).codes,['sv','fr','en']);
+  for(const change of [{source_url:'https://other.example'}, {version:'dubbed'}, {original_audio:false}])
+    assert.deepEqual(screeningAudio(f,{...s,...change}).codes,[]);
+  assert.deepEqual(screeningAudio(f,{...s,language:'Spanish'}).codes,['es']);
+  assert.deepEqual(parseLanguages('British English / Castellano; Català,').codes,['en','es','ca']);
+  assert.equal(parseLanguages('English, unclear').complete,false);
+});
+test('browser and page language recognition share all collector aliases and audio precedence',()=>{
+  const labels=JSON.parse(execFileSync('python3',['-c','import sys,json;sys.path.insert(0,"scripts");from language_names import LABELS;print(json.dumps(LABELS))'],{encoding:'utf8'}));
+  assert.deepEqual(LANGUAGE_LABELS,labels,'Regenerate language-labels.js after changing collector labels');
+  for(const [code,values] of Object.entries(labels))for(const label of [code,...values.split('|')])assert.deepEqual(parseLanguages(label).codes,[code],label);
+  const fixtures=[
+    [{}, {language:'English, French',version:'VOSI',subtitles:'English'}],
+    [{details:{language_selection:{evidence:'explicit_original_language',source_url:'https://example.com'},original_languages:['es']}}, {version:'VOSI'}],
+    [{details:{language_reports:[{status:'ok',evidence:'explicit_original_language',source_url:'https://example.com',languages:['Swedish','English']}],language_status:{state:'conflict'}}}, {version:'VOSI',source_url:'https://example.com'}],
+    [{details:{languages:['French']}}, {version:'VOSI',subtitles:'English'}],
+    [{}, {language:'other languages',subtitles:'English'}],
+  ];
+  const expected=JSON.parse(execFileSync('python3',['-c','import sys,json;sys.path.insert(0,"scripts");from screening_languages import screening_audio;print(json.dumps([screening_audio(f,s) for f,s in json.load(sys.stdin)]))'],{input:JSON.stringify(fixtures),encoding:'utf8'}));
+  assert.deepEqual(fixtures.map(([f,s])=>({...screeningAudio(f,s),source_url:screeningAudio(f,s).source_url??null})),expected);
+});
 test('strict rating comparisons preserve boundary, source and unknown values',()=>{
   assert.deepEqual(ids('rt > 80%'),['above','few-reviews','funny-games','mixed','spanish-french']);
   assert(ids('rt >=80').includes('boundary'));

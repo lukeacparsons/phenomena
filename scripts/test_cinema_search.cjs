@@ -11,7 +11,7 @@ const programmeModule=await import('../static/programme-data.js');
 const copyModule=await import('../static/cinema-copy.js');
 const listingModule=await import('../static/listing-view.js');
 const {filmMarkup}=await import('../static/film-view.js');
-const appSource = fs.readFileSync(path.join(__dirname, '../static/cinemas.js'), 'utf8').split("document.addEventListener('click'")[0];
+const appSource = fs.readFileSync(path.join(__dirname, '../static/cinemas.js'), 'utf8').split('let pressedPoster=null;')[0];
 const context = vm.createContext({
   ...searchModule,...serviceModule,...webMCPModule,...programmeModule,...copyModule,...listingModule,observeImages:()=>{},posterMarkup:()=>'',AbortController,URLSearchParams, Intl, Date, location: {search: ''}, document: {body:{dataset:{}},querySelector:()=>null,getElementById: id => id==='grid'?{dataset:{},querySelectorAll:()=>[]}:null,querySelectorAll: () => []},
   navigator: {language: 'en'}, localStorage: {getItem: () => null}

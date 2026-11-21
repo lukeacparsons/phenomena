@@ -325,6 +325,43 @@ class PublicationTests(unittest.TestCase):
         self.assertIn(DISCOVERY_COPY['en']['vosc_answer'], html)
         self.assertNotIn('data-discovery-film=', html)
 
+    def test_subtitle_pages_rebuild_foreign_multilingual_and_event_sections(self):
+        from copy import deepcopy
+        from discovery_content import PATHS, COPY as D
+        base = deepcopy(self.data['films'][0])
+        films = []
+        for fid, title, audio in [('spanish', 'Spanish film', 'Spanish'),
+                                  ('mixed', 'Multilingual film', None),
+                                  ('event', 'BTS WORLD TOUR: LIVE VIEWING', 'Korean')]:
+            film = deepcopy(base)
+            film.update(id=fid, title=title)
+            film.pop('imdb_id', None)
+            film['sessions'][0].update(id='session-' + fid, language=audio, subtitles='English', version='VOSI')
+            if fid == 'mixed':
+                film['details'] = {'language_status': {'state': 'conflict'}, 'language_reports': [{
+                    'status': 'ok', 'evidence': 'explicit_original_language',
+                    'source_url': film['sessions'][0]['source_url'], 'languages': ['Swedish', 'French', 'English']}]}
+            films.append(film)
+        self.data['films'] = films
+        self.write_input(); self.publish()
+        root = self.root / 'site/current/public'
+        for lang, path in PATHS['subtitles'].items():
+            html = (root / path.lstrip('/') / 'index.html').read_text()
+            self.assertLess(html.index('id="subtitles-foreign"'), html.index('id="subtitles-multilingual"'))
+            self.assertLess(html.index('id="subtitles-multilingual"'), html.index('id="subtitles-events"'))
+            self.assertEqual(html.count('data-discovery-film='), 3)
+            self.assertIn(D[lang]['derived_audio'], html)
+            self.assertIn('3', html.split('"numberOfItems": ')[1].split(',')[0])
+            self.assertIn('class="screening-action"', html)
+            self.assertIn(path, (root / 'sitemap.xml').read_text())
+        # Programme changes are sufficient; no hand-maintained title list or new URL.
+        films[0]['sessions'][0]['subtitles'] = 'Spanish'
+        self.write_input(); self.publish()
+        html = (root / PATHS['subtitles']['en'].lstrip('/') / 'index.html').read_text()
+        self.assertNotIn('data-discovery-film="spanish"', html)
+        self.assertIn(D['en']['subtitles-foreign_none'], html)
+        self.assertEqual(html.count('data-discovery-film='), 2)
+
     def test_gracia_renders_matching_sessions_and_reviewed_entrances(self):
         import copy
         from discovery_content import PATHS

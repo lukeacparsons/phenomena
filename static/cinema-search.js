@@ -195,7 +195,7 @@ export function createSearchIndex(programme){
     }).sort((a,b)=>a.starts-b.starts||a.session.id.localeCompare(b.session.id));
     return {film,words,personNames,plot,sessions};
   });
-  return {programme,films,titles,people:[...people],providers:[...providers],intents:new Map(),known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
+  return {programme,cinemas,films,titles,people:[...people],providers:[...providers],intents:new Map(),known:{cinema_ids:[...cinemas.keys()],formats:[...formats]}};
 }
 
 export function interpretSearch(programme,filters,{now=Date.now(),index,intent}={}){
@@ -242,7 +242,7 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
       if(filters.cinema_ids.length&&!filters.cinema_ids.includes(session.cinema_id))return false;
       if(!filters.formats.every(format=>(session.formats||[]).includes(format)))return false;
       if(bigScreens&&session.big_screen!==true)return false;
-      if(!matchesConditions(film,session,conditions))return false;
+      if(!matchesConditions(film,session,conditions,index.cinemas.get(session.cinema_id)))return false;
       return sessionTerms.every(term=>sessionWords.some(word=>word.startsWith(term)));
     }).map(row=>row.session);
     return sessions.length?[{...film,sessions}]:[];

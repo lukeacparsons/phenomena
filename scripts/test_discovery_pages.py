@@ -121,7 +121,43 @@ class SelectionTests(unittest.TestCase):
                     session('partial', language='English, Klingon'),
                     session('accent', language='Anglès,'), session('spanish-label', language='INGLÉS.')]
         self.assertEqual(select(sessions, 'english'), {'english': ['accent', 'english-vosc', 'spanish-label'], 'multilingual': ['multi', 'partial']})
-        self.assertEqual(select(sessions, 'subtitles'), {'subtitles': ['spanish-vosi']})
+        self.assertEqual(select(sessions, 'subtitles'), {'subtitles-foreign': ['spanish-vosi'],
+                         'subtitles-multilingual': [], 'subtitles-other': [], 'subtitles-events': []})
+
+    def test_english_subtitle_sections_use_same_session_audio_and_separate_events(self):
+        now = datetime.fromisoformat('2026-11-19T12:00:00Z')
+        films = [
+            {'id': 'spanish', 'title': 'Spanish film', 'sessions': [session('spanish', language='Espanyol,', subtitles='English')]},
+            {'id': 'mixed', 'title': 'Multilingual film', 'sessions': [session('mixed', language='Swedish, French, English', subtitles='Anglès')]},
+            {'id': 'unknown', 'title': 'Unknown audio', 'sessions': [session('unknown', subtitles='en')]},
+            {'id': 'english', 'title': 'English film', 'sessions': [session('english', language='English', subtitles='Inglés')]},
+            {'id': 'event', 'title': "BTS WORLD TOUR 'ARIRANG': LIVE VIEWING", 'sessions': [session('event', language='Korean', subtitles='English')]},
+            {'id': 'split', 'title': 'Two versions', 'sessions': [session('not-english-subs', language='French', subtitles='Spanish'),
+              session('different-audio', language='English', subtitles='English')]},
+            {'id': 'expired', 'sessions': [session('expired', '2026-11-19T12:00:00Z', language='Spanish', subtitles='English')]},
+        ]
+        before = repr(films)
+        groups = select_sessions({'films': films}, 'subtitles', now)
+        self.assertEqual({k: [s['id'] for _, s in v] for k, v in groups.items()}, {
+            'subtitles-foreign': ['spanish'], 'subtitles-multilingual': ['mixed'],
+            'subtitles-other': ['different-audio', 'english', 'unknown'], 'subtitles-events': ['event']})
+        self.assertEqual(repr(films), before)
+
+    def test_original_audio_can_use_the_same_cinema_film_source_without_borrowing_subtitles(self):
+        from screening_languages import screening_audio
+        film = {'id': 'belle', 'title': 'La belle année', 'details': {
+            'languages': ['English'], 'language_status': {'state': 'conflict'},
+            'language_reports': [{'status': 'ok', 'evidence': 'explicit_original_language',
+                                 'source_url': 'https://cinema.example/belle', 'languages': ['Swedish', 'French', 'English']}]}}
+        screening = session('belle', version='VOSI', subtitles='English', source_url='https://cinema.example/belle')
+        film['sessions'] = [screening]
+        self.assertEqual(screening_audio(film, screening)['codes'], ['sv', 'fr', 'en'])
+        groups = select_sessions({'films': [film]}, 'subtitles', datetime.fromisoformat('2026-11-19T12:00:00Z'))
+        self.assertEqual(len(groups['subtitles-multilingual']), 1)
+        for update in [{'source_url': 'https://other.example'}, {'version': 'dubbed'}, {'original_audio': False}]:
+            self.assertEqual(screening_audio(film, {**screening, **update})['codes'], [])
+        self.assertEqual(screening_audio(film, {**screening, 'language': 'Spanish'})['codes'], ['es'])
+        self.assertEqual(screening_audio(film, {**screening, 'language': 'unknown language'})['codes'], [])
 
     def test_today_uses_madrid_instants_and_18_to_midnight_without_duplicates(self):
         sessions = [session('started', '2026-11-19T13:00:00+01:00'),

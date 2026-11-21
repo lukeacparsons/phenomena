@@ -18,7 +18,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 from zoneinfo import ZoneInfo
 
 from site_content import COPY, GUIDES, PUBLISHER, VENUE_COPY
@@ -31,6 +31,8 @@ from optimize_images import optimize_logo, optimize_mascot_animation, prepare_im
 from browser_programme import browser_programme
 from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
+from screening_languages import screening_audio
+from language_names import LANGUAGE_NAMES
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
 from discovery_local import GRACIA_VENUES, SOURCES as LOCAL_SOURCES
@@ -348,11 +350,15 @@ class Publication:
                 venue = link(self.entity_path('films', film['id'], lang), film['title'])
                 if discovery:
                     venue += '<p>' + link(self.entity_path('cinemas', s['cinema_id'], lang), cinema['name']) + '</p>'
+            audio = screening_audio(film, s) if discovery else None
+            audio_label = ', '.join(LANGUAGE_NAMES[c] for c in audio['codes']) if audio and audio['derived'] else s.get('language')
             details = [(t['room'], s.get('room') or t['unknown']), (t['version'], s.get('version') or t['unknown']),
-                       (t['audio'], language_name(s.get('language') or t['unknown'], lang)),
+                       (t['audio'], language_name(audio_label or t['unknown'], lang)),
                        (t['subtitles'], language_name(s.get('subtitles') or t['unknown'], lang)),
                        (t['formats'], ', '.join(s.get('formats') or []) or t['unknown'])]
             facts = '<dl class="session-facts">' + ''.join(f'<dt>{text(k)}</dt><dd>{text(v)}</dd>' for k, v in details) + '</dl>'
+            if audio and audio['derived']:
+                facts += '<p class="source-note">' + link(audio['source_url'], DISCOVERY_COPY[lang]['derived_audio']) + '</p>'
             source = link(s.get('source_url'), t['source'])
             checked = stamp(s.get('schedule_fetched_at'))
             anchor = 'screening-' + hashlib.sha256(s['id'].encode()).hexdigest()[:16]
@@ -730,6 +736,8 @@ class Publication:
                 description = d.get(kind + '_description', d[kind + '_intro']).format(**values)
                 dated_title = d[kind] + (f' · {weekend[0]}–{weekend[-1]}' if kind == 'weekend' else '')
                 body = f'<h1>{text(dated_title)}</h1><p class="editorial">{text(intro)}</p>'
+                if kind == 'subtitles':
+                    body += '<p>' + link(f'/{lang}/?q=' + quote(d['subtitle_search_query']), d['subtitle_search']) + '</p>'
                 if kind == 'discounts':
                     body += self.discount_offers(lang)
                     body += f'<h2 id="discount-programme">{text(d["discount-screenings"])}</h2><p class="editorial">{text(d["discount-screenings_note"])}</p>'
@@ -745,7 +753,7 @@ class Publication:
                 body += f'<p class="discovery-stale" role="status" hidden>{text(d["stale"].format(date=today))} <button type="button" class="discovery-reload">{text(d["reload"])}</button></p>'
                 body += f'<div class="discovery-results"><p class="discovery-count" role="status" aria-atomic="true">{text(count)}</p><p class="discovery-empty"{" hidden" if pairs else ""}>{text(d.get(kind + "_none", d["none"]))}</p>'
                 for group, selected in groups.items():
-                    keep_empty = kind == 'weekend' or group in ('35mm', '70mm')
+                    keep_empty = kind == 'weekend' or group in ('35mm', '70mm', 'subtitles-foreign')
                     if not selected and not keep_empty:
                         continue
                     heading = d.get(group + '_group', d.get(group))
@@ -753,13 +761,13 @@ class Publication:
                         heading += f' · {dates[group]}'
                     body += f'<section class="discovery-group" id="{group}"' + (' aria-labelledby="discount-programme">' if kind == 'discounts' else f'><h2>{text(heading)}</h2>')
                     if keep_empty:
-                        body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d["day_none" if kind == "weekend" else "format_none"])}</p>'
+                        body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d.get(group + "_none", d["day_none" if kind == "weekend" else "format_none"]))}</p>'
                     if group + '_note' in d and kind != 'discounts':
                         body += f'<p class="editorial">{text(d[group + "_note"])}</p>'
                     if kind == 'classics':
                         ids = [repertory_match(f, s)[2] for f, s in selected]
                         body += '<p class="source-note">' + self.citations(ids, COLLECTION_SOURCES, lang) + '</p>'
-                    if kind in ('english', 'weekend', 'imax', 'vosc', 'gracia', 'classics', 'eixample', 'discounts'):
+                    if kind in ('english', 'subtitles', 'weekend', 'imax', 'vosc', 'gracia', 'classics', 'eixample', 'discounts'):
                         # Group by film so a long programme is navigable and each
                         # title is one recommendation, with its exact sessions inside.
                         films = {}
@@ -979,7 +987,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.discovery_pages()
             date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
-            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
+            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'language-navigation.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
                          'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
@@ -1077,7 +1085,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 - [Original-version IMAX]({origin}{DISCOVERY_PATHS['imax']['en']}): same-session original audio and IMAX format, with sourced room guidance.
 - [35mm and 70mm]({origin}{DISCOVERY_PATHS['film']['en']}): separate film-format lists based on explicit session tags, with print and edition caveats.
 - [Films in English]({origin}{DISCOVERY_PATHS['english']['en']}): session-confirmed English audio over the next seven calendar days; multilingual films are separate.
-- [English subtitles and VOSI]({origin}{DISCOVERY_PATHS['subtitles']['en']}): subtitle labels explained, with upcoming confirmed English-subtitled sessions.
+- [English subtitles and VOSI]({origin}{DISCOVERY_PATHS['subtitles']['en']}): automatically updated non-English and multilingual film sections, separate concerts/stage broadcasts, exact-session evidence and official tickets.
 - [Catalan subtitles and VOSC]({origin}{DISCOVERY_PATHS['vosc']['en']}): upcoming sessions with explicit Catalan subtitles; audio is checked separately.
 - [Original-language cinema in Gràcia]({origin}{DISCOVERY_PATHS['gracia']['en']}): four reviewed venues, seven calendar days, English from 20:00, separate multilingual results and entrance guidance.
 - [Classics and repertory]({origin}{DISCOVERY_PATHS['classics']['en']}): reviewed returning editions and director seasons with current sessions; old release years and 4K labels alone do not qualify a film.

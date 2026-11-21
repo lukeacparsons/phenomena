@@ -7,6 +7,7 @@ an English-audio result. Preserve the source labels in the displayed facts.
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
+from subtitle_discovery import GROUPS as SUBTITLE_GROUPS, COPY as SUBTITLE_COPY, subtitle_group
 from language_names import parse_languages, without_language_placeholder
 from discovery_guides import COPY as GUIDE_COPY
 from discovery_local import COPY as LOCAL_COPY, GRACIA_VENUES
@@ -50,7 +51,7 @@ def select_sessions(programme, kind, now):
     end = today + timedelta(days=7)
     weekend = dict(zip(weekend_dates(now), ('friday', 'saturday', 'sunday')))
     keys = {'today': ('daytime', 'tonight'), 'english': ('english', 'multilingual'),
-            'subtitles': ('subtitles',), 'weekend': ('friday', 'saturday', 'sunday'),
+            'subtitles': SUBTITLE_GROUPS, 'weekend': ('friday', 'saturday', 'sunday'),
             'imax': ('imax',), 'film': ('35mm', '70mm', 'mixed-film'),
             'vosc': ('vosc',), 'gracia': ('gracia-english', 'gracia-multilingual', 'gracia-other'),
             'classics': REPERTORY_GROUPS, 'eixample': tuple(v[0] for v in EIXAMPLE_VENUES.values()),
@@ -64,6 +65,10 @@ def select_sessions(programme, kind, now):
             if kind == 'today':
                 if starts.date() == today:
                     groups['tonight' if starts.hour >= 18 else 'daytime'].append((film, session))
+            elif kind == 'subtitles':
+                group = subtitle_group(film, session)
+                if group:
+                    groups[group].append((film, session))
             elif kind == 'weekend':
                 if starts.date() in weekend:
                     groups[weekend[starts.date()]].append((film, session))
@@ -225,4 +230,7 @@ for _lang, _copy in GUIDE_COPY.items():
 for _lang, _copy in LOCAL_COPY.items():
     COPY[_lang].update(_copy)
 for _lang, _copy in COLLECTION_COPY.items():
+    COPY[_lang].update(_copy)
+
+for _lang, _copy in SUBTITLE_COPY.items():
     COPY[_lang].update(_copy)
