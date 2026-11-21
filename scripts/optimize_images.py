@@ -127,6 +127,22 @@ def optimize_logo(static=ROOT / 'static'):
         write_bytes(target, body)
 
 
+def write_favicons(destination, source=ROOT / 'static/clint.png'):
+    """Publish square, lossless icons in formats supported by search crawlers."""
+    destination = Path(destination)
+    with Image.open(source) as original:
+        image = ImageOps.exif_transpose(original).convert('RGBA')
+    for name, size in (('favicon.png', 96), ('apple-touch-icon.png', 180), ('favicon.ico', 64)):
+        square = ImageOps.pad(image, (size, size), method=Image.Resampling.LANCZOS,
+                              color=(0, 0, 0, 0))
+        output = BytesIO()
+        if name.endswith('.ico'):
+            square.save(output, format='ICO', sizes=[(n, n) for n in (16, 32, 48, 64)])
+        else:
+            square.save(output, format='PNG', optimize=True)
+        write_bytes(destination / name, output.getvalue())
+
+
 def optimize_mascot_animation(static=ROOT / 'static'):
     # Use the refined scroll animation's first frame as its matching idle pose.
     scroll_name = 'barcelona-mascot-point-right-brow-refined.webp'

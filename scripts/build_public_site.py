@@ -26,7 +26,7 @@ from screening_context import (COPY as CONTEXT_COPY, upcoming, shared_language, 
                                examples as screening_examples, related_guides)
 from site_research import ResearchTranslations
 from site_identity import LOCALES, SECTIONS, new_registry, path_for, resolve, update_registry
-from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images
+from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images, write_favicons
 from browser_programme import browser_programme
 from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
@@ -47,6 +47,9 @@ LISTING_POSTER_SIZES = ('(max-width:600px) and (min-resolution:3.5dppx) 150px, (
                         '(max-width:1160px) calc(33.3333vw - 34.6667px), (max-width:1199px) 352px, '
                         '(max-width:1240px) calc(25vw - 34px), 276px')
 ORIGIN = 'https://vobarna.com'
+FAVICON_LINKS = ('<link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64">'
+                 '<link rel="icon" href="/favicon.png" type="image/png" sizes="96x96">'
+                 '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">')
 MADRID = ZoneInfo('Europe/Madrid')
 PAGE_SIZE = 24
 LANGUAGES = {'English': ('English', 'Inglés', 'Anglès'), 'Spanish': ('Spanish', 'Español', 'Castellà'),
@@ -237,7 +240,7 @@ class Publication:
 {'<base target="_blank">' if venue else ''}
 <title>{text(title)}</title><meta name="description" content="{text(description)}"><meta name="robots" content="{'index,follow' if index else 'noindex,follow'}">
 <link rel="canonical" href="{canonical}">{alternate}<meta property="og:type" content="website"><meta property="og:title" content="{text(title)}"><meta property="og:description" content="{text(description)}"><meta property="og:url" content="{canonical}"><meta property="og:site_name" content="VO Barna"><meta property="og:image" content="{self.origin}/clint.png"><meta name="twitter:card" content="summary">
-<link rel="icon" href="/clint-logo.webp"><link rel="preload" href="/fonts/Bungee-Regular.ttf" as="font" type="font/ttf" crossorigin>
+{FAVICON_LINKS}<link rel="preload" href="/fonts/Bungee-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -950,11 +953,12 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
             for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'film-search-content.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
-                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'favicon.svg', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
+                         'listing-view.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
+            write_favicons(dest)
             guide = (ROOT / 'static/webmcp.html').read_text().replace('/cinemas.html', '/en/')
-            guide = guide.replace('</head>', f'<link rel="canonical" href="{origin}/webmcp/"><script type="module" src="/analytics.js"></script></head>')
+            guide = guide.replace('</head>', f'{FAVICON_LINKS}<link rel="canonical" href="{origin}/webmcp/"><script type="module" src="/analytics.js"></script></head>')
             guide_path = dest / 'webmcp/index.html'
             guide_path.parent.mkdir(parents=True, exist_ok=True)
             guide_path.write_text(guide)
