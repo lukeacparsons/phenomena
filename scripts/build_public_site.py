@@ -823,7 +823,6 @@ class Publication:
                 body = '<header class="guide-heading reading-wash">' + link(f'/{lang}/{SECTIONS[lang]["guides"]}/', t['guides'], ' class="text-action"')
                 body += f'<h1>{text(d.get(kind + "_heading", guide_title(kind, lang)))}</h1><p>{text(intro if kind == "discounts" else guide_description(kind, lang))}</p></header>'
                 if kind == 'discounts':
-                    body += '<p>' + link(paths[lang] + '#discount-programme', d['discount-screenings'], ' class="text-action"') + '</p>'
                     body += self.discount_offers(lang)
                     body += f'<h2 id="discount-programme">{text(d["discount-screenings"])}</h2><p class="editorial">{text(d["discount-screenings_note"])}</p>'
                 body += f'<div class="discovery" data-discovery-kind="{kind}" data-discovery-date="{today}" data-count-template="{text(d["count"])}">'
@@ -851,7 +850,8 @@ class Publication:
                     heading = d.get(group + '_group', d.get(group))
                     if kind == 'weekend':
                         heading += f' · {dates[group]}'
-                    body += f'<section class="discovery-group" id="{group}"><h2>{text(heading)}</h2>'
+                    # The discount page's single group is already titled by the section heading above it.
+                    body += f'<section class="discovery-group" id="{group}"' + (' aria-labelledby="discount-programme">' if kind == 'discounts' else f'><h2>{text(heading)}</h2>')
                     if not selected or kind == 'weekend' or group in ('35mm', '70mm', 'subtitles-foreign'):
                         body += f'<p class="discovery-group-empty"{" hidden" if selected else ""}>{text(d.get(group + "_none", d["day_none" if kind == "weekend" else "format_none"]))}</p>'
                     if group + '_note' in d and kind != 'discounts':

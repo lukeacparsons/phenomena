@@ -71,14 +71,7 @@ if(root&&payload){
       const p=document.createElement('p'),strong=document.createElement('strong');strong.textContent=label+': ';
       p.append(strong,document.createTextNode(value||labels.unknown));block.append(p);
     }
-    const details=document.createElement('details'),summary=document.createElement('summary');
-    summary.className='text-action';summary.textContent=labels.details;details.append(summary);
-    for(const [url,label] of [[session.source_url,labels.source],[session.guide_audio_source,labels.derived_audio]]){
-      if(!url||!/^https:\/\//.test(url))continue;
-      const a=document.createElement('a');a.href=url;a.textContent=label;a.className='text-action';a.target='_blank';a.rel='noopener';details.append(a);
-    }
-    if(session.schedule_fetched_at){const p=document.createElement('p');p.className='source-note';p.textContent=labels.checked+': '+new Intl.DateTimeFormat(language,{timeZone:'Europe/Madrid',dateStyle:'medium',timeStyle:'short'}).format(new Date(session.schedule_fetched_at));details.append(p);}
-    block.append(details);dialog.querySelector('.screening-summary')?.append(block);
+    dialog.querySelector('.screening-summary')?.append(block);
   }
   function paint({restoreScroll=false,reveal=null}={}){
     const film=matchingFilm(active.id,active.group);if(!film)return false;
