@@ -24,7 +24,7 @@ const listingDate=document.body.dataset.listingDate;
 const dateKind=document.body.dataset.dateKind;
 const relativeDate=dateKind==='today'||dateKind==='tomorrow';
 const dateHeading=document.querySelector('.date-heading');
-const originalDateHeading=dateHeading?.querySelector('h1').textContent;
+const originalDateHeading=dateHeading?.querySelector('h1,h2')?.textContent;
 let restoringHistory=false;
 const listingTitle=document.title;
 const listingLanguageLinks=[...document.querySelectorAll('.lang-switch a[hreflang]')].map(node=>({node,href:node.getAttribute('href')}));
@@ -121,7 +121,12 @@ function syncURL(push=false){
     const changedDate=listingDate&&selectedDate()!==listingDate;
     document.title=film?film.title+' | VO Barna':changedDate?document.body.dataset.programmeHeading+' | VO Barna':listingTitle;
     if(dateHeading){
-      dateHeading.querySelector('h1').textContent=changedDate?document.body.dataset.programmeHeading:originalDateHeading;
+      const heading=changedDate?document.body.dataset.programmeHeading:originalDateHeading;
+      dateHeading.querySelector('h1,h2').textContent=heading;
+      const mainHeading=document.querySelector('main > h1');
+      if(mainHeading)mainHeading.textContent=heading;
+      const description=dateHeading.querySelector('p');
+      if(description)description.hidden=Boolean(changedDate);
       const complete=document.querySelector('details#complete-programme');
       if(complete)complete.hidden=changedDate||Boolean(state.query)||state.cinema_ids.length>0||state.formats.length>0||state.big_screens_only;
     }

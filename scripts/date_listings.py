@@ -110,9 +110,11 @@ def build_date_views(site, language_name):
         for kind in ('today', 'tomorrow', 'date'):
             paths = DAY_PATHS[kind] if kind != 'date' else {l: f'/{l}/?date={DATE_TOKEN}' for l in COPY}
             title = copy[kind] + ' · ' + DATE_TOKEN
-            body = f'<section class="date-heading"><h1>{escape(copy[kind])}</h1></section>{LISTING_TOKEN}'
+            body = f'<h1 class="sr-only">{escape(copy[kind])}</h1>{LISTING_TOKEN}'
+            footer_extra = (f'<section class="date-heading"><h2>{escape(copy[kind])}</h2>'
+                            f'<p>{escape(copy["intro"].format(date=DATE_TOKEN))}</p></section>')
             template = site.page(paths[lang], lang, title + ' | VO Barna', copy['intro'].format(date=DATE_TOKEN), body,
-                                 alternatives=paths, interactive=True, index=kind != 'date',
+                                 alternatives=paths, interactive=True, index=kind != 'date', footer_extra=footer_extra,
                                  date_scope={'date': DATE_TOKEN, 'kind': kind}, write=False)
             (directory / (kind + '.txt')).write_text(template)
             if kind != 'date':

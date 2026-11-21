@@ -77,9 +77,9 @@
 .comparison-room{min-width:0}
 .comparison-room h3{margin-top:0}.comparison-room dt{font-weight:700;margin-top:1rem}.comparison-room dd{margin:.35rem 0;overflow-wrap:anywhere}.comparison-room ul{padding-left:1.25rem;margin:.25rem 0}
 
-/* Date landing pages keep the programme grid close to its day heading. */
-.public-site main .date-heading{margin:0 0 20px}
-.public-site main .date-heading h1{font-size:clamp(1.25rem,3vw,1.6rem);margin:0 0 8px}
+/* Date-page context belongs inside the collapsed information footer. */
+.site-information .date-heading{max-width:760px;margin:20px 0}
+.site-information .date-heading h2{font-size:1rem;margin:0 0 8px}
 
 /* Film pages share the listing's flat surfaces and compact cinema/time rows. */
 .film-page main{max-width:var(--film-page-width);padding-top:36px}
