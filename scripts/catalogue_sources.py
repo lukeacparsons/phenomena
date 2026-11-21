@@ -329,6 +329,27 @@ def zumzeig_metadata(html):
     return events, qualification, booking_links
 
 
+def zumzeig_availability(perf, now):
+    """Read only the dedicated sessions response, never event-list placeholders."""
+    available = perf.get('disponibles')
+    if not perf.get('showDisponibles') or type(available) is not int or available < 0:
+        return None
+    value = {'kind': 'reported_total', 'available': available, 'checked_at': now.isoformat()}
+    if available == 0:
+        try:
+            sale_start = datetime.fromisoformat(perf['fechaInicioVenta'])
+            sale_open = sale_start.tzinfo is not None and sale_start <= now
+        except (KeyError, TypeError, ValueError):
+            sale_open = False
+        # Codetickets selects the no-fares action before sales open, and the
+        # capacity-limit action afterwards. Only action 3 means "Agotadas";
+        # zero alone can also mean hidden, unavailable or coming soon.
+        action = perf.get('accionLimiteMax' if sale_open else 'accionSinTarifas')
+        if action in (3, '3'):
+            value['is_sold_out'] = True
+    return value
+
+
 def collect_zumzeig(http, now):
     events = http.json(CODE + 'evento/349/1602/eventos?lang=ca_ES')
     homepage = http.get('https://zumzeigcine.coop/')
@@ -368,11 +389,11 @@ def collect_zumzeig(http, now):
                 excluded += 1
                 continue
             starts = datetime.fromisoformat(perf['fechaInicial'])
-            available = perf.get('disponibles')
-            seed = {'kind':'reported_total','available':available,'checked_at':now.isoformat()} if not external and perf.get('showDisponibles') and type(available) is int and available >= 0 else None
+            seed = zumzeig_availability(perf, now) if not external else None
             rows.append(row('zumzeig', 'zumzeig', str(perf['id']), eid, event['nombre'], starts,
                 qualification, external or f"https://www.codetickets.com/portal/zumzeigcooperativa/online/{eid}/{perf['id']}", source,
                 room='1', poster_url=event.get('urlImage'), seat_data=seed,
+                is_sold_out=bool(seed and seed.get('is_sold_out')),
                 booking_scope='event' if external else 'session'))
     return report('zumzeig', rows, now, discovered_events=len(events), excluded_unproven_version_or_venue=excluded)
 

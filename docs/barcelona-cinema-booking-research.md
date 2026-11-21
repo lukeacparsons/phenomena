@@ -88,6 +88,8 @@ Discovery returned 27 events and 52 nested session summaries. The separate Rose 
 
 **Do not read availability from the event-list summaries.** Its Rose session `105076` has `disponibles=0`, even with `showDisponibles=true`. The dedicated sessions endpoint, session detail, seat response and visible booking UI instead agree on **63**. Use `/sesiones` or the session-detail response for counts.
 
+**Sold-out status verified 21 November 2026:** [Puedes verlo todo, 26 November at 11:00](https://www.codetickets.com/portal/zumzeigcooperativa/online/38434/105125) displays `0 disponibles` and `Exhaurides`. Its dedicated session response reports `accionLimiteMax=3`. The official portal uses `accionSinTarifas` before the sale start (also when that date is absent/invalid), and `accionLimiteMax` for zero inventory after sales open; action 3 means sold out, while 0/1/2 mean hidden/unavailable/coming soon. The collector preserves this explicit sold-out signal in both `seat_data` and the session flag. An unverified reported-total zero alone remains insufficient.
+
 For deeper inspection, the browser makes read-only JSON POST requests with `{"userId":""}` to:
 
 ```text

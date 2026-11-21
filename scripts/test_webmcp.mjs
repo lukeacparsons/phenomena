@@ -5,6 +5,7 @@ import {availabilityFor,createCinemaService} from '../static/cinema-service.js';
 import {createWebMCPTools} from '../static/webmcp.js';
 import {registerWebMCP} from '../static/webmcp-registration.js';
 import {hydrateProgramme} from '../static/programme-data.js';
+import {filmMarkup} from '../static/film-view.js';
 
 const NOW=Date.parse('2026-11-19T18:00:00Z');
 test('stored prices are not exposed by frontend tools',()=>{
@@ -173,6 +174,27 @@ test('availability distinguishes unknown, stale, closed, count kind and source f
   assert.equal(classic.price,undefined);
   const record=app.data.films[0].sessions[0];record.booking_url='javascript:alert(1)';
   assert.equal(app.service.get_screening({screening_id:'imax'}).booking_url,null);
+});
+
+test('Zumzeig reported sold-out totals render consistently in screening and showtime views',()=>{
+  const screening=session('zumzeig:105125','zumzeig',[],'2099-11-26',{
+    provider:'zumzeig',time:'11:00',starts_at:'2099-11-26T11:00:00+01:00',is_sold_out:true,
+    seat_data:{kind:'reported_total',available:0,is_sold_out:true,checked_at:'2026-11-19T17:59:00Z'}
+  });
+  const film={id:'you-can-see-everything',title:'You Can See Everything',sessions:[screening]};
+  for(const [language,label] of [['en','Sold out'],['es','Agotado'],['ca','Exhaurit']]){
+    for(const view of ['screening','showtimes']){
+      const html=filmMarkup(film,{language,view,selectedSessionId:screening.id,now:NOW});
+      assert.match(html,new RegExp(`seat-count unavailable[^>]*>${label}`));
+      assert.match(html,/is-sold-out/);
+      assert.doesNotMatch(html,/0 (seats|asientos|seients)/);
+    }
+  }
+  const availability={sessions:new Map([[screening.id,{kind:'reported_total',available:5,checked_at:'2026-11-19T18:00:00Z'}]])};
+  assert.equal(availabilityFor(screening,availability,NOW).status,'reported_available');
+  const html=filmMarkup(film,{language:'en',view:'screening',selectedSessionId:screening.id,availability,now:NOW});
+  assert.doesNotMatch(html,/is-sold-out|seat-count unavailable/);
+  assert.match(html,/5 seats/);
 });
 
 test('links round-trip structured filters and stable selection IDs',()=>{

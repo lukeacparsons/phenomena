@@ -7,7 +7,7 @@ import unittest
 from original_audio import original_audio, a1_audio, original_language_registry
 from catalogue_sources import (filmoteca_sessions, filmax_sessions, renoir_sessions,
                                texas_calendar, texas_session, malda_sessions, malda_home_sessions,
-                               collect_malda, collect_a1, collect_zumzeig)
+                               collect_malda, collect_a1, collect_zumzeig, zumzeig_availability)
 from explore_premium_showtimes import mooby_sessions
 from cinesa_showtimes import cinesa_sessions, venue_for_cinema
 from kinepolis_showtimes import splau_sessions
@@ -94,15 +94,37 @@ class CatalogueTests(unittest.TestCase):
                 return '<div class="rowcontent">Versió: VOSE Qualificació: 12</div><a href="'+booking+'">Tickets</a>'
             def json(self,url):
                 perf={'id':11,'fechaInicial':'2026-11-20T18:00:00+01:00','disponibles':0,'showDisponibles':True}
-                if '/1/sesiones' in url:return [{**perf,'disponibles':42}]
+                if '/1/sesiones' in url:return [{**perf,'disponibles':42},
+                    {**perf,'id':12,'fechaInicioVenta':'2026-11-18T12:00:00+01:00','accionLimiteMax':3}]
                 return [{'id':1,'nombre':'One','sesiones':[perf]},
                         {'id':2,'nombre':'Two','urlComprar':external,
                          'sesiones':[{**perf,'id':22,'recinto':'SALA ZUMZEIG'}]}]
         rows=collect_zumzeig(HTTP(),NOW)['sessions']
-        self.assertEqual(len(rows),2)
+        self.assertEqual(len(rows),3)
         self.assertEqual(rows[0]['seat_data']['available'],42)
-        self.assertIsNone(rows[1]['seat_data'])
-        self.assertEqual(rows[1]['booking_url'],external)
+        self.assertFalse(rows[0]['is_sold_out'])
+        self.assertTrue(rows[1]['seat_data']['is_sold_out'])
+        self.assertTrue(rows[1]['is_sold_out'])
+        self.assertIsNone(rows[2]['seat_data'])
+        self.assertFalse(rows[2]['is_sold_out'])
+        self.assertEqual(rows[2]['booking_url'],external)
+
+    def test_zumzeig_zero_uses_the_published_sales_action(self):
+        perf = {'disponibles':0, 'showDisponibles':True, 'accionLimiteMax':3,
+                'accionSinTarifas':2, 'fechaInicioVenta':'2026-11-18T12:00:00+01:00'}
+        self.assertEqual(zumzeig_availability(perf, NOW), {
+            'kind':'reported_total', 'available':0, 'checked_at':NOW.isoformat(), 'is_sold_out':True})
+        for action in (0, 1, 2, None, 'unknown'):
+            with self.subTest(action=action):
+                self.assertFalse(zumzeig_availability({**perf, 'accionLimiteMax':action}, NOW).get('is_sold_out'))
+        for start in ('2026-11-20T12:00:00+01:00', None, 'invalid', '2026-11-18T12:00:00'):
+            with self.subTest(start=start):
+                self.assertFalse(zumzeig_availability({**perf, 'fechaInicioVenta':start}, NOW).get('is_sold_out'))
+        self.assertTrue(zumzeig_availability({**perf, 'fechaInicioVenta':None, 'accionSinTarifas':3}, NOW)['is_sold_out'])
+        self.assertFalse(zumzeig_availability({**perf, 'disponibles':42}, NOW).get('is_sold_out'))
+        for invalid in (None, -1, False, '0'):
+            self.assertIsNone(zumzeig_availability({**perf, 'disponibles':invalid}, NOW))
+        self.assertIsNone(zumzeig_availability({**perf, 'showDisponibles':False}, NOW))
 
     def test_filmoteca_language_and_room_identity_are_session_specific(self):
         perf={'codiCicle':'7','descrip':'Film','dataCicle':'20/11/2026','horaI':'1800','codiRecinte':'1',
