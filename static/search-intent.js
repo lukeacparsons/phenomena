@@ -193,8 +193,8 @@ export function filmMatchReason(film,plan,language='en'){
 }
 
 export function searchExplanation(plan,language='en'){
-  const copy={en:{ai:'AI matches',countries:'Includes co-productions'},es:{ai:'Coincidencias de IA',countries:'Incluye coproducciones'},ca:{ai:'Coincidències d’IA',countries:'Inclou coproduccions'}}[language];
-  return [plan.semantic_query?copy.ai:'',plan.conditions.some(c=>c.field==='country'&&c.op!=='ne')?copy.countries:''].filter(Boolean).join(' · ');
+  const copy={en:{countries:'Includes co-productions'},es:{countries:'Incluye coproducciones'},ca:{countries:'Inclou coproduccions'}}[language];
+  return plan.conditions.some(c=>c.field==='country'&&c.op!=='ne')?copy.countries:'';
 }
 
 const compare=(actual,op,wanted)=>({eq:()=>actual===wanted,ne:()=>actual!==wanted,gt:()=>actual>wanted,gte:()=>actual>=wanted,lt:()=>actual<wanted,lte:()=>actual<=wanted}[op]?.()??false);

@@ -61,7 +61,7 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
     await page.waitForSelector('[data-remove-filter="intent"][data-value="semantic"]');
     assert.deepEqual(await ids(),['bright']);
     assert.equal(await page.locator('#searchStatus').isVisible(),false);
-    assert.match(await page.locator('#searchExplanation').textContent(),/AI matches/);
+    assert.equal(await page.locator('#searchExplanation').isVisible(),false);
     assert.equal(apiCalls,1,'regional discovery reaches the AI despite absent regional metadata');
     await search('highly rated on imdb');
     await page.waitForSelector('[data-remove-filter="intent"][data-value="rating_imdb:gte:7 5"]');
