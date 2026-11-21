@@ -16,6 +16,12 @@
 .screening-action{display:block;padding:8px 0;margin-bottom:8px;min-height:44px}
 .buyrow:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
 .site-information{max-width:1120px;margin:auto;font-size:13px;color:var(--tx2)}.site-information summary{cursor:pointer}.site-information[open] summary{margin-bottom:20px}.site-information .site-intro{font-size:13px}.site-information .site-nav{margin-top:20px}
+/* Stack the homepage disclosures on the listing's left edge. */
+.public-site main:has(>details.complete-programme){padding-bottom:0}
+.public-site main:has(>details.complete-programme)+.site-footer{display:block;padding:0 20px 32px}
+.public-site main:has(>details.complete-programme)+.site-footer>.site-information{max-width:none;margin:0}
+@media(min-width:1200px){.public-site main:has(>details.complete-programme)+.site-footer{max-width:var(--listing-width)}}
+@media(max-width:460px){.public-site main:has(>details.complete-programme)+.site-footer{padding-inline:14px}}
 .screening-context{max-width:760px;margin:24px 0 32px;font-size:1rem;line-height:1.6;overflow-wrap:anywhere;color:var(--tx)}
 .screening-context h2{font-size:1.25rem;line-height:1.4;margin:0 0 16px}.screening-context h3{font-size:1.125rem;margin:24px 0 12px}
 .screening-context ul{padding-left:22px}.screening-context li{margin:10px 0}.screening-context-list>li{margin:24px 0}

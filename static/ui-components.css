@@ -42,6 +42,13 @@
 }
 .text-action:is(:hover,:focus-visible){color:var(--tx);text-decoration-color:currentColor}
 
+/* Programme and information disclosures share the same label and hit area. */
+:is(.complete-programme,.site-information)>summary{
+  width:fit-content;min-height:var(--touch-target);align-content:center;
+  cursor:pointer;font-size:.875rem;color:var(--tx2);
+}
+:is(.complete-programme,.site-information)>summary:focus-visible{outline:2px solid var(--tx);outline-offset:4px}
+
 /* Shared by listing cards and the film page/dialog reading sections. */
 .card-body,.reading-wash{
   --reading-wash-spread:20px;
