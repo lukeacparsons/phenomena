@@ -57,7 +57,7 @@
           <li lang="es">“Busca comedias para mañana.”</li>
           <li lang="ca">“Mostra’m les sessions de dissabte.”</li>
         </ul>
-        <p>Search understands film titles, actors and other searchable credits, genres, languages, countries, cinemas, formats and date phrases in English, Spanish and Catalan. Language names also match production nationality: try <code>espanol IMAX</code>, <code>catala</code> or <code>French tomorrow</code>. An agent can compare returned film facts and ratings, then apply a search or open a particular screening for you to review.</p>
+        <p>Search understands titles, credits, dates and factual constraints in English, Spanish and Catalan. Audio, subtitles and production country are distinct: try <code>films in English</code>, <code>English subtitles</code> or <code>films from France</code>. Numeric ratings, running times, estimated finish times, published admission and fresh seat counts can be combined. An agent can compare sourced results, apply a search or open a screening for you to review.</p>
         <p>Results depend on the collected programme. Examples illustrate requests you can make; they do not promise that matching screenings are available. Ticket selection and payment take place with the cinema.</p>
       </section>
 
@@ -73,7 +73,7 @@
 
         <section class="guide-tool content-block" id="search_screenings" aria-labelledby="search-screenings-title">
           <div class="tool-heading"><h3 id="search-screenings-title"><code>search_screenings</code></h3><span class="tool-kind">Reads information</span></div>
-          <p>Find upcoming sessions without changing the page. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
+          <p>Search sessions using the local factual parser without changing the page or calling AI or geolocation. Upcoming sessions are the default; explicit historical queries use retained schedules. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>, plus optional <code>limit</code> and <code>offset</code>. An empty object searches all upcoming collected sessions, independently of the page’s current filters.</p>
           <pre><code>{ "query": "Villeneuve this weekend", "formats": ["IMAX"], "limit": 10 }</code></pre>
           <p>Results include <code>total_screenings</code>, <code>total_films</code>, the resolved date range, a shareable search URL and <code>next_offset</code>. Sessions are ordered by start time, then screening ID. Use the same filters with <code>next_offset</code> to fetch the next page; <code>null</code> means there is no next page.</p>
@@ -93,7 +93,7 @@
 
         <section class="guide-tool content-block" id="set_search" aria-labelledby="set-search-title">
           <div class="tool-heading"><h3 id="set-search-title"><code>set_search</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
-          <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Structured filters appear as removable chips. Returns the first 20 matching sessions.</p>
+          <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Structured filters appear as removable chips. Returns the first 20 local matches immediately. AI interpretation, nearby permission/geocoding and enriched results may complete later in the visible page; this response does not await them.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>. Omitted filters are cleared. Pass <code>{}</code> to reset everything. Pagination arguments apply only to <code>search_screenings</code>.</p>
           <pre><code>{ "query": "comedia mañana" }</code></pre>
         </section>
@@ -120,7 +120,7 @@
           </tbody>
         </table>
         <p><code>search_screenings</code> additionally accepts <code>limit</code> (an integer from 1 to 50, default 20) and <code>offset</code> (an integer from 0 to 100000, default 0).</p>
-        <p>Relative dates use Barcelona’s calendar. Weeks run Monday–Sunday; a bare weekday means its next occurrence, including today. “In 2 weeks” selects a date 14 days ahead; “next 2 weeks” covers today and the following 13 days. Exact film titles and quoted phrases are protected from date parsing. Producer-only credits are excluded from search; other collected credits remain searchable.</p>
+        <p>Relative dates use Barcelona’s calendar. Weeks run Monday–Sunday; a bare weekday means its next occurrence, including today. “In 2 weeks” selects a date 14 days ahead; “next 2 weeks” covers today and the following 13 days. Exact film titles and quoted phrases are protected from date parsing. Qualified credits such as <code>produced by Brad Pitt</code> are supported when sourced; acting, production and distribution credits are kept separate. Audio and subtitle conditions must match the same screening. Price and seat filters exclude missing or stale evidence; a total seat count does not prove adjacent places.</p>
       </section>
 
       <section class="guide-section" id="workflow" aria-labelledby="workflow-title">
@@ -147,7 +147,7 @@
           <div><dt>What a seat count means</dt><dd>The <code>kind</code> field distinguishes ordinary seats, provider-reported totals and area counts. Wheelchair and companion spaces remain separate where supplied. Counts do not establish adjacent seats or reserve tickets. Status can be <code>reported_available</code>, <code>sold_out</code>, <code>booking_closed</code> or <code>unknown</code>; zero is not interpreted identically across count types.</dd></div>
           <div><dt>Language and format</dt><dd>VOSE means original audio with Spanish subtitles, not necessarily English audio. Film-level original languages and a session’s confirmed audio language are different facts. Use the session’s format tags; venue equipment does not guarantee a particular performance format.</dd></div>
           <div><dt>Ratings</dt><dd>Ratings retain the publisher’s scale and observation date; critics’ and audience scores are separate. Unknown values remain unknown.</dd></div>
-          <div><dt>Current limits</dt><dd>The tools do not offer seat selection, reservations or payment. Time-of-day filters, rating-threshold filters, proximity searches and cinema/auditorium research are not part of the current tool inputs. Returned film facts and session times can still help an assistant compare options.</dd></div>
+          <div><dt>Current limits</dt><dd>The tools do not select seats, reserve or purchase tickets. <code>search_screenings</code> runs the local parser and returns sessions by start time, independently of the page’s AI interpretation and resolved location. Use <code>set_search</code> to initiate theme or nearby searches, sourced venue questions and multi-film outings, then review the visible page after it finishes. Its immediate response is not the enriched result. Finish times include a visible 20-minute allowance; distances are straight-line estimates. Unknown evidence is never inferred.</dd></div>
         </dl>
       </section>
 

@@ -76,9 +76,9 @@ class PreviewTests(unittest.TestCase):
         self.assertFalse(result["seat_data"]["purchase_open"])
         self.assertNotIn("is_sold_out", result["seat_data"])
 
-    def test_yelmo_seat_check_is_explicitly_unsupported(self):
+    def test_unknown_seat_provider_is_explicitly_unsupported(self):
         with self.assertRaises(NotImplementedError):
-            fetch_availability({"provider": "yelmo"})
+            fetch_availability({"provider": "unknown-provider"})
 
     @patch('curl_cffi.requests.get')
     def test_unallocated_requires_explicit_flag_and_matching_screening(self, get):

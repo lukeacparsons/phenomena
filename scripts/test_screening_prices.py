@@ -106,7 +106,7 @@ class ScreeningPriceTests(unittest.TestCase):
         price=data['films'][0]['sessions'][0]['price_data']
         self.assertEqual(price['checked_at'],now.isoformat())
         self.assertEqual(price['source_url'],'https://cinesfilmax.com/film')
-        self.assertNotIn('price_data',compact['films'][0]['sessions'][0])
+        self.assertEqual(compact['films'][0]['sessions'][0]['price_data'],price)
         self.assertNotIn('price_eur',compact['films'][0]['sessions'][0])
         self.assertIn('según tarifa',display_price(row,'es'))
 

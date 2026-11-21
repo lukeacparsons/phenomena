@@ -35,3 +35,12 @@ test('audio and cinema restrictions apply together to the same screening in ever
  const rows=queryFilms(programme,{...emptySearch(),query:'Films in Catalan'},{index,now});
  assert.deepEqual(rows.map(f=>f.id),['catalan']);
 });
+
+test('filter chips distinguish a theatre, a known chain and an unknown operator',async()=>{
+ const {emptyIntent,intentChips}=await import('../static/search-intent.js');
+ const p={cinemas:[{id:'zumzeig',short:'Zumzeig'},{id:'phenomena',short:'Phenomena Experience'},{id:'balmes',short:'Balmes'}],films:[{sessions:[{cinema_id:'zumzeig',provider:'zumzeig'},{cinema_id:'phenomena',provider:'phenomena'},{cinema_id:'balmes',provider:'mooby'}]}]};
+ for(const [provider,label] of [['zumzeig','Theatre Zumzeig'],['phenomena','Theatre Phenomena Experience'],['mooby','Cinema chain Mooby'],['unknown','Cinema operator unknown']]){
+  assert.equal(intentChips({...emptyIntent(),conditions:[{field:'provider',op:'eq',value:provider}]},'en',p)[0].label,label);
+ }
+ assert.equal(intentChips({...emptyIntent(),conditions:[{field:'cinema',op:'eq',value:'balmes'}]},'en',p)[0].label,'Theatre Balmes');
+});

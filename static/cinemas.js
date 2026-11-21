@@ -182,6 +182,16 @@ function availabilitySnapshot(){
   return {sessions:seats,errors:seatErrors,failed:availabilityFailed,intervalSeconds:availabilityInterval,supportedProviders};
 }
 
+function refreshLiveSearch(){
+  if(!data||!state.query||document.hidden||editingSearch()||searchTimer||searchFrame)return false;
+  const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
+  const liveFields=new Set(['starts_within','seats_available','seats_together','wheelchair_seats','occupancy_percent','booking_open']);
+  const conditions=[...plan.conditions,...(plan.alternatives||[]).flat(),...(plan.preferences||[]).flatMap(p=>p.conditions)];
+  if(plan.sort!=='seats'&&!conditions.some(c=>liveFields.has(c.field)))return false;
+  scheduleSearchWork(()=>refreshResults({cooperative:true}));
+  return true;
+}
+
 function closeFilm({animate=false}={}){
   if(animate){pendingLink=null;closeFilmDialog($('filmDialog'));return;}
   activeFilm=null;activeSession=null;pendingLink=null;activeView='film';
@@ -540,7 +550,7 @@ async function loadAvailability(){
     availabilityFailed=false;
   }catch{availabilityFailed=true;}
   finally{
-    availabilityLoading=false;updateSeatDisplays();
+    availabilityLoading=false;updateSeatDisplays();refreshLiveSearch();
     // Check active refreshes sooner; idle snapshots follow the source's cadence.
     const delay=availabilityFailed?60000:availabilityRefreshing?30000:Math.max(30000,Math.min(availabilityInterval*1000,15*60*1000));
     availabilityDue=Date.now()+delay;
@@ -834,7 +844,7 @@ void programmeLoader.readCache().then(cached=>{
   }
 }).catch(()=>{});
 markStartedShowtimes();
-setInterval(()=>{if(!document.hidden)markStartedShowtimes();},15000);
+setInterval(()=>{if(!document.hidden&&!refreshLiveSearch())markStartedShowtimes();},15000);
 // Deferred decoration (static/theme.js) waits for this first attempt.
 window.vobarnaProgramme=load();loadAvailability();
 setInterval(()=>{if(!document.hidden)load();},5*60*1000);

@@ -39,7 +39,7 @@ class CompleteProgrammeTests(unittest.TestCase):
                 html = page['html'][lang]
                 self.assertLessEqual(len(html.encode()), 6000)
                 parser = ProgrammeHTML(); parser.feed(html)
-                self.assertEqual(parser.disclosures, [])
+                self.assertEqual([d.get('class') for d in parser.disclosures], ['programme-index', 'programme-index'])
                 sessions.extend(s['href'] for s in parser.sessions)
             self.assertEqual(len(sessions), 451)
             self.assertEqual(len(set(sessions)), 451)

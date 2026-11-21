@@ -306,13 +306,40 @@ export function matchesConditions(film,session,conditions,cinema,context={}){
   });
 }
 
+// Provider IDs identify collection feeds, which can represent a chain or one
+// theatre. Keep known chains explicit: a snapshot may contain only one branch.
+const cinemaChainNames=new Map(Object.entries({mooby:'Mooby',cinesa:'Cinesa',yelmo:'Yelmo',kinepolis:'Kinépolis',renoir:'Renoir',verdi:'Verdi'}));
+function cinemaChipValue(field,value,programme){
+  if(field==='cinema'){
+    const venue=programme?.cinemas.find(c=>c.id===value);
+    return {field:'cinema',value:venue?.short||venue?.name||value};
+  }
+  const provider=fold(value),chain=cinemaChainNames.get(provider);
+  if(chain)return {field:'provider',value:chain};
+  const ids=new Set(programme?.films.flatMap(f=>f.sessions.filter(s=>fold(s.provider)===provider).map(s=>s.cinema_id))||[]);
+  const venues=programme?.cinemas.filter(c=>ids.has(c.id))||[];
+  if(!venues.length){
+    const venue=programme?.cinemas.find(c=>[c.id,c.short,c.name].some(name=>name&&fold(name)===provider));
+    if(venue)venues.push(venue);
+  }
+  if(venues.length)return {field:'cinema',value:venues.map(c=>c.short||c.name||c.id).join(' / ')};
+  return {field:'operator',value};
+}
+
 export function intentChips(plan,language='en',programme){
   const extraWords={en:{finish_time:'Estimated finish',starts_within:'Starts within',distance_km:'Distance',price_eur:'Admission',seats_available:'Available places',seats_together:'Adjacent seats',wheelchair_seats:'Wheelchair places',occupancy_percent:'Occupied',age_max:'Age classification',has_subtitles:'Subtitles',booking_open:'Booking open',adaptation:'Book adaptation',sequel:'Sequel',remake:'Remake',adaptation_kind:'Adapted from',silent:'Silent film',audio_only:'Only audio',director:'Director',actor:'Actor',writer:'Writer',composer:'Composer',cinematographer:'Cinematographer',film_id:'Film',keyword:'Matching',event:'Event',edition:'Edition',award:'Award won',nomination:'Nominated for',content_warning:'Content',venue_feature:'Room facility',alternatives:'Either',preferences:'Prefer',sort:'Order',scope:'Programme',itinerary:'Film outing',yes:'yes',no:'no'},es:{finish_time:'Final estimado',starts_within:'Empieza en',distance_km:'Distancia',price_eur:'Entrada',seats_available:'Plazas disponibles',seats_together:'Asientos contiguos',wheelchair_seats:'Plazas para silla de ruedas',occupancy_percent:'Ocupación',age_max:'Clasificación por edad',has_subtitles:'Subtítulos',booking_open:'Venta abierta',adaptation:'Adaptación de libro',sequel:'Secuela',remake:'Remake',adaptation_kind:'Adaptada de',silent:'Cine mudo',audio_only:'Único audio',director:'Dirección',actor:'Intérprete',writer:'Guion',composer:'Música',cinematographer:'Fotografía',film_id:'Película',keyword:'Coincide',event:'Evento',edition:'Edición',award:'Premio ganado',nomination:'Nominada a',content_warning:'Contenido',venue_feature:'Instalación de la sala',alternatives:'Una opción',preferences:'Preferencia',sort:'Orden',scope:'Programación',itinerary:'Plan de cine',yes:'sí',no:'no'},ca:{finish_time:'Final estimat',starts_within:'Comença en',distance_km:'Distància',price_eur:'Entrada',seats_available:'Places disponibles',seats_together:'Seients contigus',wheelchair_seats:'Places per a cadira de rodes',occupancy_percent:'Ocupació',age_max:'Classificació per edat',has_subtitles:'Subtítols',booking_open:'Venda oberta',adaptation:'Adaptació de llibre',sequel:'Seqüela',remake:'Remake',adaptation_kind:'Adaptada de',silent:'Cinema mut',audio_only:'Únic àudio',director:'Direcció',actor:'Intèrpret',writer:'Guió',composer:'Música',cinematographer:'Fotografia',film_id:'Pel·lícula',keyword:'Coincideix',event:'Esdeveniment',edition:'Edició',award:'Premi guanyat',nomination:'Nominada a',content_warning:'Contingut',venue_feature:'Instal·lació de la sala',alternatives:'Una opció',preferences:'Preferència',sort:'Ordre',scope:'Programació',itinerary:'Pla de cinema',yes:'sí',no:'no'}}[language]||{};
-  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Audio',city:'City',subtitles:'Subtitles',non_english_audio:'Non-English dialogue',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Audio',city:'Ciudad',subtitles:'Subtítulos',non_english_audio:'Diálogo en otros idiomas',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Àudio',city:'Ciutat',subtitles:'Subtítols',non_english_audio:'Diàleg en altres idiomes',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Audio',city:'City',subtitles:'Subtitles',non_english_audio:'Non-English dialogue',provider:'Cinema chain',cinema:'Theatre',operator:'Cinema operator',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Audio',city:'Ciudad',subtitles:'Subtítulos',non_english_audio:'Diálogo en otros idiomas',provider:'Cadena',cinema:'Cine',operator:'Operador',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Àudio',city:'Ciutat',subtitles:'Subtítols',non_english_audio:'Diàleg en altres idiomes',provider:'Cadena',cinema:'Cinema',operator:'Operador',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');
-    if(c.field==='cinema')value=programme?.cinemas.find(v=>v.id===c.value)?.short||value;
+    if(['provider','cinema'].includes(c.field)){
+      const values=c.value.split('|').map(value=>cinemaChipValue(c.field,value,programme));
+      const sameKind=values.every(v=>v.field===values[0].field);
+      const label=sameKind
+        ?[words[values[0].field],symbols[c.op],values.map(v=>v.value).join(' / ')].filter(Boolean).join(' ')
+        :values.map(v=>[words[v.field],symbols[c.op],v.value].filter(Boolean).join(' ')).join(' / ');
+      return {id:conditionId(c),label};
+    }
     if(c.field==='film_id')value=programme?.films.find(f=>f.id===c.value)?.title||value;
     if(c.field==='date')value=new Intl.DateTimeFormat(language,{timeZone:'Europe/Madrid',day:'numeric',month:'short',year:'numeric'}).format(new Date(c.value+'T12:00:00Z'));
     if(['start_time','finish_time'].includes(c.field))value=String(Math.floor(Number(c.value)/60)).padStart(2,'0')+':'+String(Number(c.value)%60).padStart(2,'0');

@@ -118,6 +118,46 @@ COPY = {
 }
 
 
+EXPANDED_EXAMPLES = {
+    'en': [
+        ('Fit your available time', 'Finish times add the running time and a 20-minute allowance to the advertised start. Events can take longer.', ['finishes before 22:00', 'starts in the next 45 minutes']),
+        ('Alternatives and preferences', 'Each alternative must match one screening. Preferences put your preferred choices first.', ['Friday at Verdi or Saturday at Phenomena', 'English preferred, Spanish acceptable']),
+        ('Budget and seats', 'Budget filters use comparable published admission before unconfirmed fees. Seat counts must be recent. A total count cannot confirm seats together.', ['under €10', 'free screenings', 'not sold out']),
+        ('Distance limits', 'A distance limit uses your location and measures a straight line. It is not a walking or driving time.', ['within 2 km']),
+        ('Events, credits and editions', 'These searches require published event labels or sourced film credits. Missing evidence is explained.', ['director Q&A', 'restored version', 'Palme d’Or winners', 'other films by the director of Amélie']),
+        ('Cinema questions and past screenings', 'Venue answers include sources and remaining checks. Historical searches cover retained schedules only.', ['Can I bring a backpack to Verdi?', 'what played yesterday']),
+        ('Plan a film outing', 'Find two or three different films at one cinema with time between them. Finish times remain estimates.', ['two films Sunday with a dinner break']),
+    ],
+    'es': [
+        ('Encajar en tu horario', 'El final suma la duración y un margen de 20 minutos a la hora anunciada. Los eventos pueden durar más.', ['termina antes de las 22:00', 'dentro de 45 minutos']),
+        ('Alternativas y preferencias', 'Cada alternativa debe cumplirse en una misma sesión. Las preferencias ordenan las opciones.', ['viernes en Verdi o sábado en Phenomena', 'prefiero inglés pero español está bien']),
+        ('Presupuesto y plazas', 'Se comparan precios publicados de entrada antes de gastos no confirmados. Las plazas deben tener una observación reciente; un total no confirma asientos juntos.', ['menos de 10 euros', 'entrada gratuita', 'con entradas disponibles']),
+        ('Límite de distancia', 'La distancia usa tu ubicación y se mide en línea recta. No es tiempo de viaje.', ['a menos de 2 km']),
+        ('Eventos, créditos y ediciones', 'Estas búsquedas requieren datos publicados de la sesión o créditos con fuentes.', ['coloquio', 'restaurada', 'ganadoras de la Palma de Oro']),
+        ('Preguntas del cine e historial', 'Las respuestas incluyen fuentes y comprobaciones pendientes. El historial solo contiene horarios conservados.', ['¿Puedo llevar una mochila a Verdi?', 'qué proyectaron ayer']),
+        ('Planear una salida', 'Busca dos o tres películas distintas en un mismo cine, con una pausa entre ellas. El final es estimado.', ['dos películas domingo con una pausa para cenar']),
+    ],
+    'ca': [
+        ('Encaixar en el teu horari', 'El final suma la durada i un marge de 20 minuts a l’hora anunciada. Els esdeveniments poden durar més.', ['acaba abans de les 22:00', 'en els propers 45 minuts']),
+        ('Alternatives i preferències', 'Cada alternativa s’ha de complir en una mateixa sessió. Les preferències ordenen les opcions.', ['divendres a Verdi o dissabte a Phenomena', 'preferiblement anglès però castellà també va bé']),
+        ('Pressupost i places', 'Es comparen preus publicats d’entrada abans de despeses no confirmades. Les places han de tenir una observació recent; un total no confirma seients junts.', ['menys de 10 euros', 'entrada gratuïta', 'amb entrades disponibles']),
+        ('Límit de distància', 'La distància fa servir la teva ubicació i es mesura en línia recta. No és temps de viatge.', ['a menys de 2 km']),
+        ('Esdeveniments, crèdits i edicions', 'Aquestes cerques requereixen dades publicades de la sessió o crèdits amb fonts.', ['col·loqui', 'restaurada', 'guanyadores de la Palma d’Or']),
+        ('Preguntes del cinema i historial', 'Les respostes inclouen fonts i comprovacions pendents. L’historial només conté horaris conservats.', ['Puc portar una motxilla a Verdi?', 'què es va projectar ahir']),
+        ('Planificar una sortida', 'Cerca dues o tres pel·lícules diferents en un mateix cinema, amb una pausa entre elles. El final és estimat.', ['dues pel·lícules diumenge amb una pausa per sopar']),
+    ],
+}
+for _language, _examples in EXPANDED_EXAMPLES.items():
+    COPY[_language]['examples'].extend(_examples)
+
+
+SUGGESTION_HELP = {
+    'en': 'Select a suggested search below the box, or use Randomise for more ideas. Suggestions follow the site language and your browser language preferences. As you type, choose a menu suggestion or pause briefly to search automatically; Enter searches immediately. The × clears the query while keeping your selected dates, and Reset clears the filters.',
+    'es': 'Selecciona una búsqueda sugerida debajo del cuadro o usa el botón aleatorio para ver más ideas. Las sugerencias siguen el idioma del sitio y las preferencias de idioma del navegador. Mientras escribes, elige una opción del menú o haz una breve pausa para buscar automáticamente; Intro busca al momento. La × borra la consulta conservando las fechas seleccionadas y Restablecer borra los filtros.',
+    'ca': 'Selecciona una cerca suggerida sota el quadre o fes servir el botó aleatori per veure més idees. Els suggeriments segueixen l’idioma del lloc i les preferències d’idioma del navegador. Mentre escrius, tria una opció del menú o fes una pausa breu per cercar automàticament; Retorn cerca al moment. La × esborra la consulta conservant les dates seleccionades i Reinicia esborra els filtres.',
+}
+
+
 def render(lang):
     c = COPY[lang]
 
@@ -125,7 +165,7 @@ def render(lang):
         url = f'/{lang}/?' + urlencode({'q': query})
         return f'<a class="{css}" href="{escape(url, quote=True)}">{escape(label or query)}</a>'
 
-    body = f'<article class="search-guide"><div class="search-guide-intro reading-wash"><h1>{escape(c["title"])}</h1><p class="site-intro">{escape(c["intro"])}</p></div>'
+    body = f'<article class="search-guide"><div class="search-guide-intro reading-wash"><h1>{escape(c["title"])}</h1><p class="site-intro">{escape(c["intro"])}</p><p>{escape(SUGGESTION_HELP[lang])}</p></div>'
     body += f'<section class="search-guide-feature reading-wash" aria-labelledby="search-plan"><h2 id="search-plan">{escape(c["feature_title"])}</h2>'
     body += query_link(c['feature_query']) + f'<p>{escape(c["feature_body"])}</p>'
     body += query_link(c['feature_query'], c['try'], 'text-action') + '</section>'

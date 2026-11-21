@@ -80,7 +80,7 @@ export function createCinemaService({getProgramme,getAvailability,getView,applyS
     if(!Number.isInteger(limit)||limit<1||limit>50)throw inputError('limit must be an integer between 1 and 50.');
     if(!Number.isInteger(offset)||offset<0||offset>100000)throw inputError('offset must be an integer between 0 and 100000.');
     const data=programme(),filters=validateSearch(criteria,data),time=now();
-    const films=queryFilms(data,filters,{now:time});
+    const films=queryFilms(data,filters,{now:time,availability:getAvailability()});
     const rows=films.flatMap(film=>film.sessions.map(session=>({film,session})))
       .sort((a,b)=>Date.parse(a.session.starts_at)-Date.parse(b.session.starts_at)||a.session.id.localeCompare(b.session.id));
     return {ok:true,filters,resolved_date_range:resolvedSearch(data,filters,time).range,timezone:'Europe/Madrid',

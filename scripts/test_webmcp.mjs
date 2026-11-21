@@ -256,3 +256,15 @@ test('registration is optional, annotates actions, rolls back failures and clean
   await registerWebMCP(registry,app.service,{signal:lifecycle.signal});
   lifecycle.abort();assert.equal(registered.size,0);
 });
+
+
+test('search tools use the latest shared seat snapshot for factual availability filters',()=>{
+ const app=setup();
+ app.availability.sessions.set('imax',{kind:'ordinary',available:4,checked_at:new Date(NOW).toISOString()});
+ let result=app.service.search_screenings({query:'at least 3 seats'});
+ assert.deepEqual(result.results.map(r=>r.screening_id),['imax']);
+ app.availability.sessions.set('imax',{kind:'ordinary',available:0,checked_at:new Date(NOW).toISOString()});
+ assert.equal(app.service.search_screenings({query:'at least 3 seats'}).total_screenings,0);
+ app.availability.sessions.set('imax',{kind:'ordinary',available:4,checked_at:new Date(NOW-3600000).toISOString()});
+ assert.equal(app.service.search_screenings({query:'at least 3 seats'}).total_screenings,0);
+});
