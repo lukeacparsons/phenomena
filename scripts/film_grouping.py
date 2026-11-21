@@ -108,8 +108,8 @@ def merge(films, imdb=None):
         return result
     def quality(film):
         return (bool(film.get("title_provenance")), bool(film.get("original_title")),
-                bool(film.get("details")), bool(film.get("ratings")), not film["title"].isupper(),
-                film["id"] == "imdb:" + (imdb or ""), film["id"])
+                bool(film.get("details")), bool(film.get("ratings")),
+                film["id"] == "imdb:" + (imdb or ""), not film["title"].isupper(), film["id"])
     ordered = sorted(films, key=quality, reverse=True)
     result = dict(ordered[0])
     for film in ordered[1:]:

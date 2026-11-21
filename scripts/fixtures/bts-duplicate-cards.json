@@ -1,0 +1,389 @@
+{
+  "generated_at": "2026-11-19T21:59:12.026493+00:00",
+  "cinemas": [],
+  "films": [
+    {
+      "id": "cinesa:HO00003917",
+      "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG",
+      "titles": [
+        "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG"
+      ],
+      "merged_ids": [],
+      "runtime_minutes": 195,
+      "poster_url": "/preview-data/posters/23e2d429edb0fec12e2e372166b7be9e50fbe40b667b0361c61426ea3d342432.jpg",
+      "poster_width": 1296,
+      "poster_height": 1920,
+      "details": {
+        "languages": []
+      },
+      "ratings": {
+        "imdb": {
+          "url": "https://www.imdb.com/find/?s=tt&q=BTS%20WORLD%20TOUR%20%27ARIRANG%27%20IN%20KAOHSIUNG",
+          "score": null,
+          "status": "unmatched"
+        }
+      },
+      "sessions": [
+        {
+          "id": "cinesa:032-60830",
+          "provider": "cinesa",
+          "film_id": "HO00003917",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG",
+          "cinema_id": "cinesa-diagonal-mar",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://www.cinesa.es/compra/butacas/?showtimeId=032-60830",
+          "source_url": "https://www.cinesa.es/Cines/diagonal-mar/",
+          "formats": [],
+          "version": "VO"
+        },
+        {
+          "id": "cinesa:032-60831",
+          "provider": "cinesa",
+          "film_id": "HO00003917",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG",
+          "cinema_id": "cinesa-diagonal-mar",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "date": "2026-11-21",
+          "time": "16:00",
+          "runtime_minutes": 195,
+          "booking_url": "https://www.cinesa.es/compra/butacas/?showtimeId=032-60831",
+          "source_url": "https://www.cinesa.es/Cines/diagonal-mar/",
+          "formats": [],
+          "version": "VO"
+        }
+      ]
+    },
+    {
+      "id": "imdb:tt50486016",
+      "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG: LIVE VIEWING",
+      "titles": [
+        "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG: LIVE VIEWING",
+        "BTS WORLD TOUR ARIRANG IN KAOHSIUNG: LIVE VIEWING"
+      ],
+      "merged_ids": [
+        "yelmo:7380"
+      ],
+      "imdb_id": "tt50486016",
+      "runtime_minutes": 195,
+      "poster_url": "/preview-data/posters/d2cd649680f37413b21cf0c686992490d6b2bf3354fa3f8f25316cf88b0ed892.webp",
+      "poster_width": 490,
+      "poster_height": 735,
+      "details": {
+        "languages": []
+      },
+      "ratings": {
+        "imdb": {
+          "url": "https://www.imdb.com/title/tt50486016/",
+          "status": "unrated",
+          "score": null,
+          "checked_at": "2026-11-19T14:48:14.522299+00:00",
+          "source_url": "https://datasets.imdbws.com/title.ratings.tsv.gz"
+        }
+      },
+      "sessions": [
+        {
+          "id": "filmax:222336",
+          "provider": "filmax",
+          "film_id": "tt50486016",
+          "imdb_id": "tt50486016",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "filmax-gran-via",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://filmax.admit-one.eu/?p=tickets&perfCode=222336",
+          "source_url": "https://cinesfilmax.com/bts-world-tour-arirang-in-kaohsiung-live-viewing",
+          "formats": [],
+          "version": "VOSI"
+        },
+        {
+          "id": "mooby:24:193881",
+          "provider": "mooby",
+          "film_id": "tt50486016",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "mooby-arenas",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "booking_url": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=193881&language=esp&theatre=24",
+          "source_url": "https://www.moobycinemas.com/aribau",
+          "formats": [],
+          "version": "VOSI"
+        },
+        {
+          "id": "yelmo:1350:48165",
+          "provider": "yelmo",
+          "film_id": "7380",
+          "title": "BTS WORLD TOUR ARIRANG IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=48165",
+          "source_url": "https://yelmocines.es/cartelera/barcelona/westfield-la-maquinista",
+          "formats": [
+            "PREMIUM"
+          ],
+          "version": "VOSI"
+        },
+        {
+          "id": "yelmo:784:25737",
+          "provider": "yelmo",
+          "film_id": "7380",
+          "title": "BTS WORLD TOUR ARIRANG IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "yelmo-sant-cugat",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=784&showtimeVistaId=25737",
+          "source_url": "https://yelmocines.es/cartelera/barcelona/premium-sant-cugat",
+          "formats": [
+            "PREMIUM"
+          ],
+          "version": "VOSI"
+        },
+        {
+          "id": "mooby:24:193882",
+          "provider": "mooby",
+          "film_id": "tt50486016",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "mooby-arenas",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "date": "2026-11-21",
+          "time": "16:00",
+          "booking_url": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=193882&language=esp&theatre=24",
+          "source_url": "https://www.moobycinemas.com/aribau",
+          "formats": [],
+          "version": "VOSI"
+        },
+        {
+          "id": "yelmo:1350:48166",
+          "provider": "yelmo",
+          "film_id": "7380",
+          "title": "BTS WORLD TOUR ARIRANG IN KAOHSIUNG: LIVE VIEWING",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "date": "2026-11-21",
+          "time": "16:00",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=48166",
+          "source_url": "https://yelmocines.es/cartelera/barcelona/westfield-la-maquinista",
+          "formats": [
+            "PREMIUM"
+          ],
+          "version": "VOSI"
+        }
+      ]
+    },
+    {
+      "id": "kinepolis:HO00006771",
+      "title": "BTS World Tour Arirang in Kaohsiu",
+      "titles": [
+        "BTS World Tour Arirang in Kaohsiu"
+      ],
+      "merged_ids": [],
+      "runtime_minutes": 195,
+      "poster_url": "/preview-data/posters/4679ebd8d45a543f52a25f8204bbcf6583def3f39604de326b408898b3f33087.avif",
+      "poster_width": 440,
+      "poster_height": 660,
+      "details": {
+        "languages": []
+      },
+      "ratings": {
+        "imdb": {
+          "url": "https://www.imdb.com/find/?s=tt&q=BTS%20World%20Tour%20Arirang%20in%20Kaohsiu",
+          "score": null,
+          "status": "unmatched"
+        }
+      },
+      "sessions": [
+        {
+          "id": "kinepolis:PFULL-257438",
+          "provider": "kinepolis",
+          "film_id": "HO00006771",
+          "imdb_id": "TMT4963",
+          "title": "BTS World Tour Arirang in Kaohsiu",
+          "cinema_id": "kinepolis-splau",
+          "starts_at": "2026-11-21T11:45:00+01:00",
+          "date": "2026-11-21",
+          "time": "11:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://kinepolis.es/direct-vista-redirect/257438/0/PFULL/0",
+          "source_url": "https://kinepolis.es/movie-formats/laser-ultra",
+          "formats": [],
+          "version": "VO"
+        },
+        {
+          "id": "kinepolis:PFULL-257439",
+          "provider": "kinepolis",
+          "film_id": "HO00006771",
+          "imdb_id": "TMT4963",
+          "title": "BTS World Tour Arirang in Kaohsiu",
+          "cinema_id": "kinepolis-splau",
+          "starts_at": "2026-11-21T16:00:00+01:00",
+          "date": "2026-11-21",
+          "time": "16:00",
+          "runtime_minutes": 195,
+          "booking_url": "https://kinepolis.es/direct-vista-redirect/257439/0/PFULL/0",
+          "source_url": "https://kinepolis.es/movie-formats/laser-ultra",
+          "formats": [],
+          "version": "VO"
+        }
+      ]
+    },
+    {
+      "id": "imdb:tt50488328",
+      "title": "BTS World Tour 'arirang' in Jakarta: Live Viewing",
+      "titles": [
+        "BTS World Tour 'arirang' in Jakarta: Live Viewing",
+        "BTS WORLD TOUR 'ARIRANG' IN JAKARTA: LIVE VIEWING",
+        "BTS WORLD TOUR ARIRANG IN JAKARTA: LIVE VIEWING"
+      ],
+      "merged_ids": [
+        "yelmo:7381"
+      ],
+      "imdb_id": "tt50488328",
+      "runtime_minutes": 195,
+      "poster_url": "/preview-data/posters/ab0934fe7f5fde6fc92e4933e532a4b4af98339de38b919fdb3744c28396ba1a.webp",
+      "poster_width": 490,
+      "poster_height": 735,
+      "details": {
+        "languages": []
+      },
+      "ratings": {
+        "imdb": {
+          "url": "https://www.imdb.com/title/tt50488328/",
+          "status": "unrated",
+          "score": null,
+          "checked_at": "2026-11-19T14:48:14.522299+00:00",
+          "source_url": "https://datasets.imdbws.com/title.ratings.tsv.gz"
+        }
+      },
+      "sessions": [
+        {
+          "id": "filmax:222337",
+          "provider": "filmax",
+          "film_id": "tt50488328",
+          "imdb_id": "tt50488328",
+          "title": "BTS World Tour 'arirang' in Jakarta: Live Viewing",
+          "cinema_id": "filmax-gran-via",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://filmax.admit-one.eu/?p=tickets&perfCode=222337",
+          "source_url": "https://cinesfilmax.com/bts-world-tour-arirang-in-jakarta-live-viewing",
+          "formats": [],
+          "version": "VOSI"
+        },
+        {
+          "id": "mooby:24:193883",
+          "provider": "mooby",
+          "film_id": "tt50488328",
+          "title": "BTS World Tour 'arirang' in Jakarta: Live Viewing",
+          "cinema_id": "mooby-arenas",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "booking_url": "https://moobycinemas-arenas.admit-one.eu/?p=tickets&perfCode=193883&language=esp&theatre=24",
+          "source_url": "https://www.moobycinemas.com/aribau",
+          "formats": [],
+          "version": "VOSI"
+        },
+        {
+          "id": "yelmo:1350:48183",
+          "provider": "yelmo",
+          "film_id": "7381",
+          "title": "BTS WORLD TOUR ARIRANG IN JAKARTA: LIVE VIEWING",
+          "cinema_id": "yelmo-maquinista",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=1350&showtimeVistaId=48183",
+          "source_url": "https://yelmocines.es/cartelera/barcelona/westfield-la-maquinista",
+          "formats": [
+            "PREMIUM"
+          ],
+          "version": "VOSI"
+        },
+        {
+          "id": "yelmo:784:25739",
+          "provider": "yelmo",
+          "film_id": "7381",
+          "title": "BTS WORLD TOUR ARIRANG IN JAKARTA: LIVE VIEWING",
+          "cinema_id": "yelmo-sant-cugat",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "booking_url": "https://compra.yelmocines.es/?cinemaVistaId=784&showtimeVistaId=25739",
+          "source_url": "https://yelmocines.es/cartelera/barcelona/premium-sant-cugat",
+          "formats": [
+            "PREMIUM"
+          ],
+          "version": "VOSI"
+        }
+      ]
+    },
+    {
+      "id": "kinepolis:HO00006770",
+      "title": "BTS World Tour Arirang in Jakarta",
+      "titles": [
+        "BTS World Tour Arirang in Jakarta",
+        "BTS WORLD TOUR 'ARIRANG' IN JAKARTA"
+      ],
+      "merged_ids": [
+        "cinesa:HO00003918"
+      ],
+      "runtime_minutes": 195,
+      "poster_url": "/preview-data/posters/a6162f14ce04cf77159fbca87d8325ab60013c1d1cd6ac41e2e37d1f2247238a.jpg",
+      "poster_width": 1296,
+      "poster_height": 1920,
+      "details": {
+        "languages": []
+      },
+      "ratings": {
+        "imdb": {
+          "url": "https://www.imdb.com/find/?s=tt&q=BTS%20World%20Tour%20Arirang%20in%20Jakarta",
+          "score": null,
+          "status": "unmatched"
+        }
+      },
+      "sessions": [
+        {
+          "id": "cinesa:032-61149",
+          "provider": "cinesa",
+          "film_id": "HO00003918",
+          "title": "BTS WORLD TOUR 'ARIRANG' IN JAKARTA",
+          "cinema_id": "cinesa-diagonal-mar",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://www.cinesa.es/compra/butacas/?showtimeId=032-61149",
+          "source_url": "https://www.cinesa.es/Cines/diagonal-mar/",
+          "formats": [],
+          "version": "VO"
+        },
+        {
+          "id": "kinepolis:PFULL-257440",
+          "provider": "kinepolis",
+          "film_id": "HO00006770",
+          "imdb_id": "TMT4964",
+          "title": "BTS World Tour Arirang in Jakarta",
+          "cinema_id": "kinepolis-splau",
+          "starts_at": "2026-12-29T12:45:00+01:00",
+          "date": "2026-12-29",
+          "time": "12:45",
+          "runtime_minutes": 195,
+          "booking_url": "https://kinepolis.es/direct-vista-redirect/257440/0/PFULL/0",
+          "source_url": "https://kinepolis.es/movie-formats/laser-ultra",
+          "formats": [],
+          "version": "VO"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,32 @@
 {
+  "cinesa:HO00003917": {
+    "imdb_id": "tt50486016",
+    "source_url": "https://www.cinesa.es/Cines/diagonal-mar/",
+    "source_urls": ["https://cinesfilmax.com/bts-world-tour-arirang-in-kaohsiung-live-viewing"],
+    "reviewed_at": "2026-11-20",
+    "note": "BTS Arirang in Kaohsiung. Collected Cinesa title, 195-minute runtime and 21 November 2026 11:45 screening agree with Filmax's exact IMDb-linked listing. Cinesa omits the Live Viewing suffix. Keep separate from Jakarta."
+  },
+  "kinepolis:HO00006771": {
+    "imdb_id": "tt50486016",
+    "source_url": "https://kinepolis.es/movie-formats/laser-ultra",
+    "source_urls": ["https://cinesfilmax.com/bts-world-tour-arirang-in-kaohsiung-live-viewing"],
+    "reviewed_at": "2026-11-20",
+    "note": "BTS Arirang in Kaohsiung. Collected Kinepolis title is truncated to Kaohsiu; its 195-minute runtime and 21 November 2026 11:45 screening agree with Filmax's exact IMDb-linked listing. The TMT4963 source code is not an IMDb ID. Keep separate from Jakarta."
+  },
+  "cinesa:HO00003918": {
+    "imdb_id": "tt50488328",
+    "source_url": "https://www.cinesa.es/Cines/diagonal-mar/",
+    "source_urls": ["https://cinesfilmax.com/bts-world-tour-arirang-in-jakarta-live-viewing"],
+    "reviewed_at": "2026-11-20",
+    "note": "BTS Arirang in Jakarta. Collected Cinesa title, 195-minute runtime and 29 December 2026 12:45 screening agree with Filmax's exact IMDb-linked listing. Cinesa omits the Live Viewing suffix. Keep separate from Kaohsiung."
+  },
+  "kinepolis:HO00006770": {
+    "imdb_id": "tt50488328",
+    "source_url": "https://kinepolis.es/movie-formats/laser-ultra",
+    "source_urls": ["https://cinesfilmax.com/bts-world-tour-arirang-in-jakarta-live-viewing"],
+    "reviewed_at": "2026-11-20",
+    "note": "BTS Arirang in Jakarta. Collected Kinepolis title, 195-minute runtime and 29 December 2026 12:45 screening agree with Filmax's exact IMDb-linked listing. The TMT4964 source code is not an IMDb ID. Keep separate from Kaohsiung."
+  },
   "phenomena:1399": {
     "imdb_id": "tt0162346",
     "source_url": "https://phenomena-experience.com/index?pag=ficha&evento=1399",

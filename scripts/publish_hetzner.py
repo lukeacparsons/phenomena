@@ -13,6 +13,8 @@ import tempfile
 import time
 import fcntl
 
+from film_duplicate_audit import validate_publication_films
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -25,6 +27,10 @@ def publish(config):
     with tempfile.TemporaryDirectory(prefix='vobarna-release-') as temporary:
         snapshot = Path(temporary) / 'release'
         shutil.copytree(source, snapshot, copy_function=os.link)
+        # Also guard manual uploads and releases built before the gate existed.
+        # Never edit an artifact here: its HTML, JSON and routes must agree.
+        validate_publication_films(json.loads((snapshot / 'public/programme.json').read_text()),
+                                   state.parent / 'film-duplicates.json')
         files = {str(p.relative_to(snapshot)): hashlib.sha256(p.read_bytes()).hexdigest()
                  for p in sorted(snapshot.rglob('*')) if p.is_file()}
         digest = hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()

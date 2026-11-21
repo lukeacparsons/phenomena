@@ -28,6 +28,7 @@ from site_research import ResearchTranslations
 from site_identity import LOCALES, SECTIONS, new_registry, path_for, resolve, update_registry
 from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images
 from browser_programme import browser_programme
+from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
 from discovery_content import PATHS as DISCOVERY_PATHS, COPY as DISCOVERY_COPY, select_sessions, weekend_dates
 from discovery_guides import SECTIONS as DISCOVERY_SECTIONS, SOURCES as DISCOVERY_SOURCES
@@ -886,6 +887,7 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
         fcntl.flock(lock, fcntl.LOCK_EX)
         programme = read_json(programme_path)
         validate_programme(programme)
+        programme = validate_publication_films(programme, output / 'film-duplicates.json', apply_confirmed_merges=True)
         prepare_images(programme['films'])
         optimize_logo()
         optimize_mascot_animation()
