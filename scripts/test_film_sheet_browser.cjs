@@ -20,7 +20,7 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
     const handle = dialog.locator('.dialog-drag-handle');
     const pause = () => new Promise(resolve => setTimeout(resolve, 25));
     // Real browser touch input exercises scroll arbitration and native cancellation.
-    async function swipe(target, dx, dy, {cancel=false, returnToStart=false}={}) {
+    async function swipe(target, dx, dy, {cancel=false, returnToStart=false,inspectDismissal=false}={}) {
       const box = typeof target.boundingBox === 'function' ? await target.boundingBox() : target;
       const x = box.x + box.width / 2, y = box.y + Math.min(box.height / 2, 24);
       const point = (x,y) => [{x,y,id:0,radiusX:1,radiusY:1,force:1}];
@@ -33,13 +33,40 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
         await pause();
         await input.send('Input.dispatchTouchEvent', {type:'touchMove',touchPoints:point(x,y)});
       }
+      const releaseTop=inspectDismissal?await dialog.evaluate(node=>node.getBoundingClientRect().top):null;
       await input.send('Input.dispatchTouchEvent', {type:cancel?'touchCancel':'touchEnd',touchPoints:[]});
+      if(inspectDismissal)return dialog.evaluate((node,releaseTop)=>{
+        const animations=node.getAnimations({subtree:true}).filter(animation=>animation.effect?.target===node);
+        for(const animation of animations){animation.pause();animation.currentTime=0;}
+        const firstExitTop=node.getBoundingClientRect().top;
+        for(const animation of animations)animation.finish();
+        return {releaseTop,firstExitTop};
+      },releaseTop);
     }
     console.log('Loading public listing',base);
     await page.goto(base+'/en/', {waitUntil:'domcontentloaded'});
     console.log('Listing HTML loaded.');
     await page.waitForSelector('#grid[data-enhanced] .title-button',{state:'attached',timeout:30000});
     console.log('Public listing loaded.');
+    const touchPoster=page.locator('.poster-button').first();
+    await touchPoster.scrollIntoViewIfNeeded();
+    const posterBox=await touchPoster.boundingBox();
+    await input.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:posterBox.x+posterBox.width/2,y:posterBox.y+posterBox.height/2,id:0}]});
+    assert.equal(await touchPoster.locator('img').first().evaluate(node=>getComputedStyle(node).transform),'none','Touch feedback never enlarges artwork');
+    assert.equal(await touchPoster.evaluate(node=>getComputedStyle(node).opacity),'0.94','A press gently dims the poster');
+    assert.equal(await touchPoster.evaluate(node=>getComputedStyle(node).webkitTapHighlightColor),'rgba(0, 0, 0, 0)','Native tap feedback cannot flash over the poster');
+    await input.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await page.waitForSelector('#filmDialog[open][data-view=film]');
+    assert.equal(await dialog.locator('.dialog-close').evaluate(node=>getComputedStyle(node).webkitTapHighlightColor),'rgba(0, 0, 0, 0)','The close button cannot flash a coloured tap overlay');
+    await page.keyboard.press('Escape');
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    assert.equal(await touchPoster.locator('img').first().evaluate(node=>getComputedStyle(node).transform),'none','Touch hover cannot leave a zoom behind');
+    await swipe(touchPoster,0,-100);
+    assert.equal(await touchPoster.evaluate(node=>node.classList.contains('is-pressed')),false,'Scrolling cancels poster feedback');
+    assert.equal(await dialog.evaluate(node=>node.open),false,'Scrolling a poster does not open it');
+    await page.keyboard.press('Tab');
+    await touchPoster.focus();
+    assert.equal(await touchPoster.evaluate(node=>node.matches(':focus-visible')&&getComputedStyle(node).outlineStyle!=='none'),true,'Keyboard focus remains visible');
     const cinemaMore=page.locator('.card:has(.card-cinema-more)').first().locator('.card-cinema-more').last();
     const revealedId=await cinemaMore.getAttribute('data-reveal-session');
     const cinemaPath=await cinemaMore.locator('xpath=ancestor::div[@class="card-cinema"]').locator('.card-cinema-name').getAttribute('href');
@@ -278,6 +305,7 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
       await page.waitForSelector('#grid[data-enhanced] .card-more',{state:'attached'});
       await page.locator('.card:has(.card-more) .title-button').first().click();
       await page.waitForSelector('#filmDialog[open][data-view=film]');
+      await dialog.evaluate(node=>{for(const animation of node.getAnimations({subtree:true}))animation.finish();});
       const frames=await dialog.evaluate(node=>{
         const rect=element=>{const {x,y,width,height}=element.getBoundingClientRect();return {x,y,width,height};};
         const measure=()=>({box:rect(node),poster:rect(node.querySelector('.dialog-poster'))});
@@ -311,7 +339,68 @@ const base = process.env.VOBARNA_PUBLIC_URL || 'http://127.0.0.1:8765';
       await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
       await page.waitForSelector('.dialog-motion-layer',{state:'detached'});
     }
+    await page.setViewportSize({width:390,height:844});
+    await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#grid[data-enhanced] .poster-button',{state:'attached'});
+    const motionPoster=page.locator('.card:has(.card-more) .poster-button').first();
+    await motionPoster.scrollIntoViewIfNeeded();
+    await motionPoster.focus();
+    const motionScroll=await page.evaluate(()=>scrollY);
+    const entrance=await motionPoster.evaluate(node=>{
+      node.click();
+      const sheet=document.querySelector('#filmDialog');
+      const animations=sheet.getAnimations({subtree:true}).filter(animation=>animation.effect?.target===sheet);
+      for(const animation of animations){animation.pause();animation.currentTime=0;}
+      const first=sheet.getBoundingClientRect().top;
+      const backdropStart=Number(getComputedStyle(sheet,'::backdrop').opacity);
+      for(const animation of animations)animation.currentTime=140;
+      const middle=sheet.getBoundingClientRect().top;
+      const backdropMiddle=Number(getComputedStyle(sheet,'::backdrop').opacity);
+      const durations=animations.map(animation=>animation.effect.getTiming().duration);
+      for(const animation of animations)animation.finish();
+      return {first,middle,last:sheet.getBoundingClientRect().top,backdropStart,backdropMiddle,durations,height:innerHeight};
+    });
+    assert.ok(entrance.durations.includes(280),'The mobile entrance lasts 280ms');
+    assert.ok(Math.abs(entrance.first-entrance.height)<2,'The sheet starts below the viewport');
+    assert.ok(entrance.first>entrance.middle&&entrance.middle>entrance.last,'The sheet slides smoothly into place');
+    assert.equal(entrance.backdropStart,0);
+    assert.ok(entrance.backdropMiddle>0&&entrance.backdropMiddle<1,'The backdrop fades with the sheet');
+    const exit=await dialog.evaluate(node=>{
+      const first=node.getBoundingClientRect().top;
+      node.querySelector('[data-close]').click();
+      const animations=node.getAnimations({subtree:true}).filter(animation=>animation.effect?.target===node);
+      for(const animation of animations){animation.pause();animation.currentTime=100;}
+      const middle=node.getBoundingClientRect().top;
+      const locked=node.open&&getComputedStyle(document.body).overflow==='hidden'&&node.contains(document.activeElement);
+      const durations=animations.map(animation=>animation.effect.getTiming().duration);
+      for(const animation of animations)animation.finish();
+      return {first,middle,locked,durations};
+    });
+    assert.ok(exit.durations.includes(200),'Dismissal lasts 200ms');
+    assert.ok(exit.middle>exit.first,'The sheet slides down before closing');
+    assert.ok(exit.locked,'Focus and background scroll stay locked throughout dismissal');
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    assert.equal(await motionPoster.evaluate(node=>node===document.activeElement),true);
+    assert.ok(Math.abs(await page.evaluate(()=>scrollY)-motionScroll)<2);
+    await motionPoster.tap();
+    await dialog.evaluate(node=>{for(const animation of node.getAnimations({subtree:true}))animation.finish();});
+    const swipeExit=await swipe(handle,0,160,{inspectDismissal:true});
+    assert.ok(Math.abs(swipeExit.releaseTop-swipeExit.firstExitTop)<2,'Dismissal continues from the finger release without snapping back');
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    await motionPoster.tap();
+    await dialog.evaluate(node=>{
+      for(const animation of node.getAnimations({subtree:true}))animation.finish();
+      node.querySelector('[data-close]').click();
+      node.getBoundingClientRect();
+      document.querySelector('.card:has(.card-more) .poster-button').click();
+      for(const animation of node.getAnimations({subtree:true}))animation.finish();
+    });
+    await page.waitForFunction(()=>document.querySelector('#filmDialog').getAnimations({subtree:true}).length===0);
+    assert.equal(await dialog.evaluate(node=>node.open&&!node.hasAttribute('data-sheet-closing')),true,'Reopening cancels a pending dismissal');
+    await dialog.locator('[data-close]').click();
     await page.emulateMedia({reducedMotion:'reduce'});
+    await page.waitForSelector('#filmDialog[open]',{state:'hidden'});
+    console.log('Mobile poster press, sheet entry/exit, backdrop fade, scroll/focus restoration, animated swipe and interrupted dismissal passed.');
     await page.locator('.card:has(.card-more) .title-button').first().click();
     await dialog.locator('[data-show-film-times]').click();
     assert.equal(await dialog.evaluate(node=>node.getAnimations({subtree:true}).length),0,'Reduced motion skips transitions');

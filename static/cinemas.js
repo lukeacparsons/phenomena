@@ -1,6 +1,6 @@
 import {TEXT} from './cinema-copy.js';
 import {createListingView,HOME_CARD_PREVIEW} from './listing-view.js';
-import {renderFilmDialog,focusSelectedScreening,getDialogScroller,prepareFilmTransition} from './film-dialog.js';
+import {renderFilmDialog,focusSelectedScreening,getDialogScroller,prepareFilmTransition,showFilmDialog,closeFilmDialog} from './film-dialog.js';
 import './ticket-events.js';
 import {observeImages,posterMarkup} from './progressive-images.js';
 import {hydrateProgramme} from './programme-data.js';
@@ -161,7 +161,8 @@ function availabilitySnapshot(){
   return {sessions:seats,errors:seatErrors,failed:availabilityFailed,intervalSeconds:availabilityInterval,supportedProviders};
 }
 
-function closeFilm(){
+function closeFilm({animate=false}={}){
+  if(animate){pendingLink=null;closeFilmDialog($('filmDialog'));return;}
   activeFilm=null;activeSession=null;pendingLink=null;activeView='film';
   $('filmDialog').close();syncURL();
 }
@@ -373,7 +374,7 @@ function openFilm(id,sessionId=null,{push=true,view=sessionId?'screening':'film'
   if(dialog.open&&activeFilm===film.id&&activeView==='showtimes'){showtimesScroll=getDialogScroller(dialog).scrollTop;showtimesSession=sessionId;}
   else if(!dialog.open||activeFilm!==film.id){showtimesScroll=0;showtimesSession=null;}
   pendingLink=null;activeFilm=film.id;activeSession=sessionId;activeView=view;renderDialog();
-  if(!dialog.open)dialog.showModal();
+  showFilmDialog(dialog);
   getDialogScroller(dialog).scrollTop=0;syncURL(push);
   focusSelectedScreening(dialog);
   if(view==='showtimes'&&restoreScroll){
@@ -589,6 +590,19 @@ function webMCPTrial(){
   return new Promise(resolve=>{for(const type of ['load','error'])script.addEventListener(type,resolve,{once:true});});
 }
 
+// Touch browsers do not consistently expose :active while a finger is down.
+// Pointer cancellation clears feedback as soon as native scrolling takes over.
+let pressedPoster=null;
+function clearPosterPress(){pressedPoster?.classList.remove('is-pressed');pressedPoster=null;}
+document.addEventListener('pointerdown',event=>{
+  clearPosterPress();
+  if(!event.isPrimary||event.pointerType==='mouse')return;
+  pressedPoster=event.target.closest('.poster-button');
+  pressedPoster?.classList.add('is-pressed');
+},{passive:true});
+for(const type of ['pointerup','pointercancel'])document.addEventListener(type,clearPosterPress,{passive:true});
+for(const type of ['blur','pagehide'])window.addEventListener(type,clearPosterPress);
+
 document.addEventListener('click',event=>{
   const showtime=event.target.closest('.card-showtime');
   if(showtime&&Date.parse(showtime.querySelector('time')?.dateTime)<Date.now()){event.preventDefault();markStartedShowtimes();return;}
@@ -626,7 +640,7 @@ document.addEventListener('click',event=>{
     else if(['cinema_ids','formats'].includes(field))next[field]=state[field].filter(value=>value!==button.dataset.value);
     applySearch(next);
   }
-  else if(button.hasAttribute('data-close'))closeFilm();
+  else if(button.hasAttribute('data-close'))closeFilm({animate:true});
   else if(button.hasAttribute('data-reset')||button.id==='clearFilters')reset();
   else if(button.hasAttribute('data-retry'))load();
 });
@@ -686,7 +700,7 @@ window.addEventListener('pagehide',event=>{if(!event.persisted){lifecycle.abort(
 new ResizeObserver(updateDateFades).observe($('dates'));
 document.fonts.addEventListener('loadingdone',updateDateFades);
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{
-  if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeFilm();}
+  if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeFilm({animate:true});}
 }));
 document.addEventListener('error',event=>{
   if(event.target instanceof HTMLImageElement&&!event.target.hasAttribute('data-image-source')){event.target.hidden=true;const fallback=event.target.parentElement.querySelector('.poster-placeholder');if(fallback)fallback.hidden=false;}

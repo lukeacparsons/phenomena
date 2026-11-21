@@ -2,13 +2,53 @@ import {observeImages,posterMarkup} from './progressive-images.js';
 import {filmMarkup} from './film-view.js';
 const swipeDialogs = new WeakSet();
 const dialogTransitions = new WeakMap();
+const sheetClosings = new WeakMap();
 export function getDialogScroller(dialog){
   return dialog.querySelector?.('.dialog-surface')||dialog;
+}
+
+function cancelSheetClose(dialog){
+  sheetClosings.get(dialog)?.();
+}
+
+export function showFilmDialog(dialog){
+  cancelSheetClose(dialog);
+  if(!dialog.open)dialog.showModal();
+}
+
+// Keep the native modal (and its focus/scroll lock) until the exit has finished.
+// History changes still use close() directly so navigation remains immediate.
+export function closeFilmDialog(dialog){
+  if(!dialog.open||sheetClosings.has(dialog))return;
+  dialogTransitions.get(dialog)?.();
+  if(!matchMedia('(max-width:600px)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches){
+    dialog.close();return;
+  }
+  const controller=new AbortController();
+  const cleanup=()=>{
+    controller.abort();
+    sheetClosings.delete(dialog);
+    dialog.removeAttribute('data-sheet-closing');
+  };
+  const finish=()=>{
+    if(sheetClosings.get(dialog)!==cleanup)return;
+    dialog.close();cleanup();
+  };
+  sheetClosings.set(dialog,cleanup);
+  dialog.setAttribute('data-sheet-closing','');
+  dialog.addEventListener('close',cleanup,{once:true,signal:controller.signal});
+  window.addEventListener('resize',finish,{once:true,signal:controller.signal});
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',finish,{once:true,signal:controller.signal});
+  // getAnimations flushes the closing styles, including the backdrop transition.
+  const animations=dialog.getAnimations({subtree:true}).filter(animation=>animation.effect?.target===dialog);
+  if(animations.length)Promise.allSettled(animations.map(animation=>animation.finished)).then(finish);
+  else finish();
 }
 
 // Capture before rendering, then animate after the caller restores scroll/focus.
 // Availability refreshes and initial opens do not run this transition.
 export function prepareFilmTransition(dialog,filmId,nextView){
+  cancelSheetClose(dialog);
   dialogTransitions.get(dialog)?.();
   const views=['film','showtimes'];
   if(!dialog.open||dialog.dataset.film!==filmId||dialog.dataset.view===nextView||
@@ -101,7 +141,7 @@ function enableSheetDismiss(dialog){
   const reset=()=>{gesture=null;clearOffset();};
   dialog.addEventListener('touchstart',event=>{
     reset();
-    if(!mobile.matches||!dialog.open||event.touches.length!==1)return;
+    if(!mobile.matches||!dialog.open||dialog.hasAttribute('data-sheet-closing')||event.touches.length!==1)return;
     const target=event.target;
     if(target.closest('input,select,textarea,[contenteditable]:not([contenteditable="false"])'))return;
     const handle=!!target.closest('.dialog-drag-handle');
@@ -145,10 +185,11 @@ function enableSheetDismiss(dialog){
     const dismiss=event.touches.length===0&&(distance>=threshold||
       (distance>=40&&distance/Math.max(1,event.timeStamp-started)>.5));
     reset();
-    if(dismiss&&dialog.open)dialog.close();
+    if(dismiss&&dialog.open)closeFilmDialog(dialog);
   },{passive:true});
   dialog.addEventListener('touchcancel',reset,{passive:true});
   dialog.addEventListener('close',reset);
+  dialog.addEventListener('cancel',event=>{event.preventDefault();closeFilmDialog(dialog);});
   mobile.addEventListener('change',reset);
 }
 

@@ -1,4 +1,4 @@
-import {renderFilmDialog,focusSelectedScreening,getDialogScroller} from './film-dialog.js';
+import {renderFilmDialog,focusSelectedScreening,getDialogScroller,showFilmDialog,closeFilmDialog} from './film-dialog.js';
 import {filmMarkup} from './film-view.js';
 const payload=JSON.parse(document.getElementById('film-dialog-data').textContent);
 const {film,cinemas}=payload,language=document.documentElement.lang;
@@ -45,7 +45,7 @@ function restore(){
   }
   notice.hidden=true;navigating=false;activeFragment=id;paint();
   document.querySelectorAll('.lang-switch a[hreflang]').forEach(anchor=>{if(film.urls[anchor.hreflang])anchor.href=film.urls[anchor.hreflang]+'#'+id;});
-  if(!dialog.open)dialog.showModal();
+  showFilmDialog(dialog);
   getDialogScroller(dialog).scrollTop=0;focusSelectedScreening(dialog);
   window.dispatchEvent(new CustomEvent('vobarna:screening-open',{detail:{film_id:film.id,screening_id:selected?.id||null,placement:'information'}}));
 }
@@ -59,13 +59,13 @@ document.addEventListener('click',event=>{
   restore();
 });
 dialog.addEventListener('click',event=>{
-  if(event.target.closest('[data-close]'))dialog.close();
+  if(event.target.closest('[data-close]'))closeFilmDialog(dialog);
   else if(event.target.closest('[data-show-film-times]')){
     navigating=true;dialog.close();location.hash='showtimes';restore();
   }
   else if(event.target===dialog){
     const rect=dialog.getBoundingClientRect();
-    if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();
+    if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeFilmDialog(dialog);
   }
 });
 dialog.addEventListener('close',()=>{
