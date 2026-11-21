@@ -80,6 +80,8 @@ export function render(summary, { visits = 30 } = {}) {
   if (s.browser?.available) {
     for (const [name, table] of Object.entries(s.browser.dimensions)) { out.push(`  ${name}: ${table.columns.join(' | ')}`); for (const row of table.rows) out.push(`    ${row.join(' | ')}`); }
     out.push('  Sessions/IDs are observed browser activity, not people. Blockers, DNT/GPC and no-JS visits are absent. Dimensions overlap; do not add them.');
+    out.push('  Explicit internal/test events and the legacy analytics fixture are excluded; unmarked owner checks may remain.');
+    out.push('  Landing/source attribution uses the first observed pageview within this window, not necessarily the session’s true start. Ticket sessions contain outbound clicks, not confirmed purchases; a landing-page session may click tickets for another film. Page and landing tables show up to 30 rows.');
   } else out.push(`  Unavailable: ${s.browser?.reason ?? 'not requested'}`);
   out.push('', 'BROWSER-CANDIDATE PAGE REQUEST SOURCES (requests, not visits)');
   for (const [name, count] of top(s.referrals, 20)) out.push(`  ${name}: ${count}`);

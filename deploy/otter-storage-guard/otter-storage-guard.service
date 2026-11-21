@@ -1,0 +1,15 @@
+[Unit]
+Description=Check both Otter disks, rotate internal logs and expire build payloads
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/otter-storage-guard/host_guard.py tick
+TimeoutStartSec=240
+Nice=15
+IOSchedulingClass=idle
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only

@@ -49,12 +49,6 @@ const displayDate = date => {
   if(!dateLabels.has(key))dateLabels.set(key,dateParts(date+'T12:00:00Z',{weekday:'short',day:'numeric',month:'short',...(date.slice(0,4)!==year?{year:'numeric'}:{})}));
   return dateLabels.get(key);
 };
-const age = value => {
-  const minutes=Math.max(0,Math.floor((Date.now()-Date.parse(value))/60000));
-  if(!Number.isFinite(minutes))return '';
-  if(minutes===0)return {en:'just now',es:'ahora mismo',ca:'ara mateix'}[language];
-  return language==='es'?`hace ${minutes} min`:language==='ca'?`fa ${minutes} min`:`${minutes} ${minutes===1?'min':'mins'} ago`;
-};
 const params = new URLSearchParams(location.search);
 const state = searchFromURL(params);
 if(relativeDate&&!params.has('date')&&!params.has('from')&&!params.has('to'))state.date_from=state.date_to=listingDate;
@@ -67,6 +61,7 @@ let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0,suggestion
 const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
   getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
   isPrecomputedQuery:query=>suggestionsUI?.isVerified(query),
+  onMetrics:detail=>window.dispatchEvent(new CustomEvent('vobarna:smart-search',{detail})),
   onResult:()=>{locationSearchUI?.update();refreshResults();if($('filmDialog')?.open)renderDialog();},
   onStatus:(kind,unsupported=[])=>{
     searchPending=kind==='loading';
@@ -448,8 +443,7 @@ function availabilityHTML(session,compact=false){
     label=value.available+' '+t('seats');
     if(value.available<20)tone='low';
   }
-  const refreshed=!compact&&value.checked_at?`<span class="seat-age"> · ${escapeHTML(age(value.checked_at))}</span>`:'';
-  return wrap(`<span class="seat-count ${tone}">${escapeHTML(label)}</span>${refreshed}`);
+  return wrap(`<span class="seat-count ${tone}">${escapeHTML(label)}</span>`);
 }
 
 function renderDialog(){

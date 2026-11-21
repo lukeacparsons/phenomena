@@ -1,0 +1,29 @@
+# Installed on 116.203.11.163 at:
+# /data/coolify/proxy/dynamic/phenomenarapida-redirect.yaml
+# Keep separate from edge-apps.yaml, which Coolify edge sync regenerates.
+http:
+  routers:
+    phenomenarapida-redirect-http:
+      entryPoints:
+        - http
+      rule: 'Host(`phenomenarapida.com`) || Host(`www.phenomenarapida.com`)'
+      priority: 1000
+      middlewares:
+        - phenomenarapida-to-vobarna
+      service: noop@internal
+    phenomenarapida-redirect-https:
+      entryPoints:
+        - https
+      rule: 'Host(`phenomenarapida.com`) || Host(`www.phenomenarapida.com`)'
+      priority: 1000
+      middlewares:
+        - phenomenarapida-to-vobarna
+      service: noop@internal
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    phenomenarapida-to-vobarna:
+      redirectRegex:
+        regex: '^https?://.*'
+        replacement: 'https://vobarna.com/en/?cinemas=phenomena'
+        permanent: true

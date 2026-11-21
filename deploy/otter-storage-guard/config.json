@@ -1,0 +1,14 @@
+{
+  "mounts": ["/", "/mnt/volume-fsn1-1"],
+  "state_dir": "/var/lib/otter-storage-guard",
+  "build_root": "/var/tmp/otter-builds",
+  "queue_root": "/opt/ojo-web-builder",
+  "legacy_stage_parents": ["/opt", "/mnt/volume-fsn1-1/ojo-build-artifacts"],
+  "log_archive": "/var/log/otter-container-logs",
+  "telegram": {
+    "env_file": "/opt/vobarna-crawl-monitor/monitor.env",
+    "token_key": "VISITORS_TELEGRAM_BOT_TOKEN",
+    "chat_id": -1003773662180,
+    "topic_id": 43418
+  }
+}

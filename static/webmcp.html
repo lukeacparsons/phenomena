@@ -43,6 +43,7 @@
         <a href="#possibilities">What you can do</a>
         <a href="#tools">The six tools</a>
         <a href="#inputs">Search inputs</a>
+        <a href="#search-behaviour">Search capabilities</a>
         <a href="#workflow">Example workflow</a>
         <a href="#data">Understanding the data</a>
         <a href="#access">Access for agents</a>
@@ -51,13 +52,16 @@
       <section class="guide-section" id="possibilities" aria-labelledby="possibilities-title">
         <h2 id="possibilities-title">What you can do</h2>
         <ul class="guide-examples">
-          <li>“Find science fiction in IMAX this weekend.”</li>
+          <li>“Find science fiction in IMAX this weekend after 20:00.”</li>
+          <li>“Find French audio with English subtitles and IMDb at least 7.5.”</li>
+          <li>“Find screenings under €10 that are not sold out.”</li>
           <li>“Compare these films’ ratings and tell me who directed them.”</li>
           <li>“Show me that screening and its ticket link.”</li>
           <li lang="es">“Busca comedias para mañana.”</li>
           <li lang="ca">“Mostra’m les sessions de dissabte.”</li>
         </ul>
-        <p>Search understands titles, credits, dates and factual constraints in English, Spanish and Catalan. Audio, subtitles and production country are distinct: try <code>films in English</code>, <code>English subtitles</code> or <code>films from France</code>. Numeric ratings, running times, estimated finish times, published admission and fresh seat counts can be combined. An agent can compare sourced results, apply a search or open a screening for you to review.</p>
+        <p>Search understands titles, credits, cinemas, formats, dates and factual conditions in English, Spanish and Catalan. Use <code>in French</code> for audio, <code>from France</code> for production country, and <code>English subtitles</code> for subtitles. Combine these with numeric ratings, lengths, start or estimated finish times, published admission and fresh seat counts. All mandatory conditions must match the same screening.</p>
+        <p>The <a href="/en/guides/how-to-search/">public search guide</a> has examples for alternatives, preferences, nearby cinemas, topics, venue questions and film outings. Read <a href="#search-behaviour">how tool results differ from the page</a> before using these features through an agent.</p>
         <p>Results depend on the collected programme. Examples illustrate requests you can make; they do not promise that matching screenings are available. Ticket selection and payment take place with the cinema.</p>
       </section>
 
@@ -67,16 +71,17 @@
 
         <section class="guide-tool content-block" id="get_context" aria-labelledby="get-context-title">
           <div class="tool-heading"><h3 id="get-context-title"><code>get_context</code></h3><span class="tool-kind">Reads information</span></div>
-          <p>Discover the supported cinema IDs and formats, current filters, interface language, selected film or screening, programme coverage and collection timestamps. Dates are interpreted in <code>Europe/Madrid</code>.</p>
+          <p>Discover the supported cinema IDs and formats, current filters, interface language, selected film or screening, upcoming programme coverage and collection timestamps. Dates are interpreted in <code>Europe/Madrid</code>. This tool does not return resolved AI interpretations, coordinates or a completion status for AI or location searches.</p>
           <p><strong>Input:</strong> <code>{}</code>. Use this to learn what is available and understand the user’s current view.</p>
         </section>
 
         <section class="guide-tool content-block" id="search_screenings" aria-labelledby="search-screenings-title">
           <div class="tool-heading"><h3 id="search-screenings-title"><code>search_screenings</code></h3><span class="tool-kind">Reads information</span></div>
-          <p>Search sessions using the local factual parser without changing the page or calling AI or geolocation. Upcoming sessions are the default; explicit historical queries use retained schedules. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
+          <p>Find sessions using the local factual parser without changing the page. Results are upcoming by default; an explicit historical query such as <code>what played yesterday</code> uses retained screenings. Returns paginated screenings with exact <code>film_id</code> and <code>screening_id</code> values, cinema and room, dates and times, formats, cached availability and booking links.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>, plus optional <code>limit</code> and <code>offset</code>. An empty object searches all upcoming collected sessions, independently of the page’s current filters.</p>
-          <pre><code>{ "query": "Villeneuve this weekend", "formats": ["IMAX"], "limit": 10 }</code></pre>
-          <p>Results include <code>total_screenings</code>, <code>total_films</code>, the resolved date range, a shareable search URL and <code>next_offset</code>. Sessions are ordered by start time, then screening ID. Use the same filters with <code>next_offset</code> to fetch the next page; <code>null</code> means there is no next page.</p>
+          <pre><code>{ "query": "IMDb &gt;= 7.5 after 20:00", "formats": ["IMAX"], "limit": 10 }</code></pre>
+          <p>Results include <code>total_screenings</code>, <code>total_films</code>, the resolved date range, a shareable search URL and <code>next_offset</code>. Sessions are ordered by start time, then screening ID, regardless of preferences or requested sorting. Use the same filters with <code>next_offset</code> to fetch the next page; <code>null</code> means there is no next page.</p>
+          <p>This tool does not call AI, resolve a location or return practical venue answers. It returns flat sessions, not itinerary plans. For those page features, use <code>set_search</code> and inspect the visible results. An empty local result for a request needing AI or location resolution does not establish that no suitable screenings exist.</p>
         </section>
 
         <section class="guide-tool content-block" id="get_film" aria-labelledby="get-film-title">
@@ -93,9 +98,10 @@
 
         <section class="guide-tool content-block" id="set_search" aria-labelledby="set-search-title">
           <div class="tool-heading"><h3 id="set-search-title"><code>set_search</code></h3><span class="tool-kind tool-kind-action">Updates the page</span></div>
-          <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Structured filters appear as removable chips. Returns the first 20 local matches immediately. AI interpretation, nearby permission/geocoding and enriched results may complete later in the visible page; this response does not await them.</p>
+          <p>Replace the visible search and filters, close the film dialog, and update the results and URL. Active filters appear as removable chips. Returns the first 20 local matches immediately.</p>
           <p><strong>Input:</strong> any of the <a href="#inputs">search inputs</a>. Omitted filters are cleared. Pass <code>{}</code> to reset everything. Pagination arguments apply only to <code>search_screenings</code>.</p>
           <pre><code>{ "query": "comedia mañana" }</code></pre>
+          <p>The page can then interpret a complex request with AI, resolve a nearby location, or show venue answers and film-outing plans. Location may need browser permission or an address choice. The tool does not wait for this work, so its returned sessions can differ from the settled page. Check the visible results and messages before recommending a screening.</p>
         </section>
 
         <section class="guide-tool content-block" id="show_screening" aria-labelledby="show-screening-title">
@@ -112,22 +118,44 @@
           <caption>Filters and their meaning</caption>
           <thead><tr><th scope="col">Input</th><th scope="col">Meaning</th></tr></thead>
           <tbody>
-            <tr><th scope="row"><code>query</code></th><td>A string of up to 500 characters. Combine searchable words with natural dates, such as <code>Villeneuve this weekend</code>, <code>comedia mañana</code> or <code>ciència-ficció dissabte</code>.</td></tr>
+            <tr><th scope="row"><code>query</code></th><td>A string of up to 500 characters. Combine terms and conditions, such as <code>in French with English subtitles</code>, <code>IMDb &gt;= 7.5 after 20:00</code>, <code>menos de 10 euros</code> or <code>comèdia demà</code>. See the examples and execution limits below.</td></tr>
             <tr><th scope="row"><code>date_from</code><br><code>date_to</code></th><td>Inclusive <code>YYYY-MM-DD</code> date bounds, or <code>null</code>. Use the same date for both to select one day. A single bound is open-ended. Explicit bounds override dates embedded in the query.</td></tr>
             <tr><th scope="row"><code>cinema_ids</code></th><td>Up to 20 cinema IDs from <code>get_context</code>. A screening can match <strong>any</strong> listed cinema. An empty array means all cinemas.</td></tr>
             <tr><th scope="row"><code>formats</code></th><td>Up to 20 format values from <code>get_context</code>. <strong>Every</strong> requested format must belong to the same screening. An empty array adds no format restriction.</td></tr>
             <tr><th scope="row"><code>big_screens_only</code></th><td>A boolean, default <code>false</code>. Selects VO Barna’s curated premium selection, which includes comfort-focused venues. It is not a ranking by measured screen size.</td></tr>
+            <tr><th scope="row"><code>ignored_filters</code></th><td>Up to 20 interpretation-filter IDs removed by the user. Preserve the values returned by <code>get_context</code> when continuing the same query; normally omit this input. Do not invent IDs or silently remove conditions to obtain matches.</td></tr>
           </tbody>
         </table>
         <p><code>search_screenings</code> additionally accepts <code>limit</code> (an integer from 1 to 50, default 20) and <code>offset</code> (an integer from 0 to 100000, default 0).</p>
-        <p>Relative dates use Barcelona’s calendar. Weeks run Monday–Sunday; a bare weekday means its next occurrence, including today. “In 2 weeks” selects a date 14 days ahead; “next 2 weeks” covers today and the following 13 days. Exact film titles and quoted phrases are protected from date parsing. Qualified credits such as <code>produced by Brad Pitt</code> are supported when sourced; acting, production and distribution credits are kept separate. Audio and subtitle conditions must match the same screening. Price and seat filters exclude missing or stale evidence; a total seat count does not prove adjacent places.</p>
+        <p>Relative dates use Barcelona’s calendar. Weeks run Monday–Sunday; a bare weekday means its next occurrence, including today. “In 2 weeks” selects a date 14 days ahead; “next 2 weeks” covers today and the following 13 days. Exact film titles and quoted phrases are protected from date parsing. Use qualified producer requests such as <code>produced by Brad Pitt</code>; a bare person’s name does not match producer-only credits.</p>
+      </section>
+
+      <section class="guide-section" id="search-behaviour" aria-labelledby="search-behaviour-title">
+        <h2 id="search-behaviour-title">Search capabilities and execution</h2>
+        <p>Factual search conditions belong in <code>query</code>; there are no separate top-level rating, price or time arguments. The local parser used by both search tools supports these examples when the collected data provides the necessary evidence.</p>
+        <table>
+          <caption>Examples for local tool searches</caption>
+          <thead><tr><th scope="col">Search for</th><th scope="col">Example and meaning</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Ratings and runtime</th><td><code>IMDb &gt;= 7.5 under two hours</code> requires both a collected IMDb score and a known runtime. <code>rt &gt;= 80%</code> uses critics’ scores; <code>Certified Fresh</code> requires the actual badge.</td></tr>
+            <tr><th scope="row">Time available</th><td><code>after 20:00 finishes before 23:00</code> combines start and finish constraints. Finish estimates add runtime and 20 minutes for trailers and adverts unless a published end time is available. <code>starts in the next 45 minutes</code> uses the current time.</td></tr>
+            <tr><th scope="row">Audio and subtitles</th><td><code>in French with English subtitles</code> requires both on one screening. <code>no subtitles</code> needs explicit evidence of their absence. <code>foreign language films</code> means verified non-English dialogue and can include multilingual films containing English.</td></tr>
+            <tr><th scope="row">Countries and companies</th><td><code>from France</code> includes evidenced co-productions. <code>A24</code> can match production or distribution; <code>produced by A24</code> and <code>distributed by A24</code> require the corresponding credit.</td></tr>
+            <tr><th scope="row">Budget and seats</th><td><code>under €10 not sold out</code> requires a comparable published admission and a recent positive seat observation. Fees may remain unknown. No collector currently supplies verified adjacent-seat evidence.</td></tr>
+            <tr><th scope="row">Alternatives</th><td><code>Friday at Verdi or Saturday at Phenomena</code> accepts either complete group. Friday at Phenomena does not satisfy either alternative.</td></tr>
+            <tr><th scope="row">Editions and film facts</th><td><code>restored version</code>, <code>director Q&amp;A</code>, <code>Palme d’Or winners</code> and <code>black and white</code> require collected evidence. A missing fact does not qualify.</td></tr>
+            <tr><th scope="row">Release years and history</th><td><code>released in the 1970s</code> concerns the film’s original release, not its story setting. <code>new releases</code> means the current calendar year, not a recent Spanish opening. <code>what played yesterday</code> searches only retained past sessions.</td></tr>
+          </tbody>
+        </table>
+        <p>Use the visible page for AI topics, moods and similarity, subjective requests such as <code>highly rated on IMDb</code>, and location searches such as <code>near me</code> or <code>poblesec</code>. <code>set_search</code> starts the page flow; <code>search_screenings</code> does not reuse its completed AI interpretation or location. <code>get_context</code> reports filters, not the settled result set.</p>
+        <p>Preferences such as <code>English preferred, Spanish acceptable</code> order eligible films on the page; tool sessions remain chronological. A local outing query can restrict sessions to those participating in a complete plan, but the tool response does not expose the grouping, breaks or finish estimates. Inspect the page’s plan before recommending a sequence. Practical venue questions also produce page answers with sources, rather than screening-tool results.</p>
       </section>
 
       <section class="guide-section" id="workflow" aria-labelledby="workflow-title">
         <h2 id="workflow-title">From a request to a screening</h2>
         <ol class="guide-steps">
           <li><strong>Read the context.</strong> Call <code>get_context({})</code> for supported cinemas, formats and date coverage.</li>
-          <li><strong>Find options.</strong> Call <code>search_screenings</code> with the user’s criteria. Follow <code>next_offset</code> if you need more results.</li>
+          <li><strong>Find options.</strong> For local factual conditions, call <code>search_screenings</code> and follow <code>next_offset</code> as needed. For AI, location or venue questions, use <code>set_search</code> and inspect the settled page, including any permission, address-choice or missing-data message.</li>
           <li><strong>Compare the details.</strong> Use returned IDs with <code>get_film</code> for credits and ratings, or <code>get_screening</code> for a session’s cached availability and booking destination.</li>
           <li><strong>Show the choice.</strong> Use <code>set_search</code> to display a filtered programme, or <code>show_screening</code> to highlight the chosen session.</li>
           <li><strong>Continue with the cinema.</strong> The official ticket link leads to the cinema’s booking or event page. Seat selection, final availability, fees and payment are handled there.</li>
@@ -147,13 +175,15 @@
           <div><dt>What a seat count means</dt><dd>The <code>kind</code> field distinguishes ordinary seats, provider-reported totals and area counts. Wheelchair and companion spaces remain separate where supplied. Counts do not establish adjacent seats or reserve tickets. Status can be <code>reported_available</code>, <code>sold_out</code>, <code>booking_closed</code> or <code>unknown</code>; zero is not interpreted identically across count types.</dd></div>
           <div><dt>Language and format</dt><dd>VOSE means original audio with Spanish subtitles, not necessarily English audio. Film-level original languages and a session’s confirmed audio language are different facts. Use the session’s format tags; venue equipment does not guarantee a particular performance format.</dd></div>
           <div><dt>Ratings</dt><dd>Ratings retain the publisher’s scale and observation date; critics’ and audience scores are separate. Unknown values remain unknown.</dd></div>
-          <div><dt>Current limits</dt><dd>The tools do not select seats, reserve or purchase tickets. <code>search_screenings</code> runs the local parser and returns sessions by start time, independently of the page’s AI interpretation and resolved location. Use <code>set_search</code> to initiate theme or nearby searches, sourced venue questions and multi-film outings, then review the visible page after it finishes. Its immediate response is not the enriched result. Finish times include a visible 20-minute allowance; distances are straight-line estimates. Unknown evidence is never inferred.</dd></div>
+          <div><dt>Admission and finish times</dt><dd>Budget filters use named general admission, a single published event price or explicitly free entry. Membership discounts and unlabelled price minima do not establish a match. Screening-tool responses do not currently include the matched price or estimated finish; inspect the page and its source links for those details.</dd></div>
+          <div><dt>Historical screenings</dt><dd>History includes retained schedules only. An old session’s returned booking URL is not evidence that tickets remain available. Check <code>get_screening.has_started</code>; <code>show_screening</code> rejects started sessions. Future returns and booking-opening dates are not predicted.</dd></div>
+          <div><dt>Current limits</dt><dd>The tools do not select seats, reserve or buy tickets. Read-only searches do not perform AI interpretation, geocoding or venue research. Page proximity uses approximate straight-line distances, not route times. Unknown age classifications, content warnings or auditorium facilities cannot establish a match; a broad venue claim does not verify a particular screening room.</dd></div>
         </dl>
       </section>
 
       <section class="guide-section" id="access" aria-labelledby="access-title">
         <h2 id="access-title">Access for agents and developers</h2>
-        <p>This guide is static HTML. Its content, links and the <a href="/webmcp-tools.json">JSON tool reference</a> can be read without JavaScript, an account or a WebMCP-enabled browser. The JSON reference is generated from the implemented tool definitions and includes each tool’s description, input schema and annotations.</p>
+        <p>This guide is static HTML. Its content, links and the <a href="/webmcp-tools.json">JSON tool reference</a> can be read without JavaScript, an account or a WebMCP-enabled browser. The JSON reference is generated from the implemented tool definitions and includes each tool’s description, input schema and annotations. Visitor search guides are available in <a href="/en/guides/how-to-search/">English</a>, <a href="/es/guias/como-buscar/" lang="es">castellano</a> and <a href="/ca/guies/com-cercar/" lang="ca">català</a>.</p>
         <p><strong>To execute tools, open <a href="/en/">the screenings page</a> in a WebMCP-capable browser agent and allow its programme to load.</strong> VO Barna registers its tools through Nekuda’s SDK and the browser’s <code>document.modelContext</code> interface. Tools are available on the <a href="/en/">English</a>, <a href="/es/">Spanish</a> and <a href="/ca/">Catalan</a> listings pages. Localized cinema pages also register the tools after their programme loads. Direct film pages provide static details and ticket links; return to a listings page to execute tools. This guide does not register them. Tool names are in-page operations, not HTTP API routes; the JSON file is documentation, not an executable endpoint.</p>
         <p>In a browser that supports discovery and execution through the current API, an example console call on the screenings page is:</p>
         <pre><code>const tools = await document.modelContext.getTools();

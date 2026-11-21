@@ -24,7 +24,7 @@ The 19 November live refresh retained prices for **1,956 of 3,097 screenings (63
 
 Each accepted programme now also appends a timestamped price sample to the private [observation history](observation-history.md). Repeated prices share one stored payload while retaining every collection timestamp. History survives replacement of the current catalogue and expiry of the screening.
 
-The old `price_eur` field is retained internally for a single published amount. It is **not** populated with the cheapest fare in a range. Screening prices are kept in the crawler's source snapshot and excluded from the browser projection, generated screening HTML and WebMCP responses. Showtime details display the room and seat availability. General venue tariffs are separate directory research and are not automatically applied to every screening.
+The old `price_eur` field is retained internally for a single published amount. It is **not** populated with the cheapest fare in a range. The browser projection now includes structured price observations for budget search, with source URLs and acquisition times. Budget results display the lowest matching published general-admission or event price, before unconfirmed fees. Unnamed ranges remain non-comparable. WebMCP screening summaries do not expose price quotations. Showtime details display the room and seat availability. General venue tariffs are separate directory research and are not automatically applied to every screening.
 
 For the A1 minor-unit conversion, 15 exact Verdi session IDs were cross-checked against the operator's structured HTML prices: for example, API `600` matches published EUR `6.00`. Mixed, malformed or zero-placeholder price arrays are rejected rather than interpreted as ordinary admission.
 
@@ -44,4 +44,4 @@ The live scan also found that Maldà now publishes two consecutive weekly progra
 
 Local evidence, sample captures, test output and the refresh log are in ignored `output/pricing/`.
 
-Initial collection verification passed 288 Python tests and 36 JavaScript tests; the final Institut single-price variation also passed the targeted pricing suite. The compact-browser contract check passed 666 searches. Subsequent frontend checks require prices to remain in the source snapshot while being absent from the browser projection and WebMCP responses. The managed collector continues collecting prices internally.
+Initial collection verification passed 288 Python tests and 36 JavaScript tests; the final Institut single-price variation also passed the targeted pricing suite. The compact-browser contract check passed 666 searches. Expanded-search checks now require price provenance to survive the browser projection while retaining the range-versus-admission distinction. The private observation history remains unpublished.

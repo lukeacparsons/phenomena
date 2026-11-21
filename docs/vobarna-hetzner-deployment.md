@@ -84,3 +84,13 @@ The long-running collector had imported an older page generator and kept rebuild
 - Canonicals, hreflang, JSON-LD, robots and sitemap use `https://vobarna.com`.
 
 Verification covered the origin router, failed publication rollback, a real automatic publication, browser behaviour through Bunny, no-JavaScript content, semantic redirects, search noindex isolation, 404 responses, sitemap/robots, HTTPS and the www redirect. Indexing, Search Console/Bing verification, traffic reporting and field performance measurement are separate follow-up work.
+
+## Phenomena Rápida redirect — 21 November 2026
+
+`phenomenarapida.com` and `www.phenomenarapida.com` permanently redirect (currently HTTP 308) directly to `https://vobarna.com/en/?cinemas=phenomena`. This opens the main programme with the removable Phenomena Experience filter selected. HTTP and HTTPS, including old paths and query strings, use that fixed destination.
+
+Both hostnames retain their existing DNS and TLS setup at the central Hetzner edge (`116.203.11.163`). The deployed configuration is [`deploy/vobarna/phenomenarapida-redirect.yaml`](../deploy/vobarna/phenomenarapida-redirect.yaml), installed at `/data/coolify/proxy/dynamic/phenomenarapida-redirect.yaml`. Its priority of 1000 takes precedence over the generated legacy application routes. Keep it separate from `edge-apps.yaml`, which the Coolify edge sync regenerates every two minutes. Traefik watches the directory and loads changes automatically; no proxy restart or application deployment is required. See Traefik's [RedirectRegex](https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/redirectregex/) and [route priority](https://doc.traefik.io/traefik/reference/routing-configuration/http/routing/rules-and-priority/) documentation.
+
+The original application and its generated proxy routes remain available for rollback. To restore them, move only `phenomenarapida-redirect.yaml` outside the watched dynamic directory. Do not edit the generated edge routes or restart the shared proxy.
+
+Verified all four scheme/hostname combinations and two legacy path/query examples return a single permanent redirect to the exact destination. A fresh browser navigation through the old domain reached VO Barna with the Phenomena filter active and only Phenomena screenings displayed.

@@ -1240,12 +1240,16 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
 - [Film information]({origin}/en/films/): film facts, original audio, subtitles and official booking links.
 - [Cinema directory]({origin}/en/cinemas/): addresses and source-linked auditorium, seating and access research.
 - [Cinema guides]({origin}/en/guides/): version labels, screens and sound formats.
+- [How to search]({origin}{SEARCH_GUIDE_PATHS['en']}): factual filters, AI suggestions, nearby cinemas, budgets, seats, alternatives and film outings. Also available in [Spanish]({origin}{SEARCH_GUIDE_PATHS['es']}) and [Catalan]({origin}{SEARCH_GUIDE_PATHS['ca']}).
 - [Method and corrections]({origin}/en/about/): publisher, coverage and evidence policy.
 - [Browser tools]({origin}/webmcp/): search, inspect films and select screenings.
+- [Tool definitions]({origin}/webmcp-tools.json): generated descriptions, input schemas and execution limits for the six WebMCP tools; documentation, not an execution endpoint.
 - [XML sitemap]({origin}/sitemap.xml): canonical information pages and modification dates.
 
 ## Answering and taking action
 Information pages are canonical references. A film URL with #showtimes opens its film dialog; #screening- followed by its published screening identifier opens the exact session. Browser tools return canonical_url and action_url separately. Recommend distinct films when asked for several films; sessions are not distinct films. Let the visitor click Tickets to book with the cinema.
+
+search_screenings applies local factual query conditions and returns flat sessions ordered by start time. It does not call AI, resolve locations, return venue answers or expose outing plans and preference rankings. set_search changes the visible page but returns local matches before AI or location work finishes; inspect the settled page for those requests. get_context reports filters, not completed AI/location results. Empty local results for unsupported interpretation are not evidence that no suitable screenings exist. Explicit historical queries cover retained schedules only; expired booking links do not establish current ticket availability.
 
 VOSE means original audio with Spanish subtitles, not necessarily English audio. Unknown audio, reserved seating, comfort, access, prices and availability must not be inferred. Use session facts and cited cinema research, with their separate check dates. Schedules and seat counts are snapshots, not guarantees or reservations; operators control cancellations, booking and final prices. An expired or missing session link explains that it is unavailable and offers the current information page.
 ''')

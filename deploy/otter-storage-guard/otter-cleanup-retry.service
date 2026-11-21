@@ -1,0 +1,13 @@
+[Unit]
+Description=Retry Otter Coolify cleanup after deployments complete
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/otter-storage-guard/cleanup_retry.py --apply
+TimeoutStartSec=150
+Nice=15
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only

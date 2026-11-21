@@ -2,7 +2,7 @@ import {interpretSearch,madridDate,normalise} from './cinema-search.js';
 import {validateIntent} from './search-intent.js';
 import {parseLocationQuery} from './location-search.js';
 
-export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguage,onResult,onStatus,fetchImpl=fetch,delay=350,isPrecomputedQuery=()=>false}){
+export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguage,onResult,onStatus,onMetrics=()=>{},fetchImpl=fetch,delay=350,isPrecomputedQuery=()=>false}){
   const cache=new Map();
   let timer=null,controller=null,key='',result=null,request=0;
   function current(){return result;}
@@ -22,11 +22,20 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
     // A keyword hit must not prevent semantic discovery of other relevant films.
     // Full, known credit names already have a precise local interpretation.
     if(index.people.includes(normalise(local.text)))return;
-    if(cache.has(key)){result=cache.get(key);onStatus(result.intent.unsupported.length?'unsupported':'',result.intent.unsupported);onResult();return;}
+    function report(outcome,duration,cacheHit){
+      // Counts and fixed outcomes only: the query/intent can contain addresses.
+      // Telemetry must never change the search result if a consumer fails.
+      try{onMetrics({outcome,duration_ms:Math.max(0,Math.round(duration)),query_length:query.length,
+        semantic_result_count:result?.semanticScores?.length??null,
+        unsupported_count:result?.intent.unsupported.length??0,cache_hit:cacheHit});}catch{}
+    }
+    const outcome=()=>result.intent.unsupported.length?'unsupported':result.intent.semantic_query&&!result.semanticScores?.length?'no_semantic_results':'success';
+    if(cache.has(key)){result=cache.get(key);onStatus(result.intent.unsupported.length?'unsupported':'',result.intent.unsupported);onResult();report(outcome(),0,true);return;}
     const version=request;
     onStatus('loading');
     timer=setTimeout(async()=>{
       timer=null;controller=new AbortController();const activeController=controller;
+      const started=performance.now();
       const deadline=setTimeout(()=>activeController.abort(),6000);
       try{
         const response=await fetchImpl('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,language}),signal:activeController.signal});
@@ -41,9 +50,11 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
         // the request is in flight. Only rank films in the current browser data.
         result={intent,semanticScores:body.semantic_scores?.filter(r=>ids.has(r.film_id))??null};cache.set(key,result);if(cache.size>50)cache.delete(cache.keys().next().value);
         onStatus(intent.unsupported.length?'unsupported':intent.semantic_query&&!body.semantic_scores?.length?'noSemantic':'',intent.unsupported);onResult();
+        report(outcome(),performance.now()-started,false);
       }catch{
         if(version!==request)return;
         result=null;onStatus('unavailable');onResult();
+        report(activeController.signal.aborted?'timeout':'unavailable',performance.now()-started,false);
       }finally{clearTimeout(deadline);if(controller===activeController)controller=null;}
     },delay);
   }

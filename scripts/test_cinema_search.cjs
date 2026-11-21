@@ -88,13 +88,6 @@ context.fixtures.films.push(
 for(const [query,id] of [['La carn','catalan-title'],['The Flesh','catalan-title'],['La bola negra','spanish-title'],['The Black Ball','spanish-title']]){
   assert.deepEqual(search(query).map(f=>f.id),[id],query);
 }
-for(const [lang,expected] of [['en','just now'],['es','ahora mismo'],['ca','ara mateix']]){
-  context.lang=lang;
-  assert.equal(vm.runInContext('language=lang;age(new Date().toISOString())',context),expected);
-}
-vm.runInContext("language='en'",context);
-assert.equal(vm.runInContext("age('invalid')",context),'');
-
 // Chain searches use screening operators without adding brands to venue labels.
 const chainVenues=[
   ['diagonal-mar','Diagonal Mar','cinesa'],['la-farga','La Farga','cinesa'],

@@ -2,6 +2,10 @@
 
 The repo-local `/crawl-report` skill is in `.agents/skills/crawl-report/SKILL.md`, with a Claude-compatible symlink in `.claude/skills/crawl-report`. It adapts Ojo's source/UA classification, crawler address lists, and reporting rules to VO Barna. Run `npm run crawlers -- --days 3 --search-console`; reports save under ignored `output/traffic/`.
 
+The browser report includes unique totals across the full window, page activity, landing-page/source sessions with ticket and screening actions, and zero-result search counts without collecting search text. Landing attribution uses the first observed pageview within the requested window; a session may have started earlier. Ticket clicks are outbound interest, not purchases, and may concern a different film from the landing page. Page/source dimensions overlap and tables are capped at 30 rows.
+
+**21 November 2026:** the initial analytics fixture was found without the newer internal/test flags. Reports now also exclude events on `/__analytics-check/`, `integration-test` film/cinema IDs and `test` placements. This does not identify unmarked owner activity, and country/device alone must not be used to remove sessions.
+
 The Telegram monitor reads CDN requests, including cache hits, independently of the website and of our cinema programme collectors. It runs continuously on Otter in `vobarna-crawl-monitor`, polls once a minute, and sends to [VO Barna New Users](https://t.me/c/3773662180/43418) through the existing bot. The initial baseline is silent. New activity after a 60-minute provider gap starts one episode; requests within the episode do not send more alerts. Google, Bing, Apple, DuckDuckGo, OpenAI, Anthropic, Perplexity, Meta, Mistral, Amazon, ByteDance, Yandex and Common Crawl are recognized. User-triggered and inspection/ads fetches are reported separately and do not alert.
 
 ## Credentials and privacy

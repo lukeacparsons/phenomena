@@ -125,7 +125,6 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .buyrow-details{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 12px;font-size:.8125rem;line-height:1.5;color:var(--tx2)}
 .buyrow-room{font:inherit;margin:0}
 .buyrow-details .seat-status{font:inherit;line-height:inherit;margin:0}
-.buyrow .seat-age{font-size:.75rem}
 .buyrow.is-sold-out .buyrow-time{color:var(--tx3);text-decoration:line-through}
 .buyrow.is-highlighted{background:var(--s2);box-shadow:0 0 0 6px var(--s2);outline:1px solid var(--border);outline-offset:6px}
 .btn{display:inline-flex;justify-content:center;align-items:center;border:1px solid var(--action-bg);background:var(--action-bg);color:#fff;border-radius:var(--radius);padding:9px 13px;font-size:13px;font-weight:600;min-height:var(--touch-target);min-width:110px}.btn:hover{background:var(--action-hover);border-color:var(--action-hover)}.btn-secondary{background:var(--s2);border-color:var(--border);color:var(--tx)}.btn-secondary:hover{background:var(--s3);border-color:var(--tx3)}.seat-status{font-size:12px;line-height:1.5;margin-top:8px;color:var(--tx2)}.seat-count{font-size:inherit;font-weight:400;color:var(--tx2)}.seat-count.low,.seat-count.unavailable{color:var(--red);font-weight:600}.seat-detail{display:block;font-size:11px;color:var(--tx3);margin-top:2px}
@@ -144,7 +143,6 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 .card .poster-transition{background-size:contain;background-position:center bottom}
 .filters{padding-top:20px}.card[data-open]{cursor:pointer}
 
-.seat-age{font-size:11px;color:var(--tx3);white-space:nowrap}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after,*::backdrop{animation:none!important;transition:none!important}}
 
 .card-day{margin-top:24px}.title-button+.card-day{margin-top:16px}.card-day-label{font-size:.875rem;font-weight:650;color:var(--tx);margin-bottom:8px}.card-cinemas{display:grid;gap:var(--space-cinema)}.card-cinema{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;align-items:baseline}.card-cinema-name{font-size:.8125rem;color:var(--tx2);overflow-wrap:anywhere}.card-times{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:flex-start}.card-showtime{display:flex;flex-direction:column;align-items:flex-start;gap:2px;max-width:100%;min-width:0;padding:2px 0;border:0;background:none;text-align:left;font-size:.875rem;line-height:1.5;font-weight:500;color:var(--tx)}.card-showtime .availability-content:empty{display:none}.card-showtime time{font-variant-numeric:tabular-nums;white-space:nowrap}.card-showtime:hover time{text-decoration:underline;text-underline-offset:3px}.card-showtime .seat-status{display:block;font-size:10px;line-height:1.3;margin:0}.card-showtime.is-sold-out time{color:var(--tx3);font-weight:400;text-decoration:line-through}
@@ -333,7 +331,6 @@ dialog::backdrop{background:var(--dialog-backdrop);backdrop-filter:blur(5px)}bod
 /* Give cinema links room for touch and keep selected screening focus visible. */
 .card-cinema-name{display:inline-flex;align-items:center;min-height:32px;padding-block:5px}
 .buyrow:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
-.buyrow.is-highlighted .seat-age{color:var(--tx2)}
 
 .card[data-open]{cursor:default}
 

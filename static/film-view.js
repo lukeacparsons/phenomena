@@ -55,12 +55,6 @@ export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null
   const dayHeading=date=>(date===today?t('today')+' · ':'')+new Intl.DateTimeFormat(locale(),{timeZone:'Europe/Madrid',...(date===today?{}:{weekday:'short'}),day:'numeric',month:'short',...(date.slice(0,4)===today.slice(0,4)?{}:{year:'numeric'})}).format(new Date(date+'T12:00:00Z'));
   const showtimeLabel=session=>[session.time,film.title,dayHeading(session.date),cinema(session.cinema_id)?.name||session.cinema_id,...(session.formats||[]),session.version,isSoldOut(session)?t('soldOut'):''].filter(Boolean).join(' · ');
   const tags=session=>[...(session.formats||[]),session.version].filter(Boolean).map(value=>`<span class="tag">${escapeHTML(value)}</span>`).join('');
-const age = value => {
-  const minutes=Math.max(0,Math.floor((Date.now()-Date.parse(value))/60000));
-  if(!Number.isFinite(minutes))return '';
-  if(minutes===0)return {en:'just now',es:'ahora mismo',ca:'ara mateix'}[language];
-  return language==='es'?`hace ${minutes} min`:language==='ca'?`fa ${minutes} min`:`${minutes} ${minutes===1?'min':'mins'} ago`;
-};
 function availabilityHTML(session,compact=false){
   const wrap=html=>compact?`<span class="seat-status">${html}</span>`:`<div class="seat-status">${html}</div>`;
   const observation=availabilityFor(session,availabilitySnapshot());
@@ -78,8 +72,7 @@ function availabilityHTML(session,compact=false){
     label=value.available+' '+t('seats');
     if(value.available<20)tone='low';
   }
-  const refreshed=!compact&&value.checked_at?`<span class="seat-age"> · ${escapeHTML(age(value.checked_at))}</span>`:'';
-  return wrap(`<span class="seat-count ${tone}">${escapeHTML(label)}</span>${refreshed}`);
+  return wrap(`<span class="seat-count ${tone}">${escapeHTML(label)}</span>`);
 }
 
 function dialogShowtime(session){

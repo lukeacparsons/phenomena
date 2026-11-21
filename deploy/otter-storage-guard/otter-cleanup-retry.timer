@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for finished Otter deployments every five minutes
+
+[Timer]
+OnCalendar=*-*-* *:02/5:00
+RandomizedDelaySec=10
+Persistent=true
+
+[Install]
+WantedBy=timers.target
