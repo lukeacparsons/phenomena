@@ -39,6 +39,14 @@ class PreviewSearchTests(unittest.TestCase):
                     self.assertEqual(response.headers['Cache-Control'], 'no-store')
                 with search('something uplifting') as response:
                     self.assertEqual(json.load(response)['mode'], 'unavailable')
+                # The address route must reach geocoding validation, not AI search.
+                request = urllib.request.Request(base + '/api/geocode', data=json.dumps({'query': 'rt >80'}).encode(),
+                    headers={'Content-Type': 'application/json', 'Origin': base})
+                with self.assertRaises(urllib.error.HTTPError) as geocode_error:
+                    urllib.request.urlopen(request, timeout=10)
+                self.assertEqual(geocode_error.exception.code, 400)
+                self.assertEqual(geocode_error.exception.headers['Cache-Control'], 'no-store')
+                geocode_error.exception.close()
                 with self.assertRaises(urllib.error.HTTPError) as error:
                     search('x' * 5000)
                 self.assertEqual(error.exception.code, 400)

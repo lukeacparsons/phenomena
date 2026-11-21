@@ -11,6 +11,7 @@ import {renderDateView,dateCacheControl} from './date-listings.mjs';
 import {pathToFileURL} from 'node:url';
 import {isProgrammePath, resolvePublicURL} from './public-routing.mjs';
 import {createSmartSearch} from './smart-search.mjs';
+import {createGeocoder} from './geocode.mjs';
 
 const types={'.html':'text/html; charset=utf-8','.json':'application/json; charset=utf-8',
   '.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8',
@@ -18,10 +19,11 @@ const types={'.html':'text/html; charset=utf-8','.json':'application/json; chars
   '.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.ico':'image/x-icon',
   '.woff2':'font/woff2','.ttf':'font/ttf'};
 
-export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={},now=()=>new Date()}={}) {
+export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={},geocoderOptions={},now=()=>new Date()}={}) {
   let active;
   let catalogue;
   const canonical=new URL(origin);
+  const geocoder=createGeocoder(geocoderOptions);
   async function release() {
     const root=await realpath(resolve(publication,'current/public'));
     if(active?.root!==root){
@@ -53,7 +55,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       // Never trust forwarded hosts for redirect targets. Bunny passes a fixed origin Host.
       const url=new URL(req.url,canonical);
       if(!req.url.startsWith('/')||req.url.startsWith('//'))return reply(400,'Bad request');
-      if(url.pathname==='/api/search'){
+      if(['/api/search','/api/geocode'].includes(url.pathname)){
         const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};
         if(req.method!=='POST')return reply(405,JSON.stringify({error:'method_not_allowed'}),{...headers,Allow:'POST'});
         if(req.headers.origin&&req.headers.origin!==canonical.origin&&req.headers.origin!=='http://'+req.headers.host)return reply(403,JSON.stringify({error:'origin_not_allowed'}),headers);
@@ -65,10 +67,10 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
             req.on('end',()=>{try{done(JSON.parse(Buffer.concat(chunks).toString('utf8')));}catch{reject(Object.assign(new Error('Invalid JSON'),{code:'invalid_input'}));}});
             req.on('error',reject);
           });
-          const result=await smartSearch.search(body,{client:req.socket.remoteAddress});
+          const result=await (url.pathname==='/api/geocode'?geocoder:smartSearch).search(body,{client:req.socket.remoteAddress});
           return reply(200,JSON.stringify(result),headers);
         }catch(error){
-          const code=['invalid_input','rate_limited'].includes(error.code)?error.code:'search_unavailable';
+          const code=['invalid_input','rate_limited'].includes(error.code)?error.code:url.pathname==='/api/geocode'?'geocode_unavailable':'search_unavailable';
           return reply(code==='invalid_input'?400:code==='rate_limited'?429:503,JSON.stringify({error:code}),headers);
         }
       }

@@ -1,5 +1,6 @@
 import {interpretSearch,madridDate,normalise} from './cinema-search.js';
 import {validateIntent} from './search-intent.js';
+import {parseLocationQuery} from './location-search.js';
 
 export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguage,onResult,onStatus,fetchImpl=fetch,delay=350}){
   const cache=new Map();
@@ -7,7 +8,8 @@ export function createSmartSearchUI({getProgramme,getIndex,getFilters,getLanguag
   function current(){return result;}
   function cancel(){clearTimeout(timer);timer=null;controller?.abort();controller=null;request++;}
   function update(){
-    const programme=getProgramme(),index=getIndex(),filters=getFilters(),language=getLanguage(),query=filters.query.trim();
+    const programme=getProgramme(),index=getIndex(),filters=getFilters(),language=getLanguage();
+    const query=parseLocationQuery(filters.query,{titles:index?.titles}).text;
     const nextKey=JSON.stringify([query,language,programme?.generated_at,madridDate()]);
     if(nextKey===key)return;
     cancel();key=nextKey;result=null;onStatus('');

@@ -1,0 +1,376 @@
+{
+  "description": "Reviewed venue coordinates for distance search. OSM matches checked against the researched venue name, address and municipality; SOM uses the shopping centre centroid. Existing dossier coordinates retain their original sources.",
+  "cinemas": {
+    "mooby-arenas": {
+      "latitude": 41.3763433,
+      "longitude": 2.1490436,
+      "formatted_address": "Gran Via de les Corts Catalanes, 385, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/4551543970",
+      "source_name": "Arenas de Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "mooby-glories": {
+      "latitude": 41.4053714,
+      "longitude": 2.1928801,
+      "formatted_address": "Avinguda Diagonal, 208, Westfield Glòries, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/673051320",
+      "source_name": "Glòries Multicines",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "mooby-sarria": {
+      "latitude": 41.394792,
+      "longitude": 2.1340573,
+      "formatted_address": "Ronda del General Mitre, 38–44, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/1224403399",
+      "source_name": "Gran Sarria Multicines",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-diagonal": {
+      "latitude": 41.393745,
+      "longitude": 2.1363579,
+      "formatted_address": "Santa Fe de Nou Mèxic, s/n (municipal listing: 18), Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/496060481",
+      "source_name": "Cinesa Diagonal",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-som-multiespai": {
+      "latitude": 41.4352318,
+      "longitude": 2.180889,
+      "formatted_address": "Passeig d’Andreu Nin, s/n, SOM Multiespai, Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/82608128",
+      "source_name": "Centre Comercial SOM Multiespai",
+      "precision": "shopping-centre",
+      "checked_on": "2026-11-21"
+    },
+    "verdi": {
+      "latitude": 41.4040146,
+      "longitude": 2.1568811,
+      "formatted_address": "Carrer de Verdi, 32, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/82781680",
+      "source_name": "Cines Verdi Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "verdi-park": {
+      "latitude": 41.4043891,
+      "longitude": 2.1576461,
+      "formatted_address": "Carrer de Torrijos, 49, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/82781682",
+      "source_name": "Verdi Park Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinemes-girona": {
+      "latitude": 41.3996133,
+      "longitude": 2.1646019,
+      "formatted_address": "Carrer de Girona, 175, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/1951810406",
+      "source_name": "Cinemes Girona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "renoir-floridablanca": {
+      "latitude": 41.3818547,
+      "longitude": 2.1623339,
+      "formatted_address": "Carrer de Floridablanca, 135, Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/249402942",
+      "source_name": "Renoir Floridablanca",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "zumzeig": {
+      "latitude": 41.3773203,
+      "longitude": 2.1450266,
+      "formatted_address": "Carrer de Béjar, 53, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/3928572822",
+      "source_name": "Zumzeig",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "filmoteca-catalunya": {
+      "latitude": 41.3785127,
+      "longitude": 2.1709659,
+      "formatted_address": "Plaça de Salvador Seguí, 1, Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/147085468",
+      "source_name": "Filmoteca de Catalunya",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "espai-texas": {
+      "latitude": 41.4020472,
+      "longitude": 2.1636355,
+      "formatted_address": "Carrer de Bailèn, 205, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/3913663865",
+      "source_name": "Espai Texas",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinema-malda": {
+      "latitude": 41.3832363,
+      "longitude": 2.1739003,
+      "formatted_address": "Carrer del Pi, 5, Galeries Maldà, Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/4326495653",
+      "source_name": "Cinema Maldà",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "filmax-gran-via": {
+      "latitude": 41.3583166,
+      "longitude": 2.1283735,
+      "formatted_address": "Avinguda de la Gran Via, 75, Gran Via 2, 08908 L’Hospitalet de Llobregat",
+      "source_url": "https://www.openstreetmap.org/node/4709933970",
+      "source_name": "Filmax Gran Via",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "ateneu-barcelones": {
+      "latitude": 41.3844171,
+      "longitude": 2.1717167,
+      "formatted_address": "Carrer de la Canuda, 6, Barcelona",
+      "source_url": "https://www.openstreetmap.org/relation/7331543",
+      "source_name": "Ateneu Barcelonès",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinebaix": {
+      "latitude": 41.3819192,
+      "longitude": 2.0448598,
+      "formatted_address": "Carrer de Joan Batllori, 21, 08980 Sant Feliu de Llobregat",
+      "source_url": "https://www.openstreetmap.org/node/5810830032",
+      "source_name": "CineBaix",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinema-capri": {
+      "latitude": 41.3256214,
+      "longitude": 2.0953905,
+      "formatted_address": "Avinguda Verge de Montserrat, 111, 08820 El Prat de Llobregat",
+      "source_url": "https://www.openstreetmap.org/way/294184829",
+      "source_name": "Cinema Capri",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "sant-cugat-cinemas": {
+      "latitude": 41.4695107,
+      "longitude": 2.0900571,
+      "formatted_address": "Avinguda del Pla del Vinyet, 50, 08172 Sant Cugat del Vallès",
+      "source_url": "https://www.openstreetmap.org/way/191056075",
+      "source_name": "Cinemes Sant Cugat",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinemes-montcada": {
+      "latitude": 41.4948266,
+      "longitude": 2.1805748,
+      "formatted_address": "Carrer de Verdi, 2–4, 08110 Montcada i Reixac",
+      "source_url": "https://www.openstreetmap.org/node/439756329",
+      "source_name": "Cinemes Montcada",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "can-castellet": {
+      "latitude": 41.3453291,
+      "longitude": 2.040524,
+      "formatted_address": "Carrer de Jaume I / Plaça de Gaietà Mestres, Sant Boi de Llobregat",
+      "source_url": "https://www.openstreetmap.org/node/13830657938",
+      "source_name": "Cinemes Can Castellet",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "yelmo-castelldefels": {
+      "latitude": 41.2820671,
+      "longitude": 1.9858022,
+      "formatted_address": "Av. del Canal Olímpic, 24, CC Ànecblau, Castelldefels",
+      "source_url": "https://www.openstreetmap.org/node/904962713",
+      "source_name": "Yelmo Cines Castelldefels (Anec blau)",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "yelmo-sant-cugat": {
+      "latitude": 41.4832299,
+      "longitude": 2.0537817,
+      "formatted_address": "Av. de la Via Augusta, 2–14, 08174 Sant Cugat del Vallès",
+      "source_url": "https://www.openstreetmap.org/node/8848608418",
+      "source_name": "Yelmo",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "ocine-magic": {
+      "latitude": 41.4437406,
+      "longitude": 2.2304798,
+      "formatted_address": "Carrer de la Concòrdia, 1, CC Màgic, 08917 Badalona",
+      "source_url": "https://www.openstreetmap.org/node/493162984",
+      "source_name": "OCine Badalona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "institut-francais": {
+      "latitude": 41.3954131,
+      "longitude": 2.1515383,
+      "formatted_address": "Carrer de Moià, 8, 08006 Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/1010954995",
+      "source_name": "Institut Français de Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cccb": {
+      "latitude": 41.383693,
+      "longitude": 2.1662438,
+      "formatted_address": "Carrer de Montalegre, 5, 08001 Barcelona",
+      "source_url": "https://www.openstreetmap.org/relation/2873579",
+      "source_name": "Centre de Cultura Contemporània de Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "caixaforum-barcelona": {
+      "latitude": 41.3714823,
+      "longitude": 2.1497204,
+      "formatted_address": "Avinguda de Francesc Ferrer i Guàrdia, 6–8, Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/217475661",
+      "source_name": "CaixaForum Barcelona",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "casa-elizalde": {
+      "latitude": 41.3944748,
+      "longitude": 2.1658758,
+      "formatted_address": "Carrer de València, 302, 08009 Barcelona",
+      "source_url": "https://www.openstreetmap.org/node/13908517152",
+      "source_name": "La Casa Elizalde",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "centre-cultural-albareda": {
+      "latitude": 41.3741374,
+      "longitude": 2.1733396,
+      "formatted_address": "Carrer d’Albareda, 22–24, 08004 Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/658909940",
+      "source_name": "Centre Albareda",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "can-carol": {
+      "latitude": 41.4123825,
+      "longitude": 2.1458744,
+      "formatted_address": "Carrer de Cambrils, 26–28, 08023 Barcelona",
+      "source_url": "https://www.openstreetmap.org/way/802177326",
+      "source_name": "Casal de Barri Can Carol",
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "phenomena": {
+      "latitude": 41.4090888,
+      "longitude": 2.1718110999999998,
+      "formatted_address": "Phenomena Experience, Carrer de Sant Antoni Maria Claret, 168, Eixample, 08025 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Phenomena%20Experience%20Barcelona&query_place_id=ChIJJ0AB4M-ipBIRM07KK-oSTPY",
+      "source_ids": [
+        "google-phenomena"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "mooby-balmes": {
+      "latitude": 41.4072222,
+      "longitude": 2.1386111,
+      "formatted_address": "Mooby Balmes Versión Original, Carrer de Balmes, 422, 424, Sarrià-Sant Gervasi, 08022 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Balmes%20Barcelona&query_place_id=ChIJl2Qulw6YpBIRXqM8cEs0VC4",
+      "source_ids": [
+        "google-mooby-balmes"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "mooby-bosque": {
+      "latitude": 41.401491799999995,
+      "longitude": 2.1518736,
+      "formatted_address": "MOOBY Bosque, Rambla de Prat, 16, Gràcia, 08012 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Bosque%20Barcelona&query_place_id=ChIJg_RkeaKipBIRL2cu-hiaY3o",
+      "source_ids": [
+        "google-mooby-bosque"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "mooby-aribau": {
+      "latitude": 41.386125,
+      "longitude": 2.1625929999999998,
+      "formatted_address": "MOOBY Aribau - Aribau Cinema, Carrer d'Aribau, 8, 10, Eixample, 08011 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Mooby%20Aribau%20Barcelona&query_place_id=ChIJ74nVg4yipBIRxNcmb8HE_Ng",
+      "source_ids": [
+        "google-mooby-aribau"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-diagonal-mar": {
+      "latitude": 41.41027,
+      "longitude": 2.2165149,
+      "formatted_address": "CINESA DIAGONAL MAR · ISENSE · IMAX, Av. Diagonal, 3, Sant Martí, 08019 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20Diagonal%20Mar%20Barcelona&query_place_id=ChIJQ5WONVejpBIRBHgaGg2ts6E",
+      "source_ids": [
+        "google-cinesa-diagonal-mar"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-la-farga": {
+      "latitude": 41.3631793,
+      "longitude": 2.1047766,
+      "formatted_address": "CINESA LUXE LA FARGA, La Farga, Av. de Josep Tarradellas i Joan, 145, 08901 L'Hospitalet de Llobregat, Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20LUXE%20La%20Farga%20Barcelona&query_place_id=ChIJv56Avx-ZpBIR9Sn83R7ry0I",
+      "source_ids": [
+        "google-cinesa-la-farga"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "yelmo-maquinista": {
+      "latitude": 41.4395825,
+      "longitude": 2.1983539,
+      "formatted_address": "Cine Yelmo Westfield La Maquinista, Westfield La Maquinista, Carrer de Potosí, 2, Sant Andreu, 08030 Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Yelmo%20Premium%20La%20Maquinista%20Barcelona&query_place_id=ChIJvzQ5Neq8pBIRfUoQLf4vaD4",
+      "source_ids": [
+        "google-yelmo-maquinista"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "kinepolis-splau": {
+      "latitude": 41.347440899999995,
+      "longitude": 2.0788224,
+      "formatted_address": "KINEPOLIS CINEMAS, Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Kin%C3%A9polis%20Barcelona%20Splau%20Barcelona&query_place_id=ChIJn13KLEyZpBIRDBdVtKH83bo",
+      "source_ids": [
+        "google-kinepolis-splau"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-barnasud": {
+      "latitude": 41.296,
+      "longitude": 2.0076,
+      "formatted_address": "Carrer del Progrés, 69, 08850 Gavà",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20LUXE%20Barnasud%20Carrer%20del%20Progr%C3%A9s%2C%2069%2C%2008850%20Gav%C3%A0",
+      "source_ids": [
+        "reg-cinesa-sites"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    },
+    "cinesa-parc-valles": {
+      "latitude": 41.5469,
+      "longitude": 2.0247,
+      "formatted_address": "Avda. Can Jofresa, 85, CC Parc Vallès, 08223 Terrassa",
+      "source_url": "https://www.google.com/maps/search/?api=1&query=Cinesa%20Parc%20Vall%C3%A8s%20Avda.%20Can%20Jofresa%2C%2085%2C%20CC%20Parc%20Vall%C3%A8s%2C%2008223%20Terrassa",
+      "source_ids": [
+        "reg-cinesa-sites"
+      ],
+      "precision": "venue",
+      "checked_on": "2026-11-21"
+    }
+  }
+}

@@ -30,7 +30,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def end_headers(self):
         path = urlsplit(self.path).path
-        cache = 'no-store' if path == '/api/search' else 'public, max-age=31536000, immutable' if self.response_status in (200, 304) and re.fullmatch(r'/preview-data/images/[a-f0-9]{64}-\d+\.webp', path) else 'no-cache'
+        cache = 'no-store' if path in ('/api/search', '/api/geocode') else 'public, max-age=31536000, immutable' if self.response_status in (200, 304) and re.fullmatch(r'/preview-data/images/[a-f0-9]{64}-\d+\.webp', path) else 'no-cache'
         self.send_header("Cache-Control", cache)
         super().end_headers()
 
@@ -84,7 +84,8 @@ class Handler(SimpleHTTPRequestHandler):
         self.do_GET()
 
     def do_POST(self):
-        if urlsplit(self.path).path != '/api/search':
+        path = urlsplit(self.path).path
+        if path not in ('/api/search', '/api/geocode'):
             self.json_response({'error': 'method_not_allowed'}, 405)
             return
         try:
@@ -93,7 +94,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_response({'error': 'invalid_input'}, 400)
                 return
             headers = {key: self.headers[key] for key in ('Content-Type', 'Origin', 'Host') if key in self.headers}
-            status, result = self.server.search.request(self.rfile.read(length), headers)
+            status, result = self.server.search.request(self.rfile.read(length), headers, path=path)
             self.json_response(result, status)
         except (ValueError, OSError, AttributeError):
             self.json_response({'error': 'search_unavailable'}, 503)

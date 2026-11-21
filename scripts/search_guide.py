@@ -24,6 +24,7 @@ COPY = {
         'examples': [
             ('Title, actor or director', 'Enter a film title or the name of an actor or director.', ['Dune', 'Pedro Almodóvar']),
             ('Cinema, date or format', 'Limit results to a cinema, a day or a format such as IMAX.', ['Balmes tomorrow', 'IMAX this weekend']),
+            ('Nearby cinemas or an address', 'Enter “near me” and allow location access when your browser asks. You can also enter “near” followed by an address, or just the address. You can also type a Barcelona neighbourhood or landmark, such as “poblesec”; AI recognizes the place and starts a nearby search. Include the city for addresses; choose a place if several match.', ['near me', 'poblesec', 'near this address: Carrer de Balmes 422, Barcelona', 'Carrer de Girona 175, Barcelona', 'comedy tomorrow near me']),
             ('Audio language or country', '“In French” searches for French audio. “From France” searches for French productions, including co-productions.', ['in French', 'from France']),
             ('Subtitles', 'Audio and subtitles are separate. VOSI means English subtitles. Combine them to find a French-language screening with English subtitles.', ['English subtitles', 'foreign language films with English subtitles', 'in French with English subtitles']),
             ('Genre, length or rating', 'Choose a genre or length, or set a minimum rating. “IMDb >= 7.5” means at least 7.5 out of 10. “rt >= 80%” means a Rotten Tomatoes critics’ score of at least 80%.', ['comedy under two hours', 'IMDb >= 7.5', 'rt >= 80%']),
@@ -32,6 +33,8 @@ COPY = {
         ],
         'how_title': 'How search works',
         'how': [
+            ('Nearby results.', 'Films with the closest matching cinema appear first. Within each card’s day, cinemas are ordered by distance and show their distance from you or the chosen address. Showtimes stay in time order. Distances are approximate straight-line distances, not walking or driving routes. Cinemas without coordinates appear last with “Distance unavailable”.'),
+            ('Location and sharing.', 'Device coordinates stay in this tab and are not included in shared links. A shared “near me” search uses the recipient’s location and permission. Typed addresses are sent to the address lookup service and remain in the search link. If location is blocked or unavailable, enter an address instead. Remove the location label to restore normal ordering.'),
             ('Film and screening details.', 'Search checks titles, names, dates, ratings and other details against the site’s film and screening data.'),
             ('AI suggestions.', 'AI interprets more complex requests and suggests films using descriptions, themes and its knowledge of films.'),
             ('Results.', 'Results show films with matching upcoming screenings. Filters such as language, rating and start time also apply to AI suggestions.'),
@@ -56,6 +59,7 @@ COPY = {
         'examples': [
             ('Título, actor o director', 'Escribe el título de una película o el nombre de un actor o director.', ['Dune', 'Pedro Almodóvar']),
             ('Cine, fecha o formato', 'Limita los resultados a un cine, un día o un formato como IMAX.', ['Balmes mañana', 'IMAX este fin de semana']),
+            ('Cines cercanos o una dirección', 'Escribe «cerca de mí» y permite el acceso a tu ubicación cuando el navegador lo solicite. También puedes escribir «cerca de» seguido de una dirección, o solo la dirección. También puedes escribir un barrio o lugar de Barcelona, como «poblesec»; la IA lo reconoce e inicia una búsqueda cercana. Incluye la ciudad en las direcciones; elige un lugar si hay varias coincidencias.', ['cerca de mí', 'poblesec', 'cerca de esta dirección: Carrer de Balmes 422, Barcelona', 'Carrer de Girona 175, Barcelona', 'comedia mañana cerca de mí']),
             ('Idioma del audio o país', '«En francés» busca audio en francés. «De Francia» busca producciones francesas, incluidas las coproducciones.', ['en francés', 'de Francia']),
             ('Subtítulos', 'El audio y los subtítulos son datos distintos. VOSI indica subtítulos en inglés. Puedes combinar ambos idiomas.', ['subtítulos en inglés', 'en francés con subtítulos en inglés']),
             ('Género, duración o puntuación', 'Elige un género o una duración, o fija una puntuación mínima. «IMDb >= 7.5» significa al menos 7,5 sobre 10. «rt >= 80%» significa una puntuación de la crítica de Rotten Tomatoes de al menos el 80%.', ['comedia menos de dos horas', 'IMDb >= 7.5', 'rt >= 80%']),
@@ -64,6 +68,8 @@ COPY = {
         ],
         'how_title': 'Cómo funciona la búsqueda',
         'how': [
+            ('Resultados cercanos.', 'Las películas con el cine más próximo que cumple los filtros aparecen primero. Dentro de cada día de la tarjeta, los cines se ordenan por distancia y muestran su distancia desde tu ubicación o la dirección elegida. Las sesiones siguen en orden horario. Son distancias aproximadas en línea recta, no rutas a pie ni en coche. Los cines sin coordenadas aparecen al final con «Distancia no disponible».'),
+            ('Ubicación y enlaces.', 'Las coordenadas del dispositivo se quedan en esta pestaña y no se incluyen en los enlaces compartidos. Al compartir «cerca de mí», se utiliza la ubicación y el permiso de quien abre el enlace. Las direcciones escritas se envían al servicio de búsqueda de direcciones y quedan en el enlace. Si la ubicación está bloqueada o no está disponible, escribe una dirección. Quita la etiqueta de ubicación para recuperar el orden habitual.'),
             ('Datos de películas y sesiones.', 'La búsqueda compara títulos, nombres, fechas, puntuaciones y otros detalles con los datos del sitio.'),
             ('Sugerencias de IA.', 'La IA interpreta peticiones más complejas y sugiere películas a partir de descripciones, temas y sus conocimientos de cine.'),
             ('Resultados.', 'Los resultados muestran películas con próximas sesiones que cumplen la búsqueda. Los filtros de idioma, puntuación y hora de inicio también se aplican a las sugerencias de IA.'),
@@ -88,6 +94,7 @@ COPY = {
         'examples': [
             ('Títol, actor o director', 'Escriu el títol d’una pel·lícula o el nom d’un actor o director.', ['Dune', 'Pedro Almodóvar']),
             ('Cinema, data o format', 'Limita els resultats a un cinema, un dia o un format com IMAX.', ['Balmes demà', 'IMAX aquest cap de setmana']),
+            ('Cinemes propers o una adreça', 'Escriu «a prop meu» i permet l’accés a la ubicació quan el navegador ho demani. També pots escriure «a prop de» seguit d’una adreça, o només l’adreça. També pots escriure un barri o lloc de Barcelona, com «poblesec»; la IA el reconeix i inicia una cerca propera. Inclou la ciutat a les adreces; tria un lloc si hi ha diverses coincidències.', ['a prop meu', 'poblesec', 'a prop d’aquesta adreça: Carrer de Balmes 422, Barcelona', 'Carrer de Girona 175, Barcelona', 'comèdia demà a prop meu']),
             ('Idioma de l’àudio o país', '«En francès» cerca àudio en francès. «De França» cerca produccions franceses, incloses les coproduccions.', ['en francès', 'de França']),
             ('Subtítols', 'L’àudio i els subtítols són dades diferents. VOSI indica subtítols en anglès. Pots combinar tots dos idiomes.', ['subtítols en anglès', 'en francès amb subtítols en anglès']),
             ('Gènere, durada o puntuació', 'Tria un gènere o una durada, o fixa una puntuació mínima. «IMDb >= 7.5» vol dir almenys 7,5 sobre 10. «rt >= 80%» vol dir una puntuació de la crítica de Rotten Tomatoes d’almenys el 80%.', ['comèdia menys de dues hores', 'IMDb >= 7.5', 'rt >= 80%']),
@@ -96,6 +103,8 @@ COPY = {
         ],
         'how_title': 'Com funciona la cerca',
         'how': [
+            ('Resultats propers.', 'Les pel·lícules amb el cinema més proper que compleix els filtres apareixen primer. Dins de cada dia de la targeta, els cinemes s’ordenen per distància i mostren la distància des de la teva ubicació o l’adreça triada. Les sessions segueixen en ordre horari. Són distàncies aproximades en línia recta, no rutes a peu ni en cotxe. Els cinemes sense coordenades apareixen al final amb «Distància no disponible».'),
+            ('Ubicació i enllaços.', 'Les coordenades del dispositiu es queden en aquesta pestanya i no s’inclouen als enllaços compartits. En compartir «a prop meu», s’utilitzen la ubicació i el permís de qui obre l’enllaç. Les adreces escrites s’envien al servei de cerca d’adreces i queden a l’enllaç. Si la ubicació està bloquejada o no està disponible, escriu una adreça. Treu l’etiqueta d’ubicació per recuperar l’ordre habitual.'),
             ('Dades de pel·lícules i sessions.', 'La cerca compara títols, noms, dates, puntuacions i altres detalls amb les dades del lloc.'),
             ('Suggeriments d’IA.', 'La IA interpreta peticions més complexes i suggereix pel·lícules a partir de descripcions, temes i els seus coneixements de cinema.'),
             ('Resultats.', 'Els resultats mostren pel·lícules amb pròximes sessions que compleixen la cerca. Els filtres d’idioma, puntuació i hora d’inici també s’apliquen als suggeriments d’IA.'),
@@ -127,6 +136,7 @@ def render(lang):
     body += '</div></section>'
     body += f'<section class="search-guide-prose reading-wash" aria-labelledby="search-how"><h2 id="search-how">{escape(c["how_title"])}</h2>'
     body += ''.join(f'<p><strong>{escape(title)}</strong> {escape(description)}</p>' for title, description in c['how']) + '</section>'
+    body += '<p class="source-note">© <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a></p>'
     body += f'<section class="search-guide-prose reading-wash" aria-labelledby="search-control"><h2 id="search-control">{escape(c["control_title"])}</h2>'
     body += ''.join(f'<p>{escape(c[key])}</p>' for key in ('control', 'limits', 'booking'))
     body += f'<a class="text-action" href="/{lang}/">{escape(c["cta"])}</a></section></article>'

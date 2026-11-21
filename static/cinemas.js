@@ -8,6 +8,7 @@ import {readProgrammeCache,saveProgrammeCache} from './programme-cache.js';
 import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch,interpretSearch} from './cinema-search.js';
 import {intentChips,filmMatchReason,searchExplanation} from './search-intent.js';
 import {createSmartSearchUI} from './smart-search-ui.js';
+import {createLocationSearchUI,LOCATION_COPY} from './location-search.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
 import {registerWebMCP} from './webmcp-registration.js';
 import {installLanguageNavigation} from './language-navigation.js';
@@ -63,7 +64,7 @@ let activeView='film',showtimesScroll=0,showtimesSession=null;
 let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0;
 const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
   getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
-  onResult:()=>{refreshResults();if($('filmDialog')?.open)renderDialog();},
+  onResult:()=>{locationSearchUI?.update();refreshResults();if($('filmDialog')?.open)renderDialog();},
   onStatus:(kind,unsupported=[])=>{
     let status=$('searchStatus');
     if(!status){status=document.createElement('p');status.id='searchStatus';status.className='search-status';status.setAttribute('role','status');$('filterChips')?.after(status);}
@@ -71,6 +72,10 @@ const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
     const regional={en:'The catalogue does not yet identify films produced in Catalunya.',es:'El catálogo todavía no identifica las películas producidas en Catalunya.',ca:'El catàleg encara no identifica les pel·lícules produïdes a Catalunya.'};
     status.textContent=(messages[language][kind]||'')+(kind==='unsupported'?unsupported.map(item=>item==='origin:Catalunya'?regional[language]:item).join(' · '):'');status.hidden=!kind;
   }
+});
+const locationSearchUI=typeof window==='undefined'?null:createLocationSearchUI({
+  getQuery:()=>state.query,getIndex:()=>searchIndex,getIntent:()=>smartSearchUI?.current()?.intent,getIgnored:()=>state.ignored_filters,
+  onChange:()=>{if(data)refreshResults();}
 });
 const CARD_BATCH_SIZE=32;
 let cardLimit=CARD_BATCH_SIZE;
@@ -82,9 +87,9 @@ const publishedAt=Date.parse($('grid').dataset.listingAsOf);
 let initialViewTime=publicLanguage&&!searchParams(state).size&&Number.isFinite(publishedAt)?publishedAt:null;
 let cachedProgramme=null,viewCache=null;
 const listingView=()=>{
-  const today=todayISO(),cinemas=data?.cinemas;
-  if(viewCache?.language!==language||viewCache?.today!==today||viewCache?.cinemas!==cinemas)
-    viewCache={language,today,cinemas,view:createListingView({language,cinemas,today,listingPath,...(listingCinemaId?{}:HOME_CARD_PREVIEW),availabilityHTML,isSoldOut})};
+  const today=todayISO(),cinemas=data?.cinemas,origin=locationSearchUI?.current().origin;
+  if(viewCache?.language!==language||viewCache?.today!==today||viewCache?.cinemas!==cinemas||viewCache?.origin!==origin)
+    viewCache={language,today,cinemas,origin,view:createListingView({language,cinemas,today,listingPath,...(listingCinemaId?{}:HOME_CARD_PREVIEW),origin,availabilityHTML,isSoldOut})};
   return viewCache.view;
 };
 const seats = new Map(), seatErrors = new Set();
@@ -155,7 +160,7 @@ function parsedSearch(){
 }
 
 function filteredFilms(ignoreDate=false){
-  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now(),...smartSearchUI?.current()});
+  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now(),...smartSearchUI?.current(),origin:locationSearchUI?.current().origin});
   if(initialViewTime!==null)films.sort((a,b)=>(initialOrder.get(a.id)??Infinity)-(initialOrder.get(b.id)??Infinity));
   return films;
 }
@@ -196,6 +201,7 @@ function applySearch(filters){
   closeFilm();
   if($('search').value!==state.query)$('search').value=state.query;
   smartSearchUI?.update();
+  locationSearchUI?.update();
   refreshResults();
   window.dispatchEvent(new CustomEvent('vobarna:search',{detail:{scope:'films',query_length:state.query.length,
     result_count:visible.length,screening_count:visible.reduce((sum,film)=>sum+film.sessions.length,0),
@@ -205,6 +211,8 @@ function applySearch(filters){
 function renderFilterChips(){
   const labels={en:{remove:'Remove',big:'Big screens only',from:'From',to:'Until'},es:{remove:'Quitar',big:'Solo pantallas grandes',from:'Desde',to:'Hasta'},ca:{remove:'Treu',big:'Només pantalles grans',from:'Des de',to:'Fins a'}}[language];
   const chips=[];
+  const nearby=locationSearchUI?.current();
+  if(nearby?.location){const copy=LOCATION_COPY[language];chips.push({field:'intent',value:'location',label:nearby.location.type==='device'?copy.nearMe:copy.near+' '+(nearby.label||nearby.location.address)});}
   // A single date is already highlighted on the film strip.
   if((state.date_from||state.date_to)&&state.date_from!==state.date_to){
     const label=[state.date_from?labels.from+' '+displayDate(state.date_from):'',state.date_to?labels.to+' '+displayDate(state.date_to):''].filter(Boolean).join(' · ');
@@ -223,6 +231,7 @@ function renderFilterChips(){
   if(!explanation){explanation=document.createElement('p');explanation.id='searchExplanation';explanation.className='search-explanation';$('filterChips').after(explanation);}
   explanation.textContent=data&&state.query.trim()?searchExplanation(interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent}),language):'';
   explanation.hidden=!explanation.textContent;
+  renderLocationStatus();
 }
 
 function updateDateFades(){
@@ -243,6 +252,21 @@ function buildDates(films=filteredFilms(true)){
     requestAnimationFrame(updateDateFades);
   }
 }
+
+function renderLocationStatus(){
+  const nearby=locationSearchUI?.current();
+  if(!nearby?.location&&!$('locationStatus'))return;
+  let region=$('locationStatus');
+  if(!region){region=document.createElement('div');region.id='locationStatus';region.className='location-status';$('filterChips').after(region);}
+  region.hidden=!nearby?.location||nearby.status==='ready';
+  if(region.hidden){region.replaceChildren();return;}
+  const copy=LOCATION_COPY[language],retry=['denied','timeout','locationFailed','geocodeFailed'].includes(nearby.status);
+  const message=copy[nearby.status]||'';
+  region.innerHTML=`<p role="status">${escapeHTML(message)}</p>`+
+    (nearby.status==='choose'?`<div class="location-choices">${nearby.places.map((p,i)=>`<button type="button" class="btn btn-secondary" data-location-choice="${i}">${escapeHTML(p.label)}</button>`).join('')}</div>`:'')+
+    (retry?`<button type="button" class="btn btn-secondary" data-location-retry>${escapeHTML(copy.retry)}</button>`:'');
+}
+
 
 function imageMarkup(film,dialog=false){
   if(dialog)return posterMarkup(film,{className:'dialog-poster'});
@@ -278,6 +302,7 @@ function render(films=filteredFilms()){
   $('moreFilms').hidden=visible.length<=cardLimit;
   $('grid').setAttribute('aria-busy','false');
   $('grid').dataset.enhanced='true';
+  if(locationSearchUI?.current().location&&!locationSearchUI.current().origin){$('grid').replaceChildren();return;}
   if(!visible.length){
     $('grid').innerHTML=`<div class="empty"><h2>${t('noMatches')}</h2><p>${t('emptyHint')}</p><button type="button" class="btn btn-secondary" data-reset>${t('reset')}</button></div>`;
     return;
@@ -333,6 +358,7 @@ function setLanguage(next){
   $('dates').setAttribute('aria-label',t('screeningDates'));
   if(data){
     smartSearchUI?.update();
+    locationSearchUI?.update();
     refreshResults();
     if($('filmDialog').open)renderDialog();
   }
@@ -482,6 +508,7 @@ function useProgramme(next,{cached=false}={}){
   }
   searchIndex=createSearchIndex(data);
   smartSearchUI?.reset();
+  locationSearchUI?.reset();
   dateLabels.clear();
   if((searchTimer||searchFrame)&&parseFilmQuery(data,state.query,todayISO(),searchIndex).range){state.date_from=null;state.date_to=null;}
   cancelSearchRender();
@@ -633,7 +660,14 @@ document.addEventListener('click',event=>{
   if(card){if(openFilm(card.dataset.open,card.dataset.session,{push:!$('filmDialog').open,view:card.dataset.view,revealSession:card.dataset.revealSession})&&anchor)event.preventDefault();return;}
   const button=event.target.closest('button');
   if(!button)return;
-  if(button.dataset.lang)setLanguage(button.dataset.lang);
+  if(button.hasAttribute('data-location-choice'))locationSearchUI.select(Number(button.dataset.locationChoice));
+  else if(button.hasAttribute('data-location-retry')){
+    // WebKit retains a denied geolocation decision for the document lifetime.
+    // Reload after the visitor changes permission; the query stays in the URL.
+    if(locationSearchUI.current().status==='denied')window.location.reload();
+    else locationSearchUI.update({retry:true});
+  }
+  else if(button.dataset.lang)setLanguage(button.dataset.lang);
   else if(button.dataset.date&&!data){
     initialViewTime=null;state.date_from=state.date_to=button.dataset.date==='all'?null:button.dataset.date;
     $('dates').querySelectorAll('[data-date]').forEach(node=>node.setAttribute('aria-pressed',String(node===button)));
@@ -656,6 +690,7 @@ function inputSearch(event){
   if(state.query!==event.target.value)state.ignored_filters=[];
   state.query=event.target.value;
   smartSearchUI?.reset();
+  locationSearchUI?.reset();
   initialViewTime=null;
   if(!data)return;
   cancelSearchRender();

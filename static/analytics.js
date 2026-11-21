@@ -76,7 +76,7 @@ if(['vobarna.com','www.vobarna.com'].includes(location.hostname)
       session_recording:{
         maskAllInputs:true,
         // Search summaries can repeat typed text; booking links contain operator URLs.
-        blockSelector:'#filterChips, #searchStatus, a.ticket-link, a.buyrow-ticket, a[href*="?q="], a[href*="&q="]',
+        blockSelector:'#filterChips, #searchStatus, #locationStatus, .card-distance, a.ticket-link, a.buyrow-ticket, a[href*="?q="], a[href*="&q="]',
         recordHeaders:false,recordBody:false,
         maskCapturedNetworkRequestFn:request=>{
           if(!request.name)return request;

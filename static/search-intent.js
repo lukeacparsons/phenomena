@@ -10,10 +10,10 @@ const dictionaries={
 };
 const lookups=Object.fromEntries(Object.entries(dictionaries).map(([field,rows])=>[field,new Map(rows.flatMap(row=>row.map(alias=>[fold(alias),row[0]])))]));
 export const canonical=(field,value)=>lookups[field==='subtitles'?'language':field]?.get(fold(value))||String(value).trim();
-export const fields=['genre','country','language','subtitles','non_english_audio','city','colour','producer','company','distributor','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
-const numeric={rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,release_year:2999,duration:1440,start_time:1439};
+export const fields=['price_eur','genre','country','language','subtitles','non_english_audio','city','colour','producer','company','distributor','provider','cinema','format','rating_rt','rating_audience','rating_imdb','rating_filmaffinity','reviews_rt','release_year','duration','start_time','date','certified_fresh'];
+const numeric={price_eur:10000,rating_rt:100,rating_audience:100,rating_imdb:10,rating_filmaffinity:10,reviews_rt:10000000,release_year:2999,duration:1440,start_time:1439};
 const ops=['eq','ne','gt','gte','lt','lte','in'];
-export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',sort:'soonest',unsupported:[]});
+export const emptyIntent=()=>({text:'',conditions:[],semantic_query:'',location_query:'',sort:'soonest',unsupported:[]});
 export const conditionId=({field,op,value})=>field+':'+op+':'+fold(value);
 const esc=value=>value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const comparison=value=>({'>':'gt','>=':'gte','≥':'gte','<':'lt','<=':'lte','≤':'lte','=':'eq','==':'eq'}[value]||(/under|less|below|menos|menys|before|antes|abans/.test(value)?'lt':/at least|minimum|al menos|com a minim|a partir/.test(value)?'gte':'gt'));
@@ -21,6 +21,8 @@ const comparison=value=>({'>':'gt','>=':'gte','≥':'gte','<':'lt','<=':'lte','�
 export function validateIntent(value,programme){
   if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!Object.keys(emptyIntent()).includes(key)))throw new Error('Invalid search interpretation');
   const result={...emptyIntent(),...value};
+  if(typeof result.location_query!=='string'||result.location_query.length>300||/[\x00-\x1f]/.test(result.location_query))throw new Error('Invalid search location');
+  result.location_query=result.location_query.trim();
   for(const field of ['text','semantic_query'])if(typeof result[field]!=='string'||result[field].length>500)throw new Error('Invalid search text');
   if(!['soonest','rating','relevance'].includes(result.sort)||!Array.isArray(result.conditions)||result.conditions.length>20||!Array.isArray(result.unsupported)||result.unsupported.length>5||result.unsupported.some(x=>typeof x!=='string'||x.length>160))throw new Error('Invalid search interpretation');
   const venues=new Set(programme?.cinemas.map(c=>c.id)||[]);
@@ -82,7 +84,7 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],t
   }
   // Compound alternatives need the interpreter's complete expression. Parsing
   // just one side would accidentally turn an OR into a mandatory AND condition.
-  if(/\b(?:or|o)\b/.test(rest)){
+  if(/\b(?:or(?!\s+less\b)|o)\b/.test(rest)){
     let other=rest;
     for(const provider of new Set(programme?.films.flatMap(f=>f.sessions.map(s=>s.provider).filter(Boolean))||[]))other=other.replace(new RegExp('\\b'+esc(fold(provider))+'\\b','g'),' ');
     if(other.replace(/\b(?:or|o|at|en|movies|films|show me)\b/g,' ').trim())return plan;
@@ -91,6 +93,12 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],t
   // Year precision is explicit in the chip; a cinema showing is never a release date.
   if(!/\b(?:week|month|days?|semana|mes|setmana|mesos|dies)\b/.test(rest))
     consume(/\b(?:new releases|latest releases|recent releases|new movies|new films|nuevos estrenos|estrenos recientes|estrenos|novetats|noves estrenes|estrenes recents|estrenes)\b/g,()=>add('release_year','eq',today.slice(0,4)));
+  const priceWords={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,un:1,una:1,uno:1,dos:2,dues:2,tres:3,cuatro:4,quatre:4,cinco:5,cinc:5,seis:6,sis:6,siete:7,set:7,ocho:8,vuit:8};
+  const priceNumber='(\\d+(?:[.,]\\d+)?|'+Object.keys(priceWords).join('|')+')';
+  const priceValue=n=>priceWords[n]||Number(n.replace(',','.'));
+  consume(new RegExp('\\b(?:under|below|less than|menos de|menys de)\\s*(?:€\\s*)?'+priceNumber+'\\s*(?:€|euros?)','g'),(_,n)=>add('price_eur','lt',priceValue(n)));
+  consume(new RegExp('\\b(?:under|below|less than|menos de|menys de)\\s*€\\s*'+priceNumber+'\\b','g'),(_,n)=>add('price_eur','lt',priceValue(n)));
+  consume(new RegExp('€\\s*'+priceNumber+'\\s*(?:or less|maximum|maximo|maxim)\\b','g'),(_,n)=>add('price_eur','lte',priceValue(n)));
   consume(/\b(?:(not|no|without|sin|sense)\s+)?(?:black[ -]+and[ -]+white|monochrome|blanco y negro|blanc i negre)\b/g,(_,negative)=>add('colour',negative?'ne':'eq','black-and-white'));
   // Release dates are film metadata; story settings and screening dates remain distinct.
   if(!/\b(?:set|setting|ambientad|ambientat|about|sobre)\b/.test(rest)){
@@ -180,7 +188,7 @@ export function parseIntent(text,{programme,exactTitle=false,protectedNames=[],t
 }
 
 export function effectiveIntent(plan,ignored=[]){
-  return {...plan,conditions:plan.conditions.filter(c=>!ignored.includes(conditionId(c))),semantic_query:ignored.includes('semantic')?'':plan.semantic_query};
+  return {...plan,location_query:ignored.includes('location')?'':plan.location_query||'',conditions:plan.conditions.filter(c=>!ignored.includes(conditionId(c))),semantic_query:ignored.includes('semantic')?'':plan.semantic_query};
 }
 
 export function filmMatchReason(film,plan,language='en'){
@@ -223,12 +231,22 @@ export function ratingValue(film,field){
   const value=field==='reviews_rt'?rating?.count:rating?.score;
   return typeof value==='number'&&Number.isFinite(value)?value:null;
 }
+function admissionPrice(session){
+  const p=session.price_data;
+  if(!p||p.currency!=='EUR'||!(typeof p.source_url==='string'&&/^https:\/\//.test(p.source_url))||!Number.isFinite(Date.parse(p.checked_at)))return null;
+  // A minimum fare may require membership. Only explicit general admission
+  // (or explicitly free admission) is comparable across screenings.
+  const general=p.options?.find(o=>/^(general|general admission|adult|adulto|adulte|entrada general)$/i.test(o.label||o.name||''));
+  const amount=general?.amount??(['general_admission','published_admission','published_event_price','free_admission','single','exact'].includes(p.kind)?p.amount:null);
+  return typeof amount==='number'&&Number.isFinite(amount)&&amount>=0?amount:null;
+}
 export function matchesConditions(film,session,conditions,cinema){
   return conditions.every(c=>{
     let value;
     if(c.field.startsWith('rating_')||c.field==='reviews_rt')value=ratingValue(film,c.field);
     else if(c.field==='city')return textMatch(cinema?.area?[cinema.area.split('·')[0].trim()]:[],c);
     else if(c.field==='release_year')value=film.release_year??film.details?.release_year;
+    else if(c.field==='price_eur')value=admissionPrice(session);
     else if(c.field==='duration')value=film.details?.runtime_minutes??film.runtime_minutes;
     else if(c.field==='start_time'){
       const time=session.time||session.starts_at?.match(/T(\d\d:\d\d)/)?.[1];
@@ -262,10 +280,11 @@ export function matchesConditions(film,session,conditions,cinema){
 }
 
 export function intentChips(plan,language='en',programme){
-  const words={en:{colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Audio',city:'City',subtitles:'Subtitles',non_english_audio:'Non-English dialogue',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Audio',city:'Ciudad',subtitles:'Subtítulos',non_english_audio:'Diálogo en otros idiomas',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Àudio',city:'Ciutat',subtitles:'Subtítols',non_english_audio:'Diàleg en altres idiomes',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
+  const words={en:{price_eur:'Admission',colour:'Colour',release_year:'Released',producer:'Produced by',company:'Company',distributor:'Distributed by',genre:'Genre',country:'From',language:'Audio',city:'City',subtitles:'Subtitles',non_english_audio:'Non-English dialogue',provider:'Cinema chain',cinema:'Cinema',format:'Format',duration:'Length',start_time:'Starts',date:'Date',reviews_rt:'RT reviews',not:'Not',semantic:'Theme',rating_rt:'RT critics',rating_audience:'RT audience',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},es:{price_eur:'Entrada',colour:'Color',release_year:'Estreno',producer:'Producida por',company:'Compañía',distributor:'Distribuida por',genre:'Género',country:'De',language:'Audio',city:'Ciudad',subtitles:'Subtítulos',non_english_audio:'Diálogo en otros idiomas',provider:'Cadena',cinema:'Cine',format:'Formato',duration:'Duración',start_time:'Empieza',date:'Fecha',reviews_rt:'Reseñas RT',not:'Sin',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT público',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'},ca:{price_eur:'Entrada',colour:'Color',release_year:'Estrena',producer:'Produïda per',company:'Companyia',distributor:'Distribuïda per',genre:'Gènere',country:'De',language:'Àudio',city:'Ciutat',subtitles:'Subtítols',non_english_audio:'Diàleg en altres idiomes',provider:'Cadena',cinema:'Cinema',format:'Format',duration:'Durada',start_time:'Comença',date:'Data',reviews_rt:'Ressenyes RT',not:'Sense',semantic:'Tema',rating_rt:'RT crítica',rating_audience:'RT públic',rating_imdb:'IMDb',rating_filmaffinity:'FilmAffinity'}}[language]||{};
   const symbols={eq:'',ne:words.not,gt:'>',gte:'≥',lt:'<',lte:'≤',in:''};
   const chips=plan.conditions.map(c=>{
     let value=c.value.replaceAll('|',' / ');
+    if(c.field==='price_eur')value+=' EUR';
     if(c.field==='cinema')value=programme?.cinemas.find(v=>v.id===c.value)?.short||value;
     if(c.field==='start_time')value=String(Math.floor(Number(c.value)/60)).padStart(2,'0')+':'+String(Number(c.value)%60).padStart(2,'0');
     if(c.field==='duration')value+=' min';

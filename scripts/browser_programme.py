@@ -9,7 +9,7 @@ FILM_FIELDS = ('id', 'title', 'titles', 'original_title', 'english_title', 'rele
                'poster_image', 'merged_ids', 'synopsis')
 SESSION_FIELDS = ('id', 'cinema_id', 'provider', 'starts_at', 'date', 'time', 'room', 'version', 'formats',
                   'language', 'subtitles', 'big_screen', 'booking_url', 'booking_scope',
-                  'source_url', 'schedule_fetched_at', 'seat_data', 'is_sold_out')
+                  'source_url', 'schedule_fetched_at', 'seat_data', 'is_sold_out', 'price_data')
 
 
 def browser_programme(programme, now=None):

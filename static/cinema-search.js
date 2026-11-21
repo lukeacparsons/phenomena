@@ -1,6 +1,7 @@
 import {parseDateQuery} from './search-dates.js';
 import {parseIntent,effectiveIntent,matchesConditions,ratingValue} from './search-intent.js';
 import {filmSynopses} from './film-search-content.js';
+import {parseLocationQuery,coordinates,cinemaDistances} from './location-search.js';
 
 export const normalise = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 export const emptySearch = () => ({query:'',date_from:null,date_to:null,cinema_ids:[],formats:[],big_screens_only:false,ignored_filters:[]});
@@ -44,14 +45,17 @@ export function validateSearch(input,programme,index){
 export function parseFilmQuery(programme,query,today=madridDate(),index){
   const folded=normalise(query);
   const exactTitle=folded&&(index?index.titles.has(folded):programme?.films.some(film=>[film.title,film.original_title,film.english_title,...(film.titles||[])].some(title=>title&&normalise(title)===folded)));
-  return exactTitle?{text:query,range:null}:parseDateQuery(query,today);
+  if(exactTitle)return {text:query,range:null};
+  const nearby=parseLocationQuery(query,{titles:index?.titles});
+  const parsed=parseDateQuery(nearby.text,today);
+  return {...parsed,text:[parsed.text,nearby.location?.clause].filter(Boolean).join(' '),location:nearby.location};
 }
 
 export function resolvedSearch(programme,filters,now=Date.now(),index){
   const parsed=parseFilmQuery(programme,filters.query,madridDate(now),index);
   // Explicit date bounds take precedence over dates embedded in the query.
   const explicit=filters.date_from||filters.date_to;
-  return {text:parsed.text,range:explicit?{start:filters.date_from,end:filters.date_to}:parsed.range};
+  return {text:parseLocationQuery(parsed.text,{titles:index?.titles}).text,location:filters.ignored_filters?.includes('location')?null:parsed.location,range:explicit?{start:filters.date_from,end:filters.date_to}:parsed.range};
 }
 
 const DETAIL_FIELDS=['directors','writers','cast','genres','topics','countries','languages','composers','cinematographers','editors','studios','distributors','based_on','source_authors'];
@@ -211,12 +215,15 @@ export function interpretSearch(programme,filters,{now=Date.now(),index,intent}=
   return effectiveIntent(plan,filters.ignored_filters||[]);
 }
 
-export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index,intent,semanticScores}={}){
+export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index,intent,semanticScores,origin}={}){
   if(!programme)return [];
   if(!index||index.programme!==programme)index=createSearchIndex(programme);
   const parsed=resolvedSearch(programme,filters,now,index);
   if(ignoreExplicitDates&&(filters.date_from||filters.date_to))parsed.range=null;
   const plan=interpretSearch(programme,filters,{now,index,intent});
+  const nearby=parsed.location||plan.location_query;
+  if(nearby&&!coordinates(origin))return [];
+  const distances=nearby?cinemaDistances(programme.cinemas,origin):null;
   // Never present the whole catalogue as matches when a requested constraint
   // could not be applied and the model removed its words from the query.
   if(plan.unsupported.length)return [];
@@ -245,12 +252,12 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
       if(!matchesConditions(film,session,conditions,index.cinemas.get(session.cinema_id)))return false;
       return sessionTerms.every(term=>sessionWords.some(word=>word.startsWith(term)));
     }).map(row=>row.session);
-    return sessions.length?[{...film,sessions}]:[];
+    return sessions.length?[{...film,sessions,...(distances?{distance_km:Math.min(...sessions.map(s=>distances.get(s.cinema_id)??Infinity))}:{})}]:[];
   });
   const floor=semantic?Math.max(.25,...matches.map(f=>semantic.get(f.id)-.12)):0;
   const ratingField=plan.conditions.find(c=>c.field.startsWith('rating_')&&['gt','gte'].includes(c.op))?.field||plan.conditions.find(c=>c.field.startsWith('rating_'))?.field||'rating_rt';
   return matches.filter(f=>!semantic||semantic.get(f.id)>=floor)
-    .sort((a,b)=>(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,ratingField)??-1)-(ratingValue(a,ratingField)??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
+    .sort((a,b)=>(distances?a.distance_km-b.distance_km:0)||(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,ratingField)??-1)-(ratingValue(a,ratingField)??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
 }
 
 export function searchParams(filters,filmId=null,screeningId=null){

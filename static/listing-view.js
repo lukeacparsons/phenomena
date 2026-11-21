@@ -1,12 +1,13 @@
 // Shared by the static publication and the browser: one visible listing layout.
 import {TEXT} from './cinema-copy.js';
+import {cinemaDistances,formatDistance} from './location-search.js';
 export const HOME_CARD_PREVIEW=Object.freeze({
   cardDayLimit:1,cardCinemaLimit:3,cardTimeLimit:2,
   broadPreview:Object.freeze({minCinemas:4,minShowtimes:12,cinemaLimit:4,timeLimit:3})
 });
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL=value=>typeof value==='string'&&/^(https:\/\/|\/(?!\/))/.test(value)?escapeHTML(value):'';
-export function createListingView({language='en',cinemas=[],today,listingPath='/',cardDayLimit=2,cardCinemaLimit=5,cardTimeLimit=Infinity,broadPreview=null,availabilityHTML=()=>'',isSoldOut=session=>Boolean(session.is_sold_out)}){
+export function createListingView({language='en',cinemas=[],today,listingPath='/',cardDayLimit=2,cardCinemaLimit=5,cardTimeLimit=Infinity,broadPreview=null,origin=null,availabilityHTML=()=>'',isSoldOut=session=>Boolean(session.is_sold_out)}){
   const t=key=>TEXT[language]?.[key]||TEXT.en[key]||key;
   const locale={en:'en-GB',es:'es-ES',ca:'ca-ES'}[language];
   const formatters=new Map();
@@ -18,6 +19,7 @@ export function createListingView({language='en',cinemas=[],today,listingPath='/
   const displayDate=date=>dateParts(date+'T12:00:00Z',{weekday:'short',day:'numeric',month:'short',...(date.slice(0,4)!==today.slice(0,4)?{year:'numeric'}:{})});
   const dayHeading=date=>date===today?t('today')+' · '+dateParts(date+'T12:00:00Z',{day:'numeric',month:'short'}):displayDate(date);
   const cinema=id=>cinemas.find(c=>c.id===id);
+  const distances=origin?cinemaDistances(cinemas,origin):null;
   const filmHref=film=>film.urls?.[language]||listingPath+'?film='+encodeURIComponent(film.id);
   const cinemaHref=id=>cinema(id)?.urls?.[language]||listingPath+'?cinema='+encodeURIComponent(id);
 
@@ -49,14 +51,17 @@ export function createListingView({language='en',cinemas=[],today,listingPath='/
       if(groups>=cinemaLimit)break;
       const heading=dayHeading(date);
       let rows='';
-      for(const [cinemaId,sessions] of venues){
+      const ordered=[...venues];
+      if(distances)ordered.sort(([a],[b])=>(distances.get(a)??Infinity)-(distances.get(b)??Infinity));
+      for(const [cinemaId,sessions] of ordered){
         if(groups>=cinemaLimit)break;
         const preview=sessions.slice(0,timeLimit);
         const extra=sessions.length-preview.length;
         const extraLabel=t(extra===1?'moreShowtime':'moreShowtimes').replace('{n}',extra);
         const extraLink=extra?`<a class="card-cinema-more" href="${safeURL(filmHref(film)+'#showtimes')}" data-open="${escapeHTML(film.id)}" data-view="showtimes" data-reveal-session="${escapeHTML(sessions[preview.length].id)}" aria-haspopup="dialog" aria-label="${escapeHTML([extraLabel,film.title,cinema(cinemaId)?.name||cinemaId,heading].join(' · '))}">+${extra} ${t('more')}</a>`:'';
         groups++;shown+=preview.length;
-        rows+=`<div class="card-cinema" data-cinema="${escapeHTML(cinemaId)}"><a class="card-cinema-name" href="${safeURL(cinemaHref(cinemaId))}">${escapeHTML(cinema(cinemaId)?.short||cinemaId)}</a><div class="card-times">${preview.map(session=>`<a href="${safeURL(session.urls?.[language]||filmHref(film)+'#showtimes')}" class="card-showtime${isSoldOut(session)?' is-sold-out':''}" data-open="${escapeHTML(film.id)}" data-session="${escapeHTML(session.id)}" aria-haspopup="dialog" aria-label="${escapeHTML(showtimeLabel(session,film.title))}"><time datetime="${escapeHTML(session.starts_at)}">${escapeHTML(session.time)}</time><span class="availability-content" data-availability="${escapeHTML(session.id)}" data-compact>${availabilityHTML(session,true)}</span></a>`).join('')}${extraLink}</div></div>`;
+        const distance=distances?`<span class="card-distance">${escapeHTML(formatDistance(distances.get(cinemaId),language))}</span>`:'';
+        rows+=`<div class="card-cinema" data-cinema="${escapeHTML(cinemaId)}"><a class="card-cinema-name${distances?' has-distance':''}" href="${safeURL(cinemaHref(cinemaId))}">${distances?`<span>${escapeHTML(cinema(cinemaId)?.short||cinemaId)}</span>`:escapeHTML(cinema(cinemaId)?.short||cinemaId)}${distance}</a><div class="card-times">${preview.map(session=>`<a href="${safeURL(session.urls?.[language]||filmHref(film)+'#showtimes')}" class="card-showtime${isSoldOut(session)?' is-sold-out':''}" data-open="${escapeHTML(film.id)}" data-session="${escapeHTML(session.id)}" aria-haspopup="dialog" aria-label="${escapeHTML(showtimeLabel(session,film.title))}"><time datetime="${escapeHTML(session.starts_at)}">${escapeHTML(session.time)}</time><span class="availability-content" data-availability="${escapeHTML(session.id)}" data-compact>${availabilityHTML(session,true)}</span></a>`).join('')}${extraLink}</div></div>`;
       }
       html+=`<section class="card-day" data-date="${escapeHTML(date)}" aria-label="${escapeHTML(heading)}"><h3 class="card-day-label">${escapeHTML(heading)}</h3><div class="card-cinemas">${rows}</div></section>`;
     }

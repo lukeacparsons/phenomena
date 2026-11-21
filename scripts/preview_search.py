@@ -32,10 +32,10 @@ class PreviewSearch:
             self.stop()
             raise
 
-    def request(self, body, headers):
-        connection = http.client.HTTPConnection('127.0.0.1', self.port, timeout=7)
+    def request(self, body, headers, *, path='/api/search'):
+        connection = http.client.HTTPConnection('127.0.0.1', self.port, timeout=20)
         try:
-            connection.request('POST', '/api/search', body=body, headers=headers)
+            connection.request('POST', path, body=body, headers=headers)
             response = connection.getresponse()
             return response.status, json.loads(response.read())
         finally:
