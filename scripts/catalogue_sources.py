@@ -488,13 +488,15 @@ def malda_sessions(html):
 def malda_card_date(label, first, last):
     """Resolve abbreviated dates against the published year, never the clock.
 
-    Weekday-only cards cover the advertised week and the following week.
+    Weekday-only cards cover the advertised week and its neighbouring weeks.
+    The homepage can retain expired cards when its programme heading rolls over.
     Named months can advertise up to six months ahead, including New Year.
     Ambiguous or unrecognised dates fail closed instead of inventing a date.
     """
     label = fold(clean(label)).rstrip('.')
     named = re.fullmatch(r'(\d{1,2})\s+de\s+(\w+)(?:\s+(?:de\s+)?(\d{4}))?', label)
-    short = re.fullmatch(r'(lu|ma|mi|ju|vi|sa|do)\.?\s+(\d{1,2})', label)
+    weekdays = {'lu': 0, 'ma': 1, 'mi': 2, 'mx': 2, 'ju': 3, 'vi': 4, 'sa': 5, 'do': 6}
+    short = re.fullmatch(r'(lu|ma|mi|mx|ju|vi|sa|do)\.?\s+(\d{1,2})', label)
     candidates = []
     if named and named[2] in MONTHS:
         for year in ([int(named[3])] if named[3] else [first.year - 1, first.year, first.year + 1]):
@@ -505,13 +507,37 @@ def malda_card_date(label, first, last):
             if first - timedelta(days=7) <= date <= last + timedelta(days=183):
                 candidates.append(date)
     elif short:
-        for offset in range((last - first).days + 8):
+        for offset in range(-7, (last - first).days + 8):
             date = first + timedelta(days=offset)
-            if date.day == int(short[2]) and date.weekday() == ['lu', 'ma', 'mi', 'ju', 'vi', 'sa', 'do'].index(short[1]):
+            if date.day == int(short[2]) and date.weekday() == weekdays[short[1]]:
                 candidates.append(date)
     if len(candidates) != 1:
         raise ValueError(f'Maldà timed card has unresolved date: {label}')
     return candidates[0]
+
+
+def malda_poster(picture):
+    """Use the largest published variant of the card's image, never a guessed URL."""
+    if picture is None:
+        return None
+    poster = picture.attrs.get('data-src') or picture.attrs.get('src')
+    candidates = []
+    for entry in (picture.attrs.get('data-srcset') or picture.attrs.get('srcset') or '').split(','):
+        match = re.fullmatch(r'\s*(\S+)\s+(\d+)w\s*', entry)
+        if match and urlsplit(match[1]).hostname == 'www.cinemamalda.com':
+            candidates.append((int(match[2]), match[1]))
+    return max(candidates)[1] if candidates else poster
+
+
+def malda_title_key(title, film_url=None):
+    key = re.sub(r'[^a-z0-9]', '', fold(title))
+    # Reviewed against these exact Maldà film pages and matching dated slots.
+    # Do not fuzzy-match arbitrary titles in this single-auditorium programme.
+    aliases = {
+        '/la-voz-quebrada/': {'lorcalavozquebrada': 'lavozquebrada'},
+        '/recuerdo-tu-nombre/': {'recuerdatunombre': 'recuerdotunombre'},
+    }
+    return aliases.get(urlsplit(film_url or '').path, {}).get(key, key)
 
 
 def malda_home_sessions(html):
@@ -532,7 +558,7 @@ def malda_home_sessions(html):
         if urlsplit(source).hostname != 'www.cinemamalda.com':
             raise ValueError('Unexpected Maldà film link')
         picture = next(card.find(lambda e:e.tag == 'img'), None)
-        poster = (picture.attrs.get('data-src') or picture.attrs.get('src')) if picture else None
+        poster = malda_poster(picture)
         for day in card.find(lambda e:'day' in e.classes()):
             spans = list(day.find(lambda e:e.tag == 'span'))
             if len(spans) < 2:
@@ -547,22 +573,25 @@ def malda_home_sessions(html):
                 rows.append(row('malda', 'cinema-malda', starts.strftime('%Y%m%d%H%M'), fid, title, starts,
                     qualification, source, 'https://www.cinemamalda.com/', room='1',
                     booking_scope='box_office', film_url=source, poster_url=poster,
-                    **card_prices(clean(card.text()),'https://www.cinemamalda.com/')))
+                    **(explicit_free(clean(spans[1].text()), 'https://www.cinemamalda.com/')
+                       or card_prices(clean(spans[1].text()), 'https://www.cinemamalda.com/'))))
     return rows
 
 
 def collect_malda(http, now):
     weekly = malda_sessions(http.get('https://www.cinemamalda.com/cartelera-dia-a-dia/'))
     home = malda_home_sessions(http.get('https://www.cinemamalda.com/'))
+    # Validate duplicates within each page before reconciling the two sources.
+    weekly = report('malda', weekly, now)['sessions']
+    home = report('malda', home, now)['sessions']
     merged = {item['id']: item for item in weekly}
     added = 0
     for item in home:
         previous = merged.get(item['id'])
         if previous:
-            # One auditorium: punctuation/case differences at the same time are
-            # safe to reconcile; two different films at that time are not.
-            title_key = lambda text: re.sub(r'[^a-z0-9]', '', fold(text))
-            if title_key(previous['title']) != title_key(item['title']):
+            # One auditorium: only punctuation/case or explicitly reviewed
+            # title variants may reconcile at the same time.
+            if malda_title_key(previous['title'], item['film_url']) != malda_title_key(item['title'], item['film_url']):
                 raise ValueError('Conflicting Maldà films at the same time')
             for key in ['language', 'subtitles']:
                 if previous.get(key) and item.get(key) and previous[key] != item[key]:

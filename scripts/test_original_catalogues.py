@@ -187,6 +187,70 @@ class CatalogueTests(unittest.TestCase):
         html += self.malda_card('Film', 'VOSE', [('Vi 1', '18:00h'), ('5 de enero', '19:00h')])
         self.assertEqual([r['date'] for r in malda_home_sessions(html)], ['2027-01-01', '2027-01-05'])
 
+    def test_malda_wednesday_labels_and_retained_previous_week_cards(self):
+        html = '<h2>Cartelera del 20 al 26 de noviembre de 2026</h2>'
+        html += self.malda_card('Film', 'VOE', [('Ju 19', '15:30h'), ('Mx 25', '14:00h'), ('Lu 30', '20:30h')])
+        self.assertEqual([r['date'] for r in malda_home_sessions(html)],
+                         ['2026-11-19', '2026-11-25', '2026-11-30'])
+        self.assertEqual(malda_home_sessions(html.replace('Mx 25', 'Mi. 25'))[1]['date'], '2026-11-25')
+        with self.assertRaises(ValueError):
+            malda_home_sessions(html.replace('Mx 25', 'Mx 26'))
+        with self.assertRaises(ValueError):
+            malda_home_sessions(html.replace('Ju 19', 'Ju 12'))
+        january = '<h2>Cartelera del 1 al 7 de enero de 2027</h2>'
+        january += self.malda_card('Film', 'VOSE', [('Ju 31', '18:00h')])
+        self.assertEqual(malda_home_sessions(january)[0]['date'], '2026-12-31')
+
+    def test_malda_uses_largest_published_poster_variant(self):
+        html = '<h2>Cartelera del 20 al 26 de noviembre de 2026</h2>'
+        html += self.malda_card('Film', 'VOE', [('Mx 25', '14:00h')])
+        srcset = ('https://www.cinemamalda.com/poster-small.jpg 300w, '
+                  'https://www.cinemamalda.com/poster-large.jpg 1200w, '
+                  'https://unrelated.example/poster.jpg 3000w')
+        lazy = html.replace('src="placeholder.svg"', f'src="placeholder.svg" data-srcset="{srcset}"')
+        self.assertEqual(malda_home_sessions(lazy)[0]['poster_url'], 'https://www.cinemamalda.com/poster-large.jpg')
+        self.assertEqual(malda_home_sessions(lazy.replace('data-srcset=', 'srcset='))[0]['poster_url'],
+                         'https://www.cinemamalda.com/poster-large.jpg')
+        self.assertEqual(malda_home_sessions(html)[0]['poster_url'], 'https://www.cinemamalda.com/poster.jpg')
+
+    def test_malda_home_prices_belong_to_the_dated_session(self):
+        html = '<h2>Cartelera del 20 al 26 de noviembre de 2026</h2>'
+        html += self.malda_card('Film', 'VOE', [('Vi 20', '18:00h Preu 9€'),
+                               ('Sa 21', '18:00h'), ('Do 22', '18:00h ENTRADA GRATUITA')])
+        rows = malda_home_sessions(html)
+        self.assertEqual(rows[0]['price_eur'], 9)
+        self.assertNotIn('price_data', rows[1])
+        self.assertEqual(rows[2]['price_eur'], 0)
+
+    def test_malda_reviewed_titles_keep_identity_and_homepage_artwork(self):
+        weekly = ('<div class="sinopsi"><h2>DEL 20 AL 26 DE NOVIEMBRE DE 2026</h2>'
+                  '<p>MARTES 24 14:30h – LORCA, LA VOZ QUEBRADA (VOE)</p>'
+                  '<p>MIÉRCOLES 25 18:45h – RECUERDA TU NOMBRE (VOE)</p></div>')
+        home = '<h2>Cartelera del 20 al 26 de noviembre de 2026</h2>'
+        home += self.malda_card('La voz quebrada', 'VOE', [('Ma 24', '14:30h')]).replace('/film/', '/la-voz-quebrada/')
+        home += self.malda_card('Recuerdo tu nombre', 'VOE', [('Mx 25', '18:45h')]).replace('/film/', '/recuerdo-tu-nombre/')
+        class HTTP:
+            def get(self, url):
+                return weekly if 'cartelera-dia-a-dia' in url else home
+        result = collect_malda(HTTP(), NOW)
+        self.assertEqual(result['count'], 2)
+        self.assertEqual([r['film_id'] for r in result['sessions']], [r['film_id'] for r in malda_sessions(weekly)])
+        self.assertTrue(all(r['poster_url'] and r['film_url'] for r in result['sessions']))
+        home = home.replace('/recuerdo-tu-nombre/', '/unrelated-film/')
+        with self.assertRaisesRegex(ValueError, 'Conflicting Maldà films'):
+            collect_malda(HTTP(), NOW)
+
+    def test_malda_conflicting_homepage_cards_fail_instead_of_overwriting(self):
+        weekly = '<div class="sinopsi"><h2>DEL 20 AL 26 DE NOVIEMBRE DE 2026</h2></div>'
+        home = '<h2>Cartelera del 20 al 26 de noviembre de 2026</h2>'
+        home += self.malda_card('First', 'VOE', [('Vi 20', '18:00h')])
+        home += self.malda_card('Second', 'VOE', [('Vi 20', '18:00h')])
+        class HTTP:
+            def get(self, url):
+                return weekly if 'cartelera-dia-a-dia' in url else home
+        with self.assertRaisesRegex(ValueError, 'Conflicting malda session identity'):
+            collect_malda(HTTP(), NOW)
+
     def test_malda_weekly_and_home_overlap_keeps_identity_and_rejects_conflicts(self):
         weekly = ('<div class="sinopsi"><h2>DEL 13 AL 19 DE NOVIEMBRE DE 2026</h2>'
                   '<p>JUEVES 19 21:35h – AFFECTION, AFFECTION (VOSCAST)</p></div>')

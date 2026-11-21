@@ -42,3 +42,33 @@ Tests cover direct-first behavior, recognized-check fallback, failure bounds, ca
 Seat availability remains a separate collection path. Restoring programme reads does not turn missing seat data into a count. Some Verdi booking pages expose unallocated admission without a seat map, and some Splau sessions omit area availability; those remain unknown or retain their last dated observation. Discovery-only cultural programmes still require exact session and original-audio evidence before publication.
 
 The ignored `output/provider-repair/` directory retains the before snapshot, live run log and health output for this repair. The macOS service uses the new programme reader on subsequent hourly runs; the independent stale-cinema watchdog continues to use real acquisition receipts.
+
+## Maldà homepage parsing — 21 November 2026
+
+The production alert was valid: Maldà had 25 consecutive failures and its last
+accepted programme was acquired at `2026-11-19T22:33:36.753961+00:00`. The other
+37 monitored venues were healthy. A read-only reproduction inside the collector
+failed with `Maldà timed card has unresolved date: mx 25`; both source pages
+were reachable. Existing future listings and the heartbeat were intact.
+
+The parser repair accepts both `Mi` and the site's `Mx` for Wednesday, and resolves
+retained previous-week cards against the explicit programme year before filtering
+expired screenings. It reconciles two reviewed title variants only for their exact
+film links: `LORCA, LA VOZ QUEBRADA` / `La voz quebrada` and `RECUERDA TU NOMBRE` /
+`Recuerdo tu nombre`. Unrelated films, conflicting duplicate slots and mismatched
+languages still fail validation. Existing weekly film identities are retained.
+
+Homepage cards supply dated additional sessions, film-page links and posters.
+Poster collection now chooses the largest image explicitly advertised in
+`data-srcset`/`srcset`, falling back to the card image. Session-specific prices
+are read from that session's text rather than the entire film card.
+
+Local verification against captured live pages produced **20 upcoming screenings
+for 13 films**, including two homepage-only sessions. All **13 source posters**
+downloaded and decoded successfully (640–1593 pixels wide), and the normal catalogue
+and browser projection retained them. **70 targeted tests passed**, including
+Wednesday labels, week/year rollover, title conflicts, larger posters, duplicate
+slots, original-audio validation and cache retention. Evidence is in the ignored
+`output/malda-investigation-2026-11-21/` directory. This validation does not itself
+deploy the change or refresh the production receipt; check those independently
+after deployment.
