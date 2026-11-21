@@ -38,10 +38,12 @@
       <span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">Original version cinema in Barcelona</span>
       <nav class="dates" id="dates" aria-label="Screening date"><button type="button" class="all-dates" aria-pressed="true" data-date="all" data-i18n="allDates">All dates</button></nav>
       <div class="filter-row">
-        <label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">Search films, people, genres, languages, countries, cinemas, formats or dates</span><input id="search" type="search" placeholder="Films, languages, theatres, directors" autocomplete="off" maxlength="500" aria-keyshortcuts="/"></label>
+        <label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">Search films, people, genres, languages, countries, cinemas, formats or dates</span><input id="search" type="search" placeholder="Search films, cinemas…" autocomplete="off" maxlength="500" aria-keyshortcuts="/"></label>
+      </div>
+      <div id="searchActiveControls" class="search-active-controls">
+        <div id="filterChips" class="filter-chips" hidden></div>
         <button type="button" id="clearFilters" class="clear-button" hidden data-i18n="reset">Reset</button>
       </div>
-      <div id="filterChips" class="filter-chips" hidden></div>
       <p id="linkNotice" class="link-notice" role="status" hidden></p>
     </section>
 

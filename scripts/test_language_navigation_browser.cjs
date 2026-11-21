@@ -93,7 +93,7 @@ const output = 'output/language-transition/after';
 
         // A language switch must retain search, selected dates and both scroll axes.
         const title = await page.locator('#grid .card h2').first().innerText();
-        await page.locator('#search').fill(title);
+        await page.locator('#search').fill(title);await page.locator('#search').press('Enter');
         await page.waitForFunction(() => document.querySelector('#grid').getAttribute('aria-busy') === 'false' && location.search.includes('q='));
         await page.locator('#dates button[data-date]:not([data-date=all])').first().click();
         await page.evaluate(() => {document.getElementById('dates').scrollLeft = 100; scrollTo({top: 150, behavior: 'instant'});});

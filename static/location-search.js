@@ -29,6 +29,7 @@ export function parseLocationQuery(query,{titles}={}){
   }
   const me=/\b(?:near\s+me|nearby|cerca\s+de\s+m[ií]|a\s+prop\s+meu|a\s+prop\s+de\s+mi)(?=$|[^\p{L}\p{N}])/iu.exec(masked);
   if(me)return {text:filler(text.slice(0,me.index)+' '+text.slice(me.index+me[0].length)),location:{type:'device',address:'',clause:me[0]}};
+  if(/\b(?:within|under|less than|a menos de|a menys de)\s+\d+(?:[.,]\d+)?\s*(?:km|kilometres?|kilometers?|kilometros?|m|metres?|meters?|metros?)\b/iu.test(masked)&&!/(?:\bnear\s|\bcerca de\s|\ba prop de\s)/iu.test(masked))return {text,location:{type:'device',address:'',clause:''}};
   const near=/\b(?:near\b(?:\s+(?:this|the)\s+address)?|cerca\s+de(?:\s+(?:esta|la)\s+direcci[oó]n)?|a\s+prop\s+(?:de(?:\s+(?:aquesta|la)\s+adreça)?|d['’](?:aquesta\s+adreça)?))\s*:?\s*/iu.exec(masked);
   if(hasTitle&&!near)return {text,location:null};
   let address=near?text.slice(near.index+near[0].length):text;

@@ -14,7 +14,6 @@ const smartSearchOptions={getProgramme:async()=>{
 const server=publicServer({smartSearchOptions});
 server.listen(0,'127.0.0.1',()=>{
   console.log(JSON.stringify({event:'preview_search_ready',port:server.address().port,enabled:Boolean(process.env.OPENAI_API_KEY)}));
-  void server.warmSearch({interpreter:true}).catch(()=>console.error('Preview search warmup failed; local filters remain available.'));
+  void server.warmSearch().catch(()=>console.error('Preview search cache unavailable; local filters remain available.'));
 });
-const refresh=setInterval(()=>void server.warmSearch().catch(()=>{}),300000);refresh.unref();
 for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),5000).unref();});

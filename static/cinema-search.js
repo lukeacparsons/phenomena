@@ -2,6 +2,7 @@ import {parseDateQuery} from './search-dates.js';
 import {parseIntent,effectiveIntent,matchesConditions,ratingValue} from './search-intent.js';
 import {filmSynopses} from './film-search-content.js';
 import {parseLocationQuery,coordinates,cinemaDistances} from './location-search.js';
+import {preservesQueryDates,outingSortValue,makeItineraries} from './outing-search.js';
 
 export const normalise = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 export const emptySearch = () => ({query:'',date_from:null,date_to:null,cinema_ids:[],formats:[],big_screens_only:false,ignored_filters:[]});
@@ -47,7 +48,8 @@ export function parseFilmQuery(programme,query,today=madridDate(),index){
   const exactTitle=folded&&(index?index.titles.has(folded):programme?.films.some(film=>[film.title,film.original_title,film.english_title,...(film.titles||[])].some(title=>title&&normalise(title)===folded)));
   if(exactTitle)return {text:query,range:null};
   const nearby=parseLocationQuery(query,{titles:index?.titles});
-  const parsed=parseDateQuery(nearby.text,today);
+  const parsed=preservesQueryDates(nearby.text)?{text:nearby.text,range:null}:parseDateQuery(nearby.text,today);
+  // Preserve the location clause when the date strip removes an embedded date.
   return {...parsed,text:[parsed.text,nearby.location?.clause].filter(Boolean).join(' '),location:nearby.location};
 }
 
@@ -173,7 +175,12 @@ function searchableAliases(details){
 export function createSearchIndex(programme){
   const cinemas=new Map(programme.cinemas.map(cinema=>[cinema.id,cinema]));
   const titles=new Set(),people=new Set(),formats=new Set(),providers=new Set();
-  const films=programme.films.map(film=>{
+  const catalogue=new Map(programme.films.map(f=>[f.id,f]));
+  for(const archived of programme.search?.films||[]){
+    const current=catalogue.get(archived.id);
+    catalogue.set(archived.id,current?{...current,sessions:[...new Map([...archived.sessions,...current.sessions].map(s=>[s.id,s])).values()]}:archived);
+  }
+  const films=[...catalogue.values()].map(film=>{
     for(const title of [film.title,film.original_title,film.english_title,...(film.titles||[])])if(title)titles.add(normalise(title));
     const title=normalise([film.title,film.original_title,film.english_title,...(film.titles||[]).map(title=>title
       .replace(/\([^)]*\b(?:VOSE|VOSI|ATMOS|IMAX|iSense|Laser ULTRA|4K|35mm|70mm)\b[^)]*\)/gi,' ')
@@ -209,13 +216,14 @@ export function interpretSearch(programme,filters,{now=Date.now(),index,intent}=
   let plan=intent||index?.intents.get(intentKey);
   if(!plan){
     const protectedNames=index?[...index.people,...[...index.titles].filter(t=>t.includes(' '))].filter(name=>(' '+text+' ').includes(' '+name+' ')):[];
-    plan=parseIntent(parsed.text,{programme,exactTitle:index?.titles.has(text),protectedNames,today:madridDate(now)});
+    plan=parseIntent(parsed.text,{programme:index?{...programme,films:index.films.map(row=>row.film)}:programme,exactTitle:index?.titles.has(text),protectedNames,today:madridDate(now)});
+    if(!index?.titles.has(normalise(filters.query))&&/\b(?:tonight|esta noche|aquesta nit)\b/.test(normalise(filters.query))&&!plan.conditions.some(c=>c.field==='start_time'))plan.conditions.push({field:'start_time',op:'gte',value:'1080'});
     if(index){if(index.intents.size>=100)index.intents.delete(index.intents.keys().next().value);index.intents.set(intentKey,plan);}
   }
   return effectiveIntent(plan,filters.ignored_filters||[]);
 }
 
-export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index,intent,semanticScores,origin}={}){
+export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates=false,index,intent,semanticScores,origin,availability}={}){
   if(!programme)return [];
   if(!index||index.programme!==programme)index=createSearchIndex(programme);
   const parsed=resolvedSearch(programme,filters,now,index);
@@ -226,10 +234,11 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
   const distances=nearby?cinemaDistances(programme.cinemas,origin):null;
   // Never present the whole catalogue as matches when a requested constraint
   // could not be applied and the model removed its words from the query.
-  if(plan.unsupported.length)return [];
+  if(plan.unsupported.length||plan.notices?.some(n=>['invalid_time','travel_time','unknown_reference','ambiguous_reference'].includes(n))||plan.venue_query)return [];
   const query=normalise(plan.text);
   const semantic=plan.semantic_query&&semanticScores?new Map(semanticScores.map(row=>[row.film_id,row.score])):null;
-  const conditions=plan.conditions.filter(c=>!(c.field==='date'&&(filters.date_from||filters.date_to)));
+  const filterConditions=items=>items.filter(c=>!(c.field==='date'&&(filters.date_from||filters.date_to))&&!(c.field==='distance_km'&&filters.ignored_filters?.includes('location')));
+  const conditions=filterConditions(plan.conditions),context={now,origin,availability};
   const bigScreens=filters.big_screens_only||/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/.test(query);
   const terms=query.replace(/\b(?:big screens? only|solo pantallas grandes|nomes pantalles grans)\b/g,' ').split(' ').filter(Boolean);
   const personQueries=index.people.filter(name=>(' '+query+' ').includes(' '+name+' '));
@@ -244,20 +253,25 @@ export function queryFilms(programme,filters,{now=Date.now(),ignoreExplicitDates
     // Match shared film metadata once, then only test remaining terms per session.
     const sessionTerms=terms.filter(term=>(providerTerms.has(term)&&!namedTerms.has(term))||!words.some(word=>word.startsWith(term)));
     const sessions=rows.filter(({session,starts,words:sessionWords})=>{
-      if(!(starts>=now))return false;
+      if(plan.scope==='past'?!(starts<now):!(starts>=now))return false;
       if(parsed.range&&((parsed.range.start&&session.date<parsed.range.start)||(parsed.range.end&&session.date>parsed.range.end)))return false;
       if(filters.cinema_ids.length&&!filters.cinema_ids.includes(session.cinema_id))return false;
       if(!filters.formats.every(format=>(session.formats||[]).includes(format)))return false;
       if(bigScreens&&session.big_screen!==true)return false;
-      if(!matchesConditions(film,session,conditions,index.cinemas.get(session.cinema_id)))return false;
+      if(!matchesConditions(film,session,conditions,index.cinemas.get(session.cinema_id),context))return false;
+      if(plan.alternatives?.length&&!plan.alternatives.some(group=>matchesConditions(film,session,filterConditions(group),index.cinemas.get(session.cinema_id),context)))return false;
       return sessionTerms.every(term=>sessionWords.some(word=>word.startsWith(term)));
     }).map(row=>row.session);
-    return sessions.length?[{...film,sessions,...(distances?{distance_km:Math.min(...sessions.map(s=>distances.get(s.cinema_id)??Infinity))}:{})}]:[];
+    const preferenceScore=Math.max(0,...sessions.map(s=>(plan.preferences||[]).reduce((total,p)=>total+(matchesConditions(film,s,p.conditions,index.cinemas.get(s.cinema_id),context)?p.weight:0),0)));
+    return sessions.length?[{...film,sessions,preference_score:preferenceScore,...(distances?{distance_km:Math.min(...sessions.map(s=>distances.get(s.cinema_id)??Infinity))}:{})}]:[];
   });
   const floor=semantic?Math.max(.25,...matches.map(f=>semantic.get(f.id)-.12)):0;
   const ratingField=plan.conditions.find(c=>c.field.startsWith('rating_')&&['gt','gte'].includes(c.op))?.field||plan.conditions.find(c=>c.field.startsWith('rating_'))?.field||'rating_rt';
-  return matches.filter(f=>!semantic||semantic.get(f.id)>=floor)
-    .sort((a,b)=>(distances?a.distance_km-b.distance_km:0)||(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,ratingField)??-1)-(ratingValue(a,ratingField)??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
+  const ranked=matches.filter(f=>!semantic||semantic.get(f.id)>=floor)
+    .sort((a,b)=>b.preference_score-a.preference_score||(distances?a.distance_km-b.distance_km:0)||outingSortValue(a,plan.sort,context)-outingSortValue(b,plan.sort,context)||(semantic?(semantic.get(b.id)||0)-(semantic.get(a.id)||0):plan.sort==='rating'?(ratingValue(b,ratingField)??-1)-(ratingValue(a,ratingField)??-1):0)||Date.parse(a.sessions[0].starts_at)-Date.parse(b.sessions[0].starts_at)||a.title.localeCompare(b.title)||a.id.localeCompare(b.id));
+  if(!plan.itinerary)return ranked;
+  const itineraries=makeItineraries(ranked,plan.itinerary),ids=new Set(itineraries.flatMap(path=>path.map(row=>row.session.id)));
+  return ranked.map(f=>({...f,sessions:f.sessions.filter(s=>ids.has(s.id))})).filter(f=>f.sessions.length);
 }
 
 export function searchParams(filters,filmId=null,screeningId=null){

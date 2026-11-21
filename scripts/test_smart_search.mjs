@@ -184,7 +184,7 @@ test('film knowledge can retrieve a low-vector candidate but cannot bypass factu
   const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
     const body=JSON.parse(opts.body);
     if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((text,index)=>({index,embedding:text.includes('guns')?[1,0]:[0,1]}))})};
-    assert.equal(JSON.parse(body.input).catalogue.length,2);
+    assert.equal(JSON.parse(body.input[1].content[0].text).catalogue.length,2);
     return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...emptyIntent(),semantic_query:'lots of guns',film_matches:[0,1]})}]}]})};
   }});
   const r=await api.search({query:'lots of guns from France'});
@@ -210,8 +210,9 @@ test('large full-dimension embeddings are the default and old small vectors are 
       assert.equal(body.model,'text-embedding-3-large');assert.equal(body.dimensions,3072);
       return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:Array(3072).fill(1)}))})};
     }});
-    await api.warm();assert.equal(calls,1);assert.equal(api.status().dimensions,3072);
-    await api.warm();assert.equal(calls,1);
+    await api.warm();assert.equal(calls,0,'Startup never creates embeddings');
+    await api.warm({refresh:true});assert.equal(calls,1);assert.equal(api.status().dimensions,3072);
+    await api.warm({refresh:true});assert.equal(calls,1);
   }finally{await rm(cacheDirectory,{recursive:true,force:true});}
 });
 test('a local topic hit does not prevent the UI from requesting semantic results',async()=>{
@@ -282,7 +283,7 @@ test('AI interprets subjective ratings on the named source without sticky RT def
   const api=createSmartSearch({getProgramme:async()=>p,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,opts)=>{
     const body=JSON.parse(opts.body);
     if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:[1,0]}))})};
-    calls++;assert.deepEqual(JSON.parse(body.input).deterministic,[]);
+    calls++;assert.deepEqual(JSON.parse(body.input[2].content[0].text).deterministic,[]);
     return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(intent)}]}]})};
   }});
   const result=await api.search({query:'highly rated on imdb'});
@@ -321,13 +322,13 @@ test('AI interpretation is cached, embeddings are reused, and local constraints 
     return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(plan)}]}]})};
   };
   const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test-key',dimensions:2,fetchImpl,now:()=>now});
-  await api.warm();const warmRequests=requests.length;
+  await api.warm({refresh:true});const warmRequests=requests.length;
   const first=await api.search({query:'uplifting from France',language:'en'});
   assert(first.intent.conditions.some(c=>c.field==='country'&&c.value==='France'));
   assert.equal(first.mode,'semantic');assert(first.semantic_scores.length);
   const count=requests.length;const second=await api.search({query:'uplifting from France',language:'en'});
   assert.equal(second.cached,true);assert.equal(requests.length,count);
-  await api.warm();assert.equal(requests.length,count);assert.equal(count-warmRequests,2);
+  await api.warm({refresh:true});assert.equal(requests.length,count);assert.equal(count-warmRequests,2);
   assert.equal(requests.find(r=>r.url.endsWith('/responses')).body.reasoning.effort,'low');
   assert.equal(requests.find(r=>r.url.endsWith('/responses')).body.store,false);
 });

@@ -3,11 +3,12 @@ import {createListingView,HOME_CARD_PREVIEW} from './listing-view.js';
 import {renderFilmDialog,focusSelectedScreening,getDialogScroller,prepareFilmTransition,showFilmDialog,closeFilmDialog} from './film-dialog.js';
 import './ticket-events.js';
 import {observeImages,posterMarkup} from './progressive-images.js';
-import {hydrateProgramme} from './programme-data.js';
-import {readProgrammeCache,saveProgrammeCache} from './programme-cache.js';
-import {createSearchIndex,emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch,interpretSearch} from './cinema-search.js';
+import {createProgrammeLoader} from './programme-loader.js';
+import {emptySearch,matchesFilmId,parseFilmQuery,queryFilms,searchFromURL,searchParams,validateSearch,interpretSearch} from './cinema-search.js';
 import {intentChips,filmMatchReason,searchExplanation} from './search-intent.js';
 import {createSmartSearchUI} from './smart-search-ui.js';
+import {createSearchSuggestionsUI} from './search-suggestions.js';
+import {searchFeedback,feedbackMarkup,searchCopy} from './search-feedback.js';
 import {createLocationSearchUI,LOCATION_COPY} from './location-search.js';
 import {availabilityFor,createCinemaService} from './cinema-service.js';
 import {registerWebMCP} from './webmcp-registration.js';
@@ -61,13 +62,14 @@ let pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('
 let legacyCinema=params.get('cinema');
 let data=null,visible=[],activeFilm=null,activeSession=null;
 let activeView='film',showtimesScroll=0,showtimesSession=null;
-let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0;
+let searchIndex=null,searchFrame=0,searchTimer=0,resultAnnouncement=0,suggestionsUI=null,updatingControllers=false,resultsPending=false;
 const smartSearchUI=typeof window==='undefined'?null:createSmartSearchUI({
   getProgramme:()=>data,getIndex:()=>searchIndex,getFilters:()=>state,getLanguage:()=>language,
+  isPrecomputedQuery:query=>suggestionsUI?.isVerified(query),
   onResult:()=>{locationSearchUI?.update();refreshResults();if($('filmDialog')?.open)renderDialog();},
   onStatus:(kind,unsupported=[])=>{
     let status=$('searchStatus');
-    if(!status){status=document.createElement('p');status.id='searchStatus';status.className='search-status';status.setAttribute('role','status');$('filterChips')?.after(status);}
+    if(!status){status=document.createElement('p');status.id='searchStatus';status.className='search-status';status.setAttribute('role','status');$('searchActiveControls')?.after(status);}
     const messages={en:{loading:'Thinking about your search…',unavailable:'Smart search is temporarily unavailable. Showing keyword matches.',noSemantic:'No close matches for this description.',unsupported:'Could not apply: '},es:{loading:'Pensando en tu búsqueda…',unavailable:'La búsqueda inteligente no está disponible. Mostramos coincidencias por palabras.',noSemantic:'No hay coincidencias cercanas para esta descripción.',unsupported:'No se pudo aplicar: '},ca:{loading:'Pensant en la teva cerca…',unavailable:'La cerca intel·ligent no està disponible. Mostrem coincidències per paraules.',noSemantic:'No hi ha coincidències properes per a aquesta descripció.',unsupported:'No s’ha pogut aplicar: '}};
     const regional={en:'The catalogue does not yet identify films produced in Catalunya.',es:'El catálogo todavía no identifica las películas producidas en Catalunya.',ca:'El catàleg encara no identifica les pel·lícules produïdes a Catalunya.'};
     status.textContent=(messages[language][kind]||'')+(kind==='unsupported'?unsupported.map(item=>item==='origin:Catalunya'?regional[language]:item).join(' · '):'');status.hidden=!kind;
@@ -99,6 +101,7 @@ let availabilityTimer=0,availabilityDue=0,availabilityETag=null,availabilityRefr
 let webMCPStarted=false,webMCPCleanup=null;
 const lifecycle=new AbortController();
 const PROGRAMME_CACHE=publicLanguage?'vobarna-public-programme-v1':'barcelona-cinema-programme-v1', SEATS_CACHE='barcelona-cinema-seats-v1';
+const programmeLoader=createProgrammeLoader({cacheKey:PROGRAMME_CACHE,cinemaId:listingCinemaId||null});
 const readCache = key => {try{return JSON.parse(localStorage.getItem(key));}catch{return null;}};
 const saveCache = (key,value) => {try{localStorage.setItem(key,JSON.stringify(value));}catch{}};
 const cinema = id => data.cinemas.find(c=>c.id===id);
@@ -160,7 +163,7 @@ function parsedSearch(){
 }
 
 function filteredFilms(ignoreDate=false){
-  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now(),...smartSearchUI?.current(),origin:locationSearchUI?.current().origin});
+  const films=queryFilms(data,state,{ignoreExplicitDates:ignoreDate,index:searchIndex,now:initialViewTime??Date.now(),...smartSearchUI?.current(),origin:locationSearchUI?.current().origin,availability:availabilitySnapshot()});
   if(initialViewTime!==null)films.sort((a,b)=>(initialOrder.get(a.id)??Infinity)-(initialOrder.get(b.id)??Infinity));
   return films;
 }
@@ -179,7 +182,19 @@ function closeFilm({animate=false}={}){
   $('filmDialog').close();syncURL();
 }
 
+function editingSearch(){
+  return $('search').value!==state.query&&document.activeElement?.closest('.search-composer');
+}
+function updateSearchControllers(){
+  updatingControllers=true;
+  try{smartSearchUI?.update();locationSearchUI?.update();}finally{updatingControllers=false;}
+}
 function refreshResults(){
+  if(updatingControllers)return;
+  // Catalogue/availability updates must not rebuild results beneath an active
+  // draft. The existing results stay usable; submit or leaving the box flushes.
+  if(editingSearch()){resultsPending=true;return;}
+  resultsPending=false;
   const matches=filteredFilms(true);
   buildDates(matches);
   render(state.date_from||state.date_to?filteredFilms():matches);
@@ -200,8 +215,8 @@ function applySearch(filters){
   $('linkNotice').hidden=true;
   closeFilm();
   if($('search').value!==state.query)$('search').value=state.query;
-  smartSearchUI?.update();
-  locationSearchUI?.update();
+  suggestionsUI?.sync();
+  updateSearchControllers();
   refreshResults();
   window.dispatchEvent(new CustomEvent('vobarna:search',{detail:{scope:'films',query_length:state.query.length,
     result_count:visible.length,screening_count:visible.reduce((sum,film)=>sum+film.sessions.length,0),
@@ -228,7 +243,7 @@ function renderFilterChips(){
   $('filterChips').hidden=!chips.length;
   $('filterChips').innerHTML=chips.map(({field,value,label})=>`<button type="button" class="filter-chip" data-remove-filter="${field}" data-value="${escapeHTML(value)}" aria-label="${escapeHTML(labels.remove+' '+label)}">${escapeHTML(label)} <span aria-hidden="true">×</span></button>`).join('');
   let explanation=$('searchExplanation');
-  if(!explanation){explanation=document.createElement('p');explanation.id='searchExplanation';explanation.className='search-explanation';$('filterChips').after(explanation);}
+  if(!explanation){explanation=document.createElement('p');explanation.id='searchExplanation';explanation.className='search-explanation';$('searchActiveControls').after(explanation);}
   explanation.textContent=data&&state.query.trim()?searchExplanation(interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent}),language):'';
   explanation.hidden=!explanation.textContent;
   renderLocationStatus();
@@ -257,7 +272,7 @@ function renderLocationStatus(){
   const nearby=locationSearchUI?.current();
   if(!nearby?.location&&!$('locationStatus'))return;
   let region=$('locationStatus');
-  if(!region){region=document.createElement('div');region.id='locationStatus';region.className='location-status';$('filterChips').after(region);}
+  if(!region){region=document.createElement('div');region.id='locationStatus';region.className='location-status';$('searchActiveControls').after(region);}
   region.hidden=!nearby?.location||nearby.status==='ready';
   if(region.hidden){region.replaceChildren();return;}
   const copy=LOCATION_COPY[language],retry=['denied','timeout','locationFailed','geocodeFailed'].includes(nearby.status);
@@ -297,18 +312,28 @@ function render(films=filteredFilms()){
   const total=visible.reduce((n,film)=>n+film.sessions.length,0);
   clearTimeout(resultAnnouncement);
   resultAnnouncement=setTimeout(()=>{$('resultCount').textContent=plural(visible.length,'film','films')+' · '+plural(total,'screening','screenings');},250);
-  $('clearFilters').hidden=!state.query&&!state.date_from&&!state.date_to&&!state.cinema_ids.length&&!state.formats.length&&!state.big_screens_only;
+  $('clearFilters').hidden=!$('search').value&&!state.query&&!state.date_from&&!state.date_to&&!state.cinema_ids.length&&!state.formats.length&&!state.big_screens_only;
   renderFilterChips();
+  const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
+  let feedback=$('searchFeedback');
+  if(!feedback){feedback=document.createElement('section');feedback.id='searchFeedback';feedback.className='search-feedback';feedback.setAttribute('aria-live','polite');$('searchActiveControls').after(feedback);}
+  const locationUnresolved=locationSearchUI?.current().location&&!locationSearchUI.current().origin;
+  const feedbackHTML=state.query.trim()&&!locationUnresolved?feedbackMarkup(searchFeedback(data,state,visible,{index:searchIndex,intent:plan,language,origin:locationSearchUI?.current().origin,availability:availabilitySnapshot()}),{language,programme:data,listingPath}):'';
+  if(feedback.innerHTML!==feedbackHTML)feedback.innerHTML=feedbackHTML;
+  feedback.hidden=!feedbackHTML;
   $('moreFilms').hidden=visible.length<=cardLimit;
   $('grid').setAttribute('aria-busy','false');
   $('grid').dataset.enhanced='true';
-  if(locationSearchUI?.current().location&&!locationSearchUI.current().origin){$('grid').replaceChildren();return;}
+  if(locationUnresolved){$('grid').replaceChildren();return;}
+  if(plan.venue_query){$('grid').replaceChildren();return;}
+  if(plan.scope==='past'&&visible.length){
+    $('grid').innerHTML=visible.slice(0,cardLimit).map(film=>`<article class="search-history"><h2><a href="${safeURL(film.urls?.[language])}">${escapeHTML(film.title)}</a></h2><p>${escapeHTML(searchCopy(language).past)}</p><ul>${film.sessions.map(s=>`<li>${escapeHTML(s.date+' · '+s.time+' · '+(cinema(s.cinema_id)?.short||s.cinema_id))}</li>`).join('')}</ul></article>`).join('');return;
+  }
   if(!visible.length){
     $('grid').innerHTML=`<div class="empty"><h2>${t('noMatches')}</h2><p>${t('emptyHint')}</p><button type="button" class="btn btn-secondary" data-reset>${t('reset')}</button></div>`;
     return;
   }
   const view=listingView();
-  const plan=interpretSearch(data,state,{index:searchIndex,intent:smartSearchUI?.current()?.intent});
   const nodes=visible.slice(0,cardLimit).map(film=>{
     const body=view.bodyMarkup(film,{matchReason:filmMatchReason(film,plan,language)});
     let cached=cardNodes.get(film.id);
@@ -347,18 +372,18 @@ function render(films=filteredFilms()){
   markStartedShowtimes();
 }
 
-function setLanguage(next){
+function setLanguage(next,{preserveDraft=false}={}){
   language=TEXT[next]?next:'en';
   document.documentElement.lang=language;
   try { localStorage.setItem('barcelona-cinema-language',language); } catch {}
   document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
   document.querySelectorAll('[data-lang]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.lang===language)));
   $('search').placeholder=t('searchPlaceholder');
+  if(!preserveDraft)suggestionsUI?.sync();
   $('search').setAttribute('aria-label',t('search'));
   $('dates').setAttribute('aria-label',t('screeningDates'));
   if(data){
-    smartSearchUI?.update();
-    locationSearchUI?.update();
+    updateSearchControllers();
     refreshResults();
     if($('filmDialog').open)renderDialog();
   }
@@ -496,17 +521,10 @@ function reset(){
   $('dates').scrollLeft=0;
 }
 
-function useProgramme(next,{cached=false}={}){
-  if(!next||!Array.isArray(next.films)||!Array.isArray(next.cinemas))throw new Error('Invalid programme');
-  data=hydrateProgramme(next);
-  // Scope the shared listing once, before search, dates, dialogs and WebMCP.
-  // Keep the downloaded catalogue intact for the shared homepage cache.
-  if(listingCinemaId){
-    data={...data,cinemas:data.cinemas.filter(venue=>venue.id===listingCinemaId),
-      films:data.films.map(film=>({...film,sessions:film.sessions.filter(session=>session.cinema_id===listingCinemaId)}))
-        .filter(film=>film.sessions.length)};
-  }
-  searchIndex=createSearchIndex(data);
+function useProgramme(prepared,{cached=false}={}){
+  data=prepared.programme;
+  searchIndex=prepared.index;
+  void suggestionsUI?.refresh();
   smartSearchUI?.reset();
   locationSearchUI?.reset();
   dateLabels.clear();
@@ -528,14 +546,15 @@ function useProgramme(next,{cached=false}={}){
   // An older browser cache may not contain a newly added cinema or format.
   // Only the current fetched catalogue can invalidate a shared filter URL.
   if(!cached){try{Object.assign(state,validateSearch(state,data,searchIndex));}catch{Object.assign(state,emptySearch(),{query:state.query});}}
-  $('search').value=state.query;
+  if(!suggestionsUI)$('search').value=state.query;
   if(publicLanguage){
     const filters=document.querySelector('.filters[hidden]');
     if(filters)filters.hidden=false;
   }
-  setLanguage(language);
+  setLanguage(language,{preserveDraft:true});
   restoreLink(false);syncURL();
   startWebMCP();
+  suggestionsUI?.ready();
 }
 
 // A slow connection that keeps delivering the catalogue must be allowed to
@@ -550,7 +569,7 @@ async function fetchProgramme(){
   try{
     const response=await fetch(document.body.dataset.programmeUrl||'/preview-data/programme.json',{cache:'no-cache',signal:controller.signal});
     if(!response.ok)throw new Error('Programme unavailable');
-    if(!response.body)return await response.json();
+    if(!response.body)return await response.text();
     const reader=response.body.getReader(),decoder=new TextDecoder();
     let text='';
     for(;;){
@@ -558,7 +577,7 @@ async function fetchProgramme(){
       if(done)break;
       watch();text+=decoder.decode(value,{stream:true});
     }
-    return JSON.parse(text+decoder.decode());
+    return text+decoder.decode();
   }finally{clearTimeout(timer);}
 }
 
@@ -568,12 +587,10 @@ function load(){return programmeLoad||=loadProgramme().finally(()=>{programmeLoa
 
 async function loadProgramme(){
   try{
-    const next=await fetchProgramme();
-    if(!Array.isArray(next.films)||!Array.isArray(next.cinemas))throw new Error('Invalid programme');
+    const next=await programmeLoader.prepare(await fetchProgramme());
     programmeFailed=false;
-    if(!data||next.generated_at!==data.generated_at)useProgramme(next);
+    if(!data||next.programme.generated_at!==data.generated_at)useProgramme(next);
     restoreLink(true);
-    void saveProgrammeCache(PROGRAMME_CACHE,next);
     loadAvailability();
   }catch{
     programmeFailed=true;
@@ -642,6 +659,7 @@ document.addEventListener('click',event=>{
   if(showtime&&Date.parse(showtime.querySelector('time')?.dateTime)<Date.now()){event.preventDefault();markStartedShowtimes();return;}
   const anchor=event.target.closest('a');
   if(anchor&&(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey))return;
+  if(anchor?.hasAttribute('data-search-suggestion')){event.preventDefault();applySearch(searchFromURL(new URL(anchor.href).searchParams));return;}
   if(event.target.closest('[data-show-film-times]')){
     openFilm(activeFilm,null,{push:false,view:'showtimes',restoreScroll:true});
     return;
@@ -685,29 +703,17 @@ document.addEventListener('click',event=>{
   else if(button.hasAttribute('data-reset')||button.id==='clearFilters')reset();
   else if(button.hasAttribute('data-retry'))load();
 });
-function inputSearch(event){
-  if(event.isComposing)return;
-  if(state.query!==event.target.value)state.ignored_filters=[];
-  state.query=event.target.value;
-  smartSearchUI?.reset();
-  locationSearchUI?.reset();
-  initialViewTime=null;
-  if(!data)return;
-  cancelSearchRender();
-  $('grid').setAttribute('aria-busy','true');
-  // Keep URL/history writes and DOM work out of the keystroke handler too.
-  searchTimer=setTimeout(()=>{
-    searchTimer=0;
-    searchFrame=requestAnimationFrame(()=>{
-      searchFrame=0;
-      const next={...state};
-      if(parseFilmQuery(data,next.query,todayISO(),searchIndex).range){next.date_from=null;next.date_to=null;}
-      applySearch(next);
-    });
-  },60);
-}
-$('search').addEventListener('input',inputSearch);
-$('search').addEventListener('compositionend',inputSearch);
+suggestionsUI=createSearchSuggestionsUI({input:$('search'),getProgramme:()=>data,getLanguage:()=>language,getQuery:()=>state.query,scoped:listingCinemaId||null,
+  onDraft:draft=>{smartSearchUI?.cancel();if(draft)$('clearFilters').hidden=false;},
+  onSubmit:query=>{
+    const next={...state,query};
+    if(parseFilmQuery(data,query,todayISO(),searchIndex).range){next.date_from=null;next.date_to=null;}
+    applySearch(next);
+  }
+});
+document.addEventListener('focusout',()=>{
+  queueMicrotask(()=>{if(resultsPending&&!editingSearch())refreshResults();});
+});
 document.addEventListener('keydown',event=>{
   if(event.key!=='/'||event.ctrlKey||event.metaKey||event.altKey||event.isComposing||event.target.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"])'))return;
   event.preventDefault();
@@ -738,7 +744,7 @@ window.addEventListener('popstate',event=>{
   pendingLink=params.has('film')||params.has('screening')?{filmId:params.get('film'),screeningId:params.get('screening')}:null;
   restoreLink(true);
 });
-window.addEventListener('pagehide',event=>{if(!event.persisted){lifecycle.abort();webMCPCleanup?.();}});
+window.addEventListener('pagehide',event=>{if(!event.persisted){lifecycle.abort();webMCPCleanup?.();programmeLoader.destroy();suggestionsUI?.destroy();}});
 new ResizeObserver(updateDateFades).observe($('dates'));
 document.fonts.addEventListener('loadingdone',updateDateFades);
 document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{
@@ -786,13 +792,13 @@ try{
   }
 }catch{data=null;}
 // Read cache and network concurrently; a late cache must never replace fresh data.
-void readProgrammeCache(PROGRAMME_CACHE).then(cached=>{
+void programmeLoader.readCache().then(cached=>{
   cachedProgramme=cached;
-  const matchesPublication=!publicLanguage||cached?.generated_at===$('grid').dataset.programmeGenerated;
+  const matchesPublication=!publicLanguage||cached?.programme.generated_at===$('grid').dataset.programmeGenerated;
   if(!data&&cached&&(matchesPublication||programmeFailed)){
     try{useProgramme(cached,{cached:true});loadAvailability();}catch{data=null;}
   }
-});
+}).catch(()=>{});
 markStartedShowtimes();
 setInterval(()=>{if(!document.hidden)markStartedShowtimes();},15000);
 // Deferred decoration (static/theme.js) waits for this first attempt.

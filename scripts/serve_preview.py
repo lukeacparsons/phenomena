@@ -40,6 +40,13 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlsplit(self.path)
+        if parsed.path == '/api/search-suggestions':
+            try:
+                status, result = self.server.search.request(None, {}, path=parsed.path, method='GET')
+                self.json_response(result, status)
+            except (ValueError, OSError, AttributeError):
+                self.json_response({'error': 'suggestions_unavailable'}, 503)
+            return
         if getattr(self.server, 'public_site', False) and parsed.path not in ('/api/preview/availability', '/availability.json', '/api/preview/health'):
             if serve_public(self, PUBLIC):
                 return
@@ -85,7 +92,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
-        if path not in ('/api/search', '/api/geocode'):
+        if path not in ('/api/search', '/api/geocode', '/api/completions'):
             self.json_response({'error': 'method_not_allowed'}, 405)
             return
         try:

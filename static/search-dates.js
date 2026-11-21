@@ -44,7 +44,7 @@ export function parseDateQuery(input,today){
   take(/\b(?:this week|esta semana|aquesta setmana)\b/,()=>({start:monday,end:dayShift(monday,6)}));
   take(/\b(?:next month|el proximo mes|proximo mes|el mes que ve|mes que ve)\b/,()=>{const start=monthShift(today.slice(0,7)+'-01',1);return {start,end:dayShift(monthShift(start,1),-1)};});
   take(/\b(?:this month|este mes|aquest mes)\b/,()=>{const start=today.slice(0,7)+'-01';return {start,end:dayShift(monthShift(start,1),-1)};});
-  take(/\b(?:today|tonight|hoy|avui)\b/,()=>exact(today));
+  take(/\b(?:today|tonight|hoy|avui|esta noche|aquesta nit)\b/,()=>exact(today));
   take(/\b(?:tomorrow|manana|dema)\b/,()=>exact(dayShift(today,1)));
   take(new RegExp('\\b(?:(this|next|este|el proximo|proximo|aquest|el proper|proper)\\s+)?('+Object.keys(weekdays).join('|')+')\\b'),m=>{
     let distance=(weekdays[m[2]]-weekday+7)%7;

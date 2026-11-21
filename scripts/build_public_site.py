@@ -30,6 +30,7 @@ from site_research import ResearchTranslations
 from site_identity import LOCALES, SECTIONS, new_registry, path_for, resolve, update_registry
 from optimize_images import optimize_logo, optimize_mascot_animation, prepare_images, write_favicons
 from browser_programme import browser_programme
+from search_evidence import public_venue_answers
 from film_duplicate_audit import validate_publication_films
 from language_names import without_language_placeholder
 from screening_languages import screening_audio, has_english_subtitles
@@ -170,6 +171,7 @@ class Publication:
                     self.by_cinema.setdefault(session['cinema_id'], []).append((film, session))
         # One renderer owns both the first HTML paint and the interactive cards.
         self.browser_programme = compact_programme(programme, registry, now)
+        self.browser_programme['search']['venues'] = public_venue_answers(research.get('visitors', {}))
         for cinema in self.browser_programme['cinemas']:
             location = self.cinemas[cinema['id']].get('location', {})
             cinema['location'] = {key: location[key] for key in ('formatted_address', 'latitude', 'longitude') if key in location}
@@ -531,7 +533,7 @@ class Publication:
         t = COPY[lang]
         view = self.listing_views[lang + ':' + ('date:' + date if date else cinema_id)]
         subtitle = '' if cinema_id else f'<span class="logo-subtitle programme-subtitle" data-i18n="siteSubtitle">{text(t["site_subtitle"])}</span>'
-        filters = f'''<section class="filters" aria-label="{t['films']}">{subtitle}<nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><div id="filterChips" class="filter-chips" hidden></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
+        filters = f'''<section class="filters" aria-label="{t['films']}">{subtitle}<nav class="dates" id="dates" aria-label="{t['screening_dates']}">{view['dates']}</nav><div class="filter-row"><label class="search"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><span class="sr-only" data-i18n="search">{text(view['search'])}</span><input type="search" id="search" maxlength="500" autocomplete="off" placeholder="{text(view['placeholder'])}" aria-label="{text(view['search'])}"></label></div><div id="searchActiveControls" class="search-active-controls"><div id="filterChips" class="filter-chips" hidden></div><button type="button" id="clearFilters" class="clear-button" data-i18n="reset" hidden>{t['reset']}</button></div><p id="linkNotice" class="link-notice" role="status" hidden></p></section>'''
         cards = []
         for position, card in enumerate(view['cards']):
             film = self.current[card['id']]
@@ -1056,6 +1058,17 @@ class Publication:
 
 def compact_programme(programme, registry, now):
     result = browser_programme(programme, now)
+    result['search'] = {'films': [], 'venues': [], 'history_note': 'Retained collected schedules; not a complete cinema archive.'}
+    for entity_id, record in registry['entities'].items():
+        if record.get('kind') != 'films' or not record.get('film'):
+            continue
+        sessions = [s for s in record.get('screenings', []) if datetime.fromisoformat(s['starts_at']) < now]
+        current_ids = {f['id'] for f in programme['films']}
+        if record['source_id'] in current_ids and not sessions:
+            continue
+        archived = {**record['film'], 'id': record['source_id'], 'sessions': sessions,
+                    'urls': {l: path_for(record, l) for l in LOCALES}}
+        result['search']['films'].append(archived)
     for value in result['films']:
         record = resolve(registry, 'films', value['id'])
         value['urls'] = {l: path_for(record, l) for l in LOCALES}
@@ -1086,7 +1099,8 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
         optimize_logo()
         optimize_mascot_animation()
         research = {'dossiers': read_json(docs / 'cinema-dossiers.json'), 'rooms': read_json(docs / 'auditoriums.json'),
-                    'practical': read_json(docs / 'cinema-practical-info.json', {})}
+                    'practical': read_json(docs / 'cinema-practical-info.json', {}),
+                    'visitors': read_json(docs / 'cinema-visitor-questions.json', {})}
         venues = {v['id']: v for v in programme['cinemas']}
         venues.update({v['id']: {**venues.get(v['id'], {}), **v} for v in research['dossiers']['cinemas']})
         previous = read_json(output / 'current/manifest.json', {})
@@ -1112,9 +1126,9 @@ def build(*, programme_path=ROOT / 'static/preview-data/screenings.json', output
             site.discovery_pages()
             date_views = build_date_views(site, language_name)
             # Explicit public assets; collectors, raw research and legacy checkout are not shipped.
-            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'location-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
+            for name in ('theme.js', 'theme.css', 'ui-components.css', 'cinemas.css', 'cinemas.js', 'cinema-search.js', 'search-catalogue.js', 'search-catalogue-worker.js', 'search-chip-selection.js', 'search-suggestions.js', 'outing-search.js', 'search-feedback.js', 'location-search.js', 'film-search-content.js', 'language-labels.js', 'screening-language.js', 'search-intent.js', 'smart-search-ui.js', 'search-dates.js', 'cinema-service.js', 'webmcp.js', 'webmcp-registration.js', 'webmcp-sdk.js', 'webmcp-sdk.LICENSE.txt',
                          'site-header.js', 'language-navigation.js', 'complete-programme.js', 'clint-idle.webp', 'barcelona-mascot-point-right-brow-refined.webp', 'barcelona-mascot-poke.webp',
-                         'listing-view.js', 'discovery-view.js', 'guide-page.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
+                         'listing-view.js', 'discovery-view.js', 'guide-page.js', 'site.css', 'site-page.js', 'discovery-page.js', 'today-links.js', 'cinema-copy.js', 'film-dialog.js', 'film-view.js', 'film-page.js', 'cinema-directory.js', 'ticket-events.js', 'analytics.js', 'progressive-images.js', 'programme-data.js', 'programme-cache.js', 'programme-loader.js', 'programme-worker.js', 'clint.png', 'clint-logo.webp', 'paper-grain.svg', 'barcelona-cinema-background.svg', 'barcelona-cinema-background.webp',
                          'webmcp-guide.css', 'webmcp-tools.json'):
                 shutil.copy2(ROOT / 'static' / name, dest / name)
             write_favicons(dest)

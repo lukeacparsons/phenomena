@@ -60,7 +60,7 @@ const trial='**/trial-token.js';
     view=await open({setup:page=>page.route('**/programme.json',async route=>{await new Promise(resolve=>setTimeout(resolve,9500));await route.continue();})});
     await view.page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
     await view.page.waitForSelector('#grid[data-enhanced] .title-button');
-    await view.page.locator('#search').fill('Dune');
+    await view.page.locator('#search').fill('Dune');await view.page.locator('#search').press('Enter');
     await view.page.waitForFunction(()=>location.search==='?q=Dune');
     assert.deepEqual(view.errors,[]);
     await view.context.close();

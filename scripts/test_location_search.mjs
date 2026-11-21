@@ -140,8 +140,8 @@ test('LLM location intent enters geocoding without inventing coordinates or weak
   const api=createSmartSearch({getProgramme:async()=>programme,apiKey:'test',dimensions:2,now:()=>now,fetchImpl:async(url,options)=>{
     const body=JSON.parse(options.body);
     if(url.endsWith('/embeddings'))return {ok:true,json:async()=>({data:body.input.map((_,index)=>({index,embedding:[1,0]}))})};
-    assert.equal(JSON.parse(body.input).query,'comedy in poblesec');
-    assert.match(body.instructions,/location_query/);
+    assert.equal(JSON.parse(body.input[2].content[0].text).query,'comedy in poblesec');
+    assert.match(body.input[0].content[0].text,/location_query/);
     return {ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({...intent,film_matches:[]})}]}]})};
   }});
   const result=await api.search({query:'comedy in poblesec'});

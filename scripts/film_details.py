@@ -14,13 +14,14 @@ from film_synopsis import clean_synopsis, unique_synopses
 from film_countries import canonical as country_name, resolve as resolve_countries, filter_aliases as filter_country_aliases
 
 VERSION = 1
-WIKIDATA_VERSION = 4
-SEARCH_CONTENT_VERSION = 3
+WIKIDATA_VERSION = 5
+SEARCH_CONTENT_VERSION = 4
 LIST_FIELDS = ("directors", "writers", "cast", "producers", "composers", "cinematographers", "editors",
                "genres", "topics", "colours", "countries", "languages", "studios", "distributors", "based_on", "source_authors")
 PROPERTIES = {"P57": "directors", "P58": "writers", "P161": "cast", "P725": "cast", "P162": "producers", "P86": "composers",
               "P344": "cinematographers", "P1040": "editors", "P136": "genres", "P495": "countries",
-              "P364": "languages", "P272": "studios", "P750": "distributors", "P144": "based_on", "P462": "colours"}
+              "P364": "languages", "P272": "studios", "P750": "distributors", "P144": "based_on", "P462": "colours",
+              "P166": "awards", "P1411": "nominations"}
 GENRES = {
     "Science fiction": ["Sci-Fi", "scifi", "science fiction film", "Ciencia ficción", "Ciència-ficció"],
     "Action": ["action film", "Acción", "Acció"], "Adventure": ["adventure film", "Aventuras", "Aventures"],
@@ -201,6 +202,8 @@ def parse_fa(html):
             for node in value.find():
                 if node.tag == "i" and re.search(r"novela|obra|cómic|comic|personajes|relato", node.text(), re.I):
                     field = "source_authors"
+                    if re.search(r'\bnovela\b', node.text(), re.I):
+                        facts['adaptation_kind'] = 'book'
                 if node.tag == "a" and "name.php?" in node.attrs.get("href", ""):
                     facts[field].append(node.text())
         elif label == "País":
@@ -252,6 +255,12 @@ def parse_wikidata(rows):
             label = value.get("valueLabel") or value.get("esLabel") or value.get("caLabel")
             if label:
                 facts.setdefault(PROPERTIES[prop], []).append(label)
+                if prop in ('P166', 'P1411'):
+                    facts.setdefault('search_facts', []).append({'field': 'award' if prop == 'P166' else 'nomination',
+                                                               'value': label, 'source_url': item.replace('http:', 'https:')})
+                if prop == 'P136' and label.casefold() in ('silent film', 'silent cinema'):
+                    facts.setdefault('search_facts', []).append({'field': 'silent', 'value': True,
+                                                               'source_url': item.replace('http:', 'https:')})
                 if prop == 'P495' and (value.get('referenceURL') or value.get('statedIn')):
                     facts.setdefault('country_claims', []).append({'country': label,
                         'reference_url': value.get('referenceURL'), 'stated_in': value.get('statedIn')})
@@ -346,6 +355,13 @@ def combine(sources, imdb=None):
                 dates.append({**date, "source_url": record["url"]})
                 seen.add(key)
     result["release_dates"] = sorted(dates, key=lambda d: (d["date"], d.get("region") or "", d.get("kind") or ""))
+    result['search_facts'] = [dict(fact, checked_at=record.get('checked_at'))
+                            for record in sources.values() if record.get('status') == 'ok'
+                            for fact in record.get('facts', {}).get('search_facts', [])]
+    for record in sources.values():
+        if record.get('status') == 'ok' and record.get('url') and record.get('facts', {}).get('adaptation_kind'):
+            result['search_facts'].append({'field': 'adaptation_kind', 'value': record['facts']['adaptation_kind'],
+                                          'source_url': record['url'], 'checked_at': record.get('checked_at')})
     search_fields = tuple(field for field in LIST_FIELDS if field != "producers")
     def name_key(value):
         return " ".join(re.sub(r"[^\w]+", " ", "".join(c for c in unicodedata.normalize("NFD", value.casefold())

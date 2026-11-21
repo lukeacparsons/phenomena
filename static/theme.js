@@ -258,6 +258,19 @@
     document.addEventListener('input', changed);
     document.fonts.addEventListener('loadingdone', changed);
 
+    const finishEditing = () => new Promise(resolve => {
+      const editing = () => document.activeElement?.matches('input,textarea,[contenteditable="true"]') &&
+        (document.activeElement.value || document.activeElement.textContent || '').length;
+      if (!editing()) { resolve(); return; }
+      const check = () => setTimeout(() => {
+        if (editing()) return;
+        document.removeEventListener('focusout', check);
+        document.removeEventListener('input', check);
+        resolve();
+      }, 0);
+      document.addEventListener('focusout', check);
+      document.addEventListener('input', check);
+    });
     const idle = () => new Promise(resolve => {
       if (window.requestIdleCallback) requestIdleCallback(() => resolve(), { timeout: 4000 });
       else setTimeout(resolve, 200);
@@ -288,6 +301,7 @@
         if (!reducedMotion.matches) {
           try {
             await idle();
+            await finishEditing();
             const { ScreenCurtains } = await import(`${artwork}cloth.js`);
             cloth = new ScreenCurtains();
             prepareCloth();
@@ -306,6 +320,7 @@
     // An interactive listing publishes its first catalogue attempt here.
     try { await window.vobarnaProgramme; } catch {}
     await idle();
+    await finishEditing();
     enhance();
   }
 

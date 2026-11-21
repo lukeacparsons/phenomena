@@ -30,13 +30,15 @@ const base=process.env.VOBARNA_PUBLIC_URL||'http://127.0.0.1:18793';
       if(query==='from catalunya')return route.fulfill({json:{query,mode:'semantic',intent:{text:'',conditions:[],semantic_query:'Catalan cinema',sort:'relevance',unsupported:[]},semantic_scores:[{film_id:'bright',score:.9}]}});
       return route.fulfill({json:{query,mode:'semantic',intent:{text:'',conditions:[{field:'country',op:'eq',value:'France'}],semantic_query:'uplifting',sort:'relevance',unsupported:[]},semantic_scores:[{film_id:'funny',score:.9},{film_id:'bright',score:.8},{film_id:'paris',score:.7}]}});
     });
+    await context.route('**/api/completions',r=>r.fulfill({json:{query:r.request().postDataJSON().query,suggestions:[]}}));
+    await context.route('**/api/search-suggestions',r=>r.fulfill({status:503,json:{error:'fixture'}}));
     const page=await context.newPage(),errors=[];
     page.on('pageerror',error=>errors.push(error.message));
     await page.clock.setFixedTime(new Date('2099-01-01T10:00:00Z'));
     await page.goto(base+'/en/',{waitUntil:'domcontentloaded'});
     await page.waitForSelector('#grid[data-enhanced]');
     const search=async query=>{
-      await page.locator('#search').fill(query);
+      await page.locator('#search').fill(query);await page.locator('#search').press('Enter');
       await page.waitForFunction(query=>document.getElementById('grid').getAttribute('aria-busy')==='false'&&(new URLSearchParams(location.search).get('q')||'')===query,query);
     };
     const ids=()=>page.locator('#grid .card[data-film]').evaluateAll(nodes=>nodes.map(n=>n.dataset.film).sort());

@@ -12,6 +12,7 @@ import {pathToFileURL} from 'node:url';
 import {isProgrammePath, resolvePublicURL} from './public-routing.mjs';
 import {createSmartSearch} from './smart-search.mjs';
 import {createGeocoder} from './geocode.mjs';
+import {createSearchSuggestions} from './search-suggestions.mjs';
 
 const types={'.html':'text/html; charset=utf-8','.json':'application/json; charset=utf-8',
   '.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8',
@@ -19,7 +20,7 @@ const types={'.html':'text/html; charset=utf-8','.json':'application/json; chars
   '.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.ico':'image/x-icon',
   '.woff2':'font/woff2','.ttf':'font/ttf'};
 
-export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={},geocoderOptions={},now=()=>new Date()}={}) {
+export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site', origin=process.env.PUBLIC_ORIGIN||'https://vobarna.com', indexNowKey=process.env.INDEXNOW_KEY,smartSearchOptions={},geocoderOptions={},suggestionOptions={},now=()=>new Date()}={}) {
   let active;
   let catalogue;
   const canonical=new URL(origin);
@@ -35,7 +36,7 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
     }
     return active;
   }
-  const smartSearch=createSmartSearch({cacheDirectory:resolve(publication,'search-cache'),getProgramme:async()=>{
+  const getProgramme=smartSearchOptions.getProgramme||(async()=>{
     const current=await release();
     if(catalogue?.root!==current.root){
       const programme=JSON.parse(await readFile(resolve(current.root,'programme.json'),'utf8'));
@@ -43,7 +44,10 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       catalogue={root:current.root,programme};
     }
     return catalogue.programme;
-  },...smartSearchOptions});
+  });
+  const suggestions=createSearchSuggestions({getProgramme,cacheDirectory:resolve(publication,'search-cache'),...suggestionOptions});
+  const smartSearch=createSmartSearch({cacheDirectory:resolve(publication,'search-cache'),getProgramme,
+    isPrecomputedQuery:suggestions.isPrecomputedQuery,...smartSearchOptions});
   const server=createServer(async(req,res)=>{
     res.setHeader('X-Content-Type-Options','nosniff');
     res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
@@ -55,7 +59,12 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
       // Never trust forwarded hosts for redirect targets. Bunny passes a fixed origin Host.
       const url=new URL(req.url,canonical);
       if(!req.url.startsWith('/')||req.url.startsWith('//'))return reply(400,'Bad request');
-      if(['/api/search','/api/geocode'].includes(url.pathname)){
+      if(url.pathname==='/api/search-suggestions'){
+        const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};
+        if(!['GET','HEAD'].includes(req.method))return reply(405,JSON.stringify({error:'method_not_allowed'}),{...headers,Allow:'GET, HEAD'});
+        return reply(200,JSON.stringify(await suggestions.catalogue()),headers);
+      }
+      if(['/api/search','/api/geocode','/api/completions'].includes(url.pathname)){
         const headers={'Content-Type':'application/json; charset=utf-8','X-Robots-Tag':'noindex'};
         if(req.method!=='POST')return reply(405,JSON.stringify({error:'method_not_allowed'}),{...headers,Allow:'POST'});
         if(req.headers.origin&&req.headers.origin!==canonical.origin&&req.headers.origin!=='http://'+req.headers.host)return reply(403,JSON.stringify({error:'origin_not_allowed'}),headers);
@@ -67,10 +76,11 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
             req.on('end',()=>{try{done(JSON.parse(Buffer.concat(chunks).toString('utf8')));}catch{reject(Object.assign(new Error('Invalid JSON'),{code:'invalid_input'}));}});
             req.on('error',reject);
           });
-          const result=await (url.pathname==='/api/geocode'?geocoder:smartSearch).search(body,{client:req.socket.remoteAddress});
+          if(url.pathname==='/api/completions'&&(!body||Object.keys(body).some(k=>!['query','language'].includes(k))))throw Object.assign(new Error('Invalid input'),{code:'invalid_input'});
+          const result=await (url.pathname==='/api/completions'?suggestions.complete(body):(url.pathname==='/api/geocode'?geocoder:smartSearch).search(body,{client:req.socket.remoteAddress}));
           return reply(200,JSON.stringify(result),headers);
         }catch(error){
-          const code=['invalid_input','rate_limited'].includes(error.code)?error.code:url.pathname==='/api/geocode'?'geocode_unavailable':'search_unavailable';
+          const code=['invalid_input','rate_limited'].includes(error.code)?error.code:error.status===400?'invalid_input':error.status===429?'rate_limited':url.pathname==='/api/geocode'?'geocode_unavailable':url.pathname==='/api/completions'?'completions_unavailable':'search_unavailable';
           return reply(code==='invalid_input'?400:code==='rate_limited'?429:503,JSON.stringify({error:code}),headers);
         }
       }
@@ -159,6 +169,8 @@ export function publicServer({publication=process.env.PUBLICATION_ROOT||'.site',
   server.headersTimeout=15_000;
   server.keepAliveTimeout=5_000;
   server.warmSearch=options=>smartSearch.warm(options);
+  server.once('listening',()=>void suggestions.start().catch(()=>console.error(JSON.stringify({event:'suggestions_start_failed'}))));
+  server.once('close',()=>suggestions.stop());
   return server;
 }
 
@@ -166,6 +178,6 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const server=publicServer();
   server.listen(Number(process.env.PORT||8787),'0.0.0.0',()=>console.log(JSON.stringify({event:'origin_started'})));
   const warm=options=>server.warmSearch(options).catch(()=>console.error(JSON.stringify({event:'search_warmup_failed'})));
-  void warm({interpreter:true});const searchRefresh=setInterval(()=>void warm(),300000);searchRefresh.unref();
+  void warm(); // Restore saved embeddings only; no paid startup calls.
   for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),10_000).unref();});
 }
