@@ -97,6 +97,13 @@ def update_registry(previous, programme, cinemas, checked_at, overrides=None):
             record['source_id'] = item['id']
             if kind == 'films':
                 record['film'] = {key: copy.deepcopy(item[key]) for key in FILM_FIELDS if key in item}
+                # Keep collected screening facts when films leave the programme.
+                from browser_programme import browser_programme
+                historical_item = {**item, 'sessions': [s for s in item.get('sessions', []) if s.get('id') and s.get('starts_at')]}
+                sessions = browser_programme({'films': [historical_item]})['films'][0]['sessions']
+                history = {s['id']: s for s in record.get('screenings', [])}
+                history.update({s['id']: s for s in sessions})
+                record['screenings'] = sorted(history.values(), key=lambda s: s['starts_at'])[-500:]
             else:
                 record['cinema'] = copy.deepcopy(item)
     # Flatten historical redirects even after several subsequent identity merges.

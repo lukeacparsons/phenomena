@@ -2,12 +2,12 @@
 import {readFileSync} from 'node:fs';
 import {filmMarkup} from '../static/film-view.js';
 
-const {films,cinemas}=JSON.parse(readFileSync(0,'utf8'));
+const {films,cinemas,now}=JSON.parse(readFileSync(0,'utf8'));
 const views={};
 for(const film of films){
   views[film.id]={};
   for(const language of ['en','es','ca']){
-    views[film.id][language]=filmMarkup(film,{language,cinemas,page:true,
+    views[film.id][language]=filmMarkup(film,{language,cinemas,page:true,now:Date.parse(now),
       poster:'<!--film-poster-->',availabilityPending:false});
   }
 }

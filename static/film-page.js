@@ -1,5 +1,5 @@
 import {renderFilmDialog,focusSelectedScreening,getDialogScroller,showFilmDialog,closeFilmDialog} from './film-dialog.js';
-import {filmMarkup} from './film-view.js';
+import {filmMarkup,lastScreeningMarkup} from './film-view.js';
 const payload=JSON.parse(document.getElementById('film-dialog-data').textContent);
 const {film,cinemas}=payload,language=document.documentElement.lang;
 const dialog=document.createElement('dialog');
@@ -10,6 +10,20 @@ const page=document.getElementById('filmPage');
 let availability={},opener=null,selected=null,navigating=false,activeFragment=null;
 const future=session=>Date.parse(session.starts_at)>=Date.now();
 const fragment=()=>location.hash.slice(1);
+function updateScreeningHistory(){
+  if(!page)return;
+  const upcoming=film.sessions.filter(future),visible=new Set(upcoming.map(s=>s.id));
+  page.querySelectorAll('.card-showtime[data-session]').forEach(row=>row.hidden=!visible.has(row.dataset.session));
+  page.querySelectorAll('.schedule-cinema,.dialog-day').forEach(section=>section.hidden=!section.querySelector('.card-showtime:not([hidden])'));
+  page.querySelector('.film-empty').hidden=upcoming.length>0;
+  const last=page.querySelector('.film-last-screening');
+  if(last){
+    last.innerHTML=lastScreeningMarkup(film,{language,cinemas});
+    last.hidden=upcoming.length>0||!last.innerHTML;
+  }
+}
+setInterval(updateScreeningHistory,30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateScreeningHistory();});
 // A cached HTML page can outlive a screening. Keep its remaining dates useful.
 page?.querySelectorAll('[data-starts]').forEach(row=>{if(Date.parse(row.dataset.starts)<Date.now())row.remove();});
 page?.querySelectorAll('.schedule-cinema,.dialog-cinema,.dialog-day').forEach(section=>{if(!section.querySelector('[data-session]'))section.remove();});
@@ -24,6 +38,7 @@ function paint(){
     {language,cinemas,selectedSessionId:selected?.id,availability});
 }
 function restore(){
+  updateScreeningHistory();
   const id=fragment();
   if(dialog.open&&id===activeFragment)return;
   if(id==='showtimes'){

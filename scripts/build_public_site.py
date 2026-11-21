@@ -387,6 +387,10 @@ class Publication:
         dialog_films = {}
         for entity_id, record in records:
             film = browser_programme({'films': [film_data[entity_id]]})['films'][0]
+            past = [s for s in record.get('screenings', []) if datetime.fromisoformat(s['starts_at']) < self.now]
+            if past:
+                last = max(past, key=lambda s: datetime.fromisoformat(s['starts_at']))
+                film['last_screening'] = {key: last[key] for key in ('starts_at', 'cinema_id')}
             film['urls'] = {lang: path_for(record, lang) for lang in LOCALES}
             for session in film['sessions']:
                 session['url_fragment'] = 'screening-' + hashlib.sha256(session['id'].encode()).hexdigest()[:16]
@@ -395,7 +399,7 @@ class Publication:
                           'urls': {lang: self.entity_path('cinemas', venue['id'], lang) for lang in LOCALES}}
                          for venue in self.cinemas.values()]
         rendered = subprocess.run(['node', str(ROOT / 'scripts/render_film_views.mjs')],
-                                  input=json.dumps({'films': list(dialog_films.values()), 'cinemas': dialog_cinemas}),
+                                  input=json.dumps({'films': list(dialog_films.values()), 'cinemas': dialog_cinemas, 'now': self.now.isoformat()}),
                                   text=True, capture_output=True, check=True)
         views = json.loads(rendered.stdout)
         for entity_id, record in records:
@@ -416,7 +420,8 @@ class Publication:
                          .replace('<div class="dialog-section showtimes-summary reading-wash" id="showtimes">', '<div class="dialog-section showtimes-summary reading-wash" id="showtimes">' + notice))
                 body += '</article>'
                 dialog_film = dialog_films[entity_id]
-                cinemas = [venue for venue in dialog_cinemas if any(s['cinema_id'] == venue['id'] for s in film['sessions'])]
+                cinemas = [venue for venue in dialog_cinemas if venue['id'] == dialog_film.get('last_screening', {}).get('cinema_id')
+                           or any(s['cinema_id'] == venue['id'] for s in film['sessions'])]
                 payload = json.dumps({'film': dialog_film, 'cinemas': cinemas}, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
                 body += f'<script type="application/json" id="film-dialog-data">{payload}</script>'
                 # Expiration alone does not remove a useful film profile from search.

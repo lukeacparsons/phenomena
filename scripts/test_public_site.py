@@ -522,6 +522,12 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(language_name('Unknown source wording', 'ca'), 'Unknown source wording')
 
     def test_archive_survives_a_new_build_without_the_film(self):
+        session = self.data['films'][0]['sessions'][0]
+        self.data['films'][0]['sessions'] += [
+            {**session, 'id': 'earlier', 'starts_at': '2026-11-19T19:00:00+01:00', 'date': '2026-11-19'},
+            {**session, 'id': 'withdrawn-future', 'starts_at': '2026-11-28T19:00:00+01:00', 'date': '2026-11-28'},
+        ]
+        self.write_input()
         self.publish()
         self.data['films'] = []
         self.write_input()
@@ -530,6 +536,21 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('David Lynch', html)
         self.assertIn('No upcoming screenings', html)
         self.assertNotIn('cinema.example/tickets', html)
+        for lang, section, label in [('en', 'films', 'Last listed screening'),
+                                     ('es', 'peliculas', 'Última sesión anunciada'),
+                                     ('ca', 'pellicules', 'Última sessió anunciada')]:
+            localized = (self.root / f'site/current/public/{lang}/{section}/dune-1984/index.html').read_text()
+            history = localized.split('<p class="film-last-screening">')[1].split('</p>')[0]
+            self.assertIn(label, history)
+            self.assertIn('<time datetime="2026-11-20T19:00:00+01:00">', history)
+            self.assertIn('Phenomena Experience', history)
+            self.assertNotIn('<a', history)
+            payload = json.loads(localized.split('id="film-dialog-data">')[1].split('</script>')[0])
+            self.assertEqual(payload['film']['sessions'], [])
+            self.assertEqual(payload['film']['last_screening'], {
+                'starts_at': '2026-11-20T19:00:00+01:00', 'cinema_id': 'phenomena'})
+            self.assertEqual(payload['cinemas'][0]['name'], 'Phenomena Experience')
+        self.assertNotIn('"@type":"ScreeningEvent"', html.replace(' ', ''))
         import hashlib
         prefix = hashlib.sha256(b'session:one').hexdigest()[:2]
         root = self.root / 'site/current/public'

@@ -141,6 +141,7 @@
 .film-sheet .dialog-intro{gap:6px}
 .public-site .film-sheet .dialog-intro p{margin:0;line-height:1.5;font-size:.875rem;color:var(--tx2)}
 .film-sheet .dialog-section{padding:0}
+.public-site .film-sheet .film-last-screening{margin:8px 0 0;color:var(--tx2);font-size:.875rem;line-height:1.6}
 .public-site .film-sheet .film-showtimes-heading{margin:0 0 20px;font-size:1.125rem;font-weight:600;line-height:1.4}
 .public-site .film-sheet section{margin:0}
 .public-site .film-sheet #showtimes{scroll-margin-top:calc(var(--header-height) + 36px)}

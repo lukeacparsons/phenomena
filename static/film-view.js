@@ -4,10 +4,20 @@ const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<
 const safeURL=value=>typeof value==='string'&&(/^(https:\/\/|\/(?!\/))/.test(value))?escapeHTML(value):'';
 const RATING_LABELS = {en:{critics:'RT · Critics',audience:'RT · Audience'},es:{critics:'RT · Crítica',audience:'RT · Público'},ca:{critics:'RT · Crítica',audience:'RT · Públic'}};
 const DETAIL_LABELS = {
-  en:{directedBy:'Directed by',languages:'Original language',reportedLanguages:'Languages',empty:'No upcoming screenings listed.'},
-  es:{directedBy:'Dirección',languages:'Idioma original',reportedLanguages:'Idiomas',empty:'No hay próximas sesiones anunciadas.'},
-  ca:{directedBy:'Direcció',languages:'Idioma original',reportedLanguages:'Idiomes',empty:'No hi ha pròximes sessions anunciades.'}
+  en:{directedBy:'Directed by',languages:'Original language',reportedLanguages:'Languages',empty:'No upcoming screenings listed.',lastScreening:'Last listed screening'},
+  es:{directedBy:'Dirección',languages:'Idioma original',reportedLanguages:'Idiomas',empty:'No hay próximas sesiones anunciadas.',lastScreening:'Última sesión anunciada'},
+  ca:{directedBy:'Direcció',languages:'Idioma original',reportedLanguages:'Idiomes',empty:'No hi ha pròximes sessions anunciades.',lastScreening:'Última sessió anunciada'}
 };
+// Historical context is plain text, never a time link or booking action.
+export function lastScreeningMarkup(film,{language='en',cinemas=[],now=Date.now()}={}){
+  const last=[film.last_screening,...film.sessions].filter(s=>s&&Date.parse(s.starts_at)<now)
+    .sort((a,b)=>Date.parse(b.starts_at)-Date.parse(a.starts_at))[0];
+  if(!last)return '';
+  const date=new Intl.DateTimeFormat({en:'en-GB',es:'es-ES',ca:'ca-ES'}[language],
+    {timeZone:'Europe/Madrid',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(last.starts_at));
+  const venue=cinemas.find(c=>c.id===last.cinema_id)?.name;
+  return `${DETAIL_LABELS[language].lastScreening}: <time datetime="${escapeHTML(last.starts_at)}">${escapeHTML(date)}</time>${venue?' · '+escapeHTML(venue):''}`;
+}
 const RATING_PROVIDERS = [
   {id:'rotten_tomatoes',name:'Rotten Tomatoes · Tomatometer',label:'critics',icons:{positive:'rt-fresh.svg',negative:'rt-rotten.svg',empty:'rt-empty.svg'},scale:100,search:title=>'https://www.rottentomatoes.com/search?search='+encodeURIComponent(title)},
   {id:'rotten_tomatoes_audience',parent:'rotten_tomatoes',audience:true,name:'Rotten Tomatoes · Popcornmeter',label:'audience',icons:{positive:'rt-audience-positive.svg',negative:'rt-audience-negative.svg',empty:'rt-audience-empty.svg'},scale:100,search:title=>'https://www.rottentomatoes.com/search?search='+encodeURIComponent(title)},
@@ -26,7 +36,7 @@ function groupShowtimes(sessions){
 }
 
 // Shared HTML for the crawlable film page and the listing's dialog.
-export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null,availability={},poster='',page=false,availabilityPending=true,view='all'}={}){
+export function filmMarkup(film,{language='en',cinemas=[],selectedSessionId=null,availability={},poster='',page=false,availabilityPending=true,view='all',now=Date.now()}={}){
   const activeSession=selectedSessionId;
   const t=key=>TEXT[language]?.[key]||TEXT.en[key]||key;
   const locale=()=>({en:'en-GB',es:'es-ES',ca:'ca-ES'}[language]||'en-GB');
@@ -93,8 +103,10 @@ function scheduleShowtime(session){
 }
 
 function scheduleMarkup(){
+  const last=page?lastScreeningMarkup(film,{language,cinemas,now}):'';
   return `<div class="dialog-section showtimes-summary reading-wash"${page?' id="showtimes"':''}>${page?`<h2 class="film-showtimes-heading">${t('showtimes')}</h2>`:`<h3 class="sr-only">${t('showtimes')}</h3>`}
     <p class="film-empty"${film.sessions.length?' hidden':''}>${DETAIL_LABELS[language].empty}</p>
+    ${page?`<p class="film-last-screening"${film.sessions.length||!last?' hidden':''}>${last}</p>`:''}
     ${[...groupShowtimes(film.sessions)].map(([date,venues])=>`
       <section class="dialog-day" data-date="${escapeHTML(date)}" aria-label="${escapeHTML(dayHeading(date))}">
         <h3 class="dialog-day-label">${escapeHTML(dayHeading(date))}</h3>

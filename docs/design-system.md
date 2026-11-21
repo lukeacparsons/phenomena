@@ -66,6 +66,7 @@ The pattern is fixed behind scrolling content. Light mode keeps a 65% paper-colo
 - Returning to showtimes restores its scroll. Closing the dialog restores the originating listing/page position and focus. The floating back-to-top button is intentionally absent.
 - On mobile, pulling down anywhere in the sheet dismisses it once its content is at the top, including a continuous drag that first scrolls to the top. Only the extra pull beyond that boundary counts toward dismissal. Keep native scrolling within the content, suppress boundary bounce, and leave link taps, short/canceled pulls and multi-touch gestures intact. Momentum alone must not dismiss the sheet.
 - Standalone film pages contain the complete schedule in their initial HTML. `#showtimes` scrolls to that schedule; `#screening-…` opens one screening. Without JavaScript, page time links go directly to the operator's booking destination.
+- When a film has no upcoming sessions, show its last retained past screening below the empty-state message: a localized “Last listed screening” label, full date/year, Barcelona time and cinema name. Use quiet plain text with no booking action. Omit it when history is unknown or any upcoming session remains, including when a subtitle filter hides those upcoming sessions. Cached pages update the line as their final screening expires.
 
 ## Verification and extension
 
