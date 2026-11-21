@@ -93,6 +93,42 @@ class IdentityTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
+    def test_homepage_covers_quiet_cinemas_and_separates_directory_only_venues(self):
+        from html import escape
+        from site_content import COPY, PUBLISHER
+
+        self.data['cinemas'] += [
+            {'id': 'quiet', 'name': 'Quiet & Covered', 'url': 'https://cinema.example/quiet'},
+            {'id': 'links-only', 'name': 'Programme Links Only', 'url': 'https://cinema.example/links',
+             'catalogue_mode': 'programme_links_only'}]
+        dossier = json.loads((self.docs / 'cinema-dossiers.json').read_text())
+        dossier['cinemas'].append({'id': 'research-only', 'name': 'Research Only',
+                                   'official_url': 'https://cinema.example/research'})
+        (self.docs / 'cinema-dossiers.json').write_text(json.dumps(dossier))
+        self.write_input()
+        self.publish()
+        root = self.root / 'site/current/public'
+        for lang, section, about in [('en', 'cinemas', 'about'), ('es', 'cines', 'acerca-de'), ('ca', 'cinemes', 'sobre-nosaltres')]:
+            html = (root / lang / 'index.html').read_text()
+            footer = html.split('<details class="site-information">', 1)[1].split('</details>', 1)[0]
+            collected = footer.split('<ul id="collected-cinemas"', 1)[1].split('</ul>', 1)[0]
+            directory = footer.split('<ul id="directory-cinemas"', 1)[1].split('</ul>', 1)[0]
+            self.assertIn('Phenomena Experience', collected)
+            self.assertIn('Quiet &amp; Covered', collected)
+            self.assertIn(f'/{lang}/{section}/quiet-covered/', collected)
+            self.assertEqual(collected.count('<li>'), 2)
+            self.assertEqual(directory.count('<li>'), 2)
+            for name in ('Programme Links Only', 'Research Only'):
+                self.assertIn(name, directory)
+                self.assertNotIn(name, collected)
+            self.assertNotIn('homepage-information', html.split('</main>', 1)[0])
+            self.assertIn(escape(COPY[lang]['coverage_answer'].format(count=2)), footer)
+            self.assertIn(PUBLISHER['name'], footer)
+            self.assertIn('mailto:' + PUBLISHER['email'], footer)
+            for key in ('commitment', 'booking_benefit_text', 'refresh_answer'):
+                self.assertIn(escape(COPY[lang][key]), footer)
+                self.assertIn(escape(COPY[lang][key]), (root / lang / about / 'index.html').read_text())
+
     def test_session_context_is_in_the_closed_footer_with_evidence_backed_metadata(self):
         from html.parser import HTMLParser
         from discovery_content import PATHS

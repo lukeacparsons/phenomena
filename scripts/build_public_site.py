@@ -579,6 +579,33 @@ class Publication:
                           footer_extra=self.screening_context(pairs, lang, cinema=cinema),
                           crumbs=[(t['cinemas'], f'/{lang}/{SECTIONS[lang]["cinemas"]}/')])
 
+    def homepage_information(self, lang):
+        t = COPY[lang]
+        # Inventory, not today's session counts: a quiet week must not erase coverage.
+        collected = {c['id'] for c in self.data['cinemas']
+                     if c.get('catalogue_mode') != 'programme_links_only'}
+
+        def venue_list(ids, key):
+            venues = sorted((self.cinemas[cid] for cid in ids), key=lambda c: c['name'].casefold())
+            return f'<ul id="{key}" class="coverage-venues">' + ''.join(
+                '<li>' + link(self.entity_path('cinemas', c['id'], lang), c['name']) + '</li>'
+                for c in venues) + '</ul>'
+
+        body = (f'<section class="homepage-information" aria-labelledby="cinema-coverage">'
+                f'<h2 id="cinema-coverage">{text(t["coverage_question"])}</h2>'
+                f'<p>{text(t["coverage_answer"].format(count=len(collected)))}</p>'
+                + venue_list(collected, 'collected-cinemas'))
+        directory = set(self.cinemas) - collected
+        if directory:
+            body += (f'<h3>{text(t["directory_coverage"])}</h3><p>{text(t["directory_coverage_note"])}</p>'
+                     + venue_list(directory, 'directory-cinemas'))
+        body += (f'<h2>{text(t["refresh_question"])}</h2><p>{text(t["refresh_answer"])}</p>'
+                 f'<h2>{text(t["publisher"])}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p>'
+                 f'<p>{text(t["commitment"])}</p>'
+                 f'<p>{text(t["contact_text"])} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p>'
+                 f'<h2>{text(t["booking_benefit"])}</h2><p>{text(t["booking_benefit_text"])}</p></section>')
+        return body
+
     def indexes(self):
         films = [self.film_data(k, r) for k, r in self.registry['entities'].items() if r['kind'] == 'films']
         films.sort(key=lambda f: (not bool(f['sessions']), f['title'].casefold()))
@@ -589,6 +616,7 @@ class Publication:
             body = f'<h1 class="sr-only">{t["home"]}</h1>' + self.programme_listing(lang)
             body += render_programme_directory(programme_pages, lang)
             footer_extra = f'<p class="site-intro">{text(t["intro"])}</p><p id="staticPagination">{link(f"/{lang}/{SECTIONS[lang]["films"]}/", t["more"])}</p><p class="fineprint">{t["coverage"]} {t["checked"]}: {stamp(self.data["generated_at"])}</p>'
+            footer_extra += self.homepage_information(lang)
             self.page(f'/{lang}/', lang, t['home'] + ' | VO Barna', t['intro'], body, alternatives={l: f'/{l}/' for l in LOCALES}, interactive=True,
                       footer_extra=footer_extra,
                       graph=[{'@type': 'WebSite', '@id': self.origin + '/#website', 'name': 'VO Barna', 'description': t['intro'], 'url': self.origin + '/', 'inLanguage': list(LOCALES), 'publisher': {'@id': self.origin + '/#publisher'}}])
@@ -642,8 +670,10 @@ class Publication:
             paths = {l: f'/{l}/{SECTIONS[l]["guides"]}/' for l in LOCALES}
             self.page(paths[lang], lang, t['guides'] + ' | VO Barna', t['guide_index_description'], f'<h1>{t["guides"]}</h1><ul>{"".join(links)}</ul>', alternatives=paths)
             paths = {l: f'/{l}/{SECTIONS[l]["about"]}/' for l in LOCALES}
-            body = f'<h1>{t["about"]}</h1><p class="site-intro">{text(t["intro"])}</p><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
-            body += f'<h2>{t["analytics_title"]}</h2><p>{text(t["analytics_body"])}</p>'
+            body = f'<h1>{t["about"]}</h1><p class="site-intro">{text(t["intro"])}</p><p>{t["independent"]}</p><h2>{t["publisher"]}</h2><p>{text(t["publisher_text"].format(name=PUBLISHER["name"]))}</p><p>{text(t["commitment"])}</p><h2>{t["method_title"]}</h2><p class="editorial">{t["method"]}</p><h2>{t["corrections"]}</h2><p>{t["contact_text"]} <a href="mailto:{text(PUBLISHER["email"])}">{text(PUBLISHER["email"])}</a>.</p><p>{t["correction_text"]}</p>'
+            body += (f'<h2>{text(t["refresh_question"])}</h2><p>{text(t["refresh_answer"])}</p>'
+                     f'<h2>{text(t["booking_benefit"])}</h2><p>{text(t["booking_benefit_text"])}</p>'
+                     f'<h2>{t["analytics_title"]}</h2><p>{text(t["analytics_body"])}</p>')
             self.page(paths[lang], lang, t['about'], t['intro'], body, alternatives=paths)
         self.page('/404.html', 'en', COPY['en']['notfound'], COPY['en']['notfound_text'], f'<h1>{COPY["en"]["notfound"]}</h1><p>{COPY["en"]["notfound_text"]}</p>', index=False)
 
